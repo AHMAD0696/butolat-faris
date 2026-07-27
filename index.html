@@ -1050,6 +1050,7 @@ function cloudState(db){
   var c=JSON.parse(JSON.stringify(db));
   (c.users||[]).forEach(function(u){delete u.password;});
   (c.joinReqs||[]).forEach(function(r){delete r.pin;});
+  (c.teams||[]).forEach(function(tm){(tm.coaches||[]).forEach(function(co){delete co.pin;});});
   (c.tournaments||[]).forEach(function(t){(t.teams||[]).forEach(function(tm){(tm.coaches||[]).forEach(function(co){delete co.pin;});});});
   return c;
 }
@@ -1057,7 +1058,7 @@ var SYS={league:'دوري',groups:'مجموعات',knockout:'خروج مغلوب
 var TICONS=['trophy','medal','star','crown','ball','target'];
 function defDB(){return{
   users:[{id:'u1',name:'عبدالحميد الوابل',username:'عبدالحميد الوابل',password:'1425',role:'admin',team:''}],
-  joinReqs:[],actLog:[],
+  joinReqs:[],actLog:[],teams:[],
   settings:{birthOld:2007,birthYoung:2022},
   tournaments:[
     {id:'league',name:'دوري فارس 2026',subtitle:'البطولة الرسمية للأجيال الصاعدة',system:'league',icon:'trophy',color:'#DD1D45',birthYears:[],visible:true,regOpen:true,regs:[],teams:[],matches:[]},
@@ -1080,10 +1081,37 @@ function migrate(db){
   if(db&&!db.users)db.users=[];
   if(db&&!db.joinReqs)db.joinReqs=[];
   if(db&&!db.actLog)db.actLog=[];
+  /* --- global independent teams store: sweep existing tournament teams into it once --- */
+  if(db&&!db.teams){
+    db.teams=[];
+    (db.tournaments||[]).forEach(function(tr){
+      (tr.teams||[]).forEach(function(t){
+        if(!db.teams.some(function(x){return x.name===t.name;}))
+          db.teams.push(JSON.parse(JSON.stringify(t)));
+      });
+    });
+  }
   return db;
 }
+/* ---- global team store helpers (teams are independent of tournaments) ---- */
+function gTeam(name){return (DB.teams||[]).find(function(x){return x.name===name;});}
+function upsertGlobalTeam(src){
+  if(!src||!src.name)return;
+  DB.teams=DB.teams||[];
+  var g=gTeam(src.name);
+  if(!g){DB.teams.push(JSON.parse(JSON.stringify(src)));return;}
+  ['branch','admin','phone','img','color'].forEach(function(k){if(src[k])g[k]=src[k];});
+  g.coaches=g.coaches||[];
+  (src.coaches||[]).forEach(function(c){var e=g.coaches.find(function(x){return (c.id&&x.id===c.id)||x.name===c.name;});if(e){e.name=c.name;e.phone=c.phone;e.account=c.account;e.id=e.id||c.id;if(c.pin)e.pin=c.pin;}else g.coaches.push(JSON.parse(JSON.stringify(c)));});
+  g.categories=g.categories||[];
+  (src.categories||[]).forEach(function(c){var e=g.categories.find(function(x){return x.name===c.name;});if(e){e.coach=c.coach;e.phone=c.phone;}else g.categories.push(JSON.parse(JSON.stringify(c)));});
+  g.players=g.players||[];
+  (src.players||[]).forEach(function(p){var e=g.players.find(function(x){return x.id===p.id;});if(e){['name','nid','number','pos','cat','dob','nat','guard','phone','img','idImg'].forEach(function(k){if(p[k]!==undefined)e[k]=p[k];});}else g.players.push(JSON.parse(JSON.stringify(p)));});
+}
+function syncGlobalTeams(){(DB.tournaments||[]).forEach(function(tr){(tr.teams||[]).forEach(function(t){upsertGlobalTeam(t);});});}
 var DB=migrate(Store.load())||defDB();
 function sv(){
+  syncGlobalTeams();
   Store.save(DB);
   if(FA.enabled&&FA.token&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1){
     if(FA._timer)clearTimeout(FA._timer);
@@ -1247,15 +1275,12 @@ function bkT(){g('APP').style.display='none';showTS();}
 var TMVIEW='';
 /* every team across all tournaments, deduped by name, with its tournament list */
 function allTeamsGlobal(){
-  var map={};
-  DB.tournaments.forEach(function(tr){
-    (tr.teams||[]).forEach(function(t){
-      if(!map[t.name])map[t.name]={team:t,tours:[]};
-      else { /* prefer the entry with most data */ if((t.players||[]).length>(map[t.name].team.players||[]).length)map[t.name].team=t; }
-      map[t.name].tours.push(tr.name);
-    });
+  syncGlobalTeams();
+  return (DB.teams||[]).map(function(t){
+    var tours=[];
+    DB.tournaments.forEach(function(tr){if((tr.teams||[]).some(function(x){return x.name===t.name;}))tours.push(tr.name);});
+    return {team:t,tours:tours};
   });
-  return Object.keys(map).map(function(k){return map[k];});
 }
 function openTM(){TMVIEW='';g('TS').style.display='none';g('TM').style.display='block';renderTM();hydrateIcons(g('TM'));}
 function closeTM(){g('TM').style.display='none';showTS();}
@@ -1339,7 +1364,9 @@ function createTeam(){
   if(bad){g('ct-err').textContent='أكمل جوال ورمز (4 أرقام) لكل مدرب';fl('ct-err');return;}
   /* create team (approved) */
   tour.teams=tour.teams||[];
-  tour.teams.push({id:uid(),name:name,branch:city,admin:an,phone:ap,color:COLS[(tour.teams.length)%COLS.length],img:gv('ct-img'),coaches:coaches,categories:[],players:[]});
+  var newTeam={id:uid(),name:name,branch:city,admin:an,phone:ap,color:COLS[(tour.teams.length)%COLS.length],img:gv('ct-img'),coaches:coaches,categories:[],players:[]};
+  tour.teams.push(newTeam);
+  upsertGlobalTeam(newTeam);
   /* admin account */
   var adminId=uid();
   DB.users.push({id:adminId,name:an,username:an,password:apin,role:'admin-team',team:name,phone:ap});
@@ -1354,6 +1381,7 @@ function createTeam(){
 var NTSYS='league';
 function allAcademyNames(){
   var names=[];
+  (DB.teams||[]).forEach(function(t){if(names.indexOf(t.name)<0)names.push(t.name);});
   DB.tournaments.forEach(function(tr){
     (tr.teams||[]).forEach(function(t){if(names.indexOf(t.name)<0)names.push(t.name);});
     (tr.regs||[]).forEach(function(r){if(r.status!=='rejected'&&names.indexOf(r.name)<0)names.push(r.name);});
@@ -1405,8 +1433,8 @@ function createT(){
   var t={id:uid(),name:name,subtitle:gv('nt-sub'),system:NTSYS,icon:TICONS[DB.tournaments.length%TICONS.length],color:COLS[DB.tournaments.length%COLS.length],birthYears:births,partTeams:picks,visible:g('nt-vis').checked,regOpen:g('nt-reg').checked,regs:[],teams:[],matches:[]};
   /* copy chosen academies (with only the allowed birth categories) into this tournament */
   picks.forEach(function(nm){
-    var src=null;
-    DB.tournaments.forEach(function(tr){(tr.teams||[]).forEach(function(x){if(x.name===nm&&!src)src=x;});});
+    var src=gTeam(nm)||null;
+    if(!src)DB.tournaments.forEach(function(tr){(tr.teams||[]).forEach(function(x){if(x.name===nm&&!src)src=x;});});
     if(!src)DB.tournaments.forEach(function(tr){(tr.regs||[]).forEach(function(x){if(x.name===nm&&!src)src=x;});});
     if(!src)return;
     var cats=(src.categories||[]).filter(function(c){return births.indexOf(c.name)>-1;});
@@ -2298,10 +2326,14 @@ function admRegsHTML(){
 function appR(id){
   var r=(T().regs||[]).find(function(x){return x.id===id;});if(!r)return;
   r.status='approved';
-  if(!(T().teams||[]).some(function(t){return t.name===r.name;}))
-    T().teams.push({id:uid(),name:r.name,branch:r.branch||'',admin:r.admin||'',phone:r.phone||'',color:COLS[(T().teams||[]).length%COLS.length],img:r.img||'',players:r.players||[],categories:r.categories||[],coaches:r.coaches||[]});
+  var nt=null;
+  if(!(T().teams||[]).some(function(t){return t.name===r.name;})){
+    nt={id:uid(),name:r.name,branch:r.branch||'',admin:r.admin||'',phone:r.phone||'',color:COLS[(T().teams||[]).length%COLS.length],img:r.img||'',players:r.players||[],categories:r.categories||[],coaches:r.coaches||[]};
+    T().teams.push(nt);
+  }
+  if(nt)upsertGlobalTeam(nt); else upsertGlobalTeam((T().teams||[]).find(function(t){return t.name===r.name;}));
   logA('اعتماد أكاديمية: '+r.name,'check','#16a34a');
-  addN('تم اعتماد أكاديمية '+r.name,'','success');
+  addN('تم اعتماد أكاديمية '+r.name+' وإضافتها إلى الفرق','','success');
   sv();renderATab();
 }
 function rejR(id){var r=(T().regs||[]).find(function(x){return x.id===id;});if(r){r.status='rejected';logA('رفض فريق: '+r.name,'x','#DD1D45');sv();renderATab();}}
@@ -2579,10 +2611,11 @@ function saveBirthRange(){
 }
 function delTournament(){
   if(DB.tournaments.length<=1){alert('لا يمكن حذف البطولة الوحيدة');return;}
-  if(!confirm('حذف هذه البطولة وكل بياناتها نهائياً؟'))return;
+  if(!confirm('حذف هذه البطولة؟ (ملاحظة: الفرق تبقى محفوظة في صفحة «الفرق» ولا تُحذف)'))return;
   var name=T().name;
+  syncGlobalTeams(); /* ensure this tournament's teams are preserved globally before removal */
   DB.tournaments=DB.tournaments.filter(function(x){return x.id!==AT;});
-  logA('حذف بطولة: '+name,'trash','#DD1D45');sv();bkT();
+  logA('حذف بطولة: '+name+' (الفرق محفوظة)','trash','#DD1D45');sv();bkT();
 }
 function resetAll(){
   if(!confirm('تحذير: سيتم حذف جميع البطولات والفرق واللاعبين والنتائج والمستخدمين والعودة للوضع الافتراضي. هل أنت متأكد؟'))return;
