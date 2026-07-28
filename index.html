@@ -210,6 +210,17 @@ svg{display:block;flex-shrink:0}
 
 /* ============ HERO ============ */
 .hero{position:relative;background:var(--navy);overflow:hidden}
+.hero-stories{position:absolute;inset:0;z-index:0;cursor:pointer}
+.hero-stories .hs-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1s ease}
+.hero-stories .hs-slide.on{opacity:1}
+.hero-stories::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,15,45,.9),rgba(14,15,45,.55))}
+.hs-dots{position:absolute;bottom:12px;left:0;right:0;display:flex;gap:6px;justify-content:center;z-index:3;pointer-events:none}
+.hs-dot{width:26px;height:3px;border-radius:2px;background:rgba(255,255,255,.28)}
+.hs-dot.on{background:#fff}
+.hs-hint{position:absolute;top:14px;left:16px;z-index:3;background:rgba(0,0,0,.35);color:#fff;font-size:10.5px;padding:4px 10px;border-radius:99px;display:flex;align-items:center;gap:5px;pointer-events:none}
+.hs-ov{position:absolute;left:16px;bottom:28px;z-index:3;max-width:60%}
+.hs-ov .hs-ttl{color:#fff;font-size:clamp(14px,2.2vw,20px);font-weight:800;margin-bottom:.5rem;text-shadow:0 2px 12px rgba(0,0,0,.6);line-height:1.3}
+.hs-ov .hs-lnk{display:inline-flex;align-items:center;gap:7px;background:var(--red);color:#fff;padding:8px 18px;border-radius:99px;font-size:12.5px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(221,29,69,.4)}
 .hero-pitch{position:absolute;inset:0;opacity:.07;pointer-events:none}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 80% 0%,rgba(221,29,69,.25),transparent)}
 .hero-c{position:relative;max-width:1120px;margin:0 auto;padding:3.4rem 1.4rem 2.8rem}
@@ -605,6 +616,21 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 </div>
 
 <!-- EDIT TEAM MODAL (admin) -->
+<!-- STORY FULLSCREEN VIEWER -->
+<div id="storyView" style="display:none;position:fixed;inset:0;z-index:200;background:#000;flex-direction:column">
+  <div style="position:absolute;top:0;left:0;right:0;z-index:3;display:flex;gap:4px;padding:10px" id="sv-bars"></div>
+  <button onclick="closeStoryView()" style="position:absolute;top:16px;right:16px;z-index:4;background:rgba(255,255,255,.15);color:#fff;border:none;width:38px;height:38px;border-radius:50%;font-size:18px;cursor:pointer">✕</button>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+    <img id="sv-img" style="max-width:100%;max-height:100%;object-fit:contain" src="">
+    <div onclick="storyNav(-1)" style="position:absolute;top:0;bottom:0;right:0;width:30%;cursor:pointer"></div>
+    <div onclick="storyNav(1)" style="position:absolute;top:0;bottom:0;left:0;width:30%;cursor:pointer"></div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0;z-index:3;padding:1.5rem 1.4rem 2rem;background:linear-gradient(0deg,rgba(0,0,0,.85),transparent);text-align:center">
+    <div id="sv-title" style="color:#fff;font-size:16px;font-weight:700;margin-bottom:.8rem"></div>
+    <a id="sv-link" href="#" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--red);color:#fff;padding:11px 26px;border-radius:99px;font-size:14px;font-weight:700;text-decoration:none"><span data-ic="target"></span> <span id="sv-link-label">فتح الرابط</span></a>
+  </div>
+</div>
+
 <div class="modal" id="etMod" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="mbox" style="max-width:480px">
     <div class="mhdr">
@@ -665,8 +691,9 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 <!-- HOME -->
 <div id="page-home" class="page on">
   <div class="hero">
+    <div class="hero-stories" id="hero-stories" style="display:none" onclick="openStoryView(HSIDX)"></div>
     <svg class="hero-pitch" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#fff" stroke-width="2"><rect x="-100" y="30" width="1000" height="500"/><line x1="400" y1="30" x2="400" y2="530"/><circle cx="400" cy="280" r="90"/><rect x="-100" y="130" width="140" height="300"/><rect x="760" y="130" width="140" height="300"/></svg>
-    <div class="hero-c">
+    <div class="hero-c" style="position:relative;z-index:1">
       <div class="hbadge"><span class="hdot"></span> <span id="h-badge">الموسم الرسمي 2026</span></div>
       <h1 id="h-title">دوري فارس <span>2026</span></h1>
       <p class="hero-sub">البطولة الرسمية لأكاديمية فارس الرياضية — منافسة احترافية للأجيال الصاعدة</p>
@@ -982,6 +1009,7 @@ var IC={
  trophy:'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
  medal:'<circle cx="12" cy="15" r="6"/><path d="M9 9 6 2h4l2 4 2-4h4l-3 7"/>',
  star:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+ image:'<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
  'user-plus':'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>',
  users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
@@ -1113,6 +1141,7 @@ function migrate(db){
   if(db&&!db.users)db.users=[];
   if(db&&!db.joinReqs)db.joinReqs=[];
   if(db&&!db.actLog)db.actLog=[];
+  if(db&&!db.stories)db.stories=[];
   /* --- global independent teams store: sweep existing tournament teams into it once --- */
   if(db&&!db.teams){
     db.teams=[];
@@ -1141,6 +1170,64 @@ function upsertGlobalTeam(src){
   (src.players||[]).forEach(function(p){var e=g.players.find(function(x){return x.id===p.id;});if(e){['name','nid','number','pos','cat','dob','nat','guard','phone','img','idImg'].forEach(function(k){if(p[k]!==undefined)e[k]=p[k];});}else g.players.push(JSON.parse(JSON.stringify(p)));});
 }
 function syncGlobalTeams(){(DB.tournaments||[]).forEach(function(tr){(tr.teams||[]).forEach(function(t){upsertGlobalTeam(t);});});}
+/* ================= STORIES ================= */
+var HSIDX=0,HSTIMER=null,HSLIST=[];
+function activeStories(){
+  var now=Date.now();
+  return (DB.stories||[]).filter(function(s){
+    if(s.expires&&s.expires<now)return false;
+    if(s.tours&&s.tours.length&&s.tours.indexOf(AT)<0)return false;
+    return true;
+  });
+}
+function renderHeroStories(){
+  var el=g('hero-stories');if(!el)return;
+  if(HSTIMER){clearInterval(HSTIMER);HSTIMER=null;}
+  var list=activeStories();HSLIST=list;
+  if(!list.length){el.style.display='none';el.innerHTML='';return;}
+  HSIDX=0;
+  el.style.display='block';
+  el.innerHTML=list.map(function(s,i){return '<div class="hs-slide'+(i===0?' on':'')+'" style="background-image:url(\''+(s.img||'').replace(/'/g,"%27")+'\')"></div>';}).join('')
+    +'<div class="hs-hint">'+ic('target',11)+' اضغط لعرض الستوري</div>'
+    +'<div class="hs-ov" id="hs-ov"></div>'
+    +'<div class="hs-dots">'+list.map(function(s,i){return '<div class="hs-dot'+(i===0?' on':'')+'"></div>';}).join('')+'</div>';
+  hsPaint();hydrateIcons(el);
+  if(list.length>1)HSTIMER=setInterval(function(){hsGo((HSIDX+1)%list.length);},5000);
+}
+function hsPaint(){
+  var ov=g('hs-ov');if(!ov)return;var s=HSLIST[HSIDX];if(!s){ov.innerHTML='';return;}
+  var h='';
+  if(s.title)h+='<div class="hs-ttl">'+esc(s.title)+'</div>';
+  if(s.url)h+='<a class="hs-lnk" href="'+esc(s.url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+ic('target',12)+' فتح الرابط'+(storyHost(s.url)?' — '+esc(storyHost(s.url)):'')+'</a>';
+  ov.innerHTML=h;hydrateIcons(ov);
+}
+function hsGo(i){
+  var el=g('hero-stories');if(!el)return;HSIDX=i;
+  var slides=el.querySelectorAll('.hs-slide'),dots=el.querySelectorAll('.hs-dot');
+  slides.forEach(function(s,k){s.classList.toggle('on',k===i);});
+  dots.forEach(function(d,k){d.classList.toggle('on',k===i);});
+  hsPaint();
+}
+function openStoryView(i){
+  var list=activeStories();if(!list.length)return;
+  if(HSTIMER){clearInterval(HSTIMER);HSTIMER=null;}
+  SVLIST=list;SVIDX=Math.max(0,Math.min(i||0,list.length-1));
+  g('storyView').style.display='flex';renderStoryView();
+}
+var SVLIST=[],SVIDX=0;
+function renderStoryView(){
+  var s=SVLIST[SVIDX];if(!s){closeStoryView();return;}
+  g('sv-img').src=s.img||'';
+  g('sv-title').textContent=s.title||'';g('sv-title').style.display=s.title?'block':'none';
+  var lk=g('sv-link');
+  if(s.url){lk.style.display='inline-flex';lk.href=s.url;g('sv-link-label').textContent='فتح الرابط'+(storyHost(s.url)?' — '+storyHost(s.url):'');}
+  else lk.style.display='none';
+  g('sv-bars').innerHTML=SVLIST.map(function(x,i){return '<div style="flex:1;height:3px;border-radius:2px;background:'+(i<=SVIDX?'#fff':'rgba(255,255,255,.3)')+'"></div>';}).join('');
+  hydrateIcons(g('storyView'));
+}
+function storyHost(u){try{var h=new URL(u).hostname.replace('www.','');if(/tiktok/.test(h))return'تيك توك';if(/instagram/.test(h))return'انستقرام';if(/youtu/.test(h))return'يوتيوب';if(/twitter|x\.com/.test(h))return'X';return h;}catch(e){return'';}}
+function storyNav(d){SVIDX+=d;if(SVIDX<0)SVIDX=0;if(SVIDX>=SVLIST.length){closeStoryView();return;}renderStoryView();}
+function closeStoryView(){g('storyView').style.display='none';renderHeroStories();}
 var DB=migrate(Store.load())||defDB();
 function sv(){
   syncGlobalTeams();
@@ -1205,6 +1292,19 @@ function prvImg(inp,pref){
   rd.readAsDataURL(f);inp.value='';
 }
 function rmImg(pref,icn){g(pref+'-img').value='';g(pref+'-prev').innerHTML=ic(icn,22);g(pref+'-rm').style.display='none';}
+/* high-quality image (for stories) — larger max + higher quality */
+function prvStoryImg(inp,pref){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  var img=new Image(),rd=new FileReader();
+  rd.onload=function(){img.onload=function(){
+    var mx=1280,w=img.width,h=img.height,k=Math.min(1,mx/Math.max(w,h));
+    var cv=document.createElement('canvas');cv.width=Math.round(w*k);cv.height=Math.round(h*k);
+    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    var d=cv.toDataURL('image/jpeg',.92);
+    g(pref+'-img').value=d;g(pref+'-prev').innerHTML='<img src="'+d+'">';g(pref+'-rm').style.display='inline-block';
+  };img.src=rd.result;};
+  rd.readAsDataURL(f);inp.value='';
+}
 
 /* ================= NOTIFICATIONS ================= */
 function addN(txt,sub,type){
@@ -1711,6 +1811,7 @@ function allStandings(full){
 /* ================= HOME ================= */
 function rHome(){
   var t=T();
+  renderHeroStories();
   g('h-badge').textContent=t.subtitle||'الموسم الرسمي 2026';
   g('h-title').innerHTML=esc(t.name).replace(/(\d{4})/,'<span>$1</span>');
   var pl=(t.teams||[]).reduce(function(s,x){return s+(x.players||[]).length;},0);
@@ -2426,7 +2527,7 @@ function rAdmin(){
   g('adm-content').style.display=ok?'block':'none';
   if(!ok)return;
   var tabs;
-  if(CU.role==='admin')tabs=[['regs','inbox','طلبات التسجيل'],['teams','trophy','الفرق المعتمدة'],['teaminfo','card','معلومات الفريق'],['matches','cal','إضافة مباراة'],['results','chart','إدخال النتائج'],['users','users','المستخدمون'],['pending','clock','طلبات الانضمام'],['settings','edit','إعدادات البطولة'],['log','list','سجل النشاط']];
+  if(CU.role==='admin')tabs=[['regs','inbox','طلبات التسجيل'],['teams','trophy','الفرق المعتمدة'],['teaminfo','card','معلومات الفريق'],['stories','star','الستوريات'],['matches','cal','إضافة مباراة'],['results','chart','إدخال النتائج'],['users','users','المستخدمون'],['pending','clock','طلبات الانضمام'],['settings','edit','إعدادات البطولة'],['log','list','سجل النشاط']];
   else if(CU.role==='organizer')tabs=[['matches','cal','إضافة مباراة'],['results','chart','إدخال النتائج']];
   else tabs=[['mydash','trophy','أكاديميتي'],['teaminfo','card','معلومات الفريق']];
   if(tabs.map(function(t){return t[0];}).indexOf(ATAB)<0)ATAB=tabs[0][0];
@@ -2439,6 +2540,7 @@ function renderATab(){
   if(ATAB==='regs')c.innerHTML=admRegsHTML();
   else if(ATAB==='teams')c.innerHTML=admTeamsHTML();
   else if(ATAB==='teaminfo')c.innerHTML=admTeamInfoHTML();
+  else if(ATAB==='stories'){c.innerHTML=admStoriesHTML();prepStories();}
   else if(ATAB==='matches'){c.innerHTML=admMatchHTML();popAM();}
   else if(ATAB==='results'){c.innerHTML=admResHTML();popResM();}
   else if(ATAB==='users'){c.innerHTML=admUsersHTML();if(FA.enabled&&CU.role==='admin'){FA.listUsers().then(function(list){if(list){DB.users=list;if(ATAB==='users'){c.innerHTML=admUsersHTML();hydrateIcons(c);}}}).catch(function(e){console.warn(e);});}}
@@ -2451,6 +2553,49 @@ function renderATab(){
 /* ---- معلومات الفريق: قائمة + صفحة تفصيلية ---- */
 var TIVIEW='';
 function tiOpen(n){TIVIEW=n;renderATab();hydrateIcons(g('adm-c'));}
+function admStoriesHTML(){
+  var h='<div class="sec-t" style="margin-bottom:.8rem"><div class="bar"></div><h2 style="font-size:14px">إضافة ستوري</h2></div>';
+  h+='<div class="rform" style="max-width:560px">';
+  h+='<div class="fg"><label>صورة الستوري * <small>(بجودة عالية)</small></label><div class="img-pick"><div class="img-prev" id="stry-prev" data-ic="image"></div><div><label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة<input type="file" accept="image/*" style="display:none" onchange="prvStoryImg(this,\'stry\')"></label><button class="img-rm" id="stry-rm" onclick="rmImg(\'stry\',\'image\')">إزالة</button></div><input type="hidden" id="stry-img"></div></div>';
+  h+='<div class="fg"><label>الرابط * <small>(تيك توك / انستقرام / يوتيوب / أي رابط)</small></label><input type="url" id="stry-url" placeholder="https://" style="direction:ltr"></div>';
+  h+='<div class="fg"><label>عنوان <small>(اختياري)</small></label><input type="text" id="stry-title" placeholder="عنوان قصير يظهر مع الستوري"></div>';
+  h+='<div class="fg"><label>وقت الانتهاء *</label><input type="datetime-local" id="stry-exp" style="direction:ltr"></div>';
+  h+='<div class="cat-wrap"><div class="cw-t">'+ic('trophy',13)+' البطولات <small>(اختر واحدة أو أكثر — فارغ = كل البطولات)</small></div><div id="stry-tours" style="display:flex;flex-direction:column;gap:.35rem;max-height:130px;overflow:auto;padding:.3rem"></div></div>';
+  h+='<button class="btn btn-r" style="width:100%" onclick="addStory()">إضافة الستوري</button><div class="msg ok" id="stry-ok">تمت إضافة الستوري</div><div class="msg err" id="stry-err">أكمل: الصورة، الرابط، ووقت الانتهاء</div>';
+  h+='</div>';
+  /* list */
+  h+='<div class="sec-t" style="margin:1.6rem 0 .8rem"><div class="bar"></div><h2 style="font-size:14px">الستوريات ('+((DB.stories||[]).length)+')</h2></div>';
+  var list=(DB.stories||[]).slice().sort(function(a,b){return (b.at||0)-(a.at||0);});
+  if(!list.length)h+=emptyBox('star','لا توجد ستوريات بعد');
+  else h+='<div class="tg" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">'+list.map(function(s){
+    var exp=s.expires&&s.expires<Date.now();
+    var tn=(s.tours&&s.tours.length)?s.tours.map(function(id){return tName(id);}).join('، '):'كل البطولات';
+    var when=s.expires?new Date(s.expires).toLocaleString('ar-SA',{dateStyle:'short',timeStyle:'short'}):'—';
+    return '<div class="acl-item" style="padding:0;overflow:hidden">'+(s.img?'<div style="height:110px;background:#111 url(\''+(s.img||'').replace(/'/g,"%27")+'\') center/cover"></div>':'')+'<div style="padding:.7rem .8rem"><div style="font-weight:700;font-size:12.5px;margin-bottom:3px">'+esc(s.title||'ستوري')+' '+(exp?'<span class="badge pending">منتهٍ</span>':'<span class="badge approved">نشط</span>')+'</div><div style="font-size:10.5px;color:var(--gray);direction:ltr;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(s.url||'')+'</div><div style="font-size:10.5px;color:var(--gray);margin-top:3px">'+ic('trophy',10)+' '+esc(tn)+'</div><div style="font-size:10.5px;color:var(--gray)">'+ic('clock',10)+' ينتهي: '+when+'</div><button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red);margin-top:.5rem;width:100%" onclick="delStory(\''+s.id+'\')">'+ic('trash',12)+' حذف</button></div></div>';
+  }).join('')+'</div>';
+  return h;
+}
+function prepStories(){
+  var el=g('stry-tours');if(!el)return;
+  el.innerHTML=DB.tournaments.map(function(t){return '<label style="display:flex;gap:8px;align-items:center;font-size:12.5px;cursor:pointer"><input type="checkbox" class="stry-tour-cb" value="'+t.id+'"> '+esc(t.name)+'</label>';}).join('');
+  hydrateIcons(g('adm-c'));
+}
+function addStory(){
+  var img=gv('stry-img'),url=gv('stry-url'),title=gv('stry-title'),exp=gv('stry-exp');
+  if(!img||!url||!exp){fl('stry-err');return;}
+  var tours=[];document.querySelectorAll('.stry-tour-cb:checked').forEach(function(cb){tours.push(cb.value);});
+  var expMs=new Date(exp).getTime();
+  if(isNaN(expMs)){g('stry-err').textContent='وقت الانتهاء غير صحيح';fl('stry-err');return;}
+  DB.stories=DB.stories||[];
+  DB.stories.push({id:uid(),img:img,url:url,title:title,expires:expMs,tours:tours,at:Date.now()});
+  logA('إضافة ستوري: '+(title||url),'star','#DD1D45');
+  sv();fl('stry-ok');renderATab();
+}
+function delStory(id){
+  if(!confirm('حذف هذا الستوري؟'))return;
+  DB.stories=(DB.stories||[]).filter(function(s){return s.id!==id;});
+  sv();renderATab();
+}
 function admTeamInfoHTML(){
   var teams=(T().teams||[]);
   if(CU.role==='admin-team')teams=teams.filter(function(t){return t.name===CU.team;});
