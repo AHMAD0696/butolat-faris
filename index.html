@@ -2766,19 +2766,21 @@ function admTeamInfoHTML(){
   if(!TIVIEW){
     var h='<div class="sec-t" style="margin-bottom:.8rem"><div class="bar"></div><h2 style="font-size:14px">معلومات الفريق</h2></div>';
     h+='<div class="tg">'+teams.map(function(t){
-      return '<div class="tcard" style="--tc:'+(t.color||'#181946')+'" onclick="tiOpen(\''+esc(t.name)+'\')">'+tlogo(t,58)+'<div class="tn">'+esc(t.name)+'</div><div class="tb">'+esc(t.branch||'—')+'</div><div class="tstats"><div><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div><div class="n">'+(t.categories||[]).length+'</div><div class="l">فئة</div></div><div><div class="n">'+((t.coaches||[]).length)+'</div><div class="l">مدرب</div></div></div></div>';
+      var _g=gTeam(t.name);var _cc=(_g&&_g.coaches&&_g.coaches.length)?_g.coaches.length:((t.coaches||[]).length);
+      return '<div class="tcard" style="--tc:'+(t.color||'#181946')+'" onclick="tiOpen(\''+esc(t.name)+'\')">'+tlogo(t,58)+'<div class="tn">'+esc(t.name)+'</div><div class="tb">'+esc(t.branch||'—')+'</div><div class="tstats"><div><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div><div class="n">'+(t.categories||[]).length+'</div><div class="l">فئة</div></div><div><div class="n">'+_cc+'</div><div class="l">مدرب</div></div></div></div>';
     }).join('')+'</div>';
     return h;
   }
   var t=teams.find(function(x){return x.name===TIVIEW;});
   if(!t){TIVIEW='';return admTeamInfoHTML();}
   var rec=teamRecord(t.name);
+  var _gt=gTeam(t.name);var gcoaches=(_gt&&_gt.coaches&&_gt.coaches.length)?_gt.coaches:(t.coaches||[]);
   var h2='<button class="btn btn-g btn-sm" style="margin-bottom:1rem" onclick="tiOpen(\'\')">→ كل الفرق</button>';
   h2+='<div class="tp-hero">'+tlogo(t,76)+'<div><h2>'+esc(t.name)+'</h2><div class="m">'+esc(t.branch||'—')+' • الإداري: '+esc(t.admin||'—')+' • '+esc(t.phone||'—')+'</div></div></div>';
-  h2+='<div class="tp-stats"><div class="tp-stat"><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div class="tp-stat"><div class="n">'+(t.categories||[]).length+'</div><div class="l">فئة</div></div><div class="tp-stat"><div class="n">'+((t.coaches||[]).length)+'</div><div class="l">مدرب</div></div><div class="tp-stat"><div class="n">'+rec.p+'</div><div class="l">لعب</div></div></div>';
+  h2+='<div class="tp-stats"><div class="tp-stat"><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div class="tp-stat"><div class="n">'+(t.categories||[]).length+'</div><div class="l">فئة</div></div><div class="tp-stat"><div class="n">'+(gcoaches.length)+'</div><div class="l">مدرب</div></div><div class="tp-stat"><div class="n">'+rec.p+'</div><div class="l">لعب</div></div></div>';
   /* coaches */
   h2+='<div class="sec-t" style="margin:1.4rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">المدربون</h2></div>';
-  var cos=t.coaches||[];
+  var cos=gcoaches;
   if(!cos.length)h2+=emptyBox('whistle','لا يوجد مدربون');
   else h2+='<div class="at-wrap"><table class="at"><thead><tr><th>الاسم</th><th>الجوال</th><th>الحساب</th><th>الفئات المسؤول عنها</th></tr></thead><tbody>'+cos.map(function(c){
     var his=(t.categories||[]).filter(function(x){return x.coach===c.name;}).map(function(x){return esc(x.name);}).join('، ')||'—';
