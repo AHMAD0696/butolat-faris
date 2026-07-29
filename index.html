@@ -2660,20 +2660,26 @@ function doImport(data,execute){
       });
       gt.players=gt.players||[];
     }
-    /* create coach accounts (unique) */
+    /* create coach records + accounts (unique) */
     var seenCoach={};
     coaches.forEach(function(c){
       if(seenCoach[c.name])return;seenCoach[c.name]=1;
-      if(usedUsernames[c.name]){R.coachesSkipped++;return;}
+      var cid=null;
       if(execute){
-        var cid=uid();
         gt.coaches=gt.coaches||[];
-        if(!gt.coaches.some(function(x){return x.name===c.name;}))gt.coaches.push({id:cid,name:c.name,phone:c.phone,pin:c.pin,account:true});
-        var nu={id:'u_'+cid,name:c.name,username:c.name,password:c.pin,role:'coach',team:gname,coachId:cid,phone:c.phone};
-        DB.users.push(nu);usedUsernames[c.name]=nu.id;
-        if(FA.enabled)faSync(FA.upsertUser(nu,c.pin));
+        var existing=gt.coaches.find(function(x){return x.name===c.name;});
+        if(existing){cid=existing.id;}
+        else{cid=uid();gt.coaches.push({id:cid,name:c.name,phone:c.phone,pin:c.pin,account:!usedUsernames[c.name]});}
       }
-      R.coachesAdded++;
+      if(usedUsernames[c.name]){R.coachesSkipped++;}
+      else{
+        R.coachesAdded++;
+        if(execute){
+          var nu={id:'u_'+(cid||uid()),name:c.name,username:c.name,password:c.pin,role:'coach',team:gname,coachId:cid,phone:c.phone};
+          DB.users.push(nu);usedUsernames[c.name]=nu.id;
+          if(FA.enabled)faSync(FA.upsertUser(nu,c.pin));
+        }
+      }
     });
     /* players: per-tournament rosters (stable key = idImg or name+cat) */
     function _pk(nm,cat,idImg){return idImg||(nm+'|'+cat);}
@@ -2691,7 +2697,9 @@ function doImport(data,execute){
       if(execute){
         tr.birthYears=tr.birthYears||[];cats.forEach(function(cn){if(tr.birthYears.indexOf(cn)<0)tr.birthYears.push(cn);});
         tt=(tr.teams||[]).find(function(x){return x.name===gname;});
-        if(!tt){tt={id:uid(),name:gname,branch:gt.branch||'الرياض',admin:gt.admin||'',phone:gt.phone||'',color:COLS[(tr.teams||[]).length%COLS.length],img:gt.img||'',coaches:(gt.coaches||[]).slice(),categories:[],players:[]};tr.teams=tr.teams||[];tr.teams.push(tt);}
+        if(!tt){tt={id:uid(),name:gname,branch:gt.branch||'الرياض',admin:gt.admin||'',phone:gt.phone||'',color:COLS[(tr.teams||[]).length%COLS.length],img:gt.img||'',coaches:[],categories:[],players:[]};tr.teams=tr.teams||[];tr.teams.push(tt);}
+        tt.coaches=(gt.coaches||[]).slice();
+        if(!tt.admin&&gt.admin)tt.admin=gt.admin;if(!tt.phone&&gt.phone)tt.phone=gt.phone;if(!tt.img&&gt.img)tt.img=gt.img;
         tt.categories=tt.categories||[];tt.players=tt.players||[];
         cats.forEach(function(cn){if(!tt.categories.some(function(c){return c.name===cn;})){var coachNm=(catCoach[cn]&&catCoach[cn][tourName])||'';tt.categories.push({name:cn,coach:coachNm,phone:''});}});
       }
