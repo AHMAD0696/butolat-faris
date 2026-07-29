@@ -937,8 +937,6 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       </div>
       <div class="fg"><label>عدد المواليد المشاركة *</label><select id="nt-bcount" onchange="ntBuildBirths()"></select></div>
       <div id="nt-births"></div>
-      <div class="fg"><label>عدد الفرق المشاركة *</label><select id="nt-tcount" onchange="ntBuildTeams()"></select></div>
-      <div id="nt-teams"></div>
       <div class="tgl"><div><div class="tt">ظهور البطولة</div><div class="ts2">تكون ظاهرة لغير مدير النظام</div></div><label class="sw"><input type="checkbox" id="nt-vis" checked><span></span></label></div>
       <div class="tgl"><div><div class="tt">قيد التسجيل مفتوح</div><div class="ts2">السماح بتسجيل الفرق والمدربين</div></div><label class="sw"><input type="checkbox" id="nt-reg" checked><span></span></label></div>
       <button class="btn btn-r" style="width:100%;margin-top:.4rem" onclick="createT()">إنشاء البطولة</button>
@@ -1424,7 +1422,7 @@ function renderTM(){
   if(!TMVIEW){
     if(!list.length){el.innerHTML=emptyBox('trophy','لا توجد فرق بعد','أنشئ فريقاً من زر «إنشاء فريق»');return;}
     el.innerHTML='<div class="tg">'+list.map(function(x){var t=x.team;
-      return '<div class="tcard" style="--tc:'+(t.color||'#181946')+'" onclick="tmOpen(\''+esc(t.name)+'\')">'+tlogo(t,58)+'<div class="tn">'+esc(t.name)+'</div><div class="tb">'+esc(t.branch||'—')+'</div><div class="tstats"><div><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div><div class="n">'+((t.coaches||[]).length)+'</div><div class="l">مدرب</div></div><div><div class="n">'+x.tours.length+'</div><div class="l">بطولة</div></div></div></div>';
+      return '<div class="tcard" style="--tc:'+(t.color||'#181946')+';position:relative" onclick="tmOpen(\''+esc(t.name)+'\')"><button onclick="event.stopPropagation();deleteTeamCompletely(\''+esc(t.name)+'\')" title="حذف الفريق نهائياً" style="position:absolute;top:8px;left:8px;z-index:2;background:rgba(221,29,69,.1);color:var(--red);border:none;width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center">'+ic('trash',14)+'</button>'+tlogo(t,58)+'<div class="tn">'+esc(t.name)+'</div><div class="tb">'+esc(t.branch||'—')+'</div><div class="tstats"><div><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div><div class="n">'+((t.coaches||[]).length)+'</div><div class="l">مدرب</div></div><div><div class="n">'+x.tours.length+'</div><div class="l">بطولة</div></div></div></div>';
     }).join('')+'</div>';
     return;
   }
@@ -1432,7 +1430,7 @@ function renderTM(){
   if(!entry){TMVIEW='';renderTM();return;}
   var t=entry.team;
   var h='<button class="btn btn-g btn-sm" style="margin-bottom:1rem" onclick="tmOpen(\'\')">→ كل الفرق</button>';
-  h+='<div class="tp-hero">'+tlogo(t,76)+'<div style="flex:1"><h2>'+esc(t.name)+'</h2><div class="m">'+esc(t.branch||'—')+' • الإداري: '+esc(t.admin||'—')+' • '+esc(t.phone||'—')+'</div></div><button class="btn btn-sm" style="background:rgba(255,255,255,.14);color:#fff" onclick="openET(\''+esc(t.name)+'\')">'+ic('edit',13)+' تعديل</button></div>';
+  h+='<div class="tp-hero">'+tlogo(t,76)+'<div style="flex:1"><h2>'+esc(t.name)+'</h2><div class="m">'+esc(t.branch||'—')+' • الإداري: '+esc(t.admin||'—')+' • '+esc(t.phone||'—')+'</div></div><div style="display:flex;gap:.4rem"><button class="btn btn-sm" style="background:rgba(255,255,255,.14);color:#fff" onclick="openET(\''+esc(t.name)+'\')">'+ic('edit',13)+' تعديل</button><button class="btn btn-sm" style="background:rgba(221,29,69,.9);color:#fff" onclick="deleteTeamCompletely(\''+esc(t.name)+'\')">'+ic('trash',13)+' حذف</button></div></div>';
   /* tournament membership: chips + add-to-tournament */
   h+='<div class="sec-t" style="margin:1.2rem 0 .6rem"><div class="bar"></div><h2 style="font-size:14px">البطولات المشارِك فيها</h2></div>';
   if(entry.tours.length)h+='<div style="margin-bottom:.6rem">'+entry.tours.map(function(tn){return '<span class="cat-pill" style="cursor:default">'+ic('trophy',12)+' '+esc(tn)+' <button onclick="removeTeamFromTournament(\''+esc(t.name)+'\',\''+esc(tn)+'\')" style="border:none;background:none;color:var(--red);cursor:pointer;font-weight:700;margin-inline-start:4px">✕</button></span>';}).join('')+'</div>';
@@ -1498,6 +1496,26 @@ function removeTeamFromTournament(name,tourName){
   tour.teams=(tour.teams||[]).filter(function(t){return t.name!==name;});
   logA('إزالة فريق '+name+' من بطولة '+tourName,'x','#DD1D45');
   sv();renderTM();hydrateIcons(g('TM'));
+}
+function deleteTeamCompletely(name){
+  if(!confirm('سيُحذف الفريق «'+name+'» نهائياً من كل البطولات ومن حسابات الإداري والمدربين.\nملاحظة: النتائج والمباريات السابقة تبقى محفوظة كما هي.\n\nهل أنت متأكد؟ لا يمكن التراجع.'))return;
+  /* remove team from all tournaments (matches/results are preserved untouched) */
+  (DB.tournaments||[]).forEach(function(tr){
+    tr.teams=(tr.teams||[]).filter(function(t){return t.name!==name;});
+    tr.regs=(tr.regs||[]).filter(function(r){return r.name!==name;});
+  });
+  /* remove from global store */
+  DB.teams=(DB.teams||[]).filter(function(t){return t.name!==name;});
+  /* delete admin + coach accounts for this team (local + cloud) */
+  var toDel=DB.users.filter(function(u){return u.team===name&&['admin-team','coach','player'].indexOf(u.role)>-1;});
+  toDel.forEach(function(u){if(FA.enabled)faSync(FA.deleteUser(u.id));});
+  var delIds=toDel.map(function(u){return u.id;});
+  DB.users=DB.users.filter(function(u){return delIds.indexOf(u.id)<0;});
+  /* remove pending join reqs tied to this academy */
+  DB.joinReqs=(DB.joinReqs||[]).filter(function(r){return r.team!==name;});
+  logA('حذف فريق نهائياً: '+name+' (النتائج السابقة محفوظة)','trash','#DD1D45');
+  addN('تم حذف الفريق '+name+' نهائياً','النتائج السابقة بقيت محفوظة','warning');
+  TMVIEW='';sv();renderTM();hydrateIcons(g('TM'));
 }
 function tmAddToTour(name){
   var sel=g('tm-add-tour');if(!sel||!sel.value)return;
@@ -1659,43 +1677,54 @@ function openNewT(){
   document.querySelectorAll('#nt-sys button').forEach(function(b){b.classList.toggle('on',b.dataset.v==='league');});
   var bc=[];for(var i=1;i<=8;i++)bc.push(String(i));
   fillSel('nt-bcount',bc,'اختر العدد');
-  var tc=[];for(var j=2;j<=24;j++)tc.push(String(j));
-  fillSel('nt-tcount',tc,'اختر العدد');
-  g('nt-births').innerHTML='';g('nt-teams').innerHTML='';
+  g('nt-births').innerHTML='';
   g('ntMod').classList.add('open');hydrateIcons(g('ntMod'));
 }
 function ntSys(v,el){NTSYS=v;document.querySelectorAll('#nt-sys button').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
 function ntBuildBirths(){
   var n=parseInt(gv('nt-bcount'))||0,wrap=g('nt-births');
-  var old=[];wrap.querySelectorAll('select').forEach(function(s){old.push(s.value);});
+  var oldB=[],oldC=[];wrap.querySelectorAll('select.nt-b').forEach(function(s){oldB.push(s.value);});wrap.querySelectorAll('select.nt-bc').forEach(function(s){oldC.push(s.value);});
   if(!n){wrap.innerHTML='';return;}
-  var h='<div class="cat-wrap" style="margin-bottom:.7rem"><div class="cw-t">'+ic('cal',13)+' المواليد المشاركة</div>';
-  for(var i=0;i<n;i++)h+='<div class="fg" style="margin-bottom:.5rem"><label>المواليد '+(i+1)+' *</label><select class="nt-b">'+catYearOptsAll()+'</select></div>';
+  var cnt='';for(var j=2;j<=30;j++)cnt+='<option value="'+j+'">'+j+'</option>';
+  var h='<div class="cat-wrap" style="margin-bottom:.7rem"><div class="cw-t">'+ic('cal',13)+' المواليد المشاركة وعدد فرق كل فئة</div>';
+  for(var i=0;i<n;i++)h+='<div class="nt-brow" style="border:1px dashed var(--brd);border-radius:10px;padding:.6rem;margin-bottom:.6rem"><div class="frow" style="margin:0"><div class="fg" style="margin:0"><label>المواليد '+(i+1)+' *</label><select class="nt-b" onchange="ntBuildTeamPicks(this)">'+catYearOptsAll()+'</select></div><div class="fg" style="margin:0;max-width:130px"><label>عدد الفرق *</label><select class="nt-bc" onchange="ntBuildTeamPicks(this)"><option value="">اختر</option>'+cnt+'</select></div></div><div class="nt-bteams" style="margin-top:.5rem"></div></div>';
   wrap.innerHTML=h+'</div>';
-  var sels=wrap.querySelectorAll('select');for(var k=0;k<sels.length;k++){if(old[k])sels[k].value=old[k];}
+  var sb=wrap.querySelectorAll('select.nt-b');for(var k=0;k<sb.length;k++){if(oldB[k])sb[k].value=oldB[k];}
+  var sc=wrap.querySelectorAll('select.nt-bc');for(var m=0;m<sc.length;m++){if(oldC[m])sc[m].value=oldC[m];}
+  sb.forEach(function(s){ntBuildTeamPicks(s);});
   hydrateIcons(wrap);
 }
-function ntBuildTeams(){
-  var n=parseInt(gv('nt-tcount'))||0,wrap=g('nt-teams');
-  var old=[];wrap.querySelectorAll('select').forEach(function(s){old.push(s.value);});
-  if(!n){wrap.innerHTML='';return;}
+/* under each birth row: render optional team-name pickers = count (choose some now, rest later) */
+function ntBuildTeamPicks(el){
+  var row=el.closest('.nt-brow');if(!row)return;
+  var birth=row.querySelector('select.nt-b').value;
+  var count=parseInt(row.querySelector('select.nt-bc').value)||0;
+  var box=row.querySelector('.nt-bteams');
+  var oldv=[];box.querySelectorAll('select.nt-tp').forEach(function(s){oldv.push(s.value);});
+  if(!count){box.innerHTML='';return;}
+  /* candidate teams: global teams that have this birth category (or any if none) */
   var names=allAcademyNames();
-  var opts='<option value="">— اختر الفريق —</option>'+names.map(function(x){return '<option>'+esc(x)+'</option>';}).join('');
-  var h='<div class="cat-wrap" style="margin-bottom:.7rem"><div class="cw-t">'+ic('trophy',13)+' الفرق المشاركة</div>';
-  if(!names.length)h+='<div style="font-size:11.5px;color:var(--gray);padding:.2rem 0 .5rem">لا توجد أكاديميات مسجلة بعد — يمكنك إنشاء البطولة الآن وإضافة الفرق لاحقاً من إعدادات البطولة.</div>';
-  for(var i=0;i<n;i++)h+='<div class="fg" style="margin-bottom:.5rem"><label>الفريق '+(i+1)+'</label><select class="nt-t">'+opts+'</select></div>';
-  wrap.innerHTML=h+'</div>';
-  var sels=wrap.querySelectorAll('select');for(var k=0;k<sels.length;k++){if(old[k])sels[k].value=old[k];}
-  hydrateIcons(wrap);
+  var opts='<option value="">— (يُضاف لاحقاً) —</option>'+names.map(function(x){return '<option>'+esc(x)+'</option>';}).join('');
+  var h='<div style="font-size:11px;color:var(--gray);margin-bottom:.35rem">اختر الفرق المتوفّرة الآن (اختياري) — الباقي يُضاف لاحقاً من «الفرق»:</div>';
+  for(var i=0;i<count;i++)h+='<select class="nt-tp" style="width:100%;padding:7px 10px;border:1.5px solid var(--brd);border-radius:8px;font-size:12px;margin-bottom:.3rem">'+opts+'</select>';
+  box.innerHTML=h;
+  var sels=box.querySelectorAll('select.nt-tp');for(var k=0;k<sels.length;k++){if(oldv[k])sels[k].value=oldv[k];}
 }
 function createT(){
   var name=gv('nt-name');
   if(!name){g('nt-err').textContent='يرجى إدخال اسم البطولة';fl('nt-err');return;}
-  var births=[];document.querySelectorAll('#nt-births select.nt-b').forEach(function(s){if(s.value&&births.indexOf(s.value)<0)births.push(s.value);});
-  if(!births.length){g('nt-err').textContent='يرجى اختيار عدد المواليد وتحديدها';fl('nt-err');return;}
-  var picks=[];document.querySelectorAll('#nt-teams select.nt-t').forEach(function(s){if(s.value&&picks.indexOf(s.value)<0)picks.push(s.value);});
-  var t={id:uid(),name:name,subtitle:gv('nt-sub'),system:NTSYS,icon:TICONS[DB.tournaments.length%TICONS.length],img:gv('nt-img'),color:COLS[DB.tournaments.length%COLS.length],birthYears:births,partTeams:picks,visible:g('nt-vis').checked,regOpen:g('nt-reg').checked,regs:[],teams:[],matches:[]};
-  /* copy chosen academies (with only the allowed birth categories) into this tournament */
+  var births=[],teamCounts={},picks=[],rows=document.querySelectorAll('#nt-births .nt-brow'),bad=false;
+  rows.forEach(function(r){
+    var b=r.querySelector('select.nt-b').value,c=r.querySelector('select.nt-bc').value;
+    if(!b){bad='b';return;}
+    if(!c){bad='c';return;}
+    if(births.indexOf(b)<0){births.push(b);teamCounts[b]=parseInt(c);}
+    r.querySelectorAll('select.nt-tp').forEach(function(s){if(s.value&&picks.indexOf(s.value)<0)picks.push(s.value);});
+  });
+  if(!births.length||bad==='b'){g('nt-err').textContent='يرجى اختيار المواليد لكل فئة';fl('nt-err');return;}
+  if(bad==='c'){g('nt-err').textContent='يرجى تحديد عدد الفرق لكل فئة مواليد';fl('nt-err');return;}
+  var t={id:uid(),name:name,subtitle:gv('nt-sub'),system:NTSYS,icon:TICONS[DB.tournaments.length%TICONS.length],img:gv('nt-img'),color:COLS[DB.tournaments.length%COLS.length],birthYears:births,teamCounts:teamCounts,partTeams:picks,visible:g('nt-vis').checked,regOpen:g('nt-reg').checked,regs:[],teams:[],matches:[]};
+  /* copy chosen academies (only allowed birth categories) into this tournament */
   picks.forEach(function(nm){
     var src=gTeam(nm)||null;
     if(!src)DB.tournaments.forEach(function(tr){(tr.teams||[]).forEach(function(x){if(x.name===nm&&!src)src=x;});});
@@ -1706,7 +1735,8 @@ function createT(){
       players:(src.players||[]).filter(function(p){return births.indexOf(p.cat)>-1;}).map(function(p){return Object.assign({},p,{goals:0,matches:0});})});
   });
   DB.tournaments.push(t);
-  logA('إنشاء بطولة: '+name+' ('+births.length+' مواليد، '+picks.length+' فريق)','trophy','#DD1D45');
+  var totalTeams=births.reduce(function(s,b){return s+(teamCounts[b]||0);},0);
+  logA('إنشاء بطولة: '+name+' ('+births.length+' مواليد، '+totalTeams+' فريق مخطط، '+picks.length+' مضاف الآن)','trophy','#DD1D45');
   sv();g('ntMod').classList.remove('open');showTS();
 }
 
@@ -2943,8 +2973,8 @@ function admSettingsHTML(){
   h+='<div class="tgl" style="max-width:460px"><div><div class="tt">ظهور البطولة</div><div class="ts2">تكون ظاهرة لغير مدير النظام</div></div><label class="sw"><input type="checkbox" id="se-vis"'+(t.visible?' checked':'')+'><span></span></label></div>';
   h+='<div class="tgl" style="max-width:460px"><div><div class="tt">قيد التسجيل مفتوح</div><div class="ts2">السماح بتسجيل الفرق والمدربين</div></div><label class="sw"><input type="checkbox" id="se-reg"'+(t.regOpen?' checked':'')+'><span></span></label></div>';
   h+='<button class="btn btn-r" onclick="saveSettings()">حفظ الإعدادات</button> <button class="btn btn-o" onclick="delTournament()" style="color:var(--red)">'+ic('trash',13)+' حذف البطولة</button><div class="msg ok" id="se-ok">تم الحفظ</div>';
-  h+='<div style="margin-top:1.4rem;padding:1rem 1.1rem;border:1.5px solid var(--brd);border-radius:var(--r2);background:#fff;max-width:500px"><div style="font-weight:700;font-size:13px;margin-bottom:.5rem">'+ic('cal',13)+' مواليد هذه البطولة</div>';
-  h+='<div>'+((t.birthYears||[]).length?(t.birthYears||[]).map(function(x){return '<span class="cat-pill" style="cursor:default">'+esc(x)+'</span>';}).join(''):'<span style="font-size:11.5px;color:var(--gray)">لم تُحدَّد — تظهر كل المواليد</span>')+'</div>';
+  h+='<div style="margin-top:1.4rem;padding:1rem 1.1rem;border:1.5px solid var(--brd);border-radius:var(--r2);background:#fff;max-width:500px"><div style="font-weight:700;font-size:13px;margin-bottom:.5rem">'+ic('cal',13)+' مواليد هذه البطولة وعدد فرق كل فئة</div>';
+  h+='<div>'+((t.birthYears||[]).length?(t.birthYears||[]).map(function(x){var c=(t.teamCounts||{})[x];return '<span class="cat-pill" style="cursor:default">'+esc(x)+(c?' — '+c+' فرق':'')+'</span>';}).join(''):'<span style="font-size:11.5px;color:var(--gray)">لم تُحدَّد — تظهر كل المواليد</span>')+'</div>';
   h+='<div style="font-weight:700;font-size:13px;margin:.9rem 0 .5rem">'+ic('trophy',13)+' الفرق المشاركة ('+((t.teams||[]).length)+')</div>';
   h+='<div>'+((t.teams||[]).length?(t.teams||[]).map(function(x){return '<span class="cat-pill" style="cursor:default">'+esc(x.name)+'</span>';}).join(''):'<span style="font-size:11.5px;color:var(--gray)">لا توجد فرق بعد</span>')+'</div></div>';
   var _brs=bRange();
