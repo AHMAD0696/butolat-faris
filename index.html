@@ -1166,7 +1166,7 @@ function upsertGlobalTeam(src){
   g.categories=g.categories||[];
   (src.categories||[]).forEach(function(c){var e=g.categories.find(function(x){return x.name===c.name;});if(e){e.coach=c.coach;e.phone=c.phone;}else g.categories.push(JSON.parse(JSON.stringify(c)));});
   g.players=g.players||[];
-  (src.players||[]).forEach(function(p){var e=g.players.find(function(x){return x.id===p.id;});if(e){['name','nid','number','pos','cat','dob','nat','guard','phone','img','idImg'].forEach(function(k){if(p[k]!==undefined)e[k]=p[k];});}else g.players.push(JSON.parse(JSON.stringify(p)));});
+  (src.players||[]).forEach(function(p){var key=p.idImg||(p.name+'|'+p.cat);var e=g.players.find(function(x){return (x.idImg||(x.name+'|'+x.cat))===key;});if(e){['name','nid','number','pos','cat','dob','nat','guard','phone','img','idImg'].forEach(function(k){if(p[k]!==undefined&&p[k]!=='')e[k]=p[k];});}else g.players.push(JSON.parse(JSON.stringify(p)));});
 }
 function syncGlobalTeams(){(DB.tournaments||[]).forEach(function(tr){(tr.teams||[]).forEach(function(t){upsertGlobalTeam(t);});});}
 /* ================= STORIES ================= */
@@ -2558,7 +2558,7 @@ function rAdmin(){
   g('adm-content').style.display=ok?'block':'none';
   if(!ok)return;
   var tabs;
-  if(CU.role==='admin')tabs=[['regs','inbox','طلبات التسجيل'],['teams','trophy','الفرق المعتمدة'],['teaminfo','card','معلومات الفريق'],['stories','star','الستوريات'],['matches','cal','إضافة مباراة'],['results','chart','إدخال النتائج'],['users','users','المستخدمون'],['pending','clock','طلبات الانضمام'],['settings','edit','إعدادات البطولة'],['log','list','سجل النشاط']];
+  if(CU.role==='admin')tabs=[['regs','inbox','طلبات التسجيل'],['teams','trophy','الفرق المعتمدة'],['teaminfo','card','معلومات الفريق'],['stories','star','الستوريات'],['import','user-plus','استيراد دفعة'],['matches','cal','إضافة مباراة'],['results','chart','إدخال النتائج'],['users','users','المستخدمون'],['pending','clock','طلبات الانضمام'],['settings','edit','إعدادات البطولة'],['log','list','سجل النشاط']];
   else if(CU.role==='organizer')tabs=[['matches','cal','إضافة مباراة'],['results','chart','إدخال النتائج']];
   else tabs=[['mydash','trophy','أكاديميتي'],['teaminfo','card','معلومات الفريق']];
   if(tabs.map(function(t){return t[0];}).indexOf(ATAB)<0)ATAB=tabs[0][0];
@@ -2572,6 +2572,7 @@ function renderATab(){
   else if(ATAB==='teams')c.innerHTML=admTeamsHTML();
   else if(ATAB==='teaminfo')c.innerHTML=admTeamInfoHTML();
   else if(ATAB==='stories'){c.innerHTML=admStoriesHTML();prepStories();}
+  else if(ATAB==='import')c.innerHTML=admImportHTML();
   else if(ATAB==='matches'){c.innerHTML=admMatchHTML();popAM();}
   else if(ATAB==='results'){c.innerHTML=admResHTML();popResM();}
   else if(ATAB==='users'){c.innerHTML=admUsersHTML();if(FA.enabled&&CU.role==='admin'){FA.listUsers().then(function(list){if(list){DB.users=list;if(ATAB==='users'){c.innerHTML=admUsersHTML();hydrateIcons(c);}}}).catch(function(e){console.warn(e);});}}
@@ -2626,6 +2627,129 @@ function delStory(id){
   if(!confirm('حذف هذا الستوري؟'))return;
   DB.stories=(DB.stories||[]).filter(function(s){return s.id!==id;});
   sv();renderATab();
+}
+/* ================= BULK IMPORT (from Excel-derived JSON) ================= */
+function _impNorm(s){return (s||'').toString().trim().replace(/\s+/g,' ');}
+function doImport(data,execute){
+  var R={academiesMatched:0,academiesMissing:[],playersAdded:0,playersSkipped:0,coachesAdded:0,coachesSkipped:0,catsAdded:0,tournamentsUsed:{},errors:[]};
+  if(!data||!data.academies){R.errors.push('صيغة الملف غير صحيحة');return R;}
+  var usedUsernames={};DB.users.forEach(function(u){usedUsernames[u.username]=u.id;});
+  var coachByTeam={};(data.coaches||[]).forEach(function(c){
+    var nm=_impNorm(c.name);if(!nm||nm==='لا يوجد')return;
+    var key=_impNorm(c.team);(coachByTeam[key]=coachByTeam[key]||[]).push({tour:_impNorm(c.tour),cat:_impNorm(c.cat),name:nm,phone:c.phone||'',pin:(c.pin||'1111').toString()});
+  });
+  Object.keys(data.academies).forEach(function(aName){
+    var acad=data.academies[aName];var gname=_impNorm(aName);
+    var gt=gTeam(gname);
+    if(!gt){R.academiesMissing.push(gname);return;}
+    R.academiesMatched++;
+    var players=acad.players||[];
+    /* coaches for this academy */
+    var coaches=coachByTeam[gname]||[];
+    /* cat -> {tour -> coachName} */
+    var catCoach={};coaches.forEach(function(c){catCoach[c.cat]=catCoach[c.cat]||{};catCoach[c.cat][c.tour]=c.name;});
+    /* ensure categories on global team */
+    var allCats={};players.forEach(function(p){allCats[_impNorm(p.cat)]=1;});
+    if(execute){
+      gt.categories=gt.categories||[];
+      Object.keys(allCats).forEach(function(cn){
+        if(!gt.categories.some(function(c){return c.name===cn;})){
+          var anyCoach='';var cc=catCoach[cn];if(cc){anyCoach=cc[Object.keys(cc)[0]]||'';}
+          gt.categories.push({name:cn,coach:anyCoach,phone:''});R.catsAdded++;
+        }
+      });
+      gt.players=gt.players||[];
+    }
+    /* create coach accounts (unique) */
+    var seenCoach={};
+    coaches.forEach(function(c){
+      if(seenCoach[c.name])return;seenCoach[c.name]=1;
+      if(usedUsernames[c.name]){R.coachesSkipped++;return;}
+      if(execute){
+        var cid=uid();
+        gt.coaches=gt.coaches||[];
+        if(!gt.coaches.some(function(x){return x.name===c.name;}))gt.coaches.push({id:cid,name:c.name,phone:c.phone,pin:c.pin,account:true});
+        var nu={id:'u_'+cid,name:c.name,username:c.name,password:c.pin,role:'coach',team:gname,coachId:cid,phone:c.phone};
+        DB.users.push(nu);usedUsernames[c.name]=nu.id;
+        if(FA.enabled)faSync(FA.upsertUser(nu,c.pin));
+      }
+      R.coachesAdded++;
+    });
+    /* players: per-tournament rosters (stable key = idImg or name+cat) */
+    function _pk(nm,cat,idImg){return idImg||(nm+'|'+cat);}
+    var tourGroups={};
+    players.forEach(function(p){
+      var cat=_impNorm(p.cat),nm=_impNorm(p.name),tour=_impNorm(p.tour);
+      var guard=(p.guard&&p.guard!=='0'&&p.guard!=='00')?p.guard:'';
+      (tourGroups[tour]=tourGroups[tour]||[]).push({name:nm,cat:cat,number:p.number||'',pos:_impNorm(p.status),dob:p.dob||'',guard:guard,idImg:p.idImg||''});
+    });
+    Object.keys(tourGroups).forEach(function(tourName){
+      var tr=execute?DB.tournaments.find(function(x){return x.name===tourName;}):null;
+      if(execute&&!tr){R.errors.push('بطولة غير موجودة: '+tourName);return;}
+      var cats=[];tourGroups[tourName].forEach(function(p){if(cats.indexOf(p.cat)<0)cats.push(p.cat);});
+      var tt=null;
+      if(execute){
+        tr.birthYears=tr.birthYears||[];cats.forEach(function(cn){if(tr.birthYears.indexOf(cn)<0)tr.birthYears.push(cn);});
+        tt=(tr.teams||[]).find(function(x){return x.name===gname;});
+        if(!tt){tt={id:uid(),name:gname,branch:gt.branch||'الرياض',admin:gt.admin||'',phone:gt.phone||'',color:COLS[(tr.teams||[]).length%COLS.length],img:gt.img||'',coaches:(gt.coaches||[]).slice(),categories:[],players:[]};tr.teams=tr.teams||[];tr.teams.push(tt);}
+        tt.categories=tt.categories||[];tt.players=tt.players||[];
+        cats.forEach(function(cn){if(!tt.categories.some(function(c){return c.name===cn;})){var coachNm=(catCoach[cn]&&catCoach[cn][tourName])||'';tt.categories.push({name:cn,coach:coachNm,phone:''});}});
+      }
+      tourGroups[tourName].forEach(function(p){
+        var key=_pk(p.name,p.cat,p.idImg);
+        var dup=execute&&tt.players.some(function(x){return _pk(x.name,x.cat,x.idImg)===key;});
+        if(dup){R.playersSkipped++;return;}
+        R.playersAdded++;
+        if(execute){
+          tt.players.push({id:uid(),name:p.name,cat:p.cat,number:p.number,pos:p.pos,dob:p.dob,guard:p.guard,nid:'',nat:'',phone:'',img:'',idImg:p.idImg,goals:0,matches:0});
+          /* mirror into global (dedupe by key) */
+          if(!gt.players.some(function(x){return _pk(x.name,x.cat,x.idImg)===key;}))
+            gt.players.push({id:uid(),name:p.name,cat:p.cat,number:p.number,pos:p.pos,dob:p.dob,guard:p.guard,nid:'',nat:'',phone:'',img:'',idImg:p.idImg,goals:0,matches:0});
+        }
+        R.tournamentsUsed[tourName]=(R.tournamentsUsed[tourName]||0)+1;
+      });
+    });
+  });
+  if(execute){logA('استيراد دفعة: '+R.playersAdded+' لاعب، '+R.coachesAdded+' مدرب، '+R.academiesMatched+' أكاديمية','user-plus','#16a34a');sv();}
+  return R;
+}
+var IMPDATA=null;
+function admImportHTML(){
+  var h='<div class="sec-t" style="margin-bottom:.8rem"><div class="bar"></div><h2 style="font-size:14px">استيراد دفعة (لاعبين ومدربين)</h2></div>';
+  h+='<div class="rform" style="max-width:620px"><div style="font-size:12.5px;color:var(--gray);margin-bottom:.8rem;line-height:1.9">ارفع ملف الاستيراد (JSON) الذي جهّزناه من ملف الإكسل. سيُطابق الأكاديميات بالاسم ويضيف الفئات واللاعبين وحسابات المدربين، ويوزّعهم على البطولات. <strong>لن يكرّر أي لاعب أو مدرب موجود مسبقاً.</strong></div>';
+  h+='<div class="fg"><label>ملف الاستيراد (import_data.json)</label><input type="file" accept=".json,application/json" id="imp-file" onchange="impLoad(this)"></div>';
+  h+='<div id="imp-preview"></div>';
+  h+='<div style="display:flex;gap:.5rem;margin-top:.6rem"><button class="btn btn-g btn-sm" onclick="impDoPreview()" id="imp-prev-btn" disabled>معاينة</button><button class="btn btn-r btn-sm" onclick="impExecute()" id="imp-exec-btn" disabled>تنفيذ الاستيراد</button></div>';
+  h+='<div class="msg ok" id="imp-ok">تم الاستيراد بنجاح</div><div class="msg err" id="imp-err">تعذّر الاستيراد</div>';
+  h+='</div>';
+  return h;
+}
+function impLoad(inp){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){try{IMPDATA=JSON.parse(rd.result);g('imp-prev-btn').disabled=false;g('imp-exec-btn').disabled=true;g('imp-preview').innerHTML='<div style="font-size:12px;color:var(--green);margin-top:.5rem">✓ تم تحميل الملف. اضغط «معاينة».</div>';}catch(e){g('imp-err').textContent='ملف غير صالح';fl('imp-err');IMPDATA=null;}};
+  rd.readAsText(f);
+}
+function impDoPreview(){
+  if(!IMPDATA)return;
+  var R=doImport(IMPDATA,false);
+  var h='<div class="at-wrap" style="margin-top:.8rem"><table class="at"><tbody>';
+  h+='<tr><td>أكاديميات مطابقة</td><td><strong>'+R.academiesMatched+'</strong></td></tr>';
+  h+='<tr><td>لاعبون سيُضافون</td><td><strong style="color:var(--green)">'+R.playersAdded+'</strong></td></tr>';
+  h+='<tr><td>مدربون سيُضافون</td><td><strong style="color:var(--green)">'+R.coachesAdded+'</strong></td></tr>';
+  if(R.coachesSkipped)h+='<tr><td>مدربون موجودون (تخطّي)</td><td>'+R.coachesSkipped+'</td></tr>';
+  h+='<tr><td>البطولات</td><td>'+Object.keys(R.tournamentsUsed).map(esc).join('، ')+'</td></tr>';
+  h+='</tbody></table></div>';
+  if(R.academiesMissing.length)h+='<div style="font-size:12px;color:var(--red);margin-top:.5rem">⚠️ أكاديميات في الملف غير موجودة في النظام (لن تُستورد): '+R.academiesMissing.map(esc).join('، ')+'<br>أنشئها أولاً بنفس الاسم.</div>';
+  if(R.errors.length)h+='<div style="font-size:12px;color:var(--red);margin-top:.5rem">'+R.errors.map(esc).join('<br>')+'</div>';
+  g('imp-preview').innerHTML=h;g('imp-exec-btn').disabled=R.playersAdded===0&&R.coachesAdded===0;
+}
+function impExecute(){
+  if(!IMPDATA)return;
+  if(!confirm('سيتم استيراد اللاعبين والمدربين إلى النظام. متابعة؟'))return;
+  var R=doImport(IMPDATA,true);
+  g('imp-preview').innerHTML='<div style="margin-top:.8rem;font-size:13px;color:var(--green);font-weight:700">✓ تم الاستيراد: '+R.playersAdded+' لاعب، '+R.coachesAdded+' مدرب، عبر '+R.academiesMatched+' أكاديمية.</div>'+(R.academiesMissing.length?'<div style="font-size:12px;color:var(--red);margin-top:.4rem">لم تُطابَق: '+R.academiesMissing.map(esc).join('، ')+'</div>':'');
+  fl('imp-ok');g('imp-exec-btn').disabled=true;
 }
 function admTeamInfoHTML(){
   var teams=(T().teams||[]);
