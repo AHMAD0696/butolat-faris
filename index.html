@@ -1975,6 +1975,7 @@ function rSch(rnd){
 /* ================= RESULTS ================= */
 function rRes(elId,limit){
   var el=g(elId);if(!el)return;
+  var canEdit=CU&&['admin','organizer'].indexOf(CU.role)>-1;
   var done=(T().matches||[]).filter(function(m){return m.done;}).reverse();
   if(limit)done=done.slice(0,limit);
   if(!done.length){el.innerHTML=emptyBox('chart','لا توجد نتائج بعد');return;}
@@ -1984,9 +1985,51 @@ function rRes(elId,limit){
     var cd='';
     if(m.cards&&m.cards.length)cd='<div class="gl-list">'+m.cards.map(function(c){return '<span class="card-tag"><span class="cardpip '+(c.type==='red'?'r':'y')+'"></span>'+esc(c.name)+(c.min?' '+esc(c.min)+"'":'')+'</span>';}).join('')+'</div>';
     var meta=[m.mvp?ic('star',12)+' '+esc(m.mvp):'',m.cat?esc(m.cat):'',esc(m.round||'')].filter(Boolean).join(' • ');
-    return '<div class="res-card"><div class="res-top"><div class="stm">'+tlogoN(m.t1)+esc(m.t1)+'</div><span class="rscore">'+(m.s1||0)+' - '+(m.s2||0)+'</span><div class="stm">'+esc(m.t2)+tlogoN(m.t2)+'</div><div class="res-meta">'+meta+'</div></div>'+gl+cd+'</div>';
+    var edit=canEdit?'<div style="display:flex;gap:.4rem;margin-top:.6rem;justify-content:flex-start"><button class="btn btn-o btn-sm" onclick="editResult(\''+m.id+'\')">'+ic('edit',12)+' تعديل</button><button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="deleteResult(\''+m.id+'\')">'+ic('trash',12)+' حذف</button></div>':'';
+    return '<div class="res-card"><div class="res-top"><div class="stm">'+tlogoN(m.t1)+esc(m.t1)+'</div><span class="rscore">'+(m.s1||0)+' - '+(m.s2||0)+'</span><div class="stm">'+esc(m.t2)+tlogoN(m.t2)+'</div><div class="res-meta">'+meta+'</div></div>'+gl+cd+edit+'</div>';
   }).join('');
   hydrateIcons(el);
+}
+/* reverse a match's stat effects (player goals + appearances) */
+function _reverseMatchStats(m){
+  if(!m||!m.done)return;
+  var t1=(T().teams||[]).find(function(x){return x.name===m.t1;});
+  var t2=(T().teams||[]).find(function(x){return x.name===m.t2;});
+  (m.goals||[]).forEach(function(go){
+    var t=go.team===m.t1?t1:t2;if(!t)return;
+    var p=(t.players||[]).find(function(x){return x.name===go.name&&(!m.cat||x.cat===m.cat);})||(t.players||[]).find(function(x){return x.name===go.name;});
+    if(p&&p.goals)p.goals=Math.max(0,(p.goals||0)-1);
+  });
+  [t1,t2].forEach(function(t){if(t)(t.players||[]).forEach(function(p){if((!m.cat||p.cat===m.cat)&&p.matches)p.matches=Math.max(0,(p.matches||0)-1);});});
+}
+function editResult(id){
+  var m=(T().matches||[]).find(function(x){return x.id===id;});if(!m)return;
+  /* go to admin results tab and load this match into the form */
+  gP('admin');ATAB='results';renderATab();
+  setTimeout(function(){
+    var sel=g('rm-match');if(!sel)return;
+    /* ensure this (done) match is selectable */
+    if(!Array.prototype.some.call(sel.options,function(o){return o.value===id;})){
+      var opt=document.createElement('option');opt.value=id;opt.textContent=(m.round||'')+(m.cat?' ('+m.cat+')':'')+': '+m.t1+' × '+m.t2+' (تعديل)';sel.insertBefore(opt,sel.firstChild.nextSibling);
+    }
+    sel.value=id;fillRes();
+    /* prefill existing values */
+    g('rm-s1').value=m.s1||0;g('rm-s2').value=m.s2||0;syncGoals();
+    var g1=(m.goals||[]).filter(function(x){return x.team===m.t1;}),g2=(m.goals||[]).filter(function(x){return x.team===m.t2;});
+    var r1=g('gl1-r').querySelectorAll('.g-row');g1.forEach(function(go,i){if(r1[i]){r1[i].querySelector('select').value=go.name;r1[i].querySelector('.min').value=go.min||'';}});
+    var r2=g('gl2-r').querySelectorAll('.g-row');g2.forEach(function(go,i){if(r2[i]){r2[i].querySelector('select').value=go.name;r2[i].querySelector('.min').value=go.min||'';}});
+    g('cards-r').innerHTML='';(m.cards||[]).forEach(function(c){addCard(c.type);var rows=g('cards-r').querySelectorAll('.card-row');var last=rows[rows.length-1];if(last){last.querySelector('select').value=c.name;last.querySelector('.min').value=c.min||'';}});
+    if(g('rm-mvp'))g('rm-mvp').value=m.mvp||'';
+    try{g('rm-match').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
+  },60);
+}
+function deleteResult(id){
+  var m=(T().matches||[]).find(function(x){return x.id===id;});if(!m)return;
+  if(!confirm('حذف نتيجة هذه المباراة؟ ستعود المباراة «غير مُدخلة» وتُحدَّث الإحصائيات.'))return;
+  _reverseMatchStats(m);
+  m.done=false;m.s1=0;m.s2=0;m.goals=[];m.cards=[];m.mvp='';
+  logA('حذف نتيجة: '+m.t1+' ضد '+m.t2,'trash','#DD1D45');
+  sv();rRes('res-b');renderATab&&renderATab();
 }
 
 /* ================= STATS (scorers + MVP + best player, per category) ================= */
@@ -3020,6 +3063,8 @@ function saveResult(){
   if(g1.some(function(x){return !x.name;})||g2.some(function(x){return !x.name;})){
     g('rm-err').textContent='يرجى إدخال أسماء جميع مسجّلي الأهداف قبل الحفظ';fl('rm-err');return;
   }
+  /* if editing an already-entered match, reverse its previous stat effects first */
+  if(m.done)_reverseMatchStats(m);
   m.s1=s1;m.s2=s2;m.done=true;m.mvp=gv('rm-mvp');
   m.goals=g1.map(function(x){return {name:x.name,min:x.min,team:m.t1};}).concat(g2.map(function(x){return {name:x.name,min:x.min,team:m.t2};}));
   m.cards=getCards();
@@ -3033,7 +3078,7 @@ function saveResult(){
   });
   [t1,t2].forEach(function(t){if(t)(t.players||[]).forEach(function(p){if(!m.cat||p.cat===m.cat)p.matches=(p.matches||0)+1;});});
   logA('نتيجة: '+m.t1+' '+s1+'-'+s2+' '+m.t2,'chart','#16a34a');
-  addN('نتيجة جديدة',m.t1+' '+s1+' - '+s2+' '+m.t2,'success');
+  addN('نتيجة محفوظة',m.t1+' '+s1+' - '+s2+' '+m.t2,'success');
   sv();fl('rm-ok');popResM();
   g('gl1-r').innerHTML='<div class="gl-hint">حدّد عدد الأهداف بالأعلى</div>';
   g('gl2-r').innerHTML='<div class="gl-hint">حدّد عدد الأهداف بالأعلى</div>';
