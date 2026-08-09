@@ -1004,6 +1004,45 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
 #cfMod .mbox{box-shadow:0 24px 60px rgba(0,0,0,.5)}
 .cf-ic{width:46px;height:46px;border-radius:50%;background:rgba(221,29,69,.12);color:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto}
 
+/* ============ MOBILE NAV DRAWER ============ */
+@media(max-width:920px){
+  #APP .nav,#TD .nav,#NT .nav{display:flex;gap:.6rem;padding:0 .8rem;height:56px}
+  .nav .nav-links,.nav .hmb{display:none!important}
+  .mnav-btn{display:flex;flex-direction:column;justify-content:center;gap:4.5px;width:40px;height:40px;padding:0 9px;border:none;background:rgba(255,255,255,.1);border-radius:11px;cursor:pointer;flex-shrink:0}
+  .mnav-btn span{display:block;height:2px;background:rgba(255,255,255,.95);border-radius:2px;transition:.2s}
+  .mnav-btn span:nth-child(2){width:70%}
+  .mnav-t{flex:1;min-width:0;color:#fff;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:start}
+  .mnav-ov{position:fixed;inset:0;background:rgba(6,7,25,.6);backdrop-filter:blur(2px);z-index:98;opacity:0;pointer-events:none;transition:opacity .22s}
+  .mnav-ov.on{opacity:1;pointer-events:auto}
+  .sbar{position:fixed;top:0;inset-inline-end:0;height:100dvh;width:min(84vw,290px);background:var(--navy);z-index:99;
+        display:flex;flex-direction:column;padding:1rem .8rem .9rem;box-shadow:-8px 0 30px rgba(0,0,0,.4);
+        transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+  html[dir="ltr"] .sbar{transform:translateX(-100%)}
+  .sbar.open{transform:none}
+  .sb-brand{display:flex;padding:.2rem .3rem .9rem;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:.7rem}
+  .sb-links{display:flex;flex-direction:column;gap:3px;flex:1}
+  .sb-l{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:12px;min-height:46px}
+  .sb-t{display:block!important;font-size:13.5px}
+  .sb-hd{display:block;font-size:10px;letter-spacing:1px}
+  .sb-foot{margin-top:.8rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:5px}
+  .sb-foot .nav-r{display:flex;flex-direction:column;align-items:stretch;gap:5px;margin:0;width:100%}
+  .sb-foot .chip{width:100%;justify-content:flex-start;padding:9px 12px}
+  .chip-name,.chip-role{display:block!important}
+  .sb-foot .nbtn,.sb-foot .btnav,.sb-foot .lgo{width:100%;justify-content:flex-start;padding:10px 12px;border-radius:11px}
+  .thm{width:100%;justify-content:flex-start;background:rgba(255,255,255,.06)}
+  .thm .thm-t{display:inline!important}
+}
+/* جدول الترتيب: كل الأعمدة مع تمرير أفقي وعمود الفريق ثابت */
+@media(max-width:920px){
+  .stand{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .st-row{grid-template-columns:30px minmax(120px,1fr) repeat(var(--cols,4),38px);min-width:max-content;padding:10px 12px}
+  .st-row .hm{display:flex!important;align-items:center;justify-content:center}
+  .st-row .tm{position:sticky;inset-inline-start:0;background:inherit;z-index:1}
+  .st-row.hd .tm{background:var(--navy)}
+  .st-row .c{font-size:11.5px}
+  .stand::-webkit-scrollbar{display:none}
+}
+
 /* ============ MOBILE (all systems) ============ */
 @media(max-width:640px){
   input,select,textarea{font-size:16px}
@@ -3776,6 +3815,50 @@ function welcomeHTML(sub){
     +'<div class="wlc-meta">'+(role?'<span class="wlc-role">'+ic('shield',11)+' '+esc(role)+'</span>':'')
     +'<span class="wlc-dt">'+ic('cal',11)+' '+esc(dt)+'</span></div></div>';
 }
+
+/* ---- درج التنقل على الجوال ---- */
+function ensureDrawer(root,sb,nav){
+  if(!nav.querySelector('.mnav-btn')){
+    var b=document.createElement('button');
+    b.className='mnav-btn';b.setAttribute('aria-label','القائمة');
+    b.innerHTML='<span></span><span></span><span></span>';
+    b.onclick=function(e){e.stopPropagation();openDrawer(sb);};
+    nav.insertBefore(b,nav.firstChild);
+  }
+  if(!nav.querySelector('.mnav-t')){
+    var t=document.createElement('div');
+    t.className='mnav-t';
+    t.innerHTML='<b id="'+sb.id+'-mt">'+esc((typeof T==='function'&&T()&&T().name)?T().name:'أكاديمية فارس')+'</b>';
+    nav.appendChild(t);
+  }
+  if(!root.querySelector('.mnav-ov')){
+    var ov=document.createElement('div');
+    ov.className='mnav-ov';ov.onclick=function(){closeDrawer(sb);};
+    root.appendChild(ov);
+  }
+  var lbl=g(sb.id+'-mt');
+  if(lbl){
+    var nm=(root.id==='APP'&&typeof T==='function'&&T())?T().name
+      :(root.id==='TD'?'الإدارة الفنية':(root.id==='NT'?'منتخب فارس':'أكاديمية فارس'));
+    lbl.textContent=nm||'أكاديمية فارس';
+  }
+}
+function openDrawer(sb){
+  sb.classList.add('open');
+  var ov=sb.closest('#APP,#TD,#NT');
+  if(ov){var o=ov.querySelector('.mnav-ov');if(o)o.classList.add('on');}
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(sb){
+  if(!sb)return;
+  sb.classList.remove('open');
+  var p=sb.closest('#APP,#TD,#NT');
+  if(p){var o=p.querySelector('.mnav-ov');if(o)o.classList.remove('on');}
+  document.body.style.overflow='';
+}
+function closeAllDrawers(){
+  document.querySelectorAll('.sbar.open').forEach(function(s){closeDrawer(s);});
+}
 function sbarLayout(){
   var wide=window.matchMedia?window.matchMedia('(min-width:921px)').matches:((window.innerWidth||1024)>=921);
   [['APP','sbar'],['TD','td-sbar'],['NT','nt-sbar']].forEach(function(p){
@@ -3807,12 +3890,12 @@ function sbarLayout(){
       var tb2=sb.querySelector('.thm:not(.lng)');if(tb2&&tb2.parentNode!==foot)foot.appendChild(tb2);
       var lb2=sb.querySelector('.lng');if(lb2&&lb2.parentNode!==foot)foot.appendChild(lb2);
     }else{
-      if(logo&&logo.parentNode!==nav)nav.insertBefore(logo,nav.firstChild);
-      if(right&&right.parentNode!==nav)nav.appendChild(right);
-      var tb3=sb.querySelector('.thm:not(.lng)')||root.querySelector('.thm:not(.lng)');
-      if(tb3&&right&&tb3.parentNode!==right)right.insertBefore(tb3,right.firstChild);
-      var lb3=sb.querySelector('.lng')||root.querySelector('.lng');
-      if(lb3&&right&&lb3.parentNode!==right)right.insertBefore(lb3,right.firstChild);
+      /* الجوال: الشريط الجانبي يعمل كدرج منزلق — تبقى العناصر بداخله */
+      if(logo&&logo.parentNode!==brand)brand.appendChild(logo);
+      if(right&&right.parentNode!==foot)foot.appendChild(right);
+      var tb4=sb.querySelector('.thm:not(.lng)');if(tb4&&tb4.parentNode!==foot)foot.appendChild(tb4);
+      var lb4=sb.querySelector('.lng');if(lb4&&lb4.parentNode!==foot)foot.appendChild(lb4);
+      ensureDrawer(root,sb,nav);
     }
     applyTheme(THEME);
   });
@@ -3840,6 +3923,7 @@ function buildNav(){
   sbarLayout();sbarWatch();
 }
 function gP(id,btn){
+  if(typeof closeAllDrawers==='function')closeAllDrawers();
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   document.querySelectorAll('#nav-links .nl,#sbar-links .sb-l').forEach(function(b){b.classList.toggle('on',b.dataset.pg===id);});
   var el=g('page-'+id);if(el)el.classList.add('on');
@@ -6441,6 +6525,7 @@ function enterTD(){
 }
 function tdBack(){g('TD').style.display='none';showTS();}
 function tdP(pg){
+  if(typeof closeAllDrawers==='function')closeAllDrawers();
   if(pg!=='player'&&!tdAllowed(pg))pg='home';
   TDPAGE=pg;
   document.querySelectorAll('#TD .page').forEach(function(e){e.classList.remove('on');});
@@ -8558,6 +8643,7 @@ function buildNTNav(){
   sbarLayout();sbarWatch();
 }
 function ntP(pg){
+  if(typeof closeAllDrawers==='function')closeAllDrawers();
   if(!ntAllowed(pg))pg='home';
   NTPAGE=pg;
   document.querySelectorAll('#NT .page').forEach(function(e){e.classList.remove('on');});
