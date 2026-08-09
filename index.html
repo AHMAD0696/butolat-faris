@@ -1000,10 +1000,12 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
   .mnav-t{flex:1;min-width:0;color:#fff;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:start}
   .mnav-ov{position:fixed;inset:0;background:rgba(6,7,25,.6);backdrop-filter:blur(2px);z-index:98;opacity:0;pointer-events:none;transition:opacity .22s}
   .mnav-ov.on{opacity:1;pointer-events:auto}
-  #APP .sbar,#TD .sbar,#NT .sbar,.sbar{position:fixed;top:0;inset-inline-end:0;height:100dvh;width:min(84vw,290px);background:var(--navy);z-index:99;
-        display:flex;flex-direction:column;padding:1rem .8rem .9rem;box-shadow:-8px 0 30px rgba(0,0,0,.4);
-        transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1);overflow-y:auto}
-  html[dir="ltr"] .sbar{transform:translateX(-100%)}
+  /* الدرج ينزلق من نفس جهة زر القائمة: يمين في العربية، يسار في الإنجليزية */
+  #APP .sbar,#TD .sbar,#NT .sbar,.sbar{position:fixed;top:0;inset-inline-start:0;height:100dvh;width:min(84vw,300px);background:var(--navy);z-index:99;
+        display:flex;flex-direction:column;padding:1rem .8rem .9rem;
+        transition:transform .26s cubic-bezier(.4,0,.2,1);overflow-y:auto;overscroll-behavior:contain}
+  html[dir="rtl"] .sbar{transform:translateX(100%);box-shadow:-10px 0 34px rgba(0,0,0,.45)}
+  html[dir="ltr"] .sbar{transform:translateX(-100%);box-shadow:10px 0 34px rgba(0,0,0,.45)}
   .sbar::-webkit-scrollbar{display:none}
   #APP .sbar.open,#TD .sbar.open,#NT .sbar.open,.sbar.open{transform:none!important}
   .sb-brand{display:flex;padding:.2rem .3rem .9rem;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:.7rem}
@@ -1019,6 +1021,18 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
   .thm{width:100%;justify-content:flex-start;background:rgba(255,255,255,.06)}
   .thm .thm-t{display:inline!important}
 }
+/* ---- الكمبيوتر: الشريط ثابت دائماً، وزر القائمة يخفيه/يظهره ---- */
+@media(min-width:921px){
+  #APP .sbar,#TD .sbar,#NT .sbar,.sbar{width:270px;box-shadow:none;border-inline-end:1px solid rgba(255,255,255,.07)}
+  html[dir="rtl"] .sbar,html[dir="ltr"] .sbar{transform:none}
+  html[dir="rtl"] body.sb-hidden .sbar{transform:translateX(100%)}
+  html[dir="ltr"] body.sb-hidden .sbar{transform:translateX(-100%)}
+  #APP,#TD,#NT{padding-inline-start:270px;transition:padding .26s cubic-bezier(.4,0,.2,1)}
+  body.sb-hidden #APP,body.sb-hidden #TD,body.sb-hidden #NT{padding-inline-start:0}
+  .mnav-ov{display:none!important}
+  #APP .nav,#TD .nav,#NT .nav{padding-inline-start:1.2rem}
+}
+
 /* جدول الترتيب: كل الأعمدة مع تمرير أفقي وعمود الفريق ثابت */
 @media(max-width:920px){
   .stand{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -3809,7 +3823,7 @@ function ensureDrawer(root,sb,nav){
     var b=document.createElement('button');
     b.className='mnav-btn';b.setAttribute('aria-label','القائمة');
     b.innerHTML='<span></span><span></span><span></span>';
-    b.onclick=function(e){e.stopPropagation();openDrawer(sb);};
+    b.onclick=function(e){e.stopPropagation();navToggle(sb);};
     nav.insertBefore(b,nav.firstChild);
   }
   if(!nav.querySelector('.mnav-t')){
@@ -3829,6 +3843,19 @@ function ensureDrawer(root,sb,nav){
       :(root.id==='TD'?'الإدارة الفنية':(root.id==='NT'?'منتخب فارس':'أكاديمية فارس'));
     lbl.textContent=nm||'أكاديمية فارس';
   }
+}
+function isWide(){return window.matchMedia?window.matchMedia('(min-width:921px)').matches:((window.innerWidth||1024)>=921);}
+function navToggle(sb){
+  if(isWide()){
+    document.body.classList.toggle('sb-hidden');
+    try{localStorage.setItem('faris_sbar',document.body.classList.contains('sb-hidden')?'hidden':'shown');}catch(e){}
+    return;
+  }
+  if(sb&&sb.classList.contains('open'))closeDrawer(sb);else openDrawer(sb);
+}
+function initSbarPref(){
+  var v=null;try{v=localStorage.getItem('faris_sbar');}catch(e){}
+  document.body.classList.toggle('sb-hidden',v==='hidden');
 }
 function openDrawer(sb){
   sb.classList.add('open');
@@ -9427,6 +9454,7 @@ function faBoot(){
 }
 initTheme();
 initLang();
+initSbarPref();
 faBoot();
 </script>
 </body>
