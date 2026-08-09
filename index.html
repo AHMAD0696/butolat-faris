@@ -688,10 +688,8 @@ input,select,textarea{font-variant-numeric:tabular-nums}
 /* ============ SIDEBAR (all systems) ============ */
 .sbar{display:none}
 @media(min-width:921px){
-  .sbar{display:flex;flex-direction:column;position:fixed;top:0;inset-inline-start:0;width:214px;height:100vh;background:var(--navy);box-shadow:2px 0 20px rgba(24,25,70,.22);z-index:80;padding:1rem .7rem .8rem;overflow:visible}
+    .sbar{width:min(86vw,300px)}
   /* الشريط العلوي يختفي — كل شيء داخل الشريط الجانبي */
-  #APP .nav,#TD .nav,#NT .nav{display:none}
-  #APP,#TD,#NT{padding-inline-start:214px}
   /* العلامة في الزاوية أعلى الشريط */
   .sb-brand{padding:.3rem .3rem .8rem;border-bottom:1px solid rgba(255,255,255,.09);margin-bottom:.7rem}
   .sb-brand .nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -728,18 +726,7 @@ input,select,textarea{font-variant-numeric:tabular-nums}
   .sb-foot .hmb{display:none!important}
   .sb-foot .umw{width:100%}
 }
-@media(min-width:921px) and (max-width:1180px){
-  .sbar{width:66px;padding:1rem .5rem .7rem;align-items:center}
-  .sb-hd,.sb-g .sb-t,.sb-t{display:none}
-  .sb-l{justify-content:center;padding:11px 0}
-  .sb-sub{padding-inline-start:0}
-  .sb-g{justify-content:center;padding:.7rem 0 .2rem;opacity:.5}
-  #APP,#TD,#NT{padding-inline-start:66px}
-  .sb-brand{padding:.2rem 0 .8rem;display:flex;justify-content:center}
-  .sb-brand .nav-logo-t{display:none}
-  .sb-foot .nbtn::after,.sb-foot .btnav.out::after,.sb-foot .btnav span:not([data-ic]):not(.chip-av),.sb-foot .chip-name,.sb-foot .chip-role{display:none!important}
-  .sb-foot .nbtn,.sb-foot .btnav,.sb-foot .chip{justify-content:center;padding:9px 0}
-}
+
 
 /* ============ WELCOME ============ */
 .wlc{display:flex;align-items:center;gap:.9rem;background:none;color:var(--txt);border:none;padding:0 0 1rem;margin-bottom:1.2rem;border-bottom:1px solid var(--brd)}
@@ -863,7 +850,6 @@ html[data-theme="dark"] .tdh-img img,html[data-theme="dark"] .plan-img img{filte
 #h-dash-sec{padding-bottom:0}
 @media(max-width:640px){.dash{grid-template-columns:1fr}}
 /* استقرار طبقة الشريط الجانبي (يمنع أثر إعادة الرسم) */
-.sbar{will-change:transform;transform:translateZ(0);backface-visibility:hidden}
 
 .dgauge{background:rgba(255,255,255,.09);border-radius:12px;padding:.8rem;text-align:center}
 .dcard:not([class*="dc-"]) .dgauge{background:var(--bg)}
@@ -1004,9 +990,9 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
 #cfMod .mbox{box-shadow:0 24px 60px rgba(0,0,0,.5)}
 .cf-ic{width:46px;height:46px;border-radius:50%;background:rgba(221,29,69,.12);color:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto}
 
-/* ============ MOBILE NAV DRAWER ============ */
-@media(max-width:920px){
-  #APP .nav,#TD .nav,#NT .nav{display:flex;gap:.6rem;padding:0 .8rem;height:56px}
+/* ============ NAV DRAWER (كل المقاسات) ============ */
+@media(min-width:1px){
+  #APP .nav,#TD .nav,#NT .nav{display:flex;gap:.6rem;padding:0 .9rem;height:58px}
   .nav .nav-links,.nav .hmb{display:none!important}
   .mnav-btn{display:flex;flex-direction:column;justify-content:center;gap:4.5px;width:40px;height:40px;padding:0 9px;border:none;background:rgba(255,255,255,.1);border-radius:11px;cursor:pointer;flex-shrink:0}
   .mnav-btn span{display:block;height:2px;background:rgba(255,255,255,.95);border-radius:2px;transition:.2s}
@@ -1014,11 +1000,12 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
   .mnav-t{flex:1;min-width:0;color:#fff;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:start}
   .mnav-ov{position:fixed;inset:0;background:rgba(6,7,25,.6);backdrop-filter:blur(2px);z-index:98;opacity:0;pointer-events:none;transition:opacity .22s}
   .mnav-ov.on{opacity:1;pointer-events:auto}
-  .sbar{position:fixed;top:0;inset-inline-end:0;height:100dvh;width:min(84vw,290px);background:var(--navy);z-index:99;
+  #APP .sbar,#TD .sbar,#NT .sbar,.sbar{position:fixed;top:0;inset-inline-end:0;height:100dvh;width:min(84vw,290px);background:var(--navy);z-index:99;
         display:flex;flex-direction:column;padding:1rem .8rem .9rem;box-shadow:-8px 0 30px rgba(0,0,0,.4);
         transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1);overflow-y:auto}
   html[dir="ltr"] .sbar{transform:translateX(-100%)}
-  .sbar.open{transform:none}
+  .sbar::-webkit-scrollbar{display:none}
+  #APP .sbar.open,#TD .sbar.open,#NT .sbar.open,.sbar.open{transform:none!important}
   .sb-brand{display:flex;padding:.2rem .3rem .9rem;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:.7rem}
   .sb-links{display:flex;flex-direction:column;gap:3px;flex:1}
   .sb-l{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:12px;min-height:46px}
@@ -3860,7 +3847,7 @@ function closeAllDrawers(){
   document.querySelectorAll('.sbar.open').forEach(function(s){closeDrawer(s);});
 }
 function sbarLayout(){
-  var wide=window.matchMedia?window.matchMedia('(min-width:921px)').matches:((window.innerWidth||1024)>=921);
+  var wide=false; /* الدرج موحّد لكل المقاسات */
   [['APP','sbar'],['TD','td-sbar'],['NT','nt-sbar']].forEach(function(p){
     var root=g(p[0]),sb=g(p[1]);if(!root||!sb)return;
     var nav=root.querySelector('.nav');if(!nav)return;
