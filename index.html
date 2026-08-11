@@ -701,11 +701,11 @@ input,select,textarea{font-variant-numeric:tabular-nums}
 /* شاشة الدخول: ارتفاع ثابت لا يقفز مع أشرطة المتصفح */
 #LS{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:1.2rem;overflow-y:auto}
 @media(max-width:640px){
-  /* الجوال: الشاشة تتدفق طبيعياً فلا تقفز عند فتح لوحة المفاتيح */
-  #LS{position:absolute;inset:0 0 auto 0;min-height:100svh;height:auto;align-items:center;justify-content:center;
-      padding:1.5rem 1rem;overflow:visible}
-  #LS .pitch{position:fixed;inset:0}
-  #LS .lbox{width:100%;max-width:none;animation:none;backdrop-filter:none;background:rgba(255,255,255,.06);padding:2rem 1.3rem}
+  /* الجوال: الشاشة مثبّتة بارتفاع الشاشة الفعلي، والمربع في منتصفها ويُمرَّر إن طال */
+  #LS{position:fixed;inset:0;height:100dvh;min-height:100dvh;display:flex;align-items:center;justify-content:center;
+      padding:1.2rem 1rem;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+  #LS .pitch{position:absolute;inset:0}
+  #LS .lbox{width:100%;max-width:none;margin:auto;animation:none;background:rgba(255,255,255,.06);padding:2rem 1.3rem;position:relative;z-index:2}
   #LS .lbox input,#LS .lbox .jpbox{font-size:16px}
 }
 
