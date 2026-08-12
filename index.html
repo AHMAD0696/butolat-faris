@@ -298,13 +298,27 @@ svg{display:block;flex-shrink:0}
   .stand .st-row .c{display:flex;align-items:center;justify-content:center;
     font-size:11.5px;font-variant-numeric:tabular-nums;padding:0;white-space:nowrap}
   .st-row.hd{font-size:10px;letter-spacing:-.2px}
+  /* الجوال: 7 خانات إحصائية كاملة */
+  .stand .st-row.ph7{grid-template-columns:17px minmax(0,1fr) 23px 23px 23px 23px 36px 27px 24px!important;
+    padding:10px 7px;gap:0}
+  .stand .st-row.ph7 .c{font-size:10px}
+  .stand .st-row.ph7 .gcol{font-size:9.5px;letter-spacing:-.3px}
+  .stand .st-row.hd.ph7 .c{font-size:9px;letter-spacing:-.4px}
+  .stand .st-row.hd.ph7 .gcol{font-size:7.5px}
+  .stand .st-row.ph7 .tm{gap:5px}
+  .stand .st-row.ph7 .tm span{font-size:10.5px;font-weight:700}
+  .stand .st-row.ph7 .tm .tlogo{width:20px;height:20px}
+  .stand .st-row.ph7 .st-rank{width:16px;height:16px;font-size:9px;border-radius:5px}
   .tlogo{width:24px;height:24px;flex-shrink:0}
   .st-rank{width:20px;height:20px;font-size:10px;flex-shrink:0}
 }
 @media(max-width:380px){
   .stand .st-row{grid-template-columns:21px minmax(0,1fr) repeat(3,32px)!important;padding:10px 7px;gap:3px}
+  .stand .st-row.ph7{grid-template-columns:15px minmax(0,1fr) 21px 21px 21px 21px 33px 25px 22px!important;padding:10px 5px}
+  .stand .st-row.ph7 .tm span{font-size:10px}
   .st-row .tm span{font-size:11px}
   .stand .st-row .c{font-size:11px}
+  .stand .st-row.ph7 .c{font-size:9.5px}
 }
 .cat-block{margin-bottom:1.4rem}
 .cat-hd{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;margin-bottom:.6rem;color:var(--txt)}
@@ -1449,7 +1463,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 <script>
 /* ===== شبكة أمان مبكرة: تعمل حتى لو فشل السكربت الرئيسي ===== */
 (function(){
-  window.__FA_BUILD='2026.08.12-0200';
+  window.__FA_BUILD='2026.08.12-0300';
   window.__FA_ERR=[];
   function banner(msg){
     try{
@@ -1512,7 +1526,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>2026.08.12-0200</div>
+    <div class="ls-ver" id="ls-ver" data-notr>2026.08.12-0300</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4249,14 +4263,18 @@ function sbarWatch(){
   if(SBQ)return;
   SBQ=1;
   var lastSm=(window.innerWidth||1024)<=920;
+  var lastPh=(window.innerWidth||1024)<=640;
   var f=function(){
     sbarLayout();
     var sm=(window.innerWidth||1024)<=920;
-    if(sm!==lastSm){lastSm=sm;if(typeof rAllSoft==='function')rAllSoft();}
+    var phn=(window.innerWidth||1024)<=640;
+    if(sm!==lastSm||phn!==lastPh){lastSm=sm;lastPh=phn;if(typeof rAllSoft==='function')rAllSoft();}
   };
   if(window.matchMedia){
     var q=window.matchMedia('(min-width:921px)');
     if(q.addEventListener)q.addEventListener('change',f);else if(q.addListener)q.addListener(f);
+    var q2=window.matchMedia('(min-width:641px)');
+    if(q2.addEventListener)q2.addEventListener('change',f);else if(q2.addListener)q2.addListener(f);
   }
   window.addEventListener('resize',f);
 }
@@ -4405,18 +4423,33 @@ function teamRecord(tname){
 function standTable(cat,full,grp){
   var ts=computeStandings(cat,grp);
   var q=catQual(cat);
-  var sm=(window.innerWidth||1024)<=920;
+  var W=(window.innerWidth||1024);
+  var sm=W<=920, ph=W<=640;
   if(!ts.length)return emptyBox('trophy','لا توجد فرق في هذه الفئة');
-  var hd=full?'<div class="c">'+(sm?'ل':'لعب')+'</div><div class="c hm">'+(sm?'ف':'فوز')+'</div><div class="c hm">'+(sm?'ت':'تعادل')+'</div><div class="c hm">'+(sm?'خ':'خسارة')+'</div><div class="c hm">'+(sm?'له':'له')+'</div><div class="c hm">'+(sm?'عليه':'عليه')+'</div><div class="c">'+(sm?'+/-':'ف.أ')+'</div><div class="c">'+(sm?'ن':'نقاط')+'</div>':'<div class="c">لعب</div><div class="c hm">فوز</div><div class="c hm">خسارة</div><div class="c">ف.أ</div><div class="c">نقاط</div>';
-  var ncols=full?8:5;
-  var h='<div class="stand"><div class="st-row hd" style="--cols:'+ncols+'"><div>#</div><div>الفريق</div>'+hd+'</div>';
+  var hd,ncols,rowc='';
+  if(full&&ph){
+    /* الجوال: كل الإحصائيات في 7 خانات، مع دمج (له:عليه) */
+    ncols=7;rowc=' ph7';
+    hd='<div class="c">ل</div><div class="c">ف</div><div class="c">ت</div><div class="c">خ</div>'
+      +'<div class="c gcol">له:عليه</div><div class="c">+/-</div><div class="c">ن</div>';
+  }else{
+    ncols=full?8:5;
+    hd=full?'<div class="c">'+(sm?'ل':'لعب')+'</div><div class="c hm">'+(sm?'ف':'فوز')+'</div><div class="c hm">'+(sm?'ت':'تعادل')+'</div><div class="c hm">'+(sm?'خ':'خسارة')+'</div><div class="c hm">'+(sm?'له':'له')+'</div><div class="c hm">'+(sm?'عليه':'عليه')+'</div><div class="c">'+(sm?'+/-':'ف.أ')+'</div><div class="c">'+(sm?'ن':'نقاط')+'</div>':'<div class="c">لعب</div><div class="c hm">فوز</div><div class="c hm">خسارة</div><div class="c">ف.أ</div><div class="c">نقاط</div>';
+  }
+  var h='<div class="stand"><div class="st-row hd'+rowc+'" style="--cols:'+ncols+'"><div>#</div><div>الفريق</div>'+hd+'</div>';
   ts.forEach(function(t,i){
     var gd=t.gf-t.ga,gds=(gd>0?'+':'')+gd;
-    var cells=full
+    var cells;
+    if(full&&ph){
+      cells='<div class="c">'+t.p+'</div><div class="c">'+t.w+'</div><div class="c">'+t.d+'</div><div class="c">'+t.l+'</div>'
+        +'<div class="c gcol">'+t.gf+':'+t.ga+'</div><div class="c">'+gds+'</div><div class="c pts">'+t.pts+'</div>';
+    }else{
+      cells=full
       ?'<div class="c">'+t.p+'</div><div class="c hm">'+t.w+'</div><div class="c hm">'+t.d+'</div><div class="c hm">'+t.l+'</div><div class="c hm">'+t.gf+'</div><div class="c hm">'+t.ga+'</div><div class="c">'+gds+'</div><div class="c pts">'+t.pts+'</div>'
       :'<div class="c">'+t.p+'</div><div class="c hm">'+t.w+'</div><div class="c hm">'+t.l+'</div><div class="c">'+gds+'</div><div class="c pts">'+t.pts+'</div>';
+    }
     var qc=q?((i<q)?' q-in':' q-out'):'';
-    h+='<div class="st-row'+qc+'" style="--cols:'+ncols+'"><div class="st-rank">'+(i+1)+'</div><div class="tm" style="cursor:pointer" title="'+esc(t.name)+'" onclick="showTP(\''+esc(t.name)+'\')">'+tlogo(t.team)+'<span>'+esc(t.name)+'</span></div>'+cells+'</div>';
+    h+='<div class="st-row'+qc+rowc+'" style="--cols:'+ncols+'"><div class="st-rank">'+(i+1)+'</div><div class="tm" style="cursor:pointer" title="'+esc(t.name)+'" onclick="showTP(\''+esc(t.name)+'\')">'+tlogo(t.team)+'<span>'+esc(t.name)+'</span></div>'+cells+'</div>';
   });
   h+='</div>';
   if(q)h+='<div class="q-leg"><span><i class="q-dot in"></i> '+'يتأهل'+' ('+q+')</span><span><i class="q-dot out"></i> '+'خارج'+'</span></div>';
