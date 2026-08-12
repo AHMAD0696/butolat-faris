@@ -2,6 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="build" content="2026.08.11-1714">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#181946">
@@ -72,7 +76,7 @@ svg{display:block;flex-shrink:0}
   radial-gradient(ellipse 60% 45% at 85% -5%,rgba(221,29,69,.22),transparent),
   radial-gradient(ellipse 45% 40% at 5% 105%,rgba(221,29,69,.13),transparent)}
 .pitch{position:absolute;inset:0;opacity:.06;pointer-events:none}
-.lbox{position:relative;width:100%;max-width:380px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(14px);border-radius:20px;padding:2.4rem 2rem;text-align:center;animation:rise .5s ease}
+.lbox{position:relative;z-index:2;width:100%;max-width:380px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-radius:20px;padding:2.4rem 2rem;text-align:center;animation:rise .5s ease}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .lgo{width:92px;height:92px;margin:0 auto 1rem;background:transparent;background-image:var(--logo);background-size:contain;background-position:center;background-repeat:no-repeat;filter:drop-shadow(0 10px 24px rgba(0,0,0,.45))}
 .ltitle{color:#fff;font-size:1.45rem;font-weight:700;letter-spacing:-.3px}
@@ -699,14 +703,11 @@ input,select,textarea{font-variant-numeric:tabular-nums}
 /* ============ SIDEBAR (all systems) ============ */
 .sbar{display:none}
 /* شاشة الدخول: ارتفاع ثابت لا يقفز مع أشرطة المتصفح */
-#LS{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:1.2rem;overflow-y:auto}
 @media(max-width:640px){
-  /* الجوال: الشاشة مثبّتة بارتفاع الشاشة الفعلي، والمربع في منتصفها ويُمرَّر إن طال */
-  #LS{position:fixed;inset:0;height:100dvh;min-height:100dvh;display:flex;align-items:center;justify-content:center;
-      padding:1.2rem 1rem;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
-  #LS .pitch{position:absolute;inset:0}
-  #LS .lbox{width:100%;max-width:none;margin:auto;animation:none;background:rgba(255,255,255,.06);padding:2rem 1.3rem;position:relative;z-index:2}
-  #LS .lbox input,#LS .lbox .jpbox{font-size:16px}
+  /* الجوال: نعتمد التثبيت والتوسيط من القاعدة الأساسية، ونضبط المقاسات فقط */
+  #LS{padding:1.1rem 1rem}
+  #LS .lbox{width:100%;max-width:none;padding:2rem 1.3rem;position:relative;z-index:2}
+  #LS .lbox input,#LS .lbox .pbox{font-size:16px}
 }
 
 /* ============ SIDEBAR VISUALS (كل المقاسات) ============ */
@@ -1006,7 +1007,8 @@ html[data-theme="dark"] .tdh-img img,html[data-theme="dark"] .plan-img img{filte
 *{scrollbar-width:none;-ms-overflow-style:none}
 html,body{scrollbar-width:none;overflow-x:hidden;max-width:100%}
 body{position:relative}
-#APP,#TD,#NT,#TS,#LS{max-width:100%;overflow-x:clip}
+#APP,#TD,#NT,#TS{max-width:100%;overflow-x:clip}
+#LS{max-width:100%}
 .sec,.page,.nav,footer{max-width:100%;min-width:0}
 img,svg,table{max-width:100%}
 .at-wrap,.stand,.ko-scroll,.wtabs{max-width:100%}
@@ -1180,6 +1182,8 @@ html[dir="rtl"] .sb-foot .chip::after{transform:translateY(-50%) rotate(-135deg)
 }
 
 .sw-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--bg);border:1px solid var(--brd);border-radius:var(--r2);padding:.8rem .9rem;cursor:pointer}
+.lver{margin-top:.9rem;font-size:9.5px;color:rgba(255,255,255,.28);letter-spacing:.5px;direction:ltr}
+.ls-ver{margin-top:.9rem;font-size:9.5px;color:rgba(255,255,255,.28);letter-spacing:.5px;direction:ltr}
 
 /* ============ MOBILE (all systems) ============ */
 @media(max-width:640px){
@@ -1431,6 +1435,47 @@ footer strong{color:#fff}
 footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 @media print{.nav,.mob-menu,footer,.wtabs,.no-print{display:none!important}}
 </style>
+<script>
+/* ===== شبكة أمان مبكرة: تعمل حتى لو فشل السكربت الرئيسي ===== */
+(function(){
+  window.__FA_BUILD='2026.08.11-2000';
+  window.__FA_ERR=[];
+  function banner(msg){
+    try{
+      var b=document.getElementById('fa-errbar');
+      if(!b){
+        b=document.createElement('div');b.id='fa-errbar';
+        b.setAttribute('style','position:fixed;inset-inline:0;top:0;z-index:99999;background:#8b0d26;color:#fff;font:12px/1.6 system-ui,sans-serif;padding:10px 12px;direction:rtl;text-align:start;max-height:45vh;overflow:auto;white-space:pre-wrap');
+        (document.body||document.documentElement).appendChild(b);
+      }
+      b.textContent='خطأ في الصفحة (نسخة '+window.__FA_BUILD+'):\n'+msg;
+    }catch(e){}
+  }
+  window.addEventListener('error',function(ev){
+    var m=(ev&&ev.message)||'';
+    var src=(ev&&ev.filename)?(' @'+String(ev.filename).split('/').pop()+':'+ev.lineno):'';
+    window.__FA_ERR.push(m+src);
+    banner(m+src);
+  },true);
+  window.addEventListener('unhandledrejection',function(ev){
+    var m=(ev&&ev.reason&&(ev.reason.message||ev.reason))||'promise error';
+    window.__FA_ERR.push(String(m));banner(String(m));
+  });
+  /* إظهار شاشة الدخول حتى لو لم يعمل السكربت الرئيسي */
+  function showLogin(){
+    var ls=document.getElementById('LS');if(!ls)return;
+    var app=document.getElementById('APP');
+    var inApp=app&&app.style.display&&app.style.display!=='none';
+    if(inApp)return;
+    if(!ls.style.display||ls.style.display==='none')ls.style.display='flex';
+    var s1=document.getElementById('ls-s1'),s2=document.getElementById('ls-s2');
+    if(s1&&s2&&s2.style.display!=='block'&&(!s1.style.display||s1.style.display==='none'))s1.style.display='block';
+    var v=document.getElementById('ls-ver');if(v&&!v.textContent.trim())v.textContent=window.__FA_BUILD;
+  }
+  document.addEventListener('DOMContentLoaded',function(){showLogin();setTimeout(showLogin,600);});
+  window.addEventListener('load',function(){setTimeout(showLogin,100);});
+})();
+</script>
 </head>
 <body>
 
@@ -1448,6 +1493,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
+    <div class="ls-ver" id="ls-ver" data-notr>2026.08.11-2000</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -10078,6 +10124,20 @@ function faBoot(){
     setTimeout(function(){var e=g('l-name');if(e)e.focus();},200);
   }
 }
+/* شبكة أمان: تُعرض شاشة الدخول ما لم يكن المستخدم داخل النظام فعلاً */
+(function ensureLogin(){
+  try{
+    var ls=g('LS');if(!ls)return;
+    var app=g('APP'),ts=g('TS'),td=g('TD'),nt=g('NT');
+    var inside=(app&&app.style.display==='flex')||(ts&&ts.style.display==='block')
+      ||(td&&td.style.display==='block')||(nt&&nt.style.display==='block');
+    if(!inside){
+      ls.style.display='flex';
+      var s1=g('ls-s1'),s2=g('ls-s2');
+      if(s1&&s2&&s2.style.display!=='block')s1.style.display='block';
+    }
+  }catch(e){}
+})();
 initTheme();
 initLang();
 setTimeout(function(){if(typeof tdMergeGroups==='function'&&DB.td){tdMergeGroups();}if(typeof tdSyncNow==='function'&&tdAutoOn())tdSyncNow(true);},900);
