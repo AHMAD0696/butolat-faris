@@ -285,16 +285,27 @@ svg{display:block;flex-shrink:0}
 .tlogo{width:28px;height:28px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700}
 .tlogo img{width:100%;height:100%;object-fit:cover}
 @media(max-width:640px){
+  /* إخفاء الأعمدة الثانوية نهائياً على الجوال (بأولوية أعلى من قاعدة اللوحي) */
   .hm{display:none!important}
-  /* الأعمدة المخفية لا تحجز مساحة: 3 أعمدة رقمية ظاهرة فقط (لعب، ف.أ، نقاط) */
-  .st-row{grid-template-columns:26px minmax(0,1fr) repeat(3,34px)!important;padding:10px 8px;font-size:12px;gap:2px}
+  .stand .st-row .hm,.stand .st-row.hd .hm{display:none!important}
+  /* 5 خانات فقط: # | الفريق | لعب | ف.أ | نقاط — بلا التفاف ولا تمرير */
+  .stand{overflow-x:hidden!important}
+  .stand .st-row{grid-template-columns:24px minmax(0,1fr) repeat(3,36px)!important;
+    width:100%!important;min-width:0!important;padding:11px 10px;font-size:12px;gap:4px}
+  .stand .st-row>div{min-width:0}
   .st-row .tm{gap:6px}
-  .st-row .tm span{white-space:normal;line-height:1.35;word-break:break-word;font-size:11.5px}
-  .st-row.hd{font-size:10px}
+  .st-row .tm span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35;font-size:11.5px}
+  .stand .st-row .c{display:flex;align-items:center;justify-content:center;
+    font-size:11.5px;font-variant-numeric:tabular-nums;padding:0;white-space:nowrap}
+  .st-row.hd{font-size:10px;letter-spacing:-.2px}
   .tlogo{width:24px;height:24px;flex-shrink:0}
-  .st-rank{width:20px;height:20px;font-size:10px}
+  .st-rank{width:20px;height:20px;font-size:10px;flex-shrink:0}
 }
-@media(max-width:380px){.st-row{grid-template-columns:22px minmax(0,1fr) repeat(3,30px)!important;padding:9px 6px}}
+@media(max-width:380px){
+  .stand .st-row{grid-template-columns:21px minmax(0,1fr) repeat(3,32px)!important;padding:10px 7px;gap:3px}
+  .st-row .tm span{font-size:11px}
+  .stand .st-row .c{font-size:11px}
+}
 .cat-block{margin-bottom:1.4rem}
 .cat-hd{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;margin-bottom:.6rem;color:var(--txt)}
 .cat-hd .dot{width:8px;height:8px;border-radius:50%;background:var(--red)}
@@ -1064,8 +1075,8 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
   #APP .nav,#TD .nav,#NT .nav{padding-inline-start:1.2rem}
 }
 
-/* جدول الترتيب: كل الأعمدة مع تمرير أفقي وعمود الفريق ثابت */
-@media(max-width:920px){
+/* جدول الترتيب — الأجهزة اللوحية فقط (641–920): كل الأعمدة ظاهرة */
+@media(min-width:641px) and (max-width:920px){
   .stand{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
   .st-row{grid-template-columns:20px minmax(70px,1fr) repeat(var(--cols,4),1fr);width:100%;min-width:0;padding:9px 6px;gap:0;font-size:10.5px}
   .st-row>div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1438,7 +1449,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 <script>
 /* ===== شبكة أمان مبكرة: تعمل حتى لو فشل السكربت الرئيسي ===== */
 (function(){
-  window.__FA_BUILD='2026.08.12-0100';
+  window.__FA_BUILD='2026.08.12-0200';
   window.__FA_ERR=[];
   function banner(msg){
     try{
@@ -1501,7 +1512,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>2026.08.12-0100</div>
+    <div class="ls-ver" id="ls-ver" data-notr>2026.08.12-0200</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
