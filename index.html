@@ -1438,7 +1438,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 <script>
 /* ===== شبكة أمان مبكرة: تعمل حتى لو فشل السكربت الرئيسي ===== */
 (function(){
-  window.__FA_BUILD='2026.08.11-2000';
+  window.__FA_BUILD='2026.08.12-0100';
   window.__FA_ERR=[];
   function banner(msg){
     try{
@@ -1452,14 +1452,22 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     }catch(e){}
   }
   window.addEventListener('error',function(ev){
+    /* تجاهل فشل تحميل الموارد (صورة/خط/أيقونة) — ليست أخطاء برمجية */
+    if(ev&&ev.target&&ev.target!==window){
+      try{console.warn('[FA] تعذّر تحميل مورد:',ev.target.tagName,ev.target.src||ev.target.href||'');}catch(e){}
+      return;
+    }
     var m=(ev&&ev.message)||'';
+    if(!m)return; /* لا تعرض شريطاً برسالة فارغة */
     var src=(ev&&ev.filename)?(' @'+String(ev.filename).split('/').pop()+':'+ev.lineno):'';
     window.__FA_ERR.push(m+src);
     banner(m+src);
   },true);
   window.addEventListener('unhandledrejection',function(ev){
-    var m=(ev&&ev.reason&&(ev.reason.message||ev.reason))||'promise error';
-    window.__FA_ERR.push(String(m));banner(String(m));
+    var m=(ev&&ev.reason&&(ev.reason.message||ev.reason))||'';
+    m=String(m).trim();
+    if(!m)return; /* تجاهل الرفض بدون رسالة */
+    window.__FA_ERR.push(m);banner(m);
   });
   /* إظهار شاشة الدخول حتى لو لم يعمل السكربت الرئيسي */
   function showLogin(){
@@ -1493,7 +1501,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>2026.08.11-2000</div>
+    <div class="ls-ver" id="ls-ver" data-notr>2026.08.12-0100</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
