@@ -99,6 +99,28 @@ svg{display:block;flex-shrink:0}
 .pin-row{display:flex;gap:10px;justify-content:center;direction:ltr;margin:.4rem 0 .2rem}
 .pbox{width:52px;height:58px;border-radius:12px;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;font-size:1.5rem;font-weight:700;text-align:center;outline:none;transition:border-color .15s,transform .1s}
 .pbox:focus{border-color:var(--red)}
+.pin-eye{margin:.15rem auto .9rem;display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:rgba(255,255,255,.45);font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;padding:7px 12px;border-radius:99px;transition:.15s;min-height:36px}
+.pin-eye:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.07)}
+.pin-eye svg{width:14px;height:14px}
+
+/* ===== شاشة التحميل بعد إدخال الرمز ===== */
+#loadOv{position:fixed;inset:0;z-index:99998;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.4rem;
+  background:linear-gradient(135deg,#12132f,#0b0c22);opacity:0;transition:opacity .28s}
+#loadOv.on{display:flex;opacity:1}
+#loadOv::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 35%,rgba(221,29,69,.18),transparent);pointer-events:none}
+.lo-logo{width:96px;height:96px;background:var(--logo) center/contain no-repeat;position:relative;animation:loPulse 1.9s ease-in-out infinite}
+@keyframes loPulse{0%,100%{transform:scale(1);opacity:.92}50%{transform:scale(1.06);opacity:1}}
+.lo-ring{width:132px;height:132px;position:absolute;top:50%;left:50%;margin:-66px 0 0 -66px;border-radius:50%;
+  border:2.5px solid rgba(255,255,255,.08);border-top-color:var(--red);animation:loSpin 1s linear infinite}
+@keyframes loSpin{to{transform:rotate(360deg)}}
+.lo-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:132px;height:132px}
+.lo-tx{position:relative;color:#fff;font-size:14.5px;font-weight:700;text-align:center;min-height:22px;transition:opacity .2s}
+.lo-sub{position:relative;color:rgba(255,255,255,.42);font-size:11.5px;text-align:center;margin-top:-.9rem}
+.lo-dots{position:relative;display:flex;gap:7px}
+.lo-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.22);transition:background .3s}
+.lo-dot.on{background:var(--red)}
+@media(max-width:640px){.lo-logo{width:76px;height:76px}.lo-wrap,.lo-ring{width:112px;height:112px}.lo-ring{margin:-56px 0 0 -56px}}
+@media(prefers-reduced-motion:reduce){.lo-logo,.lo-ring{animation:none}}
 .pbox.err{border-color:var(--red);animation:shake .35s}
 @keyframes shake{20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
@@ -1246,6 +1268,110 @@ html[dir="rtl"] .sb-foot .chip::after{transform:translateY(-50%) rotate(-135deg)
 }
 *{-webkit-tap-highlight-color:rgba(24,25,70,.08)}
 
+/* ============ COACH EVALUATION PAGE ============ */
+.ce-hero{background:linear-gradient(125deg,var(--navy),var(--navy2));border-radius:var(--r);padding:1.5rem 1.4rem;color:#fff;box-shadow:var(--sh);position:relative;overflow:hidden;margin-bottom:1.3rem}
+.ce-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 85% 0%,rgba(221,29,69,.28),transparent);pointer-events:none}
+.ce-hero-in{position:relative;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+.ce-av{width:78px;height:78px;border-radius:22px;background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:800;flex-shrink:0}
+.ce-hi{flex:1;min-width:190px}
+.ce-nm{font-size:1.3rem;font-weight:800;line-height:1.25;overflow-wrap:anywhere}
+.ce-sub{font-size:12.5px;color:rgba(255,255,255,.62);margin-top:.35rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.ce-sub b{color:#fff;font-weight:700}
+.ce-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem}
+.ce-tag{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:99px;padding:4px 11px;font-size:11.5px;font-weight:600}
+.ce-ring{width:112px;height:112px;position:relative;flex-shrink:0}
+.ce-ring svg{transform:rotate(-90deg);width:100%;height:100%}
+.ce-ring-tx{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.ce-ring-n{font-size:1.85rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.ce-ring-l{font-size:10.5px;color:rgba(255,255,255,.55);margin-top:3px;font-weight:600}
+.ce-ring-g{font-size:11px;font-weight:800;margin-top:4px;padding:2px 9px;border-radius:99px}
+
+.ce-bar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;background:var(--sur);border:1px solid var(--brd);border-radius:var(--r2);padding:.85rem 1rem;margin-bottom:1.3rem;box-shadow:var(--sh2)}
+.ce-bar-l{font-size:12px;font-weight:700;color:var(--gray);display:flex;align-items:center;gap:6px}
+.ce-bar input[type=month]{padding:9px 12px;border:1.5px solid var(--brd);border-radius:10px;background:var(--bg);color:var(--txt);font-family:inherit;font-size:12.5px;font-weight:600;direction:ltr;outline:none;min-height:42px}
+.ce-bar .sp{flex:1}
+.ce-state{font-size:11.5px;font-weight:700;padding:6px 13px;border-radius:99px;display:inline-flex;align-items:center;gap:6px}
+.ce-state.new{background:rgba(21,101,192,.12);color:#1565c0}
+.ce-state.done{background:rgba(22,163,74,.13);color:#16a34a}
+
+.ce-auto{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:.9rem}
+.ce-ac{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r2);padding:1rem;box-shadow:var(--sh2);position:relative;overflow:hidden}
+.ce-ac-t{font-size:11.5px;color:var(--gray);font-weight:700;display:flex;align-items:center;gap:6px;line-height:1.35}
+.ce-ac-n{font-size:1.7rem;font-weight:800;margin:.5rem 0 .1rem;font-variant-numeric:tabular-nums;line-height:1}
+.ce-ac-s{font-size:11px;color:var(--gray);line-height:1.4}
+.ce-ac-track{height:6px;border-radius:99px;background:var(--bg);margin-top:.65rem;overflow:hidden}
+.ce-ac-fill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.ce-note{font-size:11.5px;color:var(--gray);background:var(--bg);border:1px dashed var(--brd);border-radius:10px;padding:.65rem .8rem;display:flex;gap:7px;align-items:flex-start;line-height:1.55;margin-bottom:1.3rem}
+.ce-note svg{flex-shrink:0;margin-top:1px;color:var(--navy)}
+
+.ce-ax{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r2);padding:1.1rem;margin-bottom:.75rem;box-shadow:var(--sh2)}
+.ce-ax-hd{display:flex;align-items:center;gap:.7rem;margin-bottom:.8rem}
+.ce-ax-ic{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--navy),#2a2c6e);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ce-ax-tx{flex:1;min-width:0}
+.ce-ax-t{font-size:13.5px;font-weight:800;line-height:1.3}
+.ce-ax-d{font-size:11.5px;color:var(--gray);margin-top:2px;line-height:1.45}
+.ce-ax-v{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:800;flex-shrink:0;font-variant-numeric:tabular-nums;transition:.2s}
+.ce-scale{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.ce-sb{border:1.5px solid var(--brd);background:var(--bg);color:var(--gray);border-radius:11px;min-height:50px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;transition:.15s;font-variant-numeric:tabular-nums;padding:0}
+.ce-sb:hover{border-color:var(--navy);color:var(--txt)}
+.ce-sb.on{background:var(--navy);border-color:var(--navy);color:#fff;transform:scale(1.06)}
+.ce-sb.on.lo{background:var(--red);border-color:var(--red)}
+.ce-sb.on.mid{background:#d97706;border-color:#d97706}
+.ce-sb.on.hi{background:#16a34a;border-color:#16a34a}
+.ce-legend{display:flex;justify-content:space-between;font-size:10.5px;color:var(--gray);margin-top:.45rem;font-weight:600}
+
+.ce-sum{background:linear-gradient(135deg,rgba(24,25,70,.05),rgba(221,29,69,.06));border:1.5px solid var(--brd);border-radius:var(--r2);padding:1.1rem;margin:1.1rem 0}
+.ce-sum-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.ce-sum-l{font-size:12.5px;font-weight:700;color:var(--gray)}
+.ce-sum-n{font-size:2.1rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.ce-split{display:flex;gap:.5rem;margin-top:.9rem;flex-wrap:wrap}
+.ce-sp{flex:1;min-width:120px;background:var(--sur);border:1px solid var(--brd);border-radius:10px;padding:.6rem .75rem}
+.ce-sp-l{font-size:10.5px;color:var(--gray);font-weight:700}
+.ce-sp-n{font-size:1.05rem;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
+
+.ce-hist{display:flex;align-items:flex-end;gap:.5rem;background:var(--sur);border:1px solid var(--brd);border-radius:var(--r2);padding:1.1rem .9rem .8rem;overflow-x:auto;box-shadow:var(--sh2);margin-bottom:1rem;-webkit-overflow-scrolling:touch}
+.ce-hb{flex:1;min-width:44px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.ce-hb-n{font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.ce-hb-t{width:100%;max-width:40px;height:96px;background:var(--bg);border-radius:8px;display:flex;align-items:flex-end;overflow:hidden}
+.ce-hb-f{width:100%;border-radius:8px;transition:height .55s cubic-bezier(.4,0,.2,1)}
+.ce-hb-l{font-size:9.8px;color:var(--gray);font-weight:600;white-space:nowrap}
+
+.ce-rec{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r2);padding:.95rem 1.05rem;margin-bottom:.6rem;box-shadow:var(--sh2)}
+.ce-rec-hd{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.ce-rec-b{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.05rem;font-weight:800;flex-shrink:0;font-variant-numeric:tabular-nums}
+.ce-rec-t{flex:1;min-width:130px}
+.ce-rec-m{font-size:13px;font-weight:800}
+.ce-rec-s{font-size:10.8px;color:var(--gray);margin-top:2px}
+.ce-rec-bd{margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--bg)}
+.ce-mini{display:flex;align-items:center;gap:.6rem;margin-bottom:.45rem}
+.ce-mini-l{font-size:11.5px;font-weight:600;flex:1;min-width:0;overflow-wrap:anywhere}
+.ce-mini-t{width:96px;height:6px;border-radius:99px;background:var(--bg);overflow:hidden;flex-shrink:0}
+.ce-mini-f{height:100%;border-radius:99px}
+.ce-mini-n{font-size:11.5px;font-weight:800;width:34px;text-align:center;font-variant-numeric:tabular-nums;flex-shrink:0}
+.ce-txt{font-size:12px;line-height:1.6;background:var(--bg);border-radius:9px;padding:.6rem .75rem;margin-top:.5rem}
+.ce-txt b{font-size:11px;color:var(--gray);display:block;margin-bottom:3px}
+
+@media(max-width:640px){
+  .ce-hero{padding:1.2rem 1rem}
+  .ce-hero-in{gap:.9rem}
+  .ce-av{width:60px;height:60px;font-size:1.3rem;border-radius:18px}
+  .ce-nm{font-size:1.1rem}
+  .ce-ring{width:96px;height:96px;margin:0 auto}
+  .ce-auto{grid-template-columns:1fr;gap:.6rem}
+  .ce-ac{display:flex;align-items:center;gap:.9rem;padding:.85rem .95rem}
+  .ce-ac>div:first-child{flex:1;min-width:0}
+  .ce-ac-n{font-size:1.4rem;margin:0}
+  .ce-ac-track{margin-top:.4rem}
+  .ce-scale{gap:6px}
+  .ce-sb{min-height:52px;font-size:17px}
+  .ce-ax{padding:.95rem}
+  .ce-ax-v{width:42px;height:42px;font-size:1.05rem}
+  .ce-sum-n{font-size:1.75rem}
+  .ce-bar{padding:.75rem .8rem}
+  .ce-bar input[type=month]{flex:1;min-width:150px}
+  .ce-mini-t{width:64px}
+}
+
 /* ============ EVALUATION FORM ============ */
 .ev-card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:1.2rem;margin-bottom:1.6rem;box-shadow:var(--sh2)}
 .ev-hd{display:flex;align-items:center;gap:.8rem;padding-bottom:.9rem;border-bottom:2px solid var(--bg);margin-bottom:1rem}
@@ -1266,8 +1392,9 @@ html[dir="rtl"] .sb-foot .chip::after{transform:translateY(-50%) rotate(-135deg)
 .ev-h{display:flex;align-items:center;gap:7px;font-weight:700;font-size:12.5px;padding-bottom:.65rem;border-bottom:1px solid var(--bg);margin-bottom:.9rem}
 .ev-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;flex-wrap:wrap}
 .ev-lb{font-size:12.5px;font-weight:600;flex:1;min-width:100px}
-.ev-scale{display:flex;gap:3px}
-.ev-s{width:25px;height:25px;border-radius:7px;border:1px solid var(--brd);background:var(--sur);font-size:10.5px;font-weight:700;color:var(--gray);cursor:pointer;font-family:inherit;transition:.12s;padding:0}
+.ev-scale{display:flex;gap:6px}
+.ev-s{width:40px;height:40px;border-radius:11px;border:1.5px solid var(--brd);background:var(--sur);font-size:14px;font-weight:700;color:var(--gray);cursor:pointer;font-family:inherit;transition:.15s;padding:0}
+.ev-s:hover{border-color:var(--navy);color:var(--txt)}
 .ev-s:hover{transform:translateY(-1px)}
 .ev-val{width:30px;text-align:center;font-weight:800;font-size:14px}
 /* بطاقة تقييم في السجل */
@@ -1288,7 +1415,8 @@ html[dir="rtl"] .sb-foot .chip::after{transform:translateY(-50%) rotate(-135deg)
 .evc-ft{display:flex;gap:.35rem;flex-wrap:wrap;align-items:center}
 .evc-btns{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:auto}
 .evc-by{font-size:10px;color:var(--gray);display:flex;align-items:center;gap:4px}
-@media(max-width:900px){.ev-wrap{grid-template-columns:1fr}.ev-sum{grid-template-columns:1fr}.ev-s{width:23px;height:23px}}
+@media(max-width:900px){.ev-wrap{grid-template-columns:1fr}.ev-sum{grid-template-columns:1fr}}
+@media(max-width:640px){.ev-scale{flex:1;justify-content:space-between;gap:5px}.ev-s{flex:1;width:auto;min-width:0;height:44px;font-size:15px}.ev-row{flex-wrap:wrap}.ev-lb{flex:1 1 100%;margin-bottom:.4rem}}
 
 /* ============ TD HERO STORIES ============ */
 .td-hero{position:relative;height:230px;border-radius:var(--r);overflow:hidden;margin-bottom:1.4rem;background:var(--navy);cursor:pointer;box-shadow:var(--sh2)}
@@ -1479,7 +1607,11 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
   window.addEventListener('error',function(ev){
     /* تجاهل فشل تحميل الموارد (صورة/خط/أيقونة) — ليست أخطاء برمجية */
     if(ev&&ev.target&&ev.target!==window){
-      try{console.warn('[FA] تعذّر تحميل مورد:',ev.target.tagName,ev.target.src||ev.target.href||'');}catch(e){}
+      try{
+        var u=ev.target.src||ev.target.href||'';
+        /* src فارغ أو مساوٍ لعنوان الصفحة = عنصر بلا مصدر فعلي، وليس فشل تحميل */
+        if(u&&u.split('#')[0]!==location.href.split('#')[0])console.warn('[FA] تعذّر تحميل مورد:',ev.target.tagName,u);
+      }catch(e){}
       return;
     }
     var m=(ev&&ev.message)||'';
@@ -1534,14 +1666,23 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div style="color:#fff;font-size:15px;font-weight:700;margin-bottom:.2rem" id="pin-nm">—</div>
     <div style="color:rgba(255,255,255,.4);font-size:11px;margin-bottom:1.2rem">أدخل الرمز السري (4 أرقام)</div>
     <div class="pin-row">
-      <input type="tel" inputmode="numeric" maxlength="1" class="pbox" id="p1" oninput="pI(this,1)" onkeydown="pK(event,1)">
-      <input type="tel" inputmode="numeric" maxlength="1" class="pbox" id="p2" oninput="pI(this,2)" onkeydown="pK(event,2)">
-      <input type="tel" inputmode="numeric" maxlength="1" class="pbox" id="p3" oninput="pI(this,3)" onkeydown="pK(event,3)">
-      <input type="tel" inputmode="numeric" maxlength="1" class="pbox" id="p4" oninput="pI(this,4)" onkeydown="pK(event,4)">
+      <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p1" oninput="pI(this,1)" onkeydown="pK(event,1)" aria-label="الرقم الأول">
+      <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p2" oninput="pI(this,2)" onkeydown="pK(event,2)" aria-label="الرقم الثاني">
+      <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p3" oninput="pI(this,3)" onkeydown="pK(event,3)" aria-label="الرقم الثالث">
+      <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p4" oninput="pI(this,4)" onkeydown="pK(event,4)" aria-label="الرقم الرابع">
     </div>
+    <button type="button" class="pin-eye" id="pin-eye" onclick="pinReveal()" aria-label="إظهار الرمز"><span data-ic="eye"></span> إظهار الرمز</button>
     <button class="lbtn" onclick="doLogin()">دخول</button>
     <div class="lerr" id="p-err">الرمز السري غير صحيح</div>
   </div>
+</div>
+
+<!-- ============ شاشة التحميل ============ -->
+<div id="loadOv" role="status" aria-live="polite" aria-hidden="true">
+  <div class="lo-wrap"><div class="lo-ring"></div><div class="lo-logo"></div></div>
+  <div class="lo-tx" id="lo-tx">جارٍ التحقق…</div>
+  <div class="lo-dots"><span class="lo-dot" id="lo-d1"></span><span class="lo-dot" id="lo-d2"></span><span class="lo-dot" id="lo-d3"></span></div>
+  <div class="lo-sub" id="lo-sub"></div>
 </div>
 
 <!-- ============ JOIN ============ -->
@@ -1671,7 +1812,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
   <div style="position:absolute;top:0;left:0;right:0;z-index:3;display:flex;gap:4px;padding:10px" id="sv-bars"></div>
   <button onclick="closeStoryView()" style="position:absolute;top:16px;right:16px;z-index:4;background:rgba(255,255,255,.15);color:#fff;border:none;width:38px;height:38px;border-radius:50%;font-size:18px;cursor:pointer">✕</button>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
-    <img id="sv-img" style="max-width:100%;max-height:100%;object-fit:contain" src="">
+    <img id="sv-img" alt="" style="max-width:100%;max-height:100%;object-fit:contain;display:none">
     <div onclick="storyNav(-1)" style="position:absolute;top:0;bottom:0;right:0;width:30%;cursor:pointer"></div>
     <div onclick="storyNav(1)" style="position:absolute;top:0;bottom:0;left:0;width:30%;cursor:pointer"></div>
   </div>
@@ -2020,6 +2161,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 <div id="tdpg-evals" class="page"><div class="sec" id="tdc-evals"></div></div>
 <div id="tdpg-plans" class="page"><div class="sec" id="tdc-plans"></div></div>
 <div id="tdpg-coaches" class="page"><div class="sec" id="tdc-coaches"></div></div>
+<div id="tdpg-coacheval" class="page"><div class="sec" id="tdc-coacheval"></div></div>
 <div id="tdpg-friendly" class="page"><div class="sec" id="tdc-friendly"></div></div>
 <div id="tdpg-reports" class="page"><div class="sec" id="tdc-reports"></div></div>
 <div id="tdpg-settings" class="page"><div class="sec" id="tdc-settings"></div></div>
@@ -2433,7 +2575,10 @@ function openStoryView(i){
 var SVLIST=[],SVIDX=0;
 function renderStoryView(){
   var s=SVLIST[SVIDX];if(!s){closeStoryView();return;}
-  g('sv-img').src=s.img||'';
+  /* لا تضع src فارغاً — المتصفح يفسّره على أنه عنوان الصفحة ويحاول تحميلها كصورة */
+  var svi=g('sv-img');
+  if(s.img){svi.src=s.img;svi.style.display='';}
+  else{svi.removeAttribute('src');svi.style.display='none';}
   g('sv-title').textContent=s.title||'';g('sv-title').style.display=s.title?'block':'none';
   var lk=g('sv-link');
   if(s.url){lk.style.display='inline-flex';lk.href=s.url;g('sv-link-label').textContent='فتح الرابط'+(storyHost(s.url)?' — '+storyHost(s.url):'');}
@@ -2735,30 +2880,98 @@ function goPin(){
   name=acc.name;g('l-name').value=name;
   g('ls-s1').style.display='none';g('ls-s2').style.display='block';
   g('pin-nm').textContent=name;g('pin-av').textContent=ti(name);
-  [1,2,3,4].forEach(function(i){var e=g('p'+i);e.value='';e.className='pbox';});
+  pinReset();
   g('p-err').style.display='none';
   setTimeout(function(){g('p1').focus();},80);
 }
-function goBack(){g('ls-s2').style.display='none';g('ls-s1').style.display='block';}
+function goBack(){loadHide();LOGIN_BUSY=false;pinReset();g('ls-s2').style.display='none';g('ls-s1').style.display='block';}
 function pI(el,n){el.value=el.value.replace(/[^0-9]/g,'');if(el.value&&n<4)g('p'+(n+1)).focus();if(el.value&&n===4)setTimeout(doLogin,140);}
 function pK(e,n){if(e.key==='Backspace'&&!e.target.value&&n>1)g('p'+(n-1)).focus();if(e.key==='Enter')doLogin();}
 function getPin(){return[1,2,3,4].map(function(i){return g('p'+i).value;}).join('');}
-function pinErr(){[1,2,3,4].forEach(function(i){var e=g('p'+i);e.className='pbox err';e.value='';});fl('p-err');setTimeout(function(){[1,2,3,4].forEach(function(i){g('p'+i).className='pbox';});g('p1').focus();},650);}
+var PIN_SHOWN=false;
+function pinApplyMask(){
+  /* تبديل نوع الحقل هو الطريقة الوحيدة الموثوقة — حقل password يخفيه المتصفح
+     نفسه ولا تلغيه أي قاعدة CSS */
+  var act=document.activeElement, isPin=act&&/^p[1-4]$/.test(act.id||''), pos=0;
+  if(isPin){try{pos=act.selectionStart;}catch(e){}}
+  [1,2,3,4].forEach(function(i){
+    var e=g('p'+i);if(!e)return;
+    e.type=PIN_SHOWN?'text':'password';
+  });
+  if(isPin){var re=g(act.id);if(re){re.focus();try{re.setSelectionRange(pos,pos);}catch(e){}}}
+}
+function pinReveal(){
+  PIN_SHOWN=!PIN_SHOWN;
+  pinApplyMask();
+  var b=g('pin-eye');
+  if(b){b.innerHTML=(PIN_SHOWN?ic('x',14):ic('eye',14))+' '+(PIN_SHOWN?'إخفاء الرمز':'إظهار الرمز');b.setAttribute('aria-label',PIN_SHOWN?'إخفاء الرمز':'إظهار الرمز');}
+}
+function pinReset(){
+  PIN_SHOWN=false;
+  [1,2,3,4].forEach(function(i){var e=g('p'+i);if(e){e.value='';e.className='pbox';e.type='password';}});
+  var b=g('pin-eye');if(b){b.innerHTML=ic('eye',14)+' إظهار الرمز';}
+}
+function pinErr(){
+  loadHide();
+  [1,2,3,4].forEach(function(i){var e=g('p'+i);e.className='pbox err';e.value='';});
+  fl('p-err');
+  setTimeout(function(){[1,2,3,4].forEach(function(i){g('p'+i).className='pbox';});g('p1').focus();},650);
+}
+
+/* ================= شاشة التحميل ================= */
+var LOAD={t:null,step:0,timer:null};
+function loadShow(msg,sub){
+  var o=g('loadOv');if(!o)return;
+  LOAD.step=0;
+  loadStep(msg||'جارٍ التحقق…',sub||'');
+  o.classList.add('on');o.setAttribute('aria-hidden','false');
+  /* شبكة أمان: لا تترك المستخدم عالقاً لو تعطّلت الشبكة */
+  clearTimeout(LOAD.timer);
+  LOAD.timer=setTimeout(function(){
+    if(o.classList.contains('on')){
+      loadHide();
+      nameErr('تعذّر الاتصال بالخادم — تأكد من الإنترنت وأعد المحاولة');
+      goBack();
+    }
+  },25000);
+}
+function loadStep(msg,sub){
+  LOAD.step++;
+  var t=g('lo-tx'),sb=g('lo-sub');
+  if(t)t.textContent=msg;
+  if(sb)sb.textContent=sub||'';
+  [1,2,3].forEach(function(i){var d=g('lo-d'+i);if(d)d.classList.toggle('on',i<=LOAD.step);});
+}
+function loadHide(){
+  clearTimeout(LOAD.timer);
+  var o=g('loadOv');if(!o)return;
+  o.classList.remove('on');o.setAttribute('aria-hidden','true');
+  LOAD.step=0;
+  [1,2,3].forEach(function(i){var d=g('lo-d'+i);if(d)d.classList.remove('on');});
+}
+var LOGIN_BUSY=false;
 function doLogin(){
+  if(LOGIN_BUSY)return;                      /* امنع الضغط المزدوج */
   var name=gv('l-name'),pass=getPin();
   if(pass.length<4){fl('p-err');return;}
   if(FA.enabled){
+    LOGIN_BUSY=true;
+    loadShow('جارٍ التحقق من الرمز…','أكاديمية فارس');
     FA.login(name,pass).then(function(u){
-      if(!u){pinErr();return;}
+      if(!u){LOGIN_BUSY=false;pinErr();return;}
       FA.token=u.token;
+      loadStep('جارٍ تحميل بياناتك…',u.name||'');
       /* refresh state from cloud on login so we have latest, then enter */
       FA.loadState().then(function(state){if(state&&state.tournaments)DB=migrate(state)||DB;}).catch(function(){}).then(function(){
         var mem=DB.users.find(function(x){return x.id===u.id;});
         if(!mem){mem={id:u.id,name:u.name,username:u.username,role:u.role,team:u.team||'',phone:u.phone||'',coachId:u.coachId||''};DB.users.push(mem);}
         else{mem.role=u.role;mem.team=u.team||'';mem.phone=u.phone||'';}
-        CU=Object.assign({},mem);loginOK();
+        CU=Object.assign({},mem);
+        loadStep('جارٍ تجهيز الواجهة…','مرحباً بك');
+        LOGIN_BUSY=false;
+        setTimeout(function(){loginOK();},260);   /* لحظة قصيرة حتى تُقرأ الرسالة */
       });
-    }).catch(function(e){console.warn('login error',e);pinErr();});
+    }).catch(function(e){console.warn('login error',e);LOGIN_BUSY=false;pinErr();});
     return;
   }
   var u=DB.users.find(function(x){return x.username===name&&x.password===pass;});
@@ -2767,6 +2980,7 @@ function doLogin(){
     if(jr){u={id:'u_'+jr.id,name:jr.name,username:jr.name,password:jr.pin,role:jr.role,team:jr.team||'',cat:jr.cat||'',child:jr.child||'',childCat:jr.childCat||'',phone:jr.phone||''};DB.users.push(u);sv();}
   }
   if(!u){
+    loadHide();
     var st=lockFail(name);
     if(st.until){nameErr('تم قفل الحساب '+LOCK_MIN+' دقيقة بعد '+LOCK_MAX+' محاولات خاطئة');goBack();}
     else pinErr();
@@ -2778,10 +2992,12 @@ function doLogin(){
     setTimeout(function(){alert('دخلت برمز مؤقت — يرجى تغييره الآن من «ملفي الشخصي».');},400);
 }
 function loginOK(){
+  loadHide();
   g('LS').style.display='none';showTS();
+  pinReset();
   logA('تسجيل دخول','user','#1565c0');
 }
-function doLogout(){CU=null;NOTIFS=[];FA.token=null;g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';}
+function doLogout(){loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';}
 function visibleTournaments(){
   return DB.tournaments.filter(function(t){return t.visible||(CU&&['admin','organizer'].indexOf(CU.role)>-1);});
 }
@@ -3695,7 +3911,7 @@ var TR={
 'الفترة':'Period',
 'فني /10':'Technical /10',
 'شخصي /10':'Personal /10',
-'النتيجة /100':'Score /100',
+'النتيجة /5':'Score /5','فني /5':'Technical /5','شخصي /5':'Personal /5',
 'بواسطة':'By',
 'المجموعات':'Groups',
 'بدون مدرب حالياً':'No coach assigned',
@@ -6981,13 +7197,22 @@ var TDDAYS={smw:'السبت • الاثنين • الأربعاء',stt:'الأ
 var TDFR_ST={sched:'مجدولة',done:'مكتملة',cancel:'ملغاة',post:'مؤجلة'};
 var TDTECH=[['t1','التمرير والاستلام'],['t2','المراوغة'],['t3','اللياقة البدنية'],['t4','المهارة'],['t5','الإنهاء']];
 var TDPERS=[['p1','الشخصية'],['p2','قابلية التعلم'],['p3','فهمه للعبة'],['p4','الانضباط داخل الحصة'],['p5','التطور']];
+/* محاور تقييم المدرب اليدوية — [المفتاح، العنوان، الوصف، الأيقونة] */
+var TDCOAX=[
+  ['c1','الانضباط والحضور','الحضور في الوقت، الالتزام بمواعيد الحصص، والإشعار المسبق عند الغياب','clock'],
+  ['c2','إدارة الحصة التدريبية','تنظيم الوقت، انسياب التمارين، والسيطرة على المجموعة','list'],
+  ['c3','التطبيق الفني في الملعب','ترجمة الخطة إلى تمارين، وتصحيح الأداء الفني للاعبين','target'],
+  ['c4','التواصل مع اللاعبين وأولياء الأمور','وضوح التوجيه، الاحترام، والرد على استفسارات أولياء الأمور','users']
+];
+/* وزن المحاور اليدوية مقابل المؤشرات التلقائية */
+var TDCOW={manual:.7,auto:.3};
 
 /* ---- roles & scope ---- */
 function tdRole(){if(!CU)return null;if(CU.role==='admin')return 'admin';if(CU.role==='admin-team')return 'staff';if(CU.role==='coach')return 'coach';return null;}
 function tdAllowed(p){
   var r=tdRole();
   if(r==='admin')return true;
-  if(r==='staff')return ['home','branches','coaches','players','cats','evals','plans','friendly','follow','reports','player'].indexOf(p)>-1;
+  if(r==='staff')return ['home','branches','coaches','players','cats','evals','plans','friendly','follow','reports','player','coacheval'].indexOf(p)>-1;
   if(r==='coach')return ['home','players','evals','plans','friendly','follow','reports','player'].indexOf(p)>-1;
   return false;
 }
@@ -7053,15 +7278,24 @@ function tdSessions(daysKey,monthKey){
 }
 
 /* ---- evals ---- */
-function tdEvalAvg(ev,keys){var s=0;keys.forEach(function(k){s+=(+ev.scores[k[0]]||0);});return keys.length?Math.round(s*10/keys.length)/10:0;}
-function tdEvalFinal(ev){var s=0;TDTECH.concat(TDPERS).forEach(function(k){s+=(+ev.scores[k[0]]||0);});return s;}
+/* ===== مقياس التقييم =====
+   المقياس الحالي من 5. التقييمات المحفوظة قبل التحويل كانت من 10،
+   وتُقرأ كما هي عبر ev.sc (غير موجود = 10) ثم تُحوَّل عند العرض.
+   الدرجة النهائية تبقى نسبة من 100 حتى تظل كل التقييمات — القديمة والجديدة — قابلة للمقارنة. */
+var EVMAX=5;
+function evMax(ev){return (ev&&+ev.sc)||10;}
+function ev5(v,max){return Math.round((+v||0)*5/(max||10)*10)/10;}
+function evPct(v,max){return Math.round((+v||0)*100/(max||10));}
+function tdEvalAvg(ev,keys){var s=0,mx=evMax(ev);keys.forEach(function(k){s+=(+ev.scores[k[0]]||0);});return keys.length?Math.round(s*5/(keys.length*mx)*10)/10:0;}
+function tdEvalFinal(ev){var s=0,mx=evMax(ev),ks=TDTECH.concat(TDPERS);ks.forEach(function(k){s+=(+ev.scores[k[0]]||0);});return Math.round(s*100/(ks.length*mx));}
+function tdEvalOf5(ev){return Math.round(tdEvalFinal(ev)/20*10)/10;}
 function tdPlayerEvals(pid){return TDX().evals.filter(function(e){return e.pid===pid;}).sort(function(a,b){return a.period<b.period?-1:1;});}
 function tdEvalBars(ev){
-  var h='';
+  var h='',mx=evMax(ev);
   h+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin:.5rem 0 .4rem">الجانب الفني</div>';
-  TDTECH.forEach(function(k){var v=+ev.scores[k[0]]||0;h+='<div class="evrow"><span class="evl">'+k[1]+'</span><span class="evbar"><i style="width:'+(v*10)+'%"></i></span><span class="evn">'+v+'</span></div>';});
+  TDTECH.forEach(function(k){var v=+ev.scores[k[0]]||0;h+='<div class="evrow"><span class="evl">'+k[1]+'</span><span class="evbar"><i style="width:'+evPct(v,mx)+'%"></i></span><span class="evn">'+ev5(v,mx)+'</span></div>';});
   h+='<div style="font-size:11px;font-weight:700;color:var(--gray);margin:.7rem 0 .4rem">الجانب الشخصي</div>';
-  TDPERS.forEach(function(k){var v=+ev.scores[k[0]]||0;h+='<div class="evrow"><span class="evl">'+k[1]+'</span><span class="evbar"><i style="width:'+(v*10)+'%;background:var(--red)"></i></span><span class="evn">'+v+'</span></div>';});
+  TDPERS.forEach(function(k){var v=+ev.scores[k[0]]||0;h+='<div class="evrow"><span class="evl">'+k[1]+'</span><span class="evbar"><i style="width:'+evPct(v,mx)+'%;background:var(--red)"></i></span><span class="evn">'+ev5(v,mx)+'</span></div>';});
   return h;
 }
 
@@ -7094,7 +7328,7 @@ function tdP(pg){
   document.querySelectorAll('#td-links .dd-i').forEach(function(b){b.classList.remove('on');});
   var sb2=g('td-setbtn');if(sb2)sb2.classList.toggle('on',pg==='settings');
   document.querySelectorAll('#td-sbar-links .sb-l').forEach(function(b){b.classList.toggle('on',b.dataset.pg===pg);});
-  var fn={home:rTDHome,branches:rTDBranches,cats:rTDCats,players:rTDPlayers,player:rTDPlayerProfile,evals:rTDEvals,plans:rTDPlans,coaches:rTDCoaches,friendly:rTDFriendly,follow:rTDFollow,reports:rTDReports,settings:rTDSettings}[pg];
+  var fn={home:rTDHome,branches:rTDBranches,cats:rTDCats,players:rTDPlayers,player:rTDPlayerProfile,evals:rTDEvals,plans:rTDPlans,coaches:rTDCoaches,coacheval:rTDCoachEval,friendly:rTDFriendly,follow:rTDFollow,reports:rTDReports,settings:rTDSettings}[pg];
   if(fn)fn();
   window.scrollTo({top:0});
 }
@@ -7104,7 +7338,7 @@ function tdSel(id,arr,cur,ph){
     return '<option value="'+esc(v)+'"'+(String(v)===String(cur)?' selected':'')+'>'+esc(l)+'</option>';
   }).join('')+'</select>';
 }
-function tdScoreSel(id){var o='';for(var i=1;i<=10;i++)o+='<option value="'+i+'"'+(i===5?' selected':'')+'>'+i+'</option>';return '<select id="'+id+'">'+o+'</select>';}
+function tdScoreSel(id){var o='';for(var i=1;i<=EVMAX;i++)o+='<option value="'+i+'"'+(i===3?' selected':'')+'>'+i+'</option>';return '<select id="'+id+'">'+o+'</select>';}
 
 /* ================= NAVIGATION: 5 SECTIONS ================= */
 var TDSECTIONS=[
@@ -7146,7 +7380,7 @@ function tdSecOf(pg){
     if(s.page===pg)found=s.id;
     (s.items||[]).forEach(function(x){if(x[0]===pg&&!found)found=s.id;});
   });
-  if(pg==='player')found='data';
+  if(pg==='player'||pg==='coacheval')found='data';
   return found;
 }
 function buildTDNav(){
@@ -7657,7 +7891,7 @@ function rTDHome(){
     h+='<div class="at-wrap" style="margin-bottom:1.4rem"><table class="at"><thead><tr><th>اللاعب</th><th>المجموعة</th>'+(r==='coach'?'':'<th>الفرع</th>')+'<th>آخر تقييم سابق</th></tr></thead><tbody>';
     late.slice(0,8).forEach(function(p){
       var evs=tdPlayerEvals(p.id);
-      h+='<tr style="cursor:pointer" onclick="tdOpenPlayer(\''+p.id+'\')"><td style="font-weight:700">'+esc(p.name)+'</td><td>'+esc(tdGName(p.groupId))+'</td>'+(r==='coach'?'':'<td>'+esc(p.branch)+'</td>')+'<td>'+(evs.length?tdMonthLabel(evs[evs.length-1].period)+' — '+tdEvalFinal(evs[evs.length-1])+'/100':'لم يُقيَّم من قبل')+'</td></tr>';
+      h+='<tr style="cursor:pointer" onclick="tdOpenPlayer(\''+p.id+'\')"><td style="font-weight:700">'+esc(p.name)+'</td><td>'+esc(tdGName(p.groupId))+'</td>'+(r==='coach'?'':'<td>'+esc(p.branch)+'</td>')+'<td>'+(evs.length?tdMonthLabel(evs[evs.length-1].period)+' — '+tdEvalOf5(evs[evs.length-1])+' / 5':'لم يُقيَّم من قبل')+'</td></tr>';
     });
     h+='</tbody></table>'+(late.length>8?'<div style="font-size:11px;color:var(--gray);padding:.5rem">+'+(late.length-8)+' لاعبين آخرين</div>':'')+'</div>';
   }
@@ -7766,7 +8000,7 @@ function rTDBranchOne(b){
       +'<div class="astat"><div class="n">'+x.groups.length+'</div><div class="l">مجموعة</div></div>'
       +'<div class="astat"><div class="n">'+x.players.length+'</div><div class="l">لاعب</div></div>'
       +'<div class="astat"><div class="n">'+x.coaches.length+'</div><div class="l">مدرب</div></div>'
-      +'<div class="astat"><div class="n" style="color:var(--red)">'+(x.avg===null?'—':x.avg+'/100')+'</div><div class="l">متوسط التقييم</div></div>'
+      +'<div class="astat"><div class="n" style="color:var(--red)">'+(x.avg===null?'—':(Math.round(x.avg/20*10)/10)+' / 5')+'</div><div class="l">متوسط التقييم</div></div>'
       +'<div class="astat"><div class="n">'+x.plansM+'</div><div class="l">خطط الشهر</div></div>'
       +'<div class="astat"><div class="n">'+x.frM+'</div><div class="l">ودية هذا الشهر</div></div>'
       +'<div class="astat"><div class="n" style="color:var(--green)">'+x.w+' - '+x.d+' - '+x.l+'</div><div class="l">ف - ت - خ</div></div>'
@@ -7787,7 +8021,7 @@ function rTDBranchOne(b){
     else{
       h+='<div class="at-wrap" style="margin-bottom:1.4rem"><table class="at"><thead><tr><th>اللاعب</th><th>المجموعة</th><th>الفترة</th><th>النتيجة</th><th>الحالة</th></tr></thead><tbody>';
       evs.forEach(function(e){var p=tdPlayer(e.pid);
-        h+='<tr style="cursor:pointer" onclick="tdOpenPlayer(\''+e.pid+'\')"><td style="font-weight:700">'+esc(p?p.name:'—')+'</td><td>'+esc(p?tdGName(p.groupId):'—')+'</td><td>'+tdMonthLabel(e.period)+'</td><td style="font-weight:700;color:var(--red)">'+tdEvalFinal(e)+'/100</td><td>'+(e.approved?'<span class="badge approved">معتمد</span>':'<span class="badge pending">بالانتظار</span>')+'</td></tr>';});
+        h+='<tr style="cursor:pointer" onclick="tdOpenPlayer(\''+e.pid+'\')"><td style="font-weight:700">'+esc(p?p.name:'—')+'</td><td>'+esc(p?tdGName(p.groupId):'—')+'</td><td>'+tdMonthLabel(e.period)+'</td><td style="font-weight:700;color:var(--red)">'+tdEvalOf5(e)+' / 5</td><td>'+(e.approved?'<span class="badge approved">معتمد</span>':'<span class="badge pending">بالانتظار</span>')+'</td></tr>';});
       h+='</tbody></table></div>';
     }
     h+=tdSubHead('آخر الوديات في الفرع');
@@ -7807,7 +8041,7 @@ function rTDBranchOne(b){
       h+='<div class="at-wrap"><table class="at"><thead><tr><th>المدرب</th><th>المجموعات</th><th>اللاعبون</th><th>خطط الشهر</th><th>التزام التقييم</th><th>آخر تقييم</th><th>الجوال</th></tr></thead><tbody>';
       x.coaches.forEach(function(c){
         var st=tdCoachStats(c);
-        h+='<tr style="cursor:pointer" onclick="TDCO.view=\''+c.id+'\';tdP(\'coaches\')"><td style="font-weight:700">'+esc(c.name)+'</td><td>'+(st.groups.length?st.groups.map(function(gg){return esc(gg.name);}).join('، '):'—')+'</td><td>'+st.players.length+'</td><td>'+(st.attPct===null?'—':st.attPct+'%')+'</td><td>'+st.plansM+'</td><td>'+(st.evPct===null?'—':st.evPct+'%')+'</td><td style="font-weight:700">'+(st.lastRating===null?'—':st.lastRating+'/10')+'</td><td style="direction:ltr">'+esc(c.phone||'—')+'</td></tr>';
+        h+='<tr style="cursor:pointer" onclick="TDCO.view=\''+c.id+'\';tdP(\'coaches\')"><td style="font-weight:700">'+esc(c.name)+'</td><td>'+(st.groups.length?st.groups.map(function(gg){return esc(gg.name);}).join('، '):'—')+'</td><td>'+st.players.length+'</td><td>'+(st.attPct===null?'—':st.attPct+'%')+'</td><td>'+st.plansM+'</td><td>'+(st.evPct===null?'—':st.evPct+'%')+'</td><td style="font-weight:700">'+(st.lastRating===null?'—':tdCeOf5(st.lastRating)+' / 5')+'</td><td style="direction:ltr">'+esc(c.phone||'—')+'</td></tr>';
       });
       h+='</tbody></table></div>';
     }
@@ -7844,7 +8078,7 @@ function rTDBranchOne(b){
       h+='<div class="at-wrap"><table class="at"><thead><tr><th>اللاعب</th><th>المجموعة</th><th>الفئة</th><th>المركز</th><th>الحالة</th><th>آخر تقييم</th></tr></thead><tbody>';
       x.players.forEach(function(p){
         var evs=tdPlayerEvals(p.id);
-        h+='<tr style="cursor:pointer" onclick="tdOpenPlayer(\''+p.id+'\')"><td style="font-weight:700">'+esc(p.name)+'</td><td>'+esc(tdGName(p.groupId))+'</td><td>'+esc(p.cat||'—')+'</td><td>'+esc(p.pos||'—')+'</td><td><span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span></td><td>'+(evs.length?tdEvalFinal(evs[evs.length-1])+'/100':'—')+'</td></tr>';
+        h+='<tr style="cursor:pointer" onclick="tdOpenPlayer(\''+p.id+'\')"><td style="font-weight:700">'+esc(p.name)+'</td><td>'+esc(tdGName(p.groupId))+'</td><td>'+esc(p.cat||'—')+'</td><td>'+esc(p.pos||'—')+'</td><td><span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span></td><td>'+(evs.length?tdEvalOf5(evs[evs.length-1])+' / 5':'—')+'</td></tr>';
       });
       h+='</tbody></table></div>';
     }
@@ -7890,15 +8124,15 @@ function tdBrReportSections(b){
   var x=tdBrData(b),m=tdMonthKey(),out=[];
   out.push({title:'ملخص الفرع',head:['البند','القيمة'],rows:[
     ['الفئات',x.cats.length],['المجموعات',x.groups.length],['اللاعبون',x.players.length],['المدربون',x.coaches.length],
-    ['متوسط التقييم',x.avg===null?'—':x.avg+'/100'],
+    ['متوسط التقييم',x.avg===null?'—':(Math.round(x.avg/20*10)/10)+' / 5'],
     ['خطط الشهر',x.plansM],['وديات الشهر',x.frM],['إجمالي الوديات',x.fr.length],
     ['فوز - تعادل - خسارة',x.w+' - '+x.d+' - '+x.l],
     ['لاعبون مميزون',x.stars.length],['مرشحون لمنتخب فارس',x.noms.length],['يحتاجون متابعة',x.watch.length]
   ]});
   out.push({title:'أداء المدربين',head:['المدرب','المجموعات','اللاعبون','خطط الشهر','التزام التقييم','آخر تقييم'],
-    rows:x.coaches.map(function(c){var st=tdCoachStats(c);return [c.name,st.groups.length,st.players.length,st.plansM,st.evPct===null?'—':st.evPct+'%',st.lastRating===null?'—':st.lastRating+'/10'];})});
+    rows:x.coaches.map(function(c){var st=tdCoachStats(c);return [c.name,st.groups.length,st.players.length,st.plansM,st.evPct===null?'—':st.evPct+'%',st.lastRating===null?'—':tdCeOf5(st.lastRating)+' / 5'];})});
   out.push({title:'اللاعبون المميزون والمرشحون',head:['اللاعب','المجموعة','الحالة','المركز','آخر تقييم'],
-    rows:x.stars.concat(x.noms).map(function(p){var e=tdPlayerEvals(p.id);return [p.name,tdGName(p.groupId),TDPST[p.status],p.pos||'—',e.length?tdEvalFinal(e[e.length-1])+'/100':'—'];})});
+    rows:x.stars.concat(x.noms).map(function(p){var e=tdPlayerEvals(p.id);return [p.name,tdGName(p.groupId),TDPST[p.status],p.pos||'—',e.length?tdEvalOf5(e[e.length-1])+' / 5':'—'];})});
   return out;
 }
 function tdBrCSV(b,kind){
@@ -7907,12 +8141,12 @@ function tdBrCSV(b,kind){
     title='لاعبو '+b;
     head=['اللاعب','المجموعة','الفئة','المركز','القدم','تاريخ الميلاد','الحالة','آخر تقييم'];
     rows=x.players.map(function(p){var e=tdPlayerEvals(p.id);
-      return [p.name,tdGName(p.groupId),p.cat||'—',p.pos||'—',p.foot||'—',p.dob||'—',TDPST[p.status||'active'],e.length?tdEvalFinal(e[e.length-1])+'/100':'—'];});
+      return [p.name,tdGName(p.groupId),p.cat||'—',p.pos||'—',p.foot||'—',p.dob||'—',TDPST[p.status||'active'],e.length?tdEvalOf5(e[e.length-1])+' / 5':'—'];});
   }else if(kind==='coaches'){
     title='مدربو '+b;
     head=['المدرب','الجوال','المجموعات','اللاعبون','خطط الشهر','التزام التقييم','آخر تقييم'];
     rows=x.coaches.map(function(c){var st=tdCoachStats(c);
-      return [c.name,c.phone||'—',st.groups.map(function(gg){return gg.name;}).join(' / ')||'—',st.players.length,st.plansM,st.evPct===null?'—':st.evPct+'%',st.lastRating===null?'—':st.lastRating+'/10'];});
+      return [c.name,c.phone||'—',st.groups.map(function(gg){return gg.name;}).join(' / ')||'—',st.players.length,st.plansM,st.evPct===null?'—':st.evPct+'%',st.lastRating===null?'—':tdCeOf5(st.lastRating)+' / 5'];});
   }else{return;}
   var lines=[head].concat(rows).map(function(r){return r.map(function(c){return '"'+String(c==null?'':c).replace(/"/g,'""')+'"';}).join(',');});
   var blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
@@ -8097,7 +8331,7 @@ function rTDPlayerProfile(){
   else evs.slice().reverse().forEach(function(e){
     h+='<div class="rform" style="margin-bottom:.9rem">';
     h+='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.4rem">';
-    h+='<div style="font-weight:700;font-size:13px">'+tdMonthLabel(e.period)+' <span style="color:var(--red)">'+tdEvalFinal(e)+'/100</span></div>';
+    h+='<div style="font-weight:700;font-size:13px">'+tdMonthLabel(e.period)+' <span style="color:var(--red)">'+tdEvalOf5(e)+' / 5</span></div>';
     h+='<div style="display:flex;gap:.4rem;align-items:center">'+(e.approved?'<span class="badge approved">معتمد</span>':'<span class="badge pending">بانتظار الاعتماد</span>')
       +(tdRole()==='admin'&&!e.approved?'<button class="btn btn-r btn-sm" onclick="tdApproveEval(\''+e.id+'\',\'player\')">اعتماد</button>':'')
       +(tdRole()==='admin'?'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="tdDelEval(\''+e.id+'\',\'player\')">'+ic('trash',11)+'</button>':'')+'</div>';
@@ -8123,7 +8357,7 @@ function rTDPlayerProfile(){
 var TDEV={showForm:false,group:'',player:'',period:'',scores:{},notes:'',rec:''};
 function tdEvReset(){
   TDEV.scores={};
-  TDTECH.concat(TDPERS).forEach(function(k){TDEV.scores[k[0]]=5;});
+  TDTECH.concat(TDPERS).forEach(function(k){TDEV.scores[k[0]]=3;});
   TDEV.notes='';TDEV.rec='';TDEV.player='';
 }
 function tdEvSum(keys){var s=0;keys.forEach(function(k){s+=(+TDEV.scores[k[0]]||0);});return s;}
@@ -8134,10 +8368,11 @@ function tdEvGrade(total){
   if(total>=40)return{t:'مقبول',c:'#d97706'};
   return{t:'يحتاج تطوير',c:'#DD1D45'};
 }
-function tdEvColor(v){return v>=8?'#16a34a':(v>=6?'#1565c0':(v>=5?'#d97706':'#DD1D45'));}
+/* v على مقياس 5 */
+function tdEvColor(v){return v>=4.5?'#16a34a':(v>=3.5?'#1565c0':(v>=2.5?'#d97706':'#DD1D45'));}
 function tdEvScaleHTML(k){
   var v=+TDEV.scores[k]||0,cl=tdEvColor(v),h='';
-  for(var i=1;i<=10;i++){
+  for(var i=1;i<=EVMAX;i++){
     var on=i<=v;
     h+='<button type="button" class="ev-s'+(on?' on':'')+'" data-ev="'+k+'" data-n="'+i+'" style="'+(on?'background:'+cl+';border-color:'+cl+';color:#fff':'')+'" onclick="tdEvSet(\''+k+'\','+i+')">'+i+'</button>';
   }
@@ -8156,15 +8391,17 @@ function tdEvSet(k,n){
   tdEvPaintSum();
 }
 function tdEvPaintSum(){
-  var tech=tdEvSum(TDTECH),pers=tdEvSum(TDPERS),tot=tech+pers;
-  var gr=tdEvGrade(tot);
-  var set=function(id,val,pct,color){
+  var tech=tdEvSum(TDTECH),pers=tdEvSum(TDPERS);
+  var techA=Math.round(tech/TDTECH.length*10)/10, persA=Math.round(pers/TDPERS.length*10)/10;
+  var pct=Math.round((tech+pers)*100/((TDTECH.length+TDPERS.length)*EVMAX));
+  var gr=tdEvGrade(pct);
+  var set=function(id,val,p,color){
     var n=g(id+'-n');if(n){n.textContent=val;if(color)n.style.color=color;}
-    var b=g(id+'-b');if(b){b.style.width=pct+'%';if(color)b.style.background=color;}
+    var b=g(id+'-b');if(b){b.style.width=p+'%';if(color)b.style.background=color;}
   };
-  set('evsum-t',tech+'/50',tech*2,tdEvColor(tech/5));
-  set('evsum-p',pers+'/50',pers*2,tdEvColor(pers/5));
-  set('evsum-o',tot+'/100',tot,gr.c);
+  set('evsum-t',techA+' / 5',techA*20,tdEvColor(techA));
+  set('evsum-p',persA+' / 5',persA*20,tdEvColor(persA));
+  set('evsum-o',(Math.round(pct/20*10)/10)+' / 5',pct,gr.c);
   var gl=g('evsum-grade');if(gl){gl.textContent=gr.t;gl.style.background=gr.c+'1f';gl.style.color=gr.c;}
 }
 function rTDEvals(){
@@ -8266,8 +8503,8 @@ function tdSaveEval(){
   var gid=gv('tdev-g'),pid=gv('tdev-p'),period=gv('tdev-period');
   if(!gid||!pid||!period){fl('tdev-err');return;}
   var scores={};
-  TDTECH.concat(TDPERS).forEach(function(k){scores[k[0]]=+TDEV.scores[k[0]]||5;});
-  TDX().evals.push({id:uid(),pid:pid,period:period,scores:scores,notes:gv('tdev-notes'),rec:gv('tdev-rec'),by:CU.name,at:Date.now(),approved:false});
+  TDTECH.concat(TDPERS).forEach(function(k){scores[k[0]]=+TDEV.scores[k[0]]||3;});
+  TDX().evals.push({id:uid(),pid:pid,period:period,scores:scores,sc:EVMAX,notes:gv('tdev-notes'),rec:gv('tdev-rec'),by:CU.name,at:Date.now(),approved:false});
   logA('تقييم لاعب (إدارة فنية)','star','#d97706');
   sv();TDEV.showForm=false;tdEvReset();rTDEvals();fl('tdev-ok');
 }
@@ -8427,8 +8664,59 @@ function tdCoachStats(c){
   var plansM=t.plans.filter(function(pl){return gids.indexOf(pl.groupId)>-1&&tdPlanDate(pl).slice(0,7)===m;}).length;
   var evDone=ps.filter(function(p){return t.evals.some(function(e){return e.pid===p.id&&e.period===m;});}).length;
   var cevs=t.coachEvals.filter(function(e){return e.coachId===c.id;}).sort(function(a,b){return (b.at||0)-(a.at||0);});
-  return{groups:gs,players:ps,plansM:plansM,evPct:ps.length?Math.round(evDone*100/ps.length):null,evals:cevs,lastRating:cevs.length?cevs[0].rating:null};
+  return{groups:gs,players:ps,plansM:plansM,evPct:ps.length?Math.round(evDone*100/ps.length):null,evals:cevs,lastRating:cevs.length?tdCeScore(cevs[0]):null};
 }
+
+/* ---------- حساب درجة تقييم المدرب ---------- */
+/* الدرجة النهائية من 100 = (متوسط المحاور اليدوية ×10 × 70%) + (متوسط المؤشرات التلقائية × 30%)
+   وإذا لم تتوفر مؤشرات تلقائية (مدرب بلا مجموعات أو لاعبين) تُحسب المحاور اليدوية وحدها */
+function tdCeManual(ev){
+  if(!ev)return null;
+  var ax=ev.axes||{},vals=[];
+  TDCOAX.forEach(function(k){var v=+ax[k[0]];if(v>0)vals.push(v);});
+  if(!vals.length)return (ev.rating>0)?(+ev.rating)*10:null; /* توافق مع التقييمات القديمة (كانت من 10) */
+  var mx=(+ev.sc)||10;
+  return Math.round(vals.reduce(function(a,b){return a+b;},0)/vals.length*100/mx);
+}
+function tdCeScore(ev){
+  if(!ev)return null;
+  var man=tdCeManual(ev);if(man===null)return null;
+  var a=ev.auto||{},parts=[];
+  if(typeof a.plansPct==='number')parts.push(a.plansPct);
+  if(typeof a.evalPct==='number')parts.push(a.evalPct);
+  if(!parts.length)return man;
+  var auto=Math.round(parts.reduce(function(x,y){return x+y;},0)/parts.length);
+  return Math.round(man*TDCOW.manual+auto*TDCOW.auto);
+}
+function tdCeGrade(s){
+  if(s===null||s===undefined)return{l:'—',c:'var(--gray)'};
+  if(s>=85)return{l:'ممتاز',c:'#16a34a'};
+  if(s>=70)return{l:'جيد جداً',c:'#0ea5e9'};
+  if(s>=55)return{l:'جيد',c:'#d97706'};
+  if(s>=40)return{l:'يحتاج تحسين',c:'#ea580c'};
+  return{l:'ضعيف',c:'var(--red)'};
+}
+/* v على مقياس 5 */
+function tdCeColor(v){return v>=4.5?'#16a34a':v>=3.5?'#0ea5e9':v>=2.5?'#d97706':'var(--red)';}
+/* تحويل درجة مئوية إلى مقياس 5 */
+function tdCeOf5(s){return s===null||s===undefined?null:Math.round(s/20*10)/10;}
+
+/* مؤشرات تلقائية لشهر محدد */
+function tdCeAuto(c,m){
+  var t=TDX();
+  var gs=t.groups.filter(function(x){return x.coachId===c.id;});
+  var gids=gs.map(function(x){return x.id;});
+  var ps=t.players.filter(function(x){return gids.indexOf(x.groupId)>-1;});
+  var plans=t.plans.filter(function(pl){return gids.indexOf(pl.groupId)>-1&&tdPlanDate(pl).slice(0,7)===m;}).length;
+  var evDone=ps.filter(function(p){return t.evals.some(function(e){return e.pid===p.id&&e.period===m;});}).length;
+  return{
+    groups:gs.length,players:ps.length,plans:plans,evDone:evDone,
+    plansPct:gs.length?Math.min(100,Math.round(plans*100/gs.length)):null,
+    evalPct:ps.length?Math.round(evDone*100/ps.length):null
+  };
+}
+
+/* ---------- قائمة المدربين ---------- */
 function rTDCoaches(){
   var t=TDX(),cs=tdScopeCoaches(),brs=tdScopeBranchNames();
   var h=tdHead('whistle','المدربون','متابعة أداء المدربين والتزامهم بالخطط والتقييمات',
@@ -8446,7 +8734,7 @@ function rTDCoaches(){
   }
   if(!cs.length)h+=emptyBox('whistle','لا يوجد مدربون بعد',tdCanManage()?'أضف المدربين من زر «إضافة مدرب»':'');
   else cs.forEach(function(c){
-    var st=tdCoachStats(c);
+    var st=tdCoachStats(c),gr=tdCeGrade(st.lastRating);
     var open=TDCO.view===c.id;
     h+='<div class="rform" style="margin-bottom:.9rem">';
     h+='<div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;cursor:pointer" onclick="TDCO.view=TDCO.view===\''+c.id+'\'?\'\':\''+c.id+'\';rTDCoaches()">';
@@ -8455,29 +8743,19 @@ function rTDCoaches(){
     h+='<div style="display:flex;gap:1.1rem;font-size:11px;text-align:center;flex-wrap:wrap">';
     h+='<div><div style="font-weight:700;font-size:14px">'+st.plansM+'</div><div style="color:var(--gray)">خطط الشهر</div></div>';
     h+='<div><div style="font-weight:700;font-size:14px">'+(st.evPct===null?'—':st.evPct+'%')+'</div><div style="color:var(--gray)">التزام التقييم</div></div>';
-    h+='<div><div style="font-weight:700;font-size:14px;color:var(--red)">'+(st.lastRating===null?'—':st.lastRating+'/10')+'</div><div style="color:var(--gray)">آخر تقييم</div></div>';
+    h+='<div><div style="font-weight:700;font-size:14px;color:'+gr.c+'">'+(st.lastRating===null?'—':st.lastRating)+'</div><div style="color:var(--gray)">آخر تقييم</div></div>';
     h+='</div></div>';
     if(open){
       h+='<div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--bg)">';
       h+='<div class="td-info-row"><span class="k">المجموعات</span><span class="v">'+(st.groups.length?st.groups.map(function(x){return esc(x.name);}).join('، '):'—')+'</span></div>';
       h+='<div class="td-info-row"><span class="k">إجمالي الخطط المرفوعة</span><span class="v">'+t.plans.filter(function(pl){return st.groups.some(function(gg){return gg.id===pl.groupId;});}).length+'</span></div>';
+      h+='<div class="td-info-row"><span class="k">عدد التقييمات</span><span class="v">'+st.evals.length+'</span></div>';
       h+='<div class="td-info-row" style="border-bottom:none"><span class="k">ملاحظات المدير الفني</span><span class="v">'+esc(c.note||'—')+' '+(tdCanManage()?'<button class="btn btn-g btn-sm" style="padding:3px 9px;font-size:10px" onclick="tdCoachNote(\''+c.id+'\')">تحديث</button>':'')+'</span></div>';
-      /* تقييم المدرب */
-      if(tdCanManage()){
-        h+='<div class="cat-wrap" style="margin-top:.8rem"><div class="cw-t">'+ic('star',13)+' تقييم أداء المدرب</div>';
-        h+='<div class="frow" style="grid-template-columns:1fr 110px 1fr auto;gap:.6rem;align-items:end">';
-        h+='<div class="fg" style="margin-bottom:0"><label>الشهر</label><input type="month" id="tdce-m-'+c.id+'" value="'+tdMonthKey()+'" style="direction:ltr"></div>';
-        h+='<div class="fg" style="margin-bottom:0"><label>التقييم</label>'+tdScoreSel('tdce-r-'+c.id)+'</div>';
-        h+='<div class="fg" style="margin-bottom:0"><label>ملاحظات</label><input type="text" id="tdce-n-'+c.id+'"></div>';
-        h+='<button class="btn btn-n btn-sm" onclick="tdSaveCoachEval(\''+c.id+'\')">حفظ</button>';
-        h+='</div></div>';
-      }
-      if(st.evals.length){
-        h+='<div style="margin-top:.8rem;font-size:11px;font-weight:700;color:var(--gray)">سجل التقييمات</div>';
-        st.evals.forEach(function(e){h+='<div class="alert-item" style="margin-top:.4rem"><div class="aic" style="color:var(--amber)">'+ic('star',14)+'</div><div style="flex:1"><b>'+e.rating+'/10</b> — '+tdMonthLabel(e.month)+(e.notes?' • '+esc(e.notes):'')+'<div style="font-size:10px;color:var(--gray)">'+esc(e.by||'')+'</div></div></div>';});
-      }
-      if(tdRole()==='admin')h+='<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red);margin-top:.8rem" onclick="tdDelCoach(\''+c.id+'\')">'+ic('trash',12)+' حذف المدرب</button>';
       h+='</div>';
+      if(tdCanManage()){
+        h+='<button class="btn btn-r" style="width:100%;margin-top:.9rem" onclick="tdOpenCoachEval(\''+c.id+'\')">'+ic('star',14)+' فتح صفحة التقييم</button>';
+      }
+      if(tdRole()==='admin')h+='<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red);margin-top:.6rem" onclick="tdDelCoach(\''+c.id+'\')">'+ic('trash',12)+' حذف المدرب</button>';
     }
     h+='</div>';
   });
@@ -8497,13 +8775,6 @@ function tdCoachNote(id){
   if(v===null)return;
   c.note=v.trim();sv();rTDCoaches();
 }
-function tdSaveCoachEval(id){
-  var m=gv('tdce-m-'+id),r=+gv('tdce-r-'+id);
-  if(!m||!r)return;
-  TDX().coachEvals.push({id:uid(),coachId:id,month:m,rating:r,notes:gv('tdce-n-'+id),by:CU.name,at:Date.now()});
-  logA('تقييم مدرب (إدارة فنية)','star','#d97706');
-  sv();rTDCoaches();
-}
 function tdDelCoach(id){
   askConfirm('حذف المدرب؟ ستبقى مجموعاته بدون مدرب.',function(){
   var t=TDX();
@@ -8512,6 +8783,238 @@ function tdDelCoach(id){
   sv();TDCO.view='';rTDCoaches();
 });
 }
+
+/* ================= صفحة تقييم المدرب ================= */
+var TDCE={id:'',month:'',ax:{},open:''};
+
+function tdOpenCoachEval(id){
+  if(!tdCanManage())return;
+  TDCE.id=id;TDCE.month=tdMonthKey();TDCE.open='';
+  tdCeLoad();
+  tdP('coacheval');
+}
+/* تحميل قيم المحاور: من تقييم الشهر المحدد إن وُجد، وإلا من آخر تقييم، وإلا 5 */
+function tdCeLoad(){
+  var ex=tdCeOf(TDCE.id,TDCE.month);
+  TDCE.ax={};
+  TDCOAX.forEach(function(k){
+    var v=ex&&ex.axes?+ex.axes[k[0]]:0;
+    TDCE.ax[k[0]]=v>0?v:3;
+  });
+}
+function tdCeOf(cid,m){
+  return TDX().coachEvals.find(function(e){return e.coachId===cid&&e.month===m;});
+}
+function tdCeSetMonth(){
+  var v=gv('ce-month');if(!v)return;
+  TDCE.month=v;tdCeLoad();rTDCoachEval();
+}
+function tdCeSet(k,v){
+  TDCE.ax[k]=v;
+  rTDCoachEval();
+}
+function tdCeToggle(id){TDCE.open=TDCE.open===id?'':id;rTDCoachEval();}
+
+function rTDCoachEval(){
+  var el=g('tdc-coacheval');if(!el)return;
+  var c=tdCoach(TDCE.id);
+  if(!c||!tdCanManage()){el.innerHTML=emptyBox('whistle','المدرب غير موجود أو لا تملك صلاحية العرض');return;}
+  var t=TDX(),m=TDCE.month||tdMonthKey();
+  var auto=tdCeAuto(c,m);
+  var existing=tdCeOf(c.id,m);
+
+  /* الدرجة المباشرة من الاختيارات الحالية */
+  var vals=TDCOAX.map(function(k){return +TDCE.ax[k[0]]||0;});
+  var man=Math.round(vals.reduce(function(a,b){return a+b;},0)/vals.length*100/EVMAX);
+  var aParts=[];
+  if(auto.plansPct!==null)aParts.push(auto.plansPct);
+  if(auto.evalPct!==null)aParts.push(auto.evalPct);
+  var autoAvg=aParts.length?Math.round(aParts.reduce(function(x,y){return x+y;},0)/aParts.length):null;
+  var final=autoAvg===null?man:Math.round(man*TDCOW.manual+autoAvg*TDCOW.auto);
+  var gr=tdCeGrade(final);
+
+  var h='<button class="btn btn-g btn-sm" onclick="tdP(\'coaches\')" style="margin-bottom:1rem">'+ic('swap',13)+' رجوع للمدربين</button>';
+
+  /* ===== رأس الصفحة ===== */
+  var R=48,CIRC=2*Math.PI*R,off=CIRC-(final/100)*CIRC;
+  h+='<div class="ce-hero"><div class="ce-hero-in">';
+  h+='<div class="ce-av">'+esc(ti(c.name))+'</div>';
+  h+='<div class="ce-hi">';
+  h+='<div class="ce-nm">'+esc(c.name)+'</div>';
+  h+='<div class="ce-sub">'+ic('pin',12)+' '+esc(c.branch||'—')+(c.phone?' <span style="opacity:.4">•</span> <span style="direction:ltr">'+esc(c.phone)+'</span>':'')+'</div>';
+  h+='<div class="ce-tags"><span class="ce-tag">'+auto.groups+' مجموعة</span><span class="ce-tag">'+auto.players+' لاعب</span><span class="ce-tag">'+t.coachEvals.filter(function(e){return e.coachId===c.id;}).length+' تقييم سابق</span></div>';
+  h+='</div>';
+  h+='<div class="ce-ring"><svg viewBox="0 0 110 110">'
+    +'<circle cx="55" cy="55" r="'+R+'" stroke="rgba(255,255,255,.14)" stroke-width="8" fill="none"/>'
+    +'<circle cx="55" cy="55" r="'+R+'" stroke="'+gr.c+'" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="'+CIRC.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" style="transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1)"/>'
+    +'</svg><div class="ce-ring-tx"><div class="ce-ring-n">'+tdCeOf5(final)+'</div><div class="ce-ring-l">من 5</div>'
+    +'<div class="ce-ring-g" style="background:'+gr.c+'22;color:'+gr.c+'">'+gr.l+'</div></div></div>';
+  h+='</div></div>';
+
+  /* ===== شريط الشهر ===== */
+  h+='<div class="ce-bar">';
+  h+='<span class="ce-bar-l">'+ic('cal',13)+' شهر التقييم</span>';
+  h+='<input type="month" id="ce-month" value="'+esc(m)+'" onchange="tdCeSetMonth()">';
+  h+='<span class="sp"></span>';
+  h+=existing?'<span class="ce-state done">'+ic('check',12)+' يوجد تقييم محفوظ لهذا الشهر — الحفظ سيُحدّثه</span>'
+             :'<span class="ce-state new">'+ic('plus',12)+' لا يوجد تقييم لهذا الشهر بعد</span>';
+  h+='</div>';
+
+  /* ===== المؤشرات التلقائية ===== */
+  h+=tdSubHead('مؤشرات محسوبة تلقائياً','<span style="font-size:11px;color:var(--gray)">من بيانات النظام — وزنها '+Math.round(TDCOW.auto*100)+'%</span>');
+  h+='<div class="ce-auto">';
+  h+=tdCeAutoCard('doc','الالتزام برفع الخطط',auto.plansPct,auto.plans+' خطة مرفوعة مقابل '+auto.groups+' مجموعة','لا توجد مجموعات مسندة لهذا المدرب');
+  h+=tdCeAutoCard('star','تقييم اللاعبين',auto.evalPct,auto.evDone+' لاعب مُقيَّم من أصل '+auto.players,'لا يوجد لاعبون في مجموعاته');
+  h+='<div class="ce-ac"><div><div class="ce-ac-t">'+ic('chart',13)+' متوسط المؤشرات</div>'
+    +'<div class="ce-ac-n" style="color:'+(autoAvg===null?'var(--gray)':tdCeColor(autoAvg/20))+'">'+(autoAvg===null?'—':autoAvg+'%')+'</div>'
+    +'<div class="ce-ac-s">'+(autoAvg===null?'غير متاح':'يدخل بوزن '+Math.round(TDCOW.auto*100)+'% في الدرجة')+'</div>'
+    +'<div class="ce-ac-track"><div class="ce-ac-fill" style="width:'+(autoAvg||0)+'%;background:'+(autoAvg===null?'var(--gray)':tdCeColor(autoAvg/20))+'"></div></div></div></div>';
+  h+='</div>';
+  if(autoAvg===null)h+='<div class="ce-note">'+ic('info',13)+'<div>لا تتوفر مؤشرات تلقائية لهذا المدرب هذا الشهر، لذلك تُحتسب الدرجة النهائية من المحاور اليدوية وحدها بوزن 100%.</div></div>';
+  else h+='<div class="ce-note">'+ic('info',13)+'<div>هذه الأرقام تُقرأ مباشرة من الخطط والتقييمات المسجّلة في النظام ولا يمكن تعديلها يدوياً. لتحسينها، على المدرب رفع خططه وتقييم لاعبيه في حينه.</div></div>';
+
+  /* ===== المحاور اليدوية ===== */
+  h+=tdSubHead('محاور التقييم','<span style="font-size:11px;color:var(--gray)">وزنها '+Math.round(TDCOW.manual*100)+'%</span>');
+  TDCOAX.forEach(function(k){
+    var v=+TDCE.ax[k[0]]||5,col=tdCeColor(v);
+    h+='<div class="ce-ax">';
+    h+='<div class="ce-ax-hd"><div class="ce-ax-ic">'+ic(k[3],17)+'</div>';
+    h+='<div class="ce-ax-tx"><div class="ce-ax-t">'+k[1]+'</div><div class="ce-ax-d">'+k[2]+'</div></div>';
+    h+='<div class="ce-ax-v" style="background:'+col+'1f;color:'+col+'">'+v+'</div></div>';
+    h+='<div class="ce-scale">';
+    for(var i=1;i<=EVMAX;i++){
+      var cls=i===v?' on '+(i>=5?'hi':i>=4?'':i>=3?'mid':'lo'):'';
+      h+='<button type="button" class="ce-sb'+cls+'" onclick="tdCeSet(\''+k[0]+'\','+i+')">'+i+'</button>';
+    }
+    h+='</div>';
+    h+='<div class="ce-legend"><span>١ — ضعيف جداً</span><span>٥ — ممتاز</span></div>';
+    h+='</div>';
+  });
+
+  /* ===== الدرجة النهائية ===== */
+  h+='<div class="ce-sum"><div class="ce-sum-row">';
+  h+='<div><div class="ce-sum-l">الدرجة النهائية لشهر '+tdMonthLabel(m)+'</div>';
+  h+='<div class="ce-sum-n" style="color:'+gr.c+'">'+tdCeOf5(final)+' <span style="font-size:1rem;color:var(--gray);font-weight:600">/ 5 <span style="font-size:.8rem">('+final+'%)</span></span></div></div>';
+  h+='<div style="background:'+gr.c+'1f;color:'+gr.c+';font-weight:800;font-size:13px;padding:9px 20px;border-radius:99px">'+gr.l+'</div>';
+  h+='</div>';
+  h+='<div class="ce-split">';
+  h+='<div class="ce-sp"><div class="ce-sp-l">المحاور اليدوية ('+Math.round(TDCOW.manual*100)+'%)</div><div class="ce-sp-n">'+tdCeOf5(man)+' / 5</div></div>';
+  h+='<div class="ce-sp"><div class="ce-sp-l">المؤشرات التلقائية ('+(autoAvg===null?'0':Math.round(TDCOW.auto*100))+'%)</div><div class="ce-sp-n">'+(autoAvg===null?'—':autoAvg)+'</div></div>';
+  h+='</div></div>';
+
+  /* ===== ملاحظات ===== */
+  h+='<div class="rform" style="margin-bottom:1.2rem">';
+  h+='<div class="fg"><label>'+'أبرز نقاط القوة'+'</label><textarea id="ce-str" rows="2" placeholder="ما الذي أجاده المدرب هذا الشهر؟">'+esc(existing&&existing.strengths?existing.strengths:'')+'</textarea></div>';
+  h+='<div class="fg"><label>'+'ما يحتاج تحسينه'+'</label><textarea id="ce-imp" rows="2" placeholder="نقاط محددة وقابلة للقياس">'+esc(existing&&existing.improve?existing.improve:'')+'</textarea></div>';
+  h+='<div class="fg" style="margin-bottom:0"><label>ملاحظات عامة</label><textarea id="ce-notes" rows="2">'+esc(existing?(existing.notes||''):'')+'</textarea></div>';
+  h+='</div>';
+
+  h+='<button class="btn btn-r" style="width:100%;min-height:50px;font-size:14px" onclick="tdCeSave()">'+ic('check',15)+' '+(existing?'تحديث تقييم '+tdMonthLabel(m):'حفظ تقييم '+tdMonthLabel(m))+'</button>';
+  h+='<div class="msg ok" id="ce-ok">تم حفظ التقييم</div>';
+
+  /* ===== سجل التطور ===== */
+  var hist=t.coachEvals.filter(function(e){return e.coachId===c.id;})
+    .sort(function(a,b){return (a.month||'').localeCompare(b.month||'');});
+  h+=tdSubHead('سجل التطور ('+hist.length+')');
+  if(!hist.length)h+=emptyBox('chart','لا توجد تقييمات سابقة','أول تقييم لهذا المدرب سيظهر هنا');
+  else{
+    var last12=hist.slice(-12);
+    h+='<div class="ce-hist">';
+    last12.forEach(function(e){
+      var s=tdCeScore(e);if(s===null)s=0;
+      var gg2=tdCeGrade(s);
+      h+='<div class="ce-hb"><div class="ce-hb-n" style="color:'+gg2.c+'">'+tdCeOf5(s)+'</div>'
+        +'<div class="ce-hb-t"><div class="ce-hb-f" style="height:'+Math.max(4,s)+'%;background:'+gg2.c+'"></div></div>'
+        +'<div class="ce-hb-l">'+esc((e.month||'').replace('-','/').slice(2))+'</div></div>';
+    });
+    h+='</div>';
+    hist.slice().reverse().forEach(function(e){
+      var s=tdCeScore(e),gg3=tdCeGrade(s),op=TDCE.open===e.id;
+      h+='<div class="ce-rec">';
+      h+='<div class="ce-rec-hd" style="cursor:pointer" onclick="tdCeToggle(\''+e.id+'\')">';
+      h+='<div class="ce-rec-b" style="background:'+gg3.c+'1f;color:'+gg3.c+'">'+(s===null?'—':tdCeOf5(s))+'</div>';
+      h+='<div class="ce-rec-t"><div class="ce-rec-m">'+tdMonthLabel(e.month)+'</div>'
+        +'<div class="ce-rec-s">'+gg3.l+' • بواسطة '+esc(e.by||'—')+'</div></div>';
+      h+='<span style="color:var(--gray);font-size:11px">'+(op?'إخفاء':'التفاصيل')+'</span>';
+      h+='</div>';
+      if(op){
+        h+='<div class="ce-rec-bd">';
+        if(e.axes&&Object.keys(e.axes).length){
+          TDCOAX.forEach(function(k){
+            var v=+e.axes[k[0]]||0;if(!v)return;
+            var mx=(+e.sc)||10,v5=ev5(v,mx);
+            h+='<div class="ce-mini"><span class="ce-mini-l">'+k[1]+'</span>'
+              +'<span class="ce-mini-t"><span class="ce-mini-f" style="width:'+evPct(v,mx)+'%;background:'+tdCeColor(v5)+'"></span></span>'
+              +'<span class="ce-mini-n" style="color:'+tdCeColor(v5)+'">'+v5+'</span></div>';
+          });
+        }else if(e.rating){
+          var r5=ev5(e.rating,10);
+          h+='<div class="ce-mini"><span class="ce-mini-l">تقييم عام (نموذج قديم)</span>'
+            +'<span class="ce-mini-t"><span class="ce-mini-f" style="width:'+(e.rating*10)+'%;background:'+tdCeColor(r5)+'"></span></span>'
+            +'<span class="ce-mini-n" style="color:'+tdCeColor(r5)+'">'+r5+'</span></div>';
+        }
+        if(e.auto&&(typeof e.auto.plansPct==='number'||typeof e.auto.evalPct==='number')){
+          h+='<div style="font-size:10.5px;color:var(--gray);margin-top:.6rem;font-weight:700">المؤشرات التلقائية وقت التقييم</div>';
+          if(typeof e.auto.plansPct==='number')h+='<div class="ce-mini"><span class="ce-mini-l">الالتزام بالخطط</span><span class="ce-mini-t"><span class="ce-mini-f" style="width:'+e.auto.plansPct+'%;background:'+tdCeColor(e.auto.plansPct/20)+'"></span></span><span class="ce-mini-n">'+e.auto.plansPct+'%</span></div>';
+          if(typeof e.auto.evalPct==='number')h+='<div class="ce-mini"><span class="ce-mini-l">تقييم اللاعبين</span><span class="ce-mini-t"><span class="ce-mini-f" style="width:'+e.auto.evalPct+'%;background:'+tdCeColor(e.auto.evalPct/20)+'"></span></span><span class="ce-mini-n">'+e.auto.evalPct+'%</span></div>';
+        }
+        if(e.strengths)h+='<div class="ce-txt"><b>نقاط القوة</b>'+esc(e.strengths)+'</div>';
+        if(e.improve)h+='<div class="ce-txt"><b>ما يحتاج تحسينه</b>'+esc(e.improve)+'</div>';
+        if(e.notes)h+='<div class="ce-txt"><b>ملاحظات</b>'+esc(e.notes)+'</div>';
+        if(tdRole()==='admin')h+='<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red);margin-top:.7rem" onclick="tdCeDel(\''+e.id+'\')">'+ic('trash',12)+' حذف هذا التقييم</button>';
+        h+='</div>';
+      }
+      h+='</div>';
+    });
+  }
+
+  el.innerHTML=h;
+  hydrateIcons(el);
+}
+
+function tdCeAutoCard(icn,title,pct,sub,noneTxt){
+  var has=pct!==null&&pct!==undefined;
+  var col=has?tdCeColor(pct/20):'var(--gray)';
+  return '<div class="ce-ac"><div><div class="ce-ac-t">'+ic(icn,13)+' '+title+'</div>'
+    +'<div class="ce-ac-n" style="color:'+col+'">'+(has?pct+'%':'—')+'</div>'
+    +'<div class="ce-ac-s">'+(has?esc(sub):esc(noneTxt))+'</div>'
+    +'<div class="ce-ac-track"><div class="ce-ac-fill" style="width:'+(has?pct:0)+'%;background:'+col+'"></div></div></div></div>';
+}
+
+function tdCeSave(){
+  var c=tdCoach(TDCE.id);if(!c||!tdCanManage())return;
+  var t=TDX(),m=TDCE.month||tdMonthKey();
+  var auto=tdCeAuto(c,m);
+  var axes={};TDCOAX.forEach(function(k){axes[k[0]]=+TDCE.ax[k[0]]||3;});
+  var payload={
+    coachId:c.id,month:m,axes:axes,sc:EVMAX,
+    auto:{plansPct:auto.plansPct,evalPct:auto.evalPct,plans:auto.plans,groups:auto.groups,evDone:auto.evDone,players:auto.players},
+    strengths:gv('ce-str'),improve:gv('ce-imp'),notes:gv('ce-notes'),
+    by:CU.name,at:Date.now()
+  };
+  /* التقييم يُحدَّث بدل أن يتكرر لنفس الشهر */
+  var ex=tdCeOf(c.id,m);
+  if(ex){
+    Object.keys(payload).forEach(function(k){ex[k]=payload[k];});
+    delete ex.rating;
+    logA('تحديث تقييم مدرب: '+c.name+' — '+tdMonthLabel(m),'star','#d97706');
+  }else{
+    payload.id=uid();
+    t.coachEvals.push(payload);
+    logA('تقييم مدرب: '+c.name+' — '+tdMonthLabel(m),'star','#d97706');
+  }
+  sv();rTDCoachEval();fl('ce-ok');
+}
+function tdCeDel(id){
+  askConfirm('حذف هذا التقييم نهائياً؟',function(){
+    var t=TDX();
+    t.coachEvals=t.coachEvals.filter(function(x){return x.id!==id;});
+    sv();TDCE.open='';tdCeLoad();rTDCoachEval();
+  });
+}
+/* توافق: الاسم القديم ما زال يعمل من أي مكان يستدعيه */
+function tdSaveCoachEval(id){tdOpenCoachEval(id);}
+
 
 /* ================= المباريات الودية ================= */
 var TDFR={showForm:false,edit:'',res:'',det:'',view:'cal',period:'month',ref:new Date().toISOString(),branch:'',coach:'',group:'',status:''};
@@ -8754,18 +9257,18 @@ function tdReportData(){
       var gg=tdGroup(pl.groupId);
       rows.push([tdDayLabel(tdPlanDate(pl)),pl.title,gg?gg.name:'—',gg?gg.branch:'—',pl.dur?pl.dur+' د':'—',pl.by||'—']);});
   }else if(type==='evals'){
-    head=['اللاعب','الفرع','المجموعة','الفترة','فني /10','شخصي /10','النتيجة /100','الحالة','بواسطة'];
+    head=['اللاعب','الفرع','المجموعة','الفترة','فني /5','شخصي /5','النتيجة /5','الحالة','بواسطة'];
     t.evals.filter(function(e){return ps.some(function(p){return p.id===e.pid;});}).forEach(function(e){var p=tdPlayer(e.pid);
       rows.push([p?p.name:'—',p?p.branch:'—',p?tdGName(p.groupId):'—',tdMonthLabel(e.period),tdEvalAvg(e,TDTECH),tdEvalAvg(e,TDPERS),tdEvalFinal(e),e.approved?'معتمد':'بالانتظار',e.by||'—']);});
   }else if(type==='dev'){
     head=['اللاعب','الفرع','عدد التقييمات','أول تقييم','آخر تقييم','التطور'];
     ps.forEach(function(p){var evs=tdPlayerEvals(p.id);if(!evs.length){rows.push([p.name,p.branch,0,'—','—','—']);return;}
       var f=tdEvalFinal(evs[0]),l=tdEvalFinal(evs[evs.length-1]),d=l-f;
-      rows.push([p.name,p.branch,evs.length,f+'/100',l+'/100',(d>0?'+':'')+d]);});
+      rows.push([p.name,p.branch,evs.length,(Math.round(f/20*10)/10)+' / 5',(Math.round(l/20*10)/10)+' / 5',(d>0?'+':'')+(Math.round(d/20*10)/10)]);});
   }else if(type==='coaches'){
     head=['المدرب','الفرع','المجموعات','اللاعبون','خطط الشهر','التزام التقييم','آخر تقييم'];
     cs.forEach(function(c){var st=tdCoachStats(c);
-      rows.push([c.name,c.branch,st.groups.length,st.players.length,st.plansM,st.evPct===null?'—':st.evPct+'%',st.lastRating===null?'—':st.lastRating+'/10']);});
+      rows.push([c.name,c.branch,st.groups.length,st.players.length,st.plansM,st.evPct===null?'—':st.evPct+'%',st.lastRating===null?'—':tdCeOf5(st.lastRating)+' / 5']);});
   }else if(type==='branches'){
     head=['الفرع','الفئات','المجموعات','اللاعبون','المدربون','الوديات','متوسط التقييم'];
     brs.forEach(function(b){
@@ -8774,7 +9277,7 @@ function tdReportData(){
       var fr=t.friendlies.filter(function(f){var gg=tdGroup(f.groupId);return gg&&gg.branch===b;}).length;
       var evs=t.evals.filter(function(e){var p=tdPlayer(e.pid);return p&&p.branch===b;});
       var avg=evs.length?Math.round(evs.reduce(function(s,e){return s+tdEvalFinal(e);},0)/evs.length):null;
-      rows.push([b,bcat.length,bg.length,bp.length,bc.length,fr,avg===null?'—':avg+'/100']);});
+      rows.push([b,bcat.length,bg.length,bp.length,bc.length,fr,avg===null?'—':(Math.round(avg/20*10)/10)+' / 5']);});
   }else if(type==='friendly'){
     head=['المجموعة','الفرع','المنافس','النوع','التاريخ','النتيجة','الحالة','الاعتماد','المدرب'];
     var gids=tdScopeGroups().map(function(x){return x.id;});
@@ -8784,7 +9287,7 @@ function tdReportData(){
     var want=type==='stars'?'star':'nom';
     head=['اللاعب','الفرع','المجموعة','الفئة','المركز','آخر تقييم'];
     ps.filter(function(p){return p.status===want;}).forEach(function(p){
-      var evs=tdPlayerEvals(p.id);var last=evs.length?tdEvalFinal(evs[evs.length-1])+'/100':'—';
+      var evs=tdPlayerEvals(p.id);var last=evs.length?tdEvalOf5(evs[evs.length-1])+' / 5':'—';
       rows.push([p.name,p.branch,tdGName(p.groupId),p.cat||'—',p.pos||'—',last]);});
   }
   return{title:title,head:head,rows:rows};
@@ -8854,7 +9357,7 @@ function tdDelTask(id){
 /* ================= الإعدادات (مدير النظام) ================= */
 var TDST={editG:'',editC:''};
 var NT_EB={home:'منتخب فارس',squad:'منتخب فارس',camps:'منتخب فارس',matches:'منتخب فارس',evals:'منتخب فارس',reports:'منتخب فارس',settings:'منتخب فارس'};
-var TD_EB={home:'الإدارة الفنية',branches:'البيانات الأساسية',cats:'البيانات الأساسية',players:'البيانات الأساسية',coaches:'البيانات الأساسية',evals:'العمل الفني',plans:'العمل الفني',friendly:'العمل الفني',follow:'المتابعة',reports:'التقارير',settings:'إعداد النظام',player:'ملف لاعب'};
+var TD_EB={home:'الإدارة الفنية',branches:'البيانات الأساسية',cats:'البيانات الأساسية',players:'البيانات الأساسية',coaches:'البيانات الأساسية',evals:'العمل الفني',plans:'العمل الفني',friendly:'العمل الفني',follow:'المتابعة',reports:'التقارير',settings:'إعداد النظام',player:'ملف لاعب',coacheval:'تقييم المدربين'};
 function tdHead(icn,title,sub,actions){
   var inNT=(g('NT')&&g('NT').style.display==='block');
   var eb=inNT?(NT_EB[NTPAGE]||'منتخب فارس'):(TD_EB[TDPAGE]||'');
@@ -9511,7 +10014,7 @@ function rNTHome(){
   else{
     h+='<div class="at-wrap" style="margin-bottom:1.4rem"><table class="at"><thead><tr><th>اللاعب</th><th>الفئة</th><th>الفترة</th><th>فني</th><th>شخصي</th><th>النتيجة</th><th>الحالة</th></tr></thead><tbody>';
     evs.forEach(function(e){var m=ntMember(e.mid);
-      h+='<tr><td style="font-weight:700">'+esc(m?ntPName(m):'—')+'</td><td>'+esc(m?ntSqName(m.squadId):'—')+'</td><td>'+tdMonthLabel(e.period)+'</td><td>'+tdEvalAvg(e,TDTECH)+'/10</td><td>'+tdEvalAvg(e,TDPERS)+'/10</td><td style="font-weight:700;color:var(--red)">'+tdEvalFinal(e)+'/100</td><td>'+(e.approved?'<span class="badge approved">معتمد</span>':'<span class="badge pending">بالانتظار</span>')+'</td></tr>';
+      h+='<tr><td style="font-weight:700">'+esc(m?ntPName(m):'—')+'</td><td>'+esc(m?ntSqName(m.squadId):'—')+'</td><td>'+tdMonthLabel(e.period)+'</td><td>'+tdEvalAvg(e,TDTECH)+' / 5</td><td>'+tdEvalAvg(e,TDPERS)+' / 5</td><td style="font-weight:700;color:var(--red)">'+tdEvalOf5(e)+' / 5</td><td>'+(e.approved?'<span class="badge approved">معتمد</span>':'<span class="badge pending">بالانتظار</span>')+'</td></tr>';
     });
     h+='</tbody></table></div>';
   }
@@ -9537,7 +10040,7 @@ function rNTSquad(){
       h+='<div class="at-wrap" style="margin-bottom:1.4rem"><table class="at"><thead><tr><th>اللاعب</th><th>الفرع</th><th>المجموعة</th><th>المواليد</th><th>المركز</th><th>آخر تقييم</th><th>الفئة المقترحة</th><th></th></tr></thead><tbody>';
       cands.forEach(function(p){
         var evs=tdPlayerEvals(p.id);
-        var last=evs.length?tdEvalFinal(evs[evs.length-1])+'/100':'—';
+        var last=evs.length?tdEvalOf5(evs[evs.length-1])+' / 5':'—';
         var y=ntBirthYear(p);
         var match=ntSquadByYear(y);
         h+='<tr><td style="font-weight:700">'+esc(p.name)+'</td><td>'+esc(p.branch)+'</td><td>'+esc(tdGName(p.groupId))+'</td><td>'+esc(y||'—')+'</td><td>'+esc(p.pos||'—')+'</td><td>'+last+'</td>';
@@ -9577,7 +10080,7 @@ function rNTSquad(){
         mem.forEach(function(m){
           var p=ntPlayerInfo(m);
           var mev=n.evals.filter(function(e){return e.mid===m.id;});
-          var last=mev.length?tdEvalFinal(mev[mev.length-1])+'/100':'—';
+          var last=mev.length?tdEvalOf5(mev[mev.length-1])+' / 5':'—';
           h+='<tr><td style="font-weight:700">'+(m.jersey||'—')+'</td><td style="font-weight:700">'+esc(ntPName(m))+'</td><td>'+esc(p.branch||'—')+'</td><td>'+esc(m.pos||p.pos||'—')+'</td><td>'+esc(p.foot||'—')+'</td><td>'+esc(ntBirthYear(p)||'—')+'</td><td>'+mev.length+' ('+last+')</td>';
           h+='<td style="white-space:nowrap">'+(ntCanManage()?'<button class="ab" style="background:var(--bg);color:var(--navy)" onclick="ntEditMember(\''+m.id+'\')">'+ic('edit',11)+'</button><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="ntRemoveMember(\''+m.id+'\')">'+ic('trash',11)+'</button>':'')+'</td></tr>';
         });
@@ -9922,7 +10425,7 @@ function rNTEvals(){
     var m=ntMember(e.mid);
     h+='<div class="rform" style="margin-bottom:.9rem">';
     h+='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.4rem">';
-    h+='<div style="font-weight:700;font-size:13px">'+esc(m?ntPName(m):'—')+' <span style="color:var(--gray);font-weight:400">— '+esc(m?ntSqName(m.squadId):'')+' • '+tdMonthLabel(e.period)+'</span> <span style="color:var(--red)">'+tdEvalFinal(e)+'/100</span></div>';
+    h+='<div style="font-weight:700;font-size:13px">'+esc(m?ntPName(m):'—')+' <span style="color:var(--gray);font-weight:400">— '+esc(m?ntSqName(m.squadId):'')+' • '+tdMonthLabel(e.period)+'</span> <span style="color:var(--red)">'+tdEvalOf5(e)+' / 5</span></div>';
     h+='<div style="display:flex;gap:.4rem;align-items:center">'+(e.approved?'<span class="badge approved">معتمد</span>':'<span class="badge pending">بانتظار الاعتماد</span>')
       +(ntCanApprove()&&!e.approved?'<button class="btn btn-r btn-sm" onclick="ntApproveEval(\''+e.id+'\')">اعتماد</button>':'')
       +(ntCanManage()?'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="ntDelEval(\''+e.id+'\')">'+ic('trash',11)+'</button>':'')+'</div></div>';
@@ -9948,8 +10451,8 @@ function ntSaveEval(){
   var sid=gv('ntev-sq'),mid=gv('ntev-m'),period=gv('ntev-period');
   if(!sid||!mid||!period){fl('ntev-err');return;}
   var scores={};
-  TDTECH.concat(TDPERS).forEach(function(k){scores[k[0]]=+gv('ntev-'+k[0])||5;});
-  NTX().evals.push({id:uid(),mid:mid,period:period,scores:scores,notes:gv('ntev-notes'),rec:gv('ntev-rec'),by:CU.name,at:Date.now(),approved:false});
+  TDTECH.concat(TDPERS).forEach(function(k){scores[k[0]]=+gv('ntev-'+k[0])||3;});
+  NTX().evals.push({id:uid(),mid:mid,period:period,scores:scores,sc:EVMAX,notes:gv('ntev-notes'),rec:gv('ntev-rec'),by:CU.name,at:Date.now(),approved:false});
   logA('تقييم لاعب منتخب فارس','star','#d97706');
   sv();NTEV.showForm=false;rNTEvals();fl('ntev-ok');
 }
@@ -9986,13 +10489,13 @@ function ntReportData(){
       var p=ntPlayerInfo(m),s=ntSquad(m.squadId);
       var ev=n.evals.filter(function(e){return e.mid===m.id;});
       var pct=ntCampPct(m.id);
-      rows.push([s?s.name:'—',s?s.year:'—',m.jersey||'—',ntPName(m),p.branch||'—',m.pos||p.pos||'—',p.foot||'—',pct===null?'—':pct+'%',ev.length?tdEvalFinal(ev[ev.length-1])+'/100':'—']);
+      rows.push([s?s.name:'—',s?s.year:'—',m.jersey||'—',ntPName(m),p.branch||'—',m.pos||p.pos||'—',p.foot||'—',pct===null?'—':pct+'%',ev.length?tdEvalOf5(ev[ev.length-1])+' / 5':'—']);
     });
   }else if(type==='cand'){
     head=['اللاعب','الفرع','المجموعة','المواليد','المركز','آخر تقييم فني','الحالة'];
     ntCandidates().forEach(function(p){
       var evs=tdPlayerEvals(p.id);
-      rows.push([p.name,p.branch,tdGName(p.groupId),ntBirthYear(p)||'—',p.pos||'—',evs.length?tdEvalFinal(evs[evs.length-1])+'/100':'—','بانتظار الاعتماد']);
+      rows.push([p.name,p.branch,tdGName(p.groupId),ntBirthYear(p)||'—',p.pos||'—',evs.length?tdEvalOf5(evs[evs.length-1])+' / 5':'—','بانتظار الاعتماد']);
     });
     mem.forEach(function(m){
       var p=ntPlayerInfo(m);
@@ -10007,7 +10510,7 @@ function ntReportData(){
       rows.push([c.title,ntSqName(c.squadId),c.from||'—',c.to||'—',(c.sessions||[]).length,cm.length,tot?Math.round(p*100/tot)+'%':'—']);
     });
   }else if(type==='evals'){
-    head=['اللاعب','الفئة','الفترة','فني /10','شخصي /10','النتيجة /100','الحالة','بواسطة'];
+    head=['اللاعب','الفئة','الفترة','فني /5','شخصي /5','النتيجة /5','الحالة','بواسطة'];
     n.evals.filter(function(e){return mem.some(function(m){return m.id===e.mid;});}).forEach(function(e){
       var m=ntMember(e.mid);
       rows.push([m?ntPName(m):'—',m?ntSqName(m.squadId):'—',tdMonthLabel(e.period),tdEvalAvg(e,TDTECH),tdEvalAvg(e,TDPERS),tdEvalFinal(e),e.approved?'معتمد':'بالانتظار',e.by||'—']);
