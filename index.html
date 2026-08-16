@@ -138,6 +138,11 @@ svg{display:block;flex-shrink:0}
 .hcell .l{font-size:10.5px;color:var(--gray);margin-top:.3rem;font-weight:600}
 @media(max-width:640px){.hbar{grid-template-columns:repeat(2,1fr)}}
 
+.uping{position:relative;opacity:.65}
+.uping::after{content:'';position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  animation:upShine 1.1s linear infinite}
+@keyframes upShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .pfield{display:flex;align-items:center;direction:ltr;
   border:1.5px solid var(--brd);border-radius:var(--r2);background:var(--sur);
   overflow:hidden;transition:border-color .15s,box-shadow .15s}
@@ -2003,6 +2008,8 @@ body.nt-pick #NT .mnav-btn{display:none!important}
 .prow:last-child{border-bottom:none}
 .prow .k{color:var(--gray);display:flex;align-items:center;gap:7px}
 .prow .v{font-weight:700}
+/* الأرقام اللاتينية داخل نص عربي تنعكس مقاطعها — نثبّت اتجاهها */
+.ltr-num{direction:ltr;unicode-bidi:isolate;display:inline-block;text-align:start}
 .cont-item{display:flex;align-items:center;gap:12px;padding:.8rem 0;border-bottom:1px solid var(--bg)}
 .cont-item:last-child{border-bottom:none}
 .cont-icon{width:38px;height:38px;border-radius:11px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--red)}
@@ -2928,6 +2935,32 @@ var FA={
     }
     return self._loadDirect();
   },
+  /* ===== تخزين الصور خارج قاعدة البيانات ===== */
+  BUCKET:'images',
+  /* يرفع صورة base64 ويُرجع رابطها العام */
+  uploadImage:function(dataUrl,folder){
+    var self=this;
+    if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
+    if(!dataUrl||dataUrl.indexOf('data:image')!==0)return Promise.reject(new Error('not-image'));
+    try{
+      var m=/^data:(image\/[a-z+]+);base64,(.*)$/i.exec(dataUrl);
+      if(!m)return Promise.reject(new Error('bad-format'));
+      var mime=m[1],b64=m[2];
+      var ext=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'})[mime]||'jpg';
+      var bin=atob(b64),len=bin.length,arr=new Uint8Array(len);
+      for(var i=0;i<len;i++)arr[i]=bin.charCodeAt(i);
+      var name=(folder||'misc')+'/'+Date.now().toString(36)+Math.random().toString(36).slice(2,10)+'.'+ext;
+      return self.sb.storage.from(self.BUCKET)
+        .upload(name,arr,{contentType:mime,cacheControl:'31536000',upsert:false})
+        .then(function(r){
+          if(r.error)throw r.error;
+          var u=self.sb.storage.from(self.BUCKET).getPublicUrl(name);
+          var url=u&&u.data&&u.data.publicUrl;
+          if(!url)throw new Error('no-url');
+          return url;
+        });
+    }catch(e){return Promise.reject(e);}
+  },
   _loadDirect:function(){
     return this.sb.from('fa_state').select('data').eq('id',1).single().then(function(r){
       if(r.error)throw r.error; return r.data?r.data.data:null;
@@ -3192,8 +3225,25 @@ function prvImg(inp,pref){
     cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
     var d=cv.toDataURL('image/jpeg',.82);
     g(pref+'-img').value=d;g(pref+'-prev').innerHTML='<img src="'+d+'">';g(pref+'-rm').style.display='inline-block';
+    toStorage(d,'misc',pref);
   };img.src=rd.result;};
   rd.readAsDataURL(f);inp.value='';
+}
+/* الصور الجديدة تُرفع للتخزين مباشرة، ويُحفظ الرابط بدل البيانات.
+   إن فشل الرفع (بلا إنترنت مثلاً) تبقى base64 كما كانت — فلا يتعطل العمل. */
+function toStorage(dataUrl,folder,pref){
+  if(!FA.enabled||!dataUrl||dataUrl.indexOf('data:image')!==0)return;
+  var el=g(pref+'-img');if(!el)return;
+  var prev=g(pref+'-prev');
+  if(prev)prev.classList.add('uping');
+  FA.uploadImage(dataUrl,folder).then(function(url){
+    if(el.value===dataUrl)el.value=url;          /* لم يغيّرها المستخدم أثناء الرفع */
+    if(prev)prev.innerHTML='<img src="'+url+'">';
+  }).catch(function(e){
+    console.warn('[FA] تعذّر رفع الصورة — حُفظت داخل القاعدة مؤقتاً',e&&e.message);
+  }).then(function(){
+    if(prev)prev.classList.remove('uping');
+  });
 }
 function rmImg(pref,icn){g(pref+'-img').value='';g(pref+'-prev').innerHTML=ic(icn,22);g(pref+'-rm').style.display='none';}
 
@@ -3216,7 +3266,9 @@ function posterImg(inp,key,cb){
   };img.src=rd.result;};
   rd.readAsDataURL(f);inp.value='';
 }
-function sysImgSet(key,d){sysImgs()[key]=d;sv();rAdmin&&renderATab();logA('تحديث صورة قالب: '+(SYSLBL[key]||key),'image','#1565c0');}
+function sysImgSet(key,d){
+  sysImgs()[key]=d;sv();
+  if(FA.enabled)FA.uploadImage(d,'systems').then(function(url){sysImgs()[key]=url;sv();renderATab();}).catch(function(){});rAdmin&&renderATab();logA('تحديث صورة قالب: '+(SYSLBL[key]||key),'image','#1565c0');}
 function sysImgClear(key){delete sysImgs()[key];sv();renderATab();}
 var SYSLBL={tours:'بطولات فارس',td:'الإدارة الفنية',nt:'منتخب فارس'};
 function admPostersHTML(){
@@ -3248,6 +3300,7 @@ function prvStoryImg(inp,pref){
     cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
     var d=cv.toDataURL('image/jpeg',.92);
     g(pref+'-img').value=d;g(pref+'-prev').innerHTML='<img src="'+d+'">';g(pref+'-rm').style.display='inline-block';
+    toStorage(d,'stories',pref);
   };img.src=rd.result;};
   rd.readAsDataURL(f);inp.value='';
 }
@@ -7884,6 +7937,8 @@ function admSettingsHTML(){
   if(_dg)h+=_dg+'<div style="height:1.8rem"></div>';
   var _iz=admImgzHTML();
   if(_iz)h+=_iz+'<div style="height:1.8rem"></div>';
+  var _im=admImgmHTML();
+  if(_im)h+=_im+'<div style="height:1.8rem"></div>';
   if(CU.role==='admin'&&!(TDX().merged)){
     var sc=tdMergeScan();
     h+='<div class="mrg-fold'+(MRGOPEN?' on':'')+'">';
@@ -8009,7 +8064,11 @@ function openProf(e){
   if(CU.cat)rows.push(['cal','الفئة',CU.cat]);
   if(CU.phone)rows.push(['phone','الجوال',phoneDisp(CU.phone)]);
   rows.push(['target','البطولة الحالية',tName(AT)]);
-  var ph=rows.map(function(r){return '<div class="prow"><div class="k">'+ic(r[0],14)+' '+r[1]+'</div><div class="v">'+esc(r[2])+'</div></div>';}).join('');
+  var ph=rows.map(function(r){
+    var val=esc(r[2]);
+    if(r[0]==='phone')val='<span class="ltr-num">'+val+'</span>';
+    return '<div class="prow"><div class="k">'+ic(r[0],14)+' '+r[1]+'</div><div class="v">'+val+'</div></div>';
+  }).join('');
   ph+='<button class="btn btn-r" style="width:100%;margin-top:.9rem" onclick="pedOpen()">'+ic('edit',14)+' تعديل الجوال والرمز السري</button>';
   if(myProfReq())ph+='<div class="ped-note wait" style="margin-top:.6rem">'+ic('clock',13)+'<div>لديك طلب تعديل بانتظار موافقة مدير النظام.</div></div>';
   g('prof-body').innerHTML=ph;
@@ -8043,7 +8102,8 @@ function phoneDisp(v){
   var n=normPhone(v);
   if(!/^9665[0-9]{8}$/.test(n))return v||'—';
   var l=n.slice(3);
-  return '0'+l.slice(0,2)+' '+l.slice(2,5)+' '+l.slice(5);
+  /* \u2066...\u2069 عزل اتجاهي: يمنع انعكاس المقاطع داخل النص العربي */
+  return '\u2066'+'0'+l.slice(0,2)+' '+l.slice(2,5)+' '+l.slice(5)+'\u2069';
 }
 /* أرقام وهمية شائعة لا تصلح للدخول */
 /* ===== حقل الجوال بسابقة 966 ثابتة =====
@@ -8305,6 +8365,85 @@ function imgzRun(){
     }
     step();
   });
+}
+/* ================= نقل الصور إلى التخزين =================
+   يرفع كل صورة ثم يستبدل محتواها برابطها. لا يُحذف سجل ولا صورة:
+   الصورة الأصلية تبقى في مكانها حتى يتأكد الرفع، وإن فشل تُترك كما هي. */
+var IMGM={busy:false,done:0,ok:0,fail:0,saved:0};
+function imgmScan(){
+  var t=imgTargets(),n=0,b=0;
+  t.forEach(function(x){if(String(x.obj[x.key]||'').indexOf('data:image')===0){n++;b+=x.size;}});
+  return{count:n,bytes:b};
+}
+function imgmRun(){
+  if(IMGM.busy)return;
+  if(!FA.enabled){alert('الاتصال بالسحابة غير مفعّل — لا يمكن رفع الصور.');return;}
+  askConfirm('سترفع الصور إلى التخزين ويُستبدل محتواها برابطها.\n\nنزّل نسخة احتياطية أولاً إن لم تفعل. المتابعة؟',function(){
+    IMGM.busy=true;IMGM.done=0;IMGM.ok=0;IMGM.fail=0;IMGM.saved=0;
+    var list=imgTargets().filter(function(x){return String(x.obj[x.key]||'').indexOf('data:image')===0;});
+    var i=0,bar=g('imgm-bar'),lbl=g('imgm-lbl');
+    function folderOf(path){
+      if(/stories?/i.test(path))return 'stories';
+      if(/sysImg/i.test(path))return 'systems';
+      if(/idImg/i.test(path))return 'ids';
+      if(/players?/i.test(path))return 'players';
+      if(/teams?/i.test(path))return 'teams';
+      return 'misc';
+    }
+    function finish(){
+      IMGM.busy=false;
+      sv();
+      logA('نقل الصور للتخزين — نُقل '+IMGM.ok+' ووُفّر '+fmtKB(IMGM.saved),'image','#16a34a');
+      renderATab();
+      addN('انتهى نقل الصور',IMGM.ok+' نُقلت'+(IMGM.fail?' • '+IMGM.fail+' فشلت وبقيت كما هي':''),IMGM.fail?'warning':'success');
+    }
+    function step(){
+      if(i>=list.length)return finish();
+      var x=list[i++];
+      var before=String(x.obj[x.key]||'');
+      FA.uploadImage(before,folderOf(x.path)).then(function(url){
+        /* الاستبدال بعد نجاح الرفع فقط */
+        x.obj[x.key]=url;
+        IMGM.ok++;IMGM.saved+=(before.length-url.length);
+      }).catch(function(e){
+        IMGM.fail++;
+        console.warn('[FA] تعذّر رفع صورة',x.path,e&&e.message);
+      }).then(function(){
+        IMGM.done++;
+        var pct=Math.round(IMGM.done/list.length*100);
+        if(bar)bar.style.width=pct+'%';
+        if(lbl)lbl.textContent=IMGM.done+' من '+list.length+' — نُقل '+IMGM.ok+(IMGM.fail?' • فشل '+IMGM.fail:'')+' — وُفّر '+fmtKB(IMGM.saved);
+        /* حفظ دوري حتى لا يضيع التقدّم لو انقطع الاتصال */
+        if(IMGM.done%10===0)sv();
+        setTimeout(step,60);
+      });
+    }
+    step();
+  });
+}
+function admImgmHTML(){
+  if(CU.role!=='admin')return '';
+  var sc=imgmScan();
+  var h='<div class="sec-t" style="margin-bottom:.8rem"><div class="bar"></div><h2 style="font-size:14px">نقل الصور إلى التخزين</h2></div>';
+  if(!FA.enabled){
+    return h+'<div class="ce-note">'+ic('info',13)+'<div>الاتصال بالسحابة غير مفعّل — هذي الأداة تحتاج Supabase.</div></div>';
+  }
+  if(!sc.count){
+    return h+'<div class="ce-note">'+ic('check',13)+'<div>لا توجد صور مخزّنة داخل القاعدة — كلها منقولة للتخزين. ✅</div></div>';
+  }
+  var st=dbStats();
+  h+='<div class="ce-note">'+ic('image',13)+'<div><b>'+sc.count+' صورة داخل قاعدة البيانات تشغل '+fmtKB(sc.bytes)+'.</b> '
+    +'نقلها للتخزين يقلّص القاعدة إلى '+fmtKB(Math.max(0,st.total-sc.bytes))+' تقريباً، '
+    +'فلا تُنزَّل مع كل دخول بل تُعرض عند الحاجة فقط.</div></div>';
+  h+='<div class="ce-note" style="background:rgba(22,163,74,.07);border-color:rgba(22,163,74,.3)">'+ic('shield',13)
+    +'<div>الاستبدال يتم <b>بعد نجاح الرفع فقط</b>. أي صورة يفشل رفعها تبقى كما هي بلا مساس، ولا يُحذف أي سجل.</div></div>';
+  h+='<div class="dgbar"><div class="dgl"><b>التقدّم</b><span id="imgm-lbl">جاهز</span></div>'
+    +'<div class="dgt"><i id="imgm-bar" style="width:0%"></i></div></div>';
+  h+='<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.7rem">';
+  h+='<button class="btn btn-g" onclick="backupNow()">'+ic('doc',13)+' ١. نزّل نسخة احتياطية</button>';
+  h+='<button class="btn btn-r" onclick="imgmRun()">'+ic('swap',13)+' ٢. ابدأ النقل</button>';
+  h+='</div>';
+  return h;
 }
 function admImgzHTML(){
   if(CU.role!=='admin')return '';
