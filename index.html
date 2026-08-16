@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -197,6 +197,32 @@ svg{display:block;flex-shrink:0}
   .fxi{font-size:16px;padding:11px 12px;min-height:46px}
   .fxpg{gap:.6rem}
 }
+.mvp-tabs{display:flex;gap:.4rem;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:.9rem}
+.mvp-tab{flex:1;background:none;border:none;color:var(--gray);font-family:inherit;font-size:12.5px;font-weight:700;
+  padding:0 8px;min-height:42px;border-radius:9px;cursor:pointer;transition:.18s;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.mvp-tab.on{background:var(--red);color:#fff}
+.mvp-res{max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--brd);border-radius:var(--r2);padding:.35rem;background:var(--bg)}
+.mvp-row{display:flex;align-items:center;gap:.7rem;width:100%;background:none;border:none;
+  padding:.55rem .6rem;border-radius:10px;cursor:pointer;font-family:inherit;text-align:start;
+  color:var(--txt);transition:.13s;min-height:52px}
+.mvp-row:hover{background:var(--sur)}
+.mvp-row.on{background:rgba(221,29,69,.12);box-shadow:inset 0 0 0 1.5px var(--red)}
+.mvp-av{width:38px;height:38px;border-radius:11px;overflow:hidden;flex-shrink:0;background:var(--sur2);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--gray)}
+.mvp-av img{width:100%;height:100%;object-fit:cover}
+.mvp-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.mvp-tx b{font-size:13px;font-weight:700;overflow-wrap:anywhere}
+.mvp-tx small{font-size:11px;color:var(--gray)}
+.mvp-tick{color:var(--red);flex-shrink:0}
+.mvp-none{padding:1.2rem;text-align:center;color:var(--gray);font-size:12px;
+  display:flex;align-items:center;justify-content:center;gap:7px}
+.mvp-sep{height:1px;background:var(--brd);margin:.9rem 0}
+@media(max-width:640px){
+  .mvp-res{max-height:240px}
+  .mvp-tab{font-size:12px}
+}
 .ntsw{display:flex;align-items:flex-start;gap:.8rem;padding:.9rem;border:1.5px solid var(--brd);border-radius:var(--r2);cursor:pointer;transition:.15s}
 .ntsw.on{border-color:rgba(22,163,74,.45);background:rgba(22,163,74,.06)}
 .ntsw input{display:none}
@@ -364,9 +390,27 @@ svg{display:block;flex-shrink:0}
 .ts-card .ts-hlbl{display:inline-flex;align-items:center;gap:4px}
 .ts-card .ts-hlbl{position:absolute;top:10px;inset-inline-start:10px;z-index:3;font-size:9px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.7)}
 .ts-card{position:relative}
-.ts-newt{margin-top:1.4rem;background:rgba(221,29,69,.9);border:none;color:#fff;padding:11px 26px;border-radius:11px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 22px rgba(221,29,69,.32)}
-.ts-newt:hover{background:var(--red)}
-.ts-back{margin-top:1.4rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.75);padding:9px 26px;border-radius:10px;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:7px}
+/* أزرار شاشة الأنظمة — صف واحد منسّق بدل أزرار متفرقة */
+.ts-acts{display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-top:2rem}
+.ts-newt,.ts-back,.ts-acts .btn{margin:0}
+.ts-newt{background:var(--red);border:none;color:#fff;padding:0 24px;min-height:46px;border-radius:12px;
+  font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 6px 20px rgba(221,29,69,.3);transition:.18s}
+.ts-newt:hover{transform:translateY(-1px);box-shadow:0 9px 26px rgba(221,29,69,.42)}
+.ts-back{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.72);
+  padding:0 22px;min-height:46px;border-radius:12px;font-size:12.5px;font-weight:600;
+  display:inline-flex;align-items:center;gap:7px;transition:.18s}
+.ts-back:hover{background:rgba(255,255,255,.11);color:#fff}
+/* تسجيل الخروج منفصل وأخفت — إجراء نهائي لا يُضغط بالخطأ */
+.ts-out{display:block;margin:1.5rem auto 0;background:none;border:none;
+  color:rgba(255,255,255,.38);font-family:inherit;font-size:12px;font-weight:600;
+  padding:10px 20px;border-radius:99px;cursor:pointer;min-height:42px;transition:.18s;
+  display:inline-flex;align-items:center;gap:7px}
+.ts-out:hover{color:var(--red);background:rgba(221,29,69,.08)}
+@media(max-width:640px){
+  .ts-acts{flex-direction:column;gap:.5rem;width:100%;max-width:300px;margin-inline:auto}
+  .ts-acts>*{width:100%;justify-content:center}
+}
 .seg{display:flex;gap:.4rem;flex-wrap:wrap}
 .seg button{flex:1;min-width:90px;background:var(--sur);border:1.5px solid var(--brd);border-radius:var(--r2);padding:9px;font-size:12px;font-weight:600;color:var(--txt)}
 .seg button.on{background:var(--navy);color:#fff;border-color:var(--txt)}
@@ -448,11 +492,23 @@ svg{display:block;flex-shrink:0}
 .hs-ov .hs-ttl{color:#fff;font-size:clamp(14px,2.2vw,20px);font-weight:800;margin-bottom:.5rem;text-shadow:0 2px 12px rgba(0,0,0,.6);line-height:1.3}
 .hs-ov .hs-lnk{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;padding:7px 14px;border-radius:99px;font-size:11.5px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(221,29,69,.4);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:640px){
-  .hs-ov{inset-inline-end:12px;bottom:12px;max-width:62%}
-  .hs-ov .hs-t{font-size:11px;margin-bottom:5px}
-  .hs-lnk{padding:6px 12px;font-size:10.5px;gap:5px}
-  .hs-lnk svg{width:12px;height:12px}
-  .hs-hint{top:10px;inset-inline-end:12px;font-size:9.5px;padding:3px 8px}
+  /* الستوري يمتد بعرض الشريط أعلى صف الأرقام — لا يركبه */
+  .hs-ov{inset-inline:12px;bottom:auto;top:auto;max-width:none;
+    display:flex;flex-direction:column;align-items:flex-start;gap:.45rem;
+    background:linear-gradient(to top,rgba(0,0,0,.62),rgba(0,0,0,.28) 70%,transparent);
+    padding:.7rem .8rem .8rem;border-radius:14px}
+  .hs-ov{bottom:96px}                     /* فوق صف الأرقام */
+  .hs-ov .hs-ttl{font-size:13px;margin-bottom:0;line-height:1.45;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .hs-lnk{padding:8px 14px;font-size:11.5px;gap:6px;min-height:38px;max-width:100%}
+  .hs-lnk svg{width:13px;height:13px}
+  .hs-hint{top:10px;inset-inline-end:12px;font-size:10px;padding:4px 9px}
+  /* مساحة إضافية أسفل الواجهة حتى لا يلتصق شيء */
+  .hero-c{padding-bottom:1.2rem}
+}
+@media(max-width:400px){
+  .hs-ov{bottom:88px}
+  .hs-ov .hs-ttl{font-size:12.5px;-webkit-line-clamp:2}
 }
 .hero-pitch{position:absolute;inset:0;opacity:.07;pointer-events:none}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 80% 0%,rgba(221,29,69,.25),transparent)}
@@ -1007,8 +1063,17 @@ input,select,textarea{font-variant-numeric:tabular-nums}
 .sb-foot .chip{width:100%;border-radius:10px;padding:8px 10px;justify-content:flex-start}
 .sb-foot .chip-name,.sb-foot .chip-role{display:block!important}
 .sb-foot .chip-drop{inset-inline-start:calc(100% + 10px);inset-inline-end:auto;top:auto;bottom:0}
-.sb-foot .btnav{width:100%;justify-content:flex-start;padding:9px 12px;border-radius:10px;font-size:12px}
-.sb-foot .btnav.out{color:#ff8ba5}
+/* التذييل: كل الأزرار بنفس القياس والمحاذاة */
+.sb-foot .btnav,.sb-foot .nbtn,.sb-foot .chip,.sb-foot .sb-l{
+  width:100%;justify-content:flex-start;align-items:center;gap:10px;
+  padding:0 12px;min-height:44px;border-radius:11px;font-size:12.5px;font-weight:600}
+.sb-foot .btnav::after,.sb-foot .nbtn::after{font-size:12.5px;font-weight:600}
+.sb-foot .btnav svg,.sb-foot .nbtn svg,.sb-foot .sb-l svg{width:17px;height:17px;flex-shrink:0;opacity:.85}
+.sb-foot>*+*{margin-top:5px}
+/* الخروج آخر عنصر ومفصول — إجراء نهائي */
+.sb-foot .btnav.out{color:#ff8ba5;margin-top:.6rem;
+  border-top:1px solid rgba(255,255,255,.08);padding-top:.6rem;min-height:50px;border-radius:0 0 11px 11px}
+.sb-foot .btnav.out:hover{background:rgba(221,29,69,.12);color:#ffb3c4}
 .sb-foot .btnav.out::after{content:'تسجيل الخروج'}
 .sb-foot .hmb{display:none!important}
 .sb-foot .umw{width:100%}
@@ -2362,13 +2427,13 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div id="ts-tours-wrap" style="display:none">
       <div class="ts-lbl">اختر البطولة للمتابعة</div>
       <div class="ts-cards" id="ts-cards"></div>
-      <div style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center">
+      <div class="ts-acts">
         <button class="ts-newt" id="ts-newt" onclick="openNewT()" style="display:none"><span data-ic="user-plus"></span> إنشاء بطولة جديدة</button>
         <button class="ts-newt" id="ts-teams" onclick="openTM()" style="display:none;background:rgba(255,255,255,.12);box-shadow:none"><span data-ic="users"></span> الفرق</button>
+        <button class="ts-back" onclick="tsSys()"><span data-ic="swap"></span> رجوع للأنظمة</button>
       </div>
-      <div><button class="ts-back" onclick="tsSys()" style="margin-top:1.2rem"><span data-ic="swap"></span> رجوع للأنظمة</button></div>
     </div>
-    <button class="ts-back" onclick="doLogout()"><span data-ic="logout"></span> تسجيل الخروج</button>
+    <button class="ts-out" onclick="doLogout()"><span data-ic="logout"></span> تسجيل الخروج</button>
   </div>
 </div>
 
@@ -2707,6 +2772,19 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       <div style="font-size:15px;font-weight:700">بيانات تحتاج إكمالاً</div>
     </div>
     <div class="mbody" id="warn-body"></div>
+  </div>
+</div>
+
+<!-- MVP MODAL -->
+<div class="modal" id="mvpMod" onclick="if(event.target===this)mvpClose()">
+  <div class="mbox" style="max-width:460px">
+    <div class="mhdr">
+      <button class="mclose" onclick="mvpClose()" data-ic="x"></button>
+      <div class="prof-av" style="background:var(--red)"><span data-ic="crown"></span></div>
+      <div style="font-size:15px;font-weight:700">لاعب الجولة</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">اختر من القائمة أو أدخل الاسم يدوياً</div>
+    </div>
+    <div class="mbody" id="mvp-body"></div>
   </div>
 </div>
 
@@ -4058,8 +4136,59 @@ function doLogin(){
   if(u.mustChange||((DB.joinReqs||[]).find(function(r){return normName(r.name)===normName(name)&&r.mustChange;})))
     setTimeout(function(){alert('دخلت برمز مؤقت — يرجى تغييره الآن من «ملفي الشخصي».');},400);
 }
+/* ================= حفظ الجلسة =================
+   تبقى الجلسة فعّالة بعد تحديث الصفحة حتى تنتهي مدتها أو يخرج المستخدم.
+   لا يُحفظ الرمز السري إطلاقاً — فقط معرّف الجلسة ورمز الخادم. */
+var SESS_KEY='faris_session', SESS_HOURS=12;
+function sessSave(){
+  try{
+    if(!CU)return;
+    localStorage.setItem(SESS_KEY,JSON.stringify({
+      uid:CU.id, token:FA.token||'', at:Date.now(),
+      sys:(g('TD')&&g('TD').style.display==='block')?'td':
+          ((g('NT')&&g('NT').style.display==='block')?'nt':
+          ((g('APP')&&g('APP').style.display==='flex')?'app':'ts')),
+      at_id:(typeof AT!=='undefined'?AT:''), nt_team:(typeof NTTEAM!=='undefined'?NTTEAM:'')
+    }));
+  }catch(e){}
+}
+function sessClear(){try{localStorage.removeItem(SESS_KEY);}catch(e){}}
+function sessRead(){
+  try{
+    var v=JSON.parse(localStorage.getItem(SESS_KEY)||'null');
+    if(!v||!v.uid)return null;
+    if(Date.now()-(v.at||0)>SESS_HOURS*3600000){sessClear();return null;}
+    return v;
+  }catch(e){return null;}
+}
+/* استعادة الجلسة عند فتح الصفحة */
+function sessRestore(){
+  var v=sessRead();
+  if(!v)return false;
+  var u=(DB.users||[]).find(function(x){return x.id===v.uid;});
+  if(!u){return false;}
+  CU=Object.assign({},u);
+  if(v.token)FA.token=v.token;
+  if(v.at_id&&typeof AT!=='undefined')AT=v.at_id;
+  splEnd();
+  g('WEL').classList.remove('on');
+  document.body.style.overflow='';
+  g('LS').style.display='none';
+  try{
+    if(v.sys==='td'&&sysAllowed('td'))enterTD();
+    else if(v.sys==='nt'&&sysAllowed('nt')){
+      if(v.nt_team){NTTEAM=v.nt_team;}
+      enterNT();
+    }
+    else if(v.sys==='app'&&AT)selT(AT);
+    else showTS();
+  }catch(e){showTS();}
+  logA('استئناف الجلسة','user','#1565c0');
+  return true;
+}
 function loginOK(){
   loadHide();
+  setTimeout(sessSave,300);
   setTimeout(function(){try{askPhone();}catch(e){}},900);
   document.body.style.overflow='';
   g('WEL').classList.remove('on');
@@ -4067,11 +4196,12 @@ function loginOK(){
   pinReset();
   logA('تسجيل دخول','user','#1565c0');
 }
-function doLogout(){loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
+function doLogout(){sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
 function visibleTournaments(){
   return DB.tournaments.filter(function(t){return t.visible||(CU&&['admin','organizer'].indexOf(CU.role)>-1);});
 }
 function showTS(){
+  setTimeout(function(){try{sessSave();}catch(e){}},400);
   g('TS').style.display='block';g('APP').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt2=g('NT');if(nt2)nt2.style.display='none';
   g('ts-nm').textContent=CU.name;g('ts-rl').innerHTML=ic('shield',13)+' '+RL[CU.role];
   tsSys();
@@ -4246,7 +4376,13 @@ function tsTours(){
   hydrateIcons(g('TS'));
 }
 function selT(k){AT=k;g('TS').style.display='none';g('APP').style.display='flex';enterApp();}
-function bkT(){g('APP').style.display='none';showTS();}
+/* زر «البطولات» يرجع لقائمة البطولات لا لشاشة الأنظمة */
+function bkT(){
+  g('APP').style.display='none';
+  showTS();
+  try{tsTours();}catch(e){}
+  setTimeout(function(){try{sessSave();}catch(e){}},300);
+}
 
 /* ============ TEAMS MANAGEMENT (admin global) ============ */
 var TMVIEW='';
@@ -5528,23 +5664,26 @@ function initLang(){
 }
 function locale(){return LANG==='en'?'en-GB':'ar-SA';}
 
-var THEME='light';
-function applyTheme(t){
+var THEME='dark';
+/* persist=true فقط عند اختيار المستخدم صراحةً — لا عند التحميل التلقائي،
+   وإلا حُفظ الافتراضي القديم في المتصفح وتغلّب على الافتراضي الجديد. */
+function applyTheme(t,persist){
   THEME=(t==='dark')?'dark':'light';
   document.documentElement.setAttribute('data-theme',THEME);
-  try{localStorage.setItem('faris_theme',THEME);}catch(e){}
+  if(persist){try{localStorage.setItem('faris_theme_v2',THEME);}catch(e){}}
   document.querySelectorAll('.thm:not(.lng)').forEach(function(b){
     b.innerHTML='<span class="thm-ic">'+ic(THEME==='dark'?'sun':'moon',16)+'</span><span class="thm-t">'+L(THEME==='dark'?'الوضع النهاري':'الوضع الليلي')+'</span>';
     b.setAttribute('title',L(THEME==='dark'?'التبديل للوضع النهاري':'التبديل للوضع الليلي'));
     b.setAttribute('aria-pressed',THEME==='dark'?'true':'false');
   });
 }
-function toggleTheme(){applyTheme(THEME==='dark'?'light':'dark');}
+function toggleTheme(){applyTheme(THEME==='dark'?'light':'dark',true);}
 function initTheme(){
   var t=null;
-  try{t=localStorage.getItem('faris_theme');}catch(e){}
-  /* الوضع الليلي هو الأساس — ولا يُتجاوز إلا باختيار المستخدم صراحةً */
-  applyTheme(t||'dark');
+  /* مفتاح جديد: القيم القديمة كانت تُحفظ تلقائياً لا باختيار المستخدم */
+  try{t=localStorage.getItem('faris_theme_v2');}catch(e){}
+  try{localStorage.removeItem('faris_theme');}catch(e){}
+  applyTheme(t==='light'?'light':'dark');
 }
 function greetWord(){
   var hh=new Date().getHours();
@@ -6773,15 +6912,10 @@ function rStats(){
     }else{
       var curRec=(T().mvpRound||{})[STMVPR];
       var curName=(curRec&&typeof curRec==='object')?(curRec.name||''):(curRec||'');
-      var curImg=(curRec&&typeof curRec==='object')?(curRec.img||''):'';
-      var ro=rounds.map(function(r){return '<option value="'+esc(r)+'"'+(r===STMVPR?' selected':'')+'>'+esc(r)+'</option>';}).join('');
-      var allP=allPlayers();
-      var o='<option value="">— اختر لاعباً —</option>'+allP.map(function(x){return '<option value="'+esc(x.p.name)+'"'+(x.p.name===curName?' selected':'')+'>'+esc(x.p.name)+' — '+esc(x.t.name)+'</option>';}).join('');
-      h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:flex-end;margin-top:.9rem">';
-      h+='<div class="fg" style="margin:0;min-width:140px"><label>الجولة</label><select id="st-mvp-round" onchange="pickMvpRound(this.value)">'+ro+'</select></div>';
-      h+='<div class="fg" style="flex:1;min-width:200px;margin:0"><label>لاعب الجولة</label><select id="st-mvp-sel">'+o+'</select></div>';
-      h+='<div class="fg" style="margin:0"><label>صورة لاعب الجولة <small>(اختياري)</small></label><div class="img-pick" style="margin:0"><div class="img-prev" id="stmvp-prev">'+(curImg?'<img src="'+curImg+'">':ic('crown',20))+'</div><div><label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,\'stmvp\')"></label><button class="img-rm" id="stmvp-rm" onclick="rmImg(\'stmvp\',\'crown\')" style="'+(curImg?'':'display:none')+'">إزالة</button></div><input type="hidden" id="stmvp-img" value="'+esc(curImg)+'"></div></div>';
-      h+='<button class="btn btn-r btn-sm" onclick="setMvpRound()">تعيين</button>'+(curName?'<button class="btn btn-g btn-sm" onclick="clearMvpRound()">إلغاء هذه الجولة</button>':'')+'</div>';
+      h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.9rem">';
+      h+='<button class="btn btn-r btn-sm" onclick="mvpOpen()">'+ic('crown',13)+' '+(curName?'تغيير لاعب الجولة':'اختيار لاعب الجولة')+'</button>';
+      if(curName)h+='<button class="btn btn-g btn-sm" onclick="clearMvpRound()">إلغاء هذه الجولة</button>';
+      h+='</div>';
       /* list of all rounds' MVPs */
       var setRounds=rounds.filter(function(r){var rc=(T().mvpRound||{})[r];return rc&&(rc.name||typeof rc==='string');});
       if(setRounds.length){
@@ -6846,6 +6980,129 @@ function latestMvp(){
   return null;
 }
 function pickMvpRound(r){STMVPR=r;rStats();}
+/* ================= نافذة اختيار لاعب الجولة =================
+   وضعان: بحث في كل الفروع والفئات، أو إدخال يدوي لاعب غير مسجّل. */
+var MVPD={mode:'find',round:'',q:'',pick:null,img:'',manualTeam:''};
+function mvpOpen(round){
+  if(!(CU&&['admin','organizer'].indexOf(CU.role)>-1))return;
+  var rounds=roundList();
+  MVPD.round=round||STMVPR||rounds[rounds.length-1]||'';
+  var rec=(T().mvpRound||{})[MVPD.round];
+  MVPD.mode='find';MVPD.q='';MVPD.pick=null;MVPD.manualTeam='';
+  MVPD.img=(rec&&typeof rec==='object')?(rec.img||''):'';
+  if(rec){
+    var nm=(typeof rec==='object')?rec.name:rec;
+    if(nm){var f=findPlayer(nm);if(f)MVPD.pick={name:nm,team:f._team||'',img:MVPD.img};else{MVPD.mode='manual';MVPD.pick={name:nm,team:(rec&&rec.team)||'',img:MVPD.img};}}
+  }
+  rMvpDlg();
+  g('mvpMod').classList.add('open');
+}
+function mvpClose(){g('mvpMod').classList.remove('open');}
+function mvpMode(m){MVPD.mode=m;MVPD.pick=null;rMvpDlg();}
+function mvpSetRound(v){MVPD.round=v;rMvpDlg();}
+function mvpSearch(v){
+  MVPD.q=v;
+  var box=g('mvp-res');if(!box)return;
+  box.innerHTML=mvpResultsHTML();
+  hydrateIcons(box);
+  var e=g('mvp-q');if(e){e.focus();try{e.setSelectionRange(e.value.length,e.value.length);}catch(x){}}
+}
+function mvpResultsHTML(){
+  var q=normName(MVPD.q||'');
+  var all=allPlayers();
+  var list=q?all.filter(function(x){
+    return normName(x.p.name||'').indexOf(q)>-1||normName(x.t.name||'').indexOf(q)>-1
+      ||normName(x.p.cat||'').indexOf(q)>-1;
+  }):all.slice(0,40);
+  if(!list.length)return '<div class="mvp-none">'+ic('info',14)+' لا توجد نتائج — جرّب اسماً آخر أو استخدم الإدخال اليدوي</div>';
+  return list.slice(0,60).map(function(x){
+    var on=MVPD.pick&&MVPD.pick.name===x.p.name&&MVPD.pick.team===x.t.name;
+    var av=x.p.img?'<img src="'+x.p.img+'">':'<span>'+esc(ti(x.p.name))+'</span>';
+    return '<button type="button" class="mvp-row'+(on?' on':'')+'" onclick="mvpPick('+jqa([x.p.name,x.t.name,x.p.img||''])+')">'
+      +'<span class="mvp-av">'+av+'</span>'
+      +'<span class="mvp-tx"><b>'+esc(x.p.name)+'</b><small>'+esc(x.t.name)+(x.p.cat?' • '+esc(x.p.cat):'')+'</small></span>'
+      +(on?'<span class="mvp-tick">'+ic('check',14)+'</span>':'')+'</button>';
+  }).join('');
+}
+function mvpPick(json){
+  var a=[];try{a=JSON.parse(json);}catch(e){return;}
+  MVPD.pick={name:a[0],team:a[1],img:a[2]||''};
+  if(!MVPD.img&&a[2])MVPD.img=a[2];
+  rMvpDlg();
+}
+function rMvpDlg(){
+  var rounds=roundList();
+  var h='';
+  h+='<div class="mvp-tabs">'
+    +'<button type="button" class="mvp-tab'+(MVPD.mode==='find'?' on':'')+'" onclick="mvpMode(\'find\')">'+ic('users',14)+' بحث عن لاعب</button>'
+    +'<button type="button" class="mvp-tab'+(MVPD.mode==='manual'?' on':'')+'" onclick="mvpMode(\'manual\')">'+ic('edit',14)+' إدخال يدوي</button>'
+    +'</div>';
+
+  if(MVPD.mode==='find'){
+    h+='<div class="usearch" style="margin-bottom:.7rem">'+ic('filter',14)
+      +'<input type="text" id="mvp-q" placeholder="ابحث بالاسم أو الفريق أو الفئة…" value="'+esc(MVPD.q)+'" oninput="mvpSearch(this.value)"></div>';
+    h+='<div class="mvp-res" id="mvp-res">'+mvpResultsHTML()+'</div>';
+  }else{
+    var teams=(T().teams||[]).map(function(x){return x.name;});
+    h+='<div class="fg"><label>اسم اللاعب *</label><input type="text" id="mvp-name" placeholder="اكتب الاسم كاملاً" value="'+esc(MVPD.pick?MVPD.pick.name:'')+'"></div>';
+    h+='<div class="fg"><label>الفريق *</label><select id="mvp-team">'
+      +'<option value="">— اختر الفريق —</option>'
+      +teams.map(function(t){return '<option value="'+esc(t)+'"'+((MVPD.pick&&MVPD.pick.team===t)?' selected':'')+'>'+esc(t)+'</option>';}).join('')
+      +'</select></div>';
+  }
+
+  h+='<div class="mvp-sep"></div>';
+  h+='<div class="frow"><div class="fg"><label>الجولة *</label><select id="mvp-round" onchange="mvpSetRound(this.value)">'
+    +rounds.map(function(r){return '<option value="'+esc(r)+'"'+(r===MVPD.round?' selected':'')+'>'+esc(r)+'</option>';}).join('')
+    +'</select></div>';
+  h+='<div class="fg"><label>صورة اللاعب <small>(اختياري)</small></label>'
+    +'<div class="img-pick" style="margin:0"><div class="img-prev" id="mvpd-prev">'
+    +(MVPD.img?'<img src="'+MVPD.img+'">':ic('crown',22))+'</div>'
+    +'<input type="hidden" id="mvpd-img" value="'+esc(MVPD.img)+'">'
+    +'<label class="pst-btn">'+ic('camera',12)+' اختر صورة<input type="file" accept="image/*" hidden onchange="mvpImg(this)"></label>'
+    +(MVPD.img?'<button class="pst-btn del" onclick="mvpImgClear()">'+ic('trash',12)+'</button>':'')
+    +'</div></div></div>';
+
+  if(MVPD.pick&&MVPD.mode==='find'){
+    h+='<div class="ce-note" style="margin-top:.2rem">'+ic('check',13)+'<div>المختار: <b>'+esc(MVPD.pick.name)+'</b> — '+esc(MVPD.pick.team)+'</div></div>';
+  }
+  h+='<button class="btn btn-r" style="width:100%;min-height:48px;margin-top:.4rem" onclick="mvpSave()">'+ic('crown',15)+' تعيين لاعب الجولة</button>';
+  h+='<div class="msg ok" id="mvp-ok">تم التعيين</div><div class="msg err" id="mvp-err">أكمل البيانات</div>';
+  g('mvp-body').innerHTML=h;
+  hydrateIcons(g('mvp-body'));
+}
+function mvpImg(inp){
+  posterImg(inp,'mvp',function(d){
+    MVPD.img=d;
+    var pv=g('mvpd-prev'),hv=g('mvpd-img');
+    if(pv)pv.innerHTML='<img src="'+d+'">';
+    if(hv)hv.value=d;
+    if(FA.enabled)FA.uploadImage(d,'mvp').then(function(url){MVPD.img=url;if(hv)hv.value=url;}).catch(function(){});
+    rMvpDlg();
+  });
+}
+function mvpImgClear(){MVPD.img='';rMvpDlg();}
+function mvpSave(){
+  var t=T();if(!t)return;
+  var round=gv('mvp-round')||MVPD.round;
+  if(!round){g('mvp-err').textContent='اختر الجولة';fl('mvp-err');return;}
+  var name='',team='';
+  if(MVPD.mode==='find'){
+    if(!MVPD.pick){g('mvp-err').textContent='اختر لاعباً من القائمة';fl('mvp-err');return;}
+    name=MVPD.pick.name;team=MVPD.pick.team;
+  }else{
+    name=gv('mvp-name');team=gv('mvp-team');
+    if(!name){g('mvp-err').textContent='اكتب اسم اللاعب';fl('mvp-err');return;}
+    if(!team){g('mvp-err').textContent='اختر الفريق';fl('mvp-err');return;}
+  }
+  t.mvpRound=t.mvpRound||{};
+  t.mvpRound[round]={name:name,team:team,img:MVPD.img||'',by:CU.name,at:Date.now()};
+  STMVPR=round;
+  logA('تعيين لاعب الجولة: '+name+' ('+round+')','crown','#DD1D45');
+  sv();fl('mvp-ok');
+  setTimeout(function(){mvpClose();rStats();},700);
+}
+
 function setMvpRound(){
   var v=gv('st-mvp-sel');var r=gv('st-mvp-round');
   if(!r){addN('تنبيه','اختر الجولة أولاً','error');return;}
@@ -9289,6 +9546,7 @@ function tdEvalBars(ev){
 var TDPAGE='home',TDPV='';
 function tdBuildAndGo(){buildTDNav();tdP('home');}
 function enterTD(){
+  setTimeout(function(){try{sessSave();}catch(e){}},400);
   if(!sysAllowed('td'))return;
   var r=tdRole();
   if(!r){alert('نظام الإدارة الفنية متاح لمدير النظام والإداريين والمدربين فقط');return;}
@@ -12128,6 +12386,7 @@ function rNTTeams(){
   hydrateIcons(g('ntc-teams'));
 }
 function ntPickTeam(id,silent){
+  setTimeout(function(){try{sessSave();}catch(e){}},400);
   var ok=ntMyTeams().some(function(t){return t.id===id;});
   if(!ok)return;
   NTTEAM=id;
@@ -13263,13 +13522,18 @@ function faBoot(){
     }).catch(function(e){
       console.warn('cloud load failed, using local',e);
     }).then(function(){
-      /* الأرقام والأخبار تُحدَّث بعد وصول بيانات السحابة */
+      /* استئناف الجلسة إن كانت سارية — قبل عرض شاشة الدخول */
+      if(sessRestore())return;
       var wel=g('WEL');
       if(wel&&wel.classList.contains('on'))rWel();
       else{var e=g('l-name');if(e)e.focus();}
     });
   }else{
-    setTimeout(function(){var wel=g('WEL');if(wel&&wel.classList.contains('on'))return;var e=g('l-name');if(e)e.focus();},200);
+    setTimeout(function(){
+      if(sessRestore())return;
+      var wel=g('WEL');if(wel&&wel.classList.contains('on'))return;
+      var e=g('l-name');if(e)e.focus();
+    },200);
   }
 }
 /* شبكة أمان: تُعرض شاشة الدخول ما لم يكن المستخدم داخل النظام فعلاً */
