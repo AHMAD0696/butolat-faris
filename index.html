@@ -3595,8 +3595,12 @@ function savePhone(){
     faSync(FA.updateProfile(u.id,u.name,u.username,u.team,u.phone));
     if(needPin)faSync(FA.setPin(u.id,pin));
   }
+  u.phoneAt=Date.now();
   logA('إكمال بيانات الدخول: '+u.name,'shield','#16a34a');
-  sv();fl('ap-ok');
+  sv();
+  /* حفظ فوري لا مؤجَّل — حتى لا يُفقد التوثيق لو أُغلقت الصفحة */
+  if(FA.enabled&&FA.token)faSync(FA.saveState(cloudState(DB)));
+  fl('ap-ok');
   setTimeout(closeAskPhone,800);
 }
 
@@ -3697,8 +3701,13 @@ function doLogin(){
       /* refresh state from cloud on login so we have latest, then enter */
       FA.loadState().then(function(state){if(state&&state.tournaments)DB=migrate(state)||DB;}).catch(function(){}).then(function(){
         var mem=DB.users.find(function(x){return x.id===u.id;});
-        if(!mem){mem={id:u.id,name:u.name,username:u.username,role:u.role,team:u.team||'',phone:u.phone||'',coachId:u.coachId||''};DB.users.push(mem);}
-        else{mem.role=u.role;mem.team=u.team||'';mem.phone=u.phone||'';}
+        if(!mem){mem={id:u.id,name:u.name,username:u.username,role:u.role,team:u.team||'',phone:normPhone(u.phone||''),coachId:u.coachId||''};DB.users.push(mem);}
+        else{
+          mem.role=u.role;mem.team=u.team||'';
+          /* لا تمحُ رقماً موثّقاً محلياً بقيمة فارغة من الخادم */
+          if(u.phone&&normPhone(u.phone))mem.phone=normPhone(u.phone);
+          else if(!mem.phone)mem.phone='';
+        }
         CU=Object.assign({},mem);
         loadStep('جارٍ تجهيز الواجهة…','مرحباً بك');
         LOGIN_BUSY=false;
