@@ -492,23 +492,23 @@ svg{display:block;flex-shrink:0}
 .hs-ov .hs-ttl{color:#fff;font-size:clamp(14px,2.2vw,20px);font-weight:800;margin-bottom:.5rem;text-shadow:0 2px 12px rgba(0,0,0,.6);line-height:1.3}
 .hs-ov .hs-lnk{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;padding:7px 14px;border-radius:99px;font-size:11.5px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(221,29,69,.4);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:640px){
-  /* الستوري يمتد بعرض الشريط أعلى صف الأرقام — لا يركبه */
-  .hs-ov{inset-inline:12px;bottom:auto;top:auto;max-width:none;
-    display:flex;flex-direction:column;align-items:flex-start;gap:.45rem;
-    background:linear-gradient(to top,rgba(0,0,0,.62),rgba(0,0,0,.28) 70%,transparent);
-    padding:.7rem .8rem .8rem;border-radius:14px}
-  .hs-ov{bottom:96px}                     /* فوق صف الأرقام */
-  .hs-ov .hs-ttl{font-size:13px;margin-bottom:0;line-height:1.45;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .hs-lnk{padding:8px 14px;font-size:11.5px;gap:6px;min-height:38px;max-width:100%}
-  .hs-lnk svg{width:13px;height:13px}
+  /* الستوري في يسار صف الأرقام — بحجمها لا أكبر منها */
+  .hs-ov{inset-inline-start:14px;inset-inline-end:auto;bottom:22px;
+    max-width:44%;display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;
+    background:none;padding:0;text-align:start}
+  .hs-ov .hs-ttl{font-size:10.5px;font-weight:600;margin-bottom:0;line-height:1.4;
+    color:rgba(255,255,255,.55);text-shadow:0 1px 6px rgba(0,0,0,.7);
+    display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  /* الزر صغير ومضغوط بحجم أرقام الواجهة */
+  .hs-ov .hs-lnk{padding:5px 11px;font-size:10.5px;gap:5px;min-height:30px;max-width:100%;
+    box-shadow:0 3px 10px rgba(221,29,69,.35);font-weight:700}
+  .hs-ov .hs-lnk svg{width:11px;height:11px}
   .hs-hint{top:10px;inset-inline-end:12px;font-size:10px;padding:4px 9px}
-  /* مساحة إضافية أسفل الواجهة حتى لا يلتصق شيء */
-  .hero-c{padding-bottom:1.2rem}
 }
 @media(max-width:400px){
-  .hs-ov{bottom:88px}
-  .hs-ov .hs-ttl{font-size:12.5px;-webkit-line-clamp:2}
+  .hs-ov{max-width:48%;bottom:20px}
+  .hs-ov .hs-ttl{font-size:10px}
+  .hs-ov .hs-lnk{padding:5px 9px;font-size:10px;min-height:28px}
 }
 .hero-pitch{position:absolute;inset:0;opacity:.07;pointer-events:none}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 80% 0%,rgba(221,29,69,.25),transparent)}
@@ -3346,7 +3346,12 @@ function hsPaint(){
   var ov=g('hs-ov');if(!ov)return;var s=HSLIST[HSIDX];if(!s){ov.innerHTML='';return;}
   var h='';
   if(s.title)h+='<div class="hs-ttl">'+esc(s.title)+'</div>';
-  if(s.url)h+='<a class="hs-lnk" href="'+esc(s.url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+ic('target',12)+' فتح الرابط'+(storyHost(s.url)?' — '+esc(storyHost(s.url)):'')+'</a>';
+  if(s.url){
+    var _host=storyHost(s.url);
+    /* على الجوال: اسم المصدر فقط ليبقى الزر صغيراً */
+    var _lbl=(window.innerWidth<=640&&_host)?esc(_host):('فتح الرابط'+(_host?' — '+esc(_host):''));
+    h+='<a class="hs-lnk" href="'+esc(s.url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+ic('target',11)+' '+_lbl+'</a>';
+  }
   ov.innerHTML=h;hydrateIcons(ov);
 }
 function hsGo(i){
@@ -13516,6 +13521,9 @@ function faBoot(){
   splStart();
   if(FA.init()){
     var splash=g('l-name');
+    /* استرجع رمز الجلسة أولاً — بدونه يفشل جلب البيانات فتضيع الجلسة */
+    var _sv=sessRead();
+    if(_sv&&_sv.token)FA.token=_sv.token;
     FA.loadState().then(function(state){
       if(state&&state.tournaments){DB=migrate(state)||DB;}
       else{ /* first run on empty cloud: seed with local/default (admin will populate) */ FA.token&&FA.saveState(cloudState(DB)); }
@@ -13544,7 +13552,13 @@ function faBoot(){
     var inside=(app&&app.style.display==='flex')||(ts&&ts.style.display==='block')
       ||(td&&td.style.display==='block')||(nt&&nt.style.display==='block');
     var wel=g('WEL'),onWel=wel&&wel.classList.contains('on');
-    if(!inside&&!onWel){
+    /* جلسة سارية على وشك الاستعادة — لا تفرض شاشة الدخول فتومض */
+    var pend=false;
+    try{
+      var _s=JSON.parse(localStorage.getItem('faris_session')||'null');
+      pend=!!(_s&&_s.uid&&(Date.now()-(_s.at||0))<12*3600000);
+    }catch(e){}
+    if(!inside&&!onWel&&!pend){
       ls.style.display='flex';
       var s1=g('ls-s1'),s2=g('ls-s2');
       if(s1&&s2&&s2.style.display!=='block')s1.style.display='block';
