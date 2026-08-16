@@ -182,8 +182,20 @@ svg{display:block;flex-shrink:0}
   font-size:12px;color:var(--gray)}
 .fxpg .btn[disabled]{opacity:.4;pointer-events:none}
 @media(max-width:640px){
-  .fixtbl{min-width:640px}
-  .fxi{font-size:12px;padding:6px 8px}
+  /* الجدول يصير بطاقات — لا تمرير أفقي ولا ضغط */
+  .fixtbl,.fixtbl tbody,.fixtbl tr,.fixtbl td{display:block;width:100%;min-width:0}
+  .fixtbl thead{display:none}
+  .fixtbl tr{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r2);
+    padding:.85rem;margin-bottom:.7rem;position:relative}
+  .fixtbl tr.row-ok{opacity:1;border-color:rgba(22,163,74,.3)}
+  .fixtbl td{padding:0 0 .6rem 0!important;border:none!important}
+  .fixtbl td:last-child{padding-bottom:0!important}
+  .fixtbl td::before{content:attr(data-l);display:block;font-size:11px;color:var(--gray);
+    font-weight:600;margin-bottom:.3rem}
+  .fixtbl td.fx-iss{position:absolute;top:.7rem;inset-inline-end:.7rem;padding:0!important;width:auto}
+  .fixtbl td.fx-iss::before{display:none}
+  .fxi{font-size:16px;padding:11px 12px;min-height:46px}
+  .fxpg{gap:.6rem}
 }
 .ntsw{display:flex;align-items:flex-start;gap:.8rem;padding:.9rem;border:1.5px solid var(--brd);border-radius:var(--r2);cursor:pointer;transition:.15s}
 .ntsw.on{border-color:rgba(22,163,74,.45);background:rgba(22,163,74,.06)}
@@ -225,7 +237,11 @@ svg{display:block;flex-shrink:0}
   .pfield .pfx{padding:0 10px 0 12px;font-size:13px;min-height:44px}
   .pfield input{font-size:16px;padding:11px 12px}
 }
-.lhint{font-size:11px;color:rgba(255,255,255,.42);margin-top:.45rem;text-align:center}
+.lhint{font-size:11px;color:rgba(255,255,255,.42);margin-top:.5rem;text-align:center;line-height:1.7}
+.lswap{color:rgba(255,255,255,.72);text-decoration:underline;text-underline-offset:3px}
+.lswap:hover{color:#fff}
+.ltabs{gap:.3rem}
+.ltab{font-size:12.5px}
 .ltabs{display:flex;gap:.35rem;background:rgba(255,255,255,.06);border-radius:12px;padding:4px;margin-bottom:1.1rem}
 .ltab{flex:1;background:none;border:none;color:rgba(255,255,255,.5);font-family:inherit;font-size:12px;font-weight:700;
   padding:9px 4px;border-radius:9px;cursor:pointer;transition:.18s;min-height:40px;white-space:nowrap}
@@ -1568,6 +1584,51 @@ html[dir="rtl"] .sb-foot .chip::after{transform:translateY(-50%) rotate(-135deg)
   .fx-sc{font-size:1.4rem}
 }
 
+/* ============ إصلاحات الجوال الشاملة ============ */
+@media(max-width:640px){
+  /* ١) أرضية حجم الخط — لا شيء أصغر من 11px */
+  body,.sec,.rform,.dcard,.at,.badge,small{-webkit-text-size-adjust:100%}
+  .at{font-size:12px}
+  .at th,.at td{font-size:12px;padding:.55rem .45rem}
+  .badge{font-size:11px}
+  small,.sub,.hint{font-size:11px!important}
+  .ts-stat .l,.wl-st-l,.hcell .l,.mrg-s .l{font-size:11px}
+  .lo-tx{font-size:14px}
+
+  /* ٢) أهداف اللمس ٤٤ بكسل */
+  .btn,.btn-sm,.wtab,.ab,.uchip,.brchip,.ltab,.atab,.nl,.sb-l{min-height:44px}
+  .btn-sm{padding:10px 16px}
+  .udel,.uclear,.mclose,.wbadge{min-width:38px;min-height:38px}
+  .wbadge{width:24px;height:24px;font-size:14px}
+
+  /* ٣) الحقول: 16px يمنع تكبير iOS التلقائي */
+  input,select,textarea{font-size:16px!important;min-height:46px}
+  textarea{min-height:80px}
+  .pbox{min-height:56px}
+
+  /* ٤) الجداول تمرّر أفقياً بلا كسر الصفحة */
+  .at-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;
+    margin-inline:-.4rem;padding-inline:.4rem}
+  .at{min-width:520px}
+
+  /* ٥) الشبكات الضيقة تنقسم */
+  .dsplit,.ev-sum,.mrg-sum,.ce-auto{grid-template-columns:1fr!important}
+  .hbar{grid-template-columns:repeat(2,1fr)!important}
+
+  /* ٦) لا شيء يتجاوز عرض الشاشة */
+  .sec,.rform,.dcard,.ce-ax,.fx,.ucard{max-width:100%}
+  img,svg,table{max-width:100%}
+  .sec{padding-inline:.9rem}
+
+  /* ٧) العناوين الطويلة تلتف */
+  h1,h2,h3,.pg-t,.ev-hd-t,.ce-nm{overflow-wrap:anywhere}
+}
+/* ٨) 100vh يسبب قفزات مع شريط المتصفح */
+@supports(height:100dvh){
+  #APP{min-height:100dvh}
+  #TD,#NT{min-height:100dvh}
+}
+
 /* ============ SPLASH (شعار الافتتاح) ============ */
 #SPL{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1rem;
   background:linear-gradient(165deg,#12132f 0%,#0d0e24 48%,#150f22 100%);
@@ -2179,22 +2240,23 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lgo"></div>
     <div class="ltitle">أكاديمية فارس</div>
     <div class="ltabs">
-      <button type="button" class="ltab on" id="ltab-phone" onclick="lsMode('phone')">الجوال</button>
-      <button type="button" class="ltab" id="ltab-nid" onclick="lsMode('nid')">الهوية</button>
-      <button type="button" class="ltab" id="ltab-name" onclick="lsMode('name')">الاسم</button>
+      <button type="button" class="ltab on" id="ltab-staff" onclick="lsMode('phone')">موظف / مدرب</button>
+      <button type="button" class="ltab" id="ltab-nid" onclick="lsMode('nid')">لاعب</button>
     </div>
     <div class="lf" id="lf-phone">
       <label>رقم الجوال</label>
       <div class="pfield"><span class="pfx">+966</span><input type="tel" id="l-phone" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this)" onkeydown="if(event.key==='Enter')goPhone()"></div>
+      <div class="lhint">للمدربين والإداريين — <a href="#" class="lswap" onclick="event.preventDefault();lsMode('name')">أو ادخل باسمك</a></div>
     </div>
     <div class="lf" id="lf-nid" style="display:none">
-      <label>رقم الهوية / الإقامة</label>
+      <label>رقم هوية اللاعب</label>
       <input type="tel" id="l-nid" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:2px;font-size:17px" oninput="this.value=normNid(this.value)" onkeydown="if(event.key==='Enter')goNid()">
-      <div class="lhint">للاعبين — أدخل رقم هويتك أو إقامتك</div>
+      <div class="lhint">أدخل رقم هويتك أو إقامتك — أول مرة يُطلب تاريخ ميلادك</div>
     </div>
     <div class="lf" id="lf-name" style="display:none">
       <label>الاسم الكامل</label>
       <input type="text" id="l-name" placeholder="أدخل اسمك الكامل" autocomplete="off" onkeydown="if(event.key==='Enter')goPin()">
+      <div class="lhint"><a href="#" class="lswap" onclick="event.preventDefault();lsMode('phone')">الرجوع للدخول برقم الجوال</a></div>
     </div>
     <button class="lbtn" id="l-next" onclick="lsNext()">التالي</button>
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
@@ -3596,12 +3658,14 @@ function nameErr(msg){
 var LSMODE='phone';
 function lsMode(m){
   LSMODE=m;
-  [['phone','lf-phone','ltab-phone'],['nid','lf-nid','ltab-nid'],['name','lf-name','ltab-name']]
-    .forEach(function(x){
-      var f=g(x[1]),t=g(x[2]);
-      if(f)f.style.display=(m===x[0])?'':'none';
-      if(t)t.classList.toggle('on',m===x[0]);
-    });
+  ['phone','nid','name'].forEach(function(k){
+    var f=g('lf-'+k);
+    if(f)f.style.display=(m===k)?'':'none';
+  });
+  /* تبويب «موظف» يغطي الجوال والاسم معاً */
+  var ts=g('ltab-staff'),tn=g('ltab-nid');
+  if(ts)ts.classList.toggle('on',m==='phone'||m==='name');
+  if(tn)tn.classList.toggle('on',m==='nid');
   var e=g(m==='phone'?'l-phone':(m==='nid'?'l-nid':'l-name'));
   if(e)setTimeout(function(){e.focus();},60);
   var er=g('n-err');if(er)er.style.display='none';
@@ -3621,7 +3685,35 @@ function goPhone(){
   var raw=phoneVal('l-phone');
   if(!phoneOK(raw)){nameErr('أدخل رقم جوال صحيح (٠٥xxxxxxxx)');return;}
   var found=usersByPhone(raw);
+  if(!found.length&&FA.enabled){
+    /* جهاز جديد: البيانات لم تصل بعد — اسأل الخادم عن صاحب الرقم */
+    nameErr('جارٍ التحقق…');
+    FA.sb.rpc('fa_lookup',{p_id:raw}).then(function(r){
+      if(r.error)throw r.error;
+      var row=(r.data&&r.data[0])||null;
+      if(!row)throw new Error('not-found');
+      var nEl=g('l-name');if(nEl)nEl.value=row.username||row.display_name;
+      g('ls-s1').style.display='none';g('ls-s2').style.display='block';
+      g('pin-nm').textContent=row.display_name||row.username;
+      g('pin-av').textContent=ti(row.display_name||row.username);
+      pinReset();g('p-err').style.display='none';
+      setTimeout(function(){var e=g('p1');if(e)e.focus();},120);
+    }).catch(function(){
+      nameErr('لا يوجد حساب بهذا الرقم — جرّب الدخول بالاسم');
+      setTimeout(function(){lsMode('name');},1600);
+    });
+    return;
+  }
   if(!found.length){
+    /* رقم مسجّل كولي أمر أو جوال لاعب؟ وجّهه لتبويب اللاعب */
+    var nn=normPhone(raw);
+    var asPlayer=(TDX().players||[]).find(function(x){
+      return normPhone(x.phone)===nn||normPhone(x.guardPhone)===nn;});
+    if(asPlayer){
+      nameErr('هذا الرقم مسجّل للاعب — ادخل برقم هوية اللاعب');
+      setTimeout(function(){lsMode('nid');var e=g('l-nid');if(e)e.focus();},1600);
+      return;
+    }
     nameErr('لا يوجد حساب مرتبط بهذا الرقم — جرّب الدخول بالاسم');
     setTimeout(function(){lsMode('name');},1400);
     return;
@@ -3820,7 +3912,28 @@ function goPin(){
   var name=gv('l-name');
   if(!name){nameErr('يرجى إدخال اسمك أو رقم جوالك');return;}
   var acc=findAccount(name);
-  if(!acc){nameErr('هذا الحساب غير مسجّل — تأكد من الاسم أو رقم الجوال، أو أنشئ حساباً جديداً');return;}
+  if(!acc){
+    /* هل هو لاعب حاول الدخول باسمه؟ وجّهه بدل أن تتركه حائراً */
+    var q=normName(name);
+    var pl=(TDX().players||[]).find(function(x){return normName(x.name||'').indexOf(q)>-1&&q.length>2;});
+    if(pl){
+      nameErr('حسابات اللاعبين تدخل برقم الهوية — سنحوّلك الآن');
+      setTimeout(function(){
+        lsMode('nid');
+        var e=g('l-nid');if(e){e.value='';e.focus();}
+      },1500);
+      return;
+    }
+    /* السحابة مفعّلة: البيانات لم تصل بعد (جهاز جديد) — دع الخادم يتحقق */
+    if(FA.enabled){
+      g('ls-s1').style.display='none';g('ls-s2').style.display='block';
+      g('pin-nm').textContent=name;g('pin-av').textContent=ti(name);
+      pinReset();g('p-err').style.display='none';
+      setTimeout(function(){var e=g('p1');if(e)e.focus();},120);
+      return;
+    }
+    nameErr('هذا الحساب غير مسجّل — تأكد من الاسم أو رقم الجوال، أو أنشئ حساباً جديداً');return;
+  }
   var mins=lockNote(acc.name);
   if(mins){nameErr('الحساب مقفل مؤقتاً بعد محاولات خاطئة — أعد المحاولة بعد '+mins+' دقيقة');return;}
   if(acc.status==='pending'){nameErr('طلب انضمامك قيد المراجعة، انتظر اعتماد الإدارة');return;}
@@ -10164,12 +10277,12 @@ function rTDFix(){
     var iss=issuesPlayer(p);
     h+='<tr'+(iss.length?'':' class="row-ok"')+'>';
     h+='<td class="fx-iss">'+(iss.length?warnBadge(iss,p.name):'<span class="ok-tick">'+ic('check',13)+'</span>')+'</td>';
-    h+='<td><input class="fxi nm" value="'+esc(p.name||'')+'" onchange="tdFixSave(\''+p.id+'\',\'name\',this)"></td>';
-    h+='<td style="white-space:nowrap;font-size:11.5px;color:var(--gray)">'+esc(p.branch||'—')+'</td>';
-    h+='<td><input class="fxi num" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" value="'+esc(p.nid||'')+'" onchange="tdFixSave(\''+p.id+'\',\'nid\',this)"></td>';
-    h+='<td><input class="fxi num" inputmode="numeric" maxlength="9" placeholder="5XXXXXXXX" value="'+esc(phoneLocal(p.guardPhone||''))+'" onchange="tdFixSave(\''+p.id+'\',\'guardPhone\',this)"></td>';
-    h+='<td><input class="fxi num" inputmode="numeric" maxlength="9" placeholder="اختياري" value="'+esc(phoneLocal(p.phone||''))+'" onchange="tdFixSave(\''+p.id+'\',\'phone\',this)"></td>';
-    h+='<td><input class="fxi" type="date" value="'+esc(p.dob||'')+'" onchange="tdFixSave(\''+p.id+'\',\'dob\',this)"></td>';
+    h+='<td data-l="الاسم"><input class="fxi nm" value="'+esc(p.name||'')+'" onchange="tdFixSave(\''+p.id+'\',\'name\',this)"></td>';
+    h+='<td class="fx-br" data-l="الفرع" style="white-space:nowrap;font-size:11.5px;color:var(--gray)">'+esc(p.branch||'—')+'</td>';
+    h+='<td data-l="رقم الهوية"><input class="fxi num" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" value="'+esc(p.nid||'')+'" onchange="tdFixSave(\''+p.id+'\',\'nid\',this)"></td>';
+    h+='<td data-l="جوال ولي الأمر"><input class="fxi num" inputmode="numeric" maxlength="9" placeholder="5XXXXXXXX" value="'+esc(phoneLocal(p.guardPhone||''))+'" onchange="tdFixSave(\''+p.id+'\',\'guardPhone\',this)"></td>';
+    h+='<td data-l="جوال اللاعب"><input class="fxi num" inputmode="numeric" maxlength="9" placeholder="اختياري" value="'+esc(phoneLocal(p.phone||''))+'" onchange="tdFixSave(\''+p.id+'\',\'phone\',this)"></td>';
+    h+='<td data-l="تاريخ الميلاد"><input class="fxi" type="date" value="'+esc(p.dob||'')+'" onchange="tdFixSave(\''+p.id+'\',\'dob\',this)"></td>';
     h+='</tr>';
   });
   h+='</tbody></table></div>';
