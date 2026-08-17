@@ -493,9 +493,11 @@ svg{display:block;flex-shrink:0}
 .hs-ov .hs-lnk{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;padding:7px 14px;border-radius:99px;font-size:11.5px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(221,29,69,.4);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:640px){
   /* الستوري في يسار صف الأرقام — بحجمها لا أكبر منها */
-  .hs-ov{inset-inline-start:14px;inset-inline-end:auto;bottom:22px;
+  /* left/right صريحة — inset-inline تنعكس في الواجهة العربية */
+  .hs-ov{left:14px;right:auto;bottom:22px;
     max-width:44%;display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;
-    background:none;padding:0;text-align:start}
+    background:none;padding:0;text-align:left;direction:ltr}
+  .hs-ov .hs-ttl{text-align:left;direction:rtl}
   .hs-ov .hs-ttl{font-size:10.5px;font-weight:600;margin-bottom:0;line-height:1.4;
     color:rgba(255,255,255,.55);text-shadow:0 1px 6px rgba(0,0,0,.7);
     display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
