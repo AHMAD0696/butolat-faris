@@ -258,6 +258,11 @@ svg{display:block;flex-shrink:0}
   .req-note{padding:.85rem}
   .req-i{padding:.55rem .6rem}
 }
+.chip{cursor:pointer;transition:background .15s}
+.chip:hover{background:rgba(255,255,255,.09)}
+.chip-cv{display:inline-flex;align-items:center;color:rgba(255,255,255,.45);margin-inline-start:4px}
+.chip-cv svg{width:13px;height:13px}
+@media(max-width:920px){.chip-cv{display:none}}
 .ntsw{display:flex;align-items:flex-start;gap:.8rem;padding:.9rem;border:1.5px solid var(--brd);border-radius:var(--r2);cursor:pointer;transition:.15s}
 .ntsw.on{border-color:rgba(22,163,74,.45);background:rgba(22,163,74,.06)}
 .ntsw input{display:none}
@@ -2994,9 +2999,10 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
   </div>
   <div class="nav-links" id="td-links"></div>
   <div class="nav-r">
-    <div class="chip" style="cursor:default">
+    <div class="chip" onclick="openAccount(event)" title="حسابي">
       <div class="chip-av" id="td-av">؟</div>
       <div><div class="chip-name" id="td-nm">—</div><small class="chip-role" id="td-rl">—</small></div>
+      <span class="chip-cv" data-ic="chevron"></span>
     </div>
     <button class="btnav" id="td-setbtn" onclick="tdP('settings')" style="display:none"><span data-ic="gear"></span> الإعدادات</button>
     <button class="btnav" onclick="tdBack()"><span data-ic="swap"></span> الأنظمة</button>
@@ -3032,9 +3038,10 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
   </div>
   <div class="nav-links" id="nt-links"></div>
   <div class="nav-r">
-    <div class="chip" style="cursor:default">
+    <div class="chip" onclick="openAccount(event)" title="حسابي">
       <div class="chip-av" id="nt-av">؟</div>
       <div><div class="chip-name" id="nt-nm">—</div><small class="chip-role" id="nt-rl">—</small></div>
+      <span class="chip-cv" data-ic="chevron"></span>
     </div>
     <button class="btnav" onclick="ntBack()"><span data-ic="swap"></span> الأنظمة</button>
     <button class="btnav out" onclick="doLogout()"><span data-ic="logout"></span></button>
@@ -3148,11 +3155,19 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     </div>
     <div class="mbody" style="text-align:right">
       <div class="fg"><label>الفئة السنية *</label><select id="ep-cat"></select></div>
-      <div class="frow"><div class="fg"><label>الاسم الكامل *</label><input type="text" id="ep-name"></div><div class="fg"><label>رقم الهوية <small>(اختياري)</small></label><input type="text" id="ep-nid" style="direction:ltr"></div></div>
+      <div class="req-note" id="ep-req"></div>
+      <div class="frow" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="fg req"><label>اسم اللاعب *</label><input type="text" id="ep-fn" placeholder="محمد"></div>
+        <div class="fg req"><label>اسم الأب *</label><input type="text" id="ep-mn" placeholder="عبدالله"></div>
+        <div class="fg req"><label>اسم العائلة *</label><input type="text" id="ep-ln" placeholder="الأحمد"></div>
+      </div>
+      <input type="hidden" id="ep-name">
+      <div class="fg req"><label>رقم الهوية / الإقامة *</label><input type="text" id="ep-nid" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" style="direction:ltr" oninput="this.value=normNid(this.value);epReq()"></div>
       <div class="frow"><div class="fg"><label>رقم القميص <small>(اختياري)</small></label><select id="ep-num"></select></div><div class="fg"><label>المركز <small>(اختياري)</small></label><select id="ep-pos"></select></div></div>
       <div class="fg req"><label>تاريخ الميلاد *</label><div class="frow" style="grid-template-columns:1fr 1fr 1fr"><select id="ep-dd"></select><select id="ep-dm"></select><select id="ep-dy"></select></div></div>
-      <div class="frow"><div class="fg"><label>الجنسية <small>(اختياري)</small></label><select id="ep-nat"></select></div><div class="fg"><label>رقم ولي الأمر *</label><input type="tel" id="ep-gd" maxlength="10" style="direction:ltr"></div></div>
-      <div class="fg"><label>جوال اللاعب <small>(اختياري)</small></label><input type="tel" id="ep-ph" maxlength="10" style="direction:ltr"></div>
+      <div class="frow"><div class="fg"><label>الجنسية <small>(اختياري)</small></label><select id="ep-nat"></select></div><div class="fg req"><label>جوال ولي الأمر *</label><div class="pfield"><span class="pfx">+966</span><input type="tel" id="ep-gd" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this);epReq()"></div></div></div>
+      <div class="fg"><label>اسم ولي الأمر <small>(يُملأ باسم الأب تلقائياً — عدّله إن كان غيره)</small></label><input type="text" id="ep-gname" placeholder="يُملأ تلقائياً"></div>
+      <div class="fg"><label>جوال اللاعب <small>(اختياري)</small></label><div class="pfield"><span class="pfx">+966</span><input type="tel" id="ep-ph" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this)"></div></div>
       <div class="fg"><label>صورة اللاعب <small>(اختياري)</small></label>
         <div class="img-pick">
           <div class="img-prev" id="ep-prev" data-ic="user"></div>
@@ -7643,7 +7658,14 @@ function editPlayer(tname,pid){
   var dd=[],dy=[];for(var d=1;d<=31;d++)dd.push(String(d));var _br=bRange();for(var y=_br.young;y>=_br.old;y--)dy.push(String(y));
   fillSel('ep-dd',dd,'اليوم');fillSel('ep-dy',dy,'السنة');
   g('ep-dm').innerHTML='<option value="">الشهر</option>'+MONTHS.map(function(m,i){return '<option value="'+(i+1)+'">'+m+'</option>';}).join('');
-  g('ep-name').value=p.name||'';g('ep-nid').value=p.nid||'';g('ep-num').value=String(p.number||'');g('ep-pos').value=p.pos||'';g('ep-nat').value=p.nat||'';g('ep-gd').value=p.guard||'';g('ep-ph').value=p.phone||'';
+  var _n=splitName(p);
+  g('ep-fn').value=_n.first;g('ep-mn').value=_n.mid;g('ep-ln').value=_n.last;
+  g('ep-name').value=p.name||'';
+  g('ep-nid').value=normNid(p.nid||'');
+  g('ep-num').value=String(p.number||'');g('ep-pos').value=p.pos||'';g('ep-nat').value=p.nat||'';
+  g('ep-gd').value=phoneLocal(p.guard||p.guardPhone||'');
+  g('ep-ph').value=phoneLocal(p.phone||'');
+  var _gn=g('ep-gname');if(_gn)_gn.value=p.guardName||'';
   /* parse dob "يوم شهر سنة" */
   var parts=(p.dob||'').split(' ');if(parts.length===3){g('ep-dd').value=parts[0];var mi=MONTHS.indexOf(parts[1]);if(mi>=0)g('ep-dm').value=String(mi+1);g('ep-dy').value=parts[2];}
   /* images */
@@ -7654,17 +7676,56 @@ function editPlayer(tname,pid){
   g('epid-prev').innerHTML=p.idImg?'<img src="'+p.idImg+'">':ic('card',22);
   g('epid-rm').style.display=p.idImg?'inline-block':'none';
   g('epMod').classList.add('open');hydrateIcons(g('epMod'));
+  setTimeout(function(){
+    try{
+      epReq();
+      ['ep-fn','ep-mn','ep-ln','ep-dd','ep-dm','ep-dy'].forEach(function(id){
+        var e=g(id);if(e){e.oninput=epReq;e.onchange=epReq;}
+      });
+    }catch(e){}
+  },60);
+}
+/* لوحة الشرح في نافذة التعديل */
+function epReq(){
+  var el=g('ep-req');if(!el)return;
+  var fn=gv('ep-fn'),mn=gv('ep-mn'),ln=gv('ep-ln');
+  var ok=[!!(fn&&mn&&ln), normNid(gv('ep-nid')).length===10, phoneOK(phoneVal('ep-gd')),
+          !!(gv('ep-dd')&&g('ep-dm')&&g('ep-dm').value&&gv('ep-dy'))];
+  var h='<div class="req-hd">'+ic('shield',15)+'<b>بيانات لازمة لتفعيل حساب اللاعب</b></div><div class="req-list">';
+  [['١','الاسم ثلاثياً','اسم اللاعب • اسم الأب • اسم العائلة'],
+   ['٢','رقم الهوية أو الإقامة','١٠ أرقام — به يدخل اللاعب لحسابه'],
+   ['٣','جوال ولي الأمر','وسيلة التواصل الرسمية مع الأسرة'],
+   ['٤','تاريخ الميلاد','لازم للفئة السنية وللتحقق عند التفعيل']
+  ].forEach(function(x,i){
+    h+='<div class="req-i'+(ok[i]?' ok':' miss')+'"><span class="req-n">'+x[0]+'</span>'
+      +'<div><b>'+x[1]+'</b><small>'+x[2]+'</small></div></div>';
+  });
+  el.innerHTML=h+'</div>';hydrateIcons(el);
+  var gn=g('ep-gname');
+  if(gn&&!gn.value.trim()&&mn)gn.placeholder=mn;
 }
 function saveEditPlayer(){
   if(!EPCTX)return;
   var t=(T().teams||[]).find(function(x){return x.name===EPCTX.team;});if(!t)return;
   var p=(t.players||[]).find(function(x){return x.id===EPCTX.pid;});if(!p)return;
-  var cat=gv('ep-cat'),name=gv('ep-name'),nid=gv('ep-nid'),num=gv('ep-num'),pos=gv('ep-pos');
-  var dd=gv('ep-dd'),dm=g('ep-dm').value,dy=gv('ep-dy'),nat=gv('ep-nat'),gd=gv('ep-gd');
-  if(!cat||!name||!dd||!dm||!dy||!gd){g('ep-err').textContent='يرجى تعبئة: الفئة، الاسم، تاريخ الميلاد، ورقم ولي الأمر';fl('ep-err');return;}
+  var cat=gv('ep-cat'),num=gv('ep-num'),pos=gv('ep-pos');
+  var fn=gv('ep-fn'),mn=gv('ep-mn'),ln=gv('ep-ln');
+  var name=joinName(fn,mn,ln);
+  var nid=normNid(gv('ep-nid'));
+  var dd=gv('ep-dd'),dm=g('ep-dm').value,dy=gv('ep-dy'),nat=gv('ep-nat'),gd=phoneVal('ep-gd');
+  if(!cat){g('ep-err').textContent='اختر الفئة السنية';fl('ep-err');return;}
+  if(!fn||!mn||!ln){g('ep-err').textContent='الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة';fl('ep-err');return;}
+  if(nid.length!==10){g('ep-err').textContent='رقم الهوية / الإقامة مطلوب — ١٠ أرقام';fl('ep-err');return;}
+  if(!dd||!dm||!dy){g('ep-err').textContent='تاريخ الميلاد مطلوب';fl('ep-err');return;}
+  if(!phoneOK(gd)){g('ep-err').textContent='جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5';fl('ep-err');return;}
+  if(phoneFake(gd)){g('ep-err').textContent='جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً';fl('ep-err');return;}
+  var dupN=null;
+  (T().teams||[]).forEach(function(tt){(tt.players||[]).forEach(function(pp){
+    if(pp.id!==p.id&&pp.nid&&normNid(pp.nid)===nid)dupN=pp;});});
+  if(dupN){g('ep-err').textContent='رقم الهوية مسجّل للاعب: '+dupN.name;fl('ep-err');return;}
   if(!gv('epid-img')){g('ep-err').textContent='صورة الهوية مطلوبة';fl('ep-err');return;}
   if(num&&(t.players||[]).some(function(x){return x.id!==p.id&&String(x.number)===num&&x.cat===cat;})){g('ep-err').textContent='رقم القميص مستخدم في هذه الفئة';fl('ep-err');return;}
-  p.name=name;p.nid=nid;p.number=num;p.pos=pos;p.cat=cat;p.dob=dd+' '+MONTHS[dm-1]+' '+dy;p.nat=nat;p.guard=gd;p.phone=gv('ep-ph');p.img=gv('ep-img');p.idImg=gv('epid-img');
+  p.name=name;p.fn=fn;p.mn=mn;p.ln=ln;p.nid=nid;p.guardName=gv('ep-gname')||mn||'';p.number=num;p.pos=pos;p.cat=cat;p.dob=dd+' '+MONTHS[dm-1]+' '+dy;p.nat=nat;p.guard=gd;p.guardPhone=gd;p.phone=phoneVal('ep-ph');p.img=gv('ep-img');p.idImg=gv('epid-img');
   logA('تعديل لاعب: '+name+' — '+t.name,'edit','#d97706');
   sv();fl('ep-ok');g('epMod').classList.remove('open');renderApList();
 }
