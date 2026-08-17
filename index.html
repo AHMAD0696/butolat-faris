@@ -3315,13 +3315,22 @@ var FA={
       return r.data||0;
     });
   },
+  /* Supabase تحدّ النتائج بألف صف — نقرأ على صفحات */
   playersGet:function(system){
     var self=this;
     if(!self.enabled||!self.token)return Promise.resolve(null);
-    return self.sb.rpc('fa_players_get',{p_token:self.token,p_system:system||null}).then(function(r){
-      if(r.error)throw r.error;
-      return r.data||[];
-    });
+    var PAGE=1000,all=[];
+    function page(from){
+      return self.sb.rpc('fa_players_get',{p_token:self.token,p_system:system||null})
+        .range(from,from+PAGE-1).then(function(r){
+          if(r.error)throw r.error;
+          var got=r.data||[];
+          all=all.concat(got);
+          if(got.length<PAGE)return all;
+          return page(from+PAGE);
+        });
+    }
+    return page(0);
   },
   playersCount:function(){
     var self=this;
@@ -9092,19 +9101,23 @@ function migRun(){
     function step(){
       if(i>=rows.length){
         MIG.busy=false;
-        logA('نسخ اللاعبين للجدول الجديد: '+MIG.ok+' من '+MIG.total,'swap','#1565c0');
-        renderATab();
-        addN('انتهى النسخ',MIG.ok+' لاعباً'+(MIG.fail?' • فشل '+MIG.fail:''),MIG.fail?'warning':'success');
+        try{logA('نسخ اللاعبين للجدول الجديد: '+MIG.ok+' من '+MIG.total,'swap','#1565c0');}catch(e){}
+        /* أي فشل في تحديث الواجهة لا يوقف العملية */
+        try{renderATab();}catch(e){console.warn('[FA] تعذّر تحديث الواجهة',e&&e.message);}
+        try{addN('انتهى النسخ',MIG.ok+' لاعباً'+(MIG.fail?' • فشل '+MIG.fail:''),MIG.fail?'warning':'success');}catch(e){}
         return;
       }
       var batch=rows.slice(i,i+CHUNK);i+=CHUNK;
       FA.playersUpsert(batch).then(function(){MIG.ok+=batch.length;})
         .catch(function(e){MIG.fail+=batch.length;console.warn('[FA] فشل نسخ دفعة',e&&e.message);})
         .then(function(){
-          MIG.done=Math.min(i,rows.length);
-          var pct=Math.round(MIG.done/rows.length*100);
-          if(bar)bar.style.width=pct+'%';
-          if(lbl)lbl.textContent=MIG.done+' من '+rows.length+' — نُسخ '+MIG.ok+(MIG.fail?' • فشل '+MIG.fail:'');
+          try{
+            MIG.done=Math.min(i,rows.length);
+            var pct=Math.round(MIG.done/rows.length*100);
+            bar=bar||g('mig-bar');lbl=lbl||g('mig-lbl');
+            if(bar)bar.style.width=pct+'%';
+            if(lbl)lbl.textContent=MIG.done+' من '+rows.length+' — نُسخ '+MIG.ok+(MIG.fail?' • فشل '+MIG.fail:'');
+          }catch(e){}
           setTimeout(step,80);
         });
     }
@@ -9116,7 +9129,10 @@ function migVerify(){
   var el=g('mig-cmp');if(el)el.innerHTML='<span style="color:var(--gray)">جارٍ المقارنة…</span>';
   var local=allPlayerRows();
   var byId={};local.forEach(function(r){byId[r.id]=r;});
-  FA.playersGet().then(function(remote){
+  Promise.all([FA.playersGet(),FA.playersCount()]).then(function(res){
+    var remote=res[0]||[];
+    var counts=res[1]||[];
+    var serverTotal=counts.reduce(function(a,c){return a+(+c.n||0);},0);
     var rById={};(remote||[]).forEach(function(r){rById[r.id]=r;});
     var missing=local.filter(function(r){return !rById[r.id];}).length;
     var extra=(remote||[]).filter(function(r){return !byId[r.id];}).length;
@@ -9131,12 +9147,19 @@ function migVerify(){
     });
     var okAll=(missing===0&&extra===0&&diff===0);
     var h='<div class="dgbar '+(okAll?'':'warn')+'">'
-      +'<div class="dgl"><b>نتيجة المقارنة</b><span>المصدر '+local.length+' • الجدول '+(remote||[]).length+'</span></div>'
+      +'<div class="dgl"><b>نتيجة المقارنة</b><span>المصدر '+local.length+' • الجدول '+remote.length
+        +(serverTotal&&serverTotal!==remote.length?' (الخادم يقول '+serverTotal+')':'')+'</span></div>'
       +'<div class="dgn">'
       +(okAll?'✅ الجدول مطابق للمصدر تماماً'
              :'⚠ ناقص '+missing+' • زائد '+extra+' • مختلف '+diff
                +(samples.length?'<br><small>مثال: '+samples.join('، ')+'</small>':''))
       +'</div></div>';
+    /* تفصيل حسب النظام */
+    if(counts.length){
+      h+='<div class="ce-note" style="margin-top:.6rem">'+ic('info',13)+'<div>في الجدول: '
+        +counts.map(function(c){return (c.system==='td'?'الإدارة الفنية':'البطولات')+' '+c.n;}).join(' • ')
+        +'</div></div>';
+    }
     if(el)el.innerHTML=h;
   }).catch(function(e){
     if(el)el.innerHTML='<div class="ce-note">'+ic('info',13)+'<div>تعذّرت المقارنة: '+esc(e&&e.message||'')+'</div></div>';
