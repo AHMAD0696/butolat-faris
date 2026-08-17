@@ -2732,19 +2732,24 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       <h3><span data-ic="user-plus"></span> إضافة لاعب</h3>
       <div class="coach-ban" id="ap-ban" style="display:none"><div class="cb-ic" data-ic="trophy"></div><div><div class="cb-t">الأكاديمية: <span id="ap-tn">—</span></div><div class="cb-s">سيُضاف اللاعب لهذه الأكاديمية</div></div></div>
       <div class="fg"><label>الفئة السنية *</label><select id="ap-cat"></select></div>
-      <div class="frow">
-        <div class="fg"><label>الاسم الكامل *</label><input type="text" id="ap-name" placeholder="الاسم الكامل"></div>
-        <div class="fg"><label>رقم الهوية <small>(اختياري)</small></label><input type="text" id="ap-nid" placeholder="رقم الهوية أو الإقامة" style="direction:ltr"></div>
+      <div class="req-note" id="ap-req"></div>
+      <div class="frow" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="fg req"><label>اسم اللاعب *</label><input type="text" id="ap-fn" placeholder="محمد"></div>
+        <div class="fg req"><label>اسم الأب *</label><input type="text" id="ap-mn" placeholder="عبدالله"></div>
+        <div class="fg req"><label>اسم العائلة *</label><input type="text" id="ap-ln" placeholder="الأحمد"></div>
       </div>
+      <input type="hidden" id="ap-name">
+      <div class="fg req"><label>رقم الهوية / الإقامة *</label><input type="text" id="ap-nid" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" style="direction:ltr" oninput="this.value=normNid(this.value);apReq()"></div>
       <div class="frow">
         <div class="fg"><label>رقم القميص <small>(اختياري)</small></label><select id="ap-num"></select></div>
         <div class="fg"><label>المركز <small>(اختياري)</small></label><select id="ap-pos"></select></div>
       </div>
-      <div class="fg"><label>تاريخ الميلاد *</label><div class="frow" style="grid-template-columns:1fr 1fr 1fr"><select id="ap-dd"></select><select id="ap-dm"></select><select id="ap-dy"></select></div></div>
+      <div class="fg req"><label>تاريخ الميلاد *</label><div class="frow" style="grid-template-columns:1fr 1fr 1fr"><select id="ap-dd"></select><select id="ap-dm"></select><select id="ap-dy"></select></div></div>
       <div class="frow">
         <div class="fg"><label>الجنسية <small>(اختياري)</small></label><select id="ap-nat"></select></div>
-        <div class="fg"><label>رقم ولي الأمر *</label><div class="pfield"><span class="pfx">+966</span><input type="tel" id="ap-gd" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this)"></div></div>
+        <div class="fg req"><label>جوال ولي الأمر *</label><div class="pfield"><span class="pfx">+966</span><input type="tel" id="ap-gd" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this)"></div></div>
       </div>
+      <div class="fg"><label>اسم ولي الأمر <small>(يُملأ باسم الأب تلقائياً — عدّله إن كان غيره)</small></label><input type="text" id="ap-gname" placeholder="يُملأ تلقائياً"></div>
       <div class="fg"><label>جوال اللاعب <small>(اختياري)</small></label><div class="pfield"><span class="pfx">+966</span><input type="tel" id="ap-ph" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this)"></div></div>
       <div class="fg"><label>صورة اللاعب <small>(اختياري — حديثة وواضحة)</small></label>
         <div class="img-pick">
@@ -3096,7 +3101,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       <div class="fg"><label>الفئة السنية *</label><select id="ep-cat"></select></div>
       <div class="frow"><div class="fg"><label>الاسم الكامل *</label><input type="text" id="ep-name"></div><div class="fg"><label>رقم الهوية <small>(اختياري)</small></label><input type="text" id="ep-nid" style="direction:ltr"></div></div>
       <div class="frow"><div class="fg"><label>رقم القميص <small>(اختياري)</small></label><select id="ep-num"></select></div><div class="fg"><label>المركز <small>(اختياري)</small></label><select id="ep-pos"></select></div></div>
-      <div class="fg"><label>تاريخ الميلاد *</label><div class="frow" style="grid-template-columns:1fr 1fr 1fr"><select id="ep-dd"></select><select id="ep-dm"></select><select id="ep-dy"></select></div></div>
+      <div class="fg req"><label>تاريخ الميلاد *</label><div class="frow" style="grid-template-columns:1fr 1fr 1fr"><select id="ep-dd"></select><select id="ep-dm"></select><select id="ep-dy"></select></div></div>
       <div class="frow"><div class="fg"><label>الجنسية <small>(اختياري)</small></label><select id="ep-nat"></select></div><div class="fg"><label>رقم ولي الأمر *</label><input type="tel" id="ep-gd" maxlength="10" style="direction:ltr"></div></div>
       <div class="fg"><label>جوال اللاعب <small>(اختياري)</small></label><input type="tel" id="ep-ph" maxlength="10" style="direction:ltr"></div>
       <div class="fg"><label>صورة اللاعب <small>(اختياري)</small></label>
@@ -3983,7 +3988,7 @@ function openNidActivate(p){
   var h='';
   h+='<div class="ped-note warn">'+ic('shield',14)+'<div><b>تأكيد الهوية.</b><br>'
     +'أدخل تاريخ ميلاد اللاعب المسجّل لدى الأكاديمية للتأكد أنك صاحب الحساب أو وليّ أمره.</div></div>';
-  h+='<div class="fg"><label>تاريخ الميلاد *</label><input type="date" id="na-dob" style="direction:ltr"></div>';
+  h+='<div class="fg req"><label>تاريخ الميلاد *</label><input type="date" id="na-dob" style="direction:ltr"></div>';
   h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidVerifyDob()">'+ic('check',14)+' تأكيد</button>';
   h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="closeNidAct()">رجوع</button>';
   h+='<div class="msg err" id="na-err">تاريخ الميلاد غير مطابق</div>';
@@ -7525,6 +7530,14 @@ function prepAddPlayer(){
   fillSel('ap-dd',dd,'اليوم');fillSel('ap-dy',dy,'السنة');
   g('ap-dm').innerHTML='<option value="">الشهر</option>'+MONTHS.map(function(m,i){return '<option value="'+(i+1)+'">'+m+'</option>';}).join('');
   renderApList();pMode(PMODE);
+  setTimeout(function(){
+    try{
+      apReq();
+      ['ap-fn','ap-mn','ap-ln','ap-gd','ap-dd','ap-dm','ap-dy'].forEach(function(id){
+        var e=g(id);if(e){e.oninput=apReq;e.onchange=apReq;}
+      });
+    }catch(e){}
+  },60);
 }
 /* players the current user can manage (coach → own categories; admin-team → whole academy; admin → all) */
 function managePlayers(){
@@ -7558,7 +7571,7 @@ function renderApList(){
     h+=byCat[k].map(function(x){
       var p=x.p,av=p.img?'<div class="tlogo" style="width:34px;height:34px"><img src="'+p.img+'"></div>':'<div class="tlogo" style="width:34px;height:34px;background:var(--navy)">'+ic('user',16)+'</div>';
       return '<div class="acl-item plr"><div class="plr-av">'+av+'</div>'
-        +'<div class="plr-i"><div class="plr-n">'+esc(p.name)+'</div><div class="plr-s">'+esc(p.pos||'—')+' • رقم '+(p.number||'—')+' • '+(p.goals||0)+' هدف</div></div>'
+        +'<div class="plr-i"><div class="plr-n">'+esc(p.name)+tPlayerBadge(p)+'</div><div class="plr-s">'+esc(p.pos||'—')+' • رقم '+(p.number||'—')+' • '+(p.goals||0)+' هدف</div></div>'
         +'<div class="plr-a">'
         +'<button class="btn btn-n btn-sm" onclick="editPlayer(\''+esc(x.t.name)+'\',\''+p.id+'\')">'+ic('edit',12)+' <span class="plr-lbl">تعديل</span></button>'
         +'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="delPlayer(\''+esc(x.t.name)+'\',\''+p.id+'\')">'+ic('trash',12)+' <span class="plr-lbl">حذف</span></button>'
@@ -7628,10 +7641,47 @@ function exportPlayers(){
   a.href=url;a.download='لاعبو-'+who+'.xls';document.body.appendChild(a);a.click();
   setTimeout(function(){a.remove();URL.revokeObjectURL(url);},1000);
 }
+/* لوحة الشرح في نموذج البطولة — نفس منطق الإدارة الفنية */
+function apReq(){
+  var el=g('ap-req');if(!el)return;
+  var fn=gv('ap-fn'),mn=gv('ap-mn'),ln=gv('ap-ln');
+  var nameOK=!!(fn&&mn&&ln);
+  var nidOK2=normNid(gv('ap-nid')).length===10;
+  var gphOK=phoneOK(phoneVal('ap-gd'));
+  var dobOK=!!(gv('ap-dd')&&g('ap-dm')&&g('ap-dm').value&&gv('ap-dy'));
+  var h='<div class="req-hd">'+ic('shield',15)+'<b>بيانات لازمة لتفعيل حساب اللاعب</b></div><div class="req-list">';
+  [[nameOK,'١','الاسم ثلاثياً','اسم اللاعب • اسم الأب • اسم العائلة'],
+   [nidOK2,'٢','رقم الهوية أو الإقامة','١٠ أرقام — به يدخل اللاعب لحسابه'],
+   [gphOK,'٣','جوال ولي الأمر','وسيلة التواصل الرسمية مع الأسرة'],
+   [dobOK,'٤','تاريخ الميلاد','لازم للفئة السنية وللتحقق عند التفعيل']
+  ].forEach(function(x){
+    h+='<div class="req-i'+(x[0]?' ok':' miss')+'"><span class="req-n">'+x[1]+'</span>'
+      +'<div><b>'+x[2]+'</b><small>'+x[3]+'</small></div></div>';
+  });
+  el.innerHTML=h+'</div>';
+  hydrateIcons(el);
+  /* اسم ولي الأمر يقع على اسم الأب */
+  var gn=g('ap-gname');
+  if(gn&&!gn.value.trim()&&mn)gn.placeholder=mn;
+}
 function subAddPlayer(){
-  var cat=gv('ap-cat'),name=gv('ap-name'),nid=gv('ap-nid'),num=gv('ap-num'),pos=gv('ap-pos');
+  var cat=gv('ap-cat'),num=gv('ap-num'),pos=gv('ap-pos');
+  var fn=gv('ap-fn'),mn=gv('ap-mn'),ln=gv('ap-ln');
+  var name=joinName(fn,mn,ln);
+  var nid=normNid(gv('ap-nid'));
   var dd=gv('ap-dd'),dm=g('ap-dm').value,dy=gv('ap-dy'),nat=gv('ap-nat'),gd=phoneVal('ap-gd'),img=gv('ap-img'),idImg=gv('apid-img');
-  if(!cat||!name||!dd||!dm||!dy||!gd||!idImg){g('ap-err').textContent='يرجى تعبئة: الفئة، الاسم، تاريخ الميلاد، رقم ولي الأمر، وصورة الهوية';fl('ap-err');return;}
+  if(!cat){g('ap-err').textContent='اختر الفئة السنية';fl('ap-err');return;}
+  if(!fn||!mn||!ln){g('ap-err').textContent='الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة';fl('ap-err');return;}
+  if(nid.length!==10){g('ap-err').textContent='رقم الهوية / الإقامة مطلوب — ١٠ أرقام';fl('ap-err');return;}
+  if(!dd||!dm||!dy){g('ap-err').textContent='تاريخ الميلاد مطلوب';fl('ap-err');return;}
+  if(!phoneOK(gd)){g('ap-err').textContent='جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5';fl('ap-err');return;}
+  if(phoneFake(gd)){g('ap-err').textContent='جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً';fl('ap-err');return;}
+  if(!idImg){g('ap-err').textContent='صورة الهوية مطلوبة';fl('ap-err');return;}
+  /* الهوية فريدة — لا تتكرر بين اللاعبين */
+  var dupNid=null;
+  (T().teams||[]).forEach(function(tt){(tt.players||[]).forEach(function(pp){
+    if(pp.nid&&normNid(pp.nid)===nid)dupNid=pp;});});
+  if(dupNid){g('ap-err').textContent='رقم الهوية مسجّل للاعب: '+dupNid.name;fl('ap-err');return;}
   var tname,catName;
   if(CU.role==='admin'&&cat.indexOf(' — ')>-1){var sp=cat.split(' — ');tname=sp[0];catName=sp[1];}
   else{tname=myTeamName();catName=cat;}
@@ -7640,11 +7690,14 @@ function subAddPlayer(){
   if(CU.role==='coach'&&coachCats(t).indexOf(catName)<0){g('ap-err').textContent='هذه الفئة غير مرتبطة بك';fl('ap-err');return;}
   if(num&&(t.players||[]).some(function(p){return String(p.number)===num&&p.cat===catName;})){g('ap-err').textContent='رقم القميص مستخدم في هذه الفئة';fl('ap-err');return;}
   t.players=t.players||[];
-  t.players.push({id:uid(),name:name,nid:nid,number:num,pos:pos,cat:catName,dob:dd+' '+MONTHS[dm-1]+' '+dy,nat:nat,guard:gd,phone:phoneVal('ap-ph'),img:img,idImg:gv('apid-img'),goals:0,matches:0});
+  t.players.push({id:uid(),name:name,fn:fn,mn:mn,ln:ln,nid:nid,number:num,pos:pos,cat:catName,
+    dob:dd+' '+MONTHS[dm-1]+' '+dy,nat:nat,guard:gd,guardName:gv('ap-gname')||mn||'',
+    phone:phoneVal('ap-ph'),img:img,idImg:gv('apid-img'),goals:0,matches:0});
   logA('إضافة لاعب: '+name+' — '+tname,'user-plus','#16a34a');
   addN('تمت إضافة اللاعب '+name,tname,'success');
   sv();fl('ap-ok');
-  ['ap-name','ap-nid','ap-gd','ap-ph'].forEach(function(id){g(id).value='';});
+  ['ap-fn','ap-mn','ap-ln','ap-nid','ap-gd','ap-ph','ap-gname'].forEach(function(id){var e=g(id);if(e)e.value='';});
+  apReq();
   rmImg('ap','user');rmImg('apid','card');
   renderApList();
 }
@@ -8829,6 +8882,29 @@ function issuesPlayerRanked(p){
     if(d.length>2)warn.push('الرقم مشترك مع '+d.length+' لاعبين');
   }
   return{crit:crit,warn:warn,codes:codes};
+}
+/* لاعب البطولة: guard = جوال ولي الأمر (تسمية مختلفة عن الإدارة الفنية) */
+function issuesTPlayerRanked(p){
+  var crit=[],warn=[],codes={};
+  if(!p)return{crit:crit,warn:warn,codes:codes};
+  var n=splitName(p);
+  if(!String(p.name||'').trim()){crit.push('الاسم فارغ');codes.name=1;}
+  else if(!n.first||!n.mid||!n.last){crit.push('الاسم غير ثلاثي (اللاعب • الأب • العائلة)');codes.name=1;}
+  if(!p.nid){crit.push('لا يوجد رقم هوية');codes.nid=1;}
+  else if(normNid(p.nid).length!==10){crit.push('رقم الهوية ناقص — يجب ١٠ أرقام');codes.nid=1;}
+  var gp=p.guard||p.guardPhone||'';
+  if(!gp){crit.push('لا يوجد جوال ولي أمر');codes.gph=1;}
+  else if(!phoneOK(gp)){crit.push('جوال ولي الأمر غير صحيح');codes.gph=1;}
+  else if(phoneFake(gp)){crit.push('جوال ولي الأمر يبدو وهمياً');codes.gph=1;}
+  if(!p.dob){crit.push('لا يوجد تاريخ ميلاد');codes.dob=1;}
+  if(!p.idImg)warn.push('لا توجد صورة هوية');
+  if(p.phone&&!phoneOK(p.phone))warn.push('جوال اللاعب غير صحيح');
+  return{crit:crit,warn:warn,codes:codes};
+}
+function issuesTPlayer(p){var r=issuesTPlayerRanked(p);return r.crit.concat(r.warn);}
+function tPlayerBadge(p){
+  var r=issuesTPlayerRanked(p),all=r.crit.concat(r.warn);
+  return warnBadge(all,p.name,r.crit.length>0);
 }
 function issuesPlayer(p){
   var r=issuesPlayerRanked(p);
