@@ -1651,6 +1651,31 @@ html[dir="rtl"] .sb-foot .chip::after{transform:translateY(-50%) rotate(-135deg)
   .fx-sc{font-size:1.4rem}
 }
 
+/* ============ ضبط النوافذ على الجوال ============ */
+@media(max-width:640px){
+  /* النافذة تلتصق بالأسفل كورقة — أسهل للإبهام */
+  .modal{align-items:flex-end;padding:0}
+  .mbox{width:100%;max-width:100%;border-radius:20px 20px 0 0;
+    max-height:92dvh;margin:0;animation:sheetUp .26s cubic-bezier(.2,.9,.25,1)}
+  @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+  .mbody{max-height:calc(92dvh - 132px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+    padding-bottom:calc(1rem + env(safe-area-inset-bottom))}
+  .mhdr{padding-top:1.1rem}
+  /* مقبض علوي يوضّح أنها تُسحب */
+  .mbox::before{content:'';position:absolute;top:7px;left:50%;transform:translateX(-50%);
+    width:38px;height:4px;border-radius:99px;background:rgba(255,255,255,.28);z-index:5}
+  .mclose{min-width:40px;min-height:40px}
+  /* الأزرار داخل النوافذ بعرض كامل */
+  .mbody>.btn{width:100%}
+}
+/* منطقة الأمان أسفل الشاشة في كل الصفحات */
+@supports(padding:env(safe-area-inset-bottom)){
+  @media(max-width:640px){
+    .sec{padding-bottom:calc(1.5rem + env(safe-area-inset-bottom))}
+    .sbar{padding-bottom:calc(.8rem + env(safe-area-inset-bottom))}
+  }
+}
+
 /* ============ إصلاحات الجوال الشاملة ============ */
 @media(max-width:640px){
   /* ١) أرضية حجم الخط — لا شيء أصغر من 11px */
@@ -9703,7 +9728,7 @@ function rTDCats(){
     h+='<div class="frow"><div class="fg"><label>الفرع *</label>'+tdSel('tdcg-cbranch',brs,'','اختر الفرع')+'</div>';
     h+='<div class="fg"><label>سنة المواليد *</label>'+tdSel('tdcg-cyear',_yo,'','اختر السنة')+'</div></div>';
     h+='<div class="frow"><div class="fg"><label>اسم الفئة <small>(اختياري)</small></label><input type="text" id="tdcg-clabel" placeholder="مثال: براعم"></div>';
-    h+='<div class="fg"><label>المدرب المسؤول <small>(اختياري)</small></label>'+tdSel('tdcg-ccoach',t.coaches.map(function(c){return [c.id,c.name+' — '+c.branch];}),'','بدون مدرب')+'</div></div>';
+    h+='<div class="fg"><label>المدرب المسؤول <small>(اختياري)</small></label>'+tdSel('tdcg-ccoach',t.coaches.map(function(c){return [c.id,c.name+' — '+coachBranchLabel(c)];}),'','بدون مدرب')+'</div></div>';
     h+='<div class="fg"><label>أيام التدريب <small>(اختياري)</small></label>'+tdSel('tdcg-cdays',[['smw',TDDAYS.smw],['stt',TDDAYS.stt]],'','اختر الأيام')+'</div>';
     h+='<button class="btn btn-r" style="width:100%" onclick="tdSaveCat(\'tdcg-c\')">إضافة الفئة</button>';
     h+='<div class="msg ok" id="tdcg-c-ok">تمت الإضافة</div><div class="msg err" id="tdcg-c-err">أكمل: الفرع وسنة المواليد</div>';
@@ -9786,7 +9811,7 @@ function rTDFollow(){
     if(tdCanManage()){
       h+='<div class="rform" style="max-width:640px;margin-bottom:1.2rem">';
       h+='<div class="cw-t" style="margin-bottom:.6rem">'+ic('list',13)+' إسناد مهمة فنية لمدرب</div>';
-      h+='<div class="frow" style="grid-template-columns:1fr 2fr;align-items:end"><div class="fg" style="margin-bottom:0"><label>المدرب *</label>'+tdSel('tdtk-c',cs.map(function(c){return [c.id,c.name+' — '+c.branch];}),'','اختر المدرب')+'</div><div class="fg" style="margin-bottom:0"><label>المهمة *</label><input type="text" id="tdtk-txt" placeholder="مثال: رفع خطة الأسبوع القادم"></div></div>';
+      h+='<div class="frow" style="grid-template-columns:1fr 2fr;align-items:end"><div class="fg" style="margin-bottom:0"><label>المدرب *</label>'+tdSel('tdtk-c',cs.map(function(c){return [c.id,c.name+' — '+coachBranchLabel(c)];}),'','اختر المدرب')+'</div><div class="fg" style="margin-bottom:0"><label>المهمة *</label><input type="text" id="tdtk-txt" placeholder="مثال: رفع خطة الأسبوع القادم"></div></div>';
       h+='<button class="btn btn-r" style="width:100%;margin-top:.85rem" onclick="tdAddTask()">'+ic('plus',12)+' إضافة المهمة</button>';
       h+='<div class="msg ok" id="tdtk-ok">تمت إضافة المهمة</div><div class="msg err" id="tdtk-err">اختر المدرب واكتب المهمة</div>';
       h+='</div>';
@@ -10590,7 +10615,7 @@ function rTDPlayers(){
     h+='<div class="fg"><label>اسم ولي الأمر <small>(يُملأ باسم الأب تلقائياً — عدّله إن كان غيره)</small></label><input type="text" id="tdp-gname" value="'+esc(ed&&ed.guardName?ed.guardName:'')+'" placeholder="يُملأ تلقائياً"></div>';
     h+='<div class="sub-head" style="margin:.9rem 0 .6rem"><span class="sh-line"></span><h2 style="font-size:12px">البيانات الرياضية</h2></div>';
     h+='<div class="fg"><label>الفرع *</label>'+tdSel('tdp-branch',brs,ed?ed.branch:'','اختر الفرع')+'</div>';
-    h+='<div class="frow"><div class="fg"><label>الفئة *</label>'+tdSel('tdp-cat',tdScopeCats().filter(function(c){return !ed||!ed.branch||c.branch===ed.branch;}).map(function(c){return [c.id,c.name+' — '+c.branch];}),edCat,'اختر الفئة')+'</div>';
+    h+='<div class="frow"><div class="fg"><label>الفئة *</label>'+tdSel('tdp-cat',tdScopeCats().filter(function(c){return !ed||!ed.branch||c.branch===ed.branch;}).map(function(c){return [c.id,c.name+' — '+coachBranchLabel(c)];}),edCat,'اختر الفئة')+'</div>';
     h+='<div class="fg" id="tdp-gwrap" style="display:none">'+tdSel('tdp-group',tdCatOpts(),ed?ed.groupId:'','')+'</div></div>';
     h+='<div class="fg"><label>المركز</label>'+tdSel('tdp-pos',['حارس مرمى','مدافع','وسط','مهاجم'],ed?ed.pos:'','اختر المركز')+'</div>';
     h+='<div class="frow"><div class="fg"><label>القدم المفضلة</label>'+tdSel('tdp-foot',['اليمنى','اليسرى','كلتاهما'],ed?ed.foot:'','اختر')+'</div>';
@@ -10995,7 +11020,7 @@ function rTDPlans(){
   if(TDPL.view==='cal'){
     h+=calHTML(TDPL,plans.map(function(pl){
       var gg=tdGroup(pl.groupId);
-      return{id:pl.id,dt:tdPlanDate(pl)+'T12:00',title:(gg?gg.name+' — ':'')+pl.title,sub:(gg?gg.branch:'')+(pl.dur?' • '+pl.dur+' د':''),color:tdGroupColor(pl.groupId),noTime:true};
+      return{id:pl.id,dt:tdPlanDate(pl)+'T12:00',title:(gg?gg.name+' — ':'')+(pl.title||'خطة تدريبية'),sub:(gg&&gg.branch?gg.branch:'')+(pl.dur?' • '+pl.dur+' د':''),color:tdGroupColor(pl.groupId),noTime:true};
     }),'tdPl');
   }
   h+='<div class="sub-head"><span class="sh-line"></span><h2>الخطط المرفوعة ('+plans.length+')</h2>';
@@ -11518,7 +11543,7 @@ function rTDFriendly(){
   if(TDFR.view==='cal'){
     h+=calHTML(TDFR,frs.map(function(f){
       var gg=tdGroup(f.groupId);
-      return{id:f.id,dt:f.dt,title:(gg?gg.name:'مباراة')+' × '+f.opp,sub:(gg?gg.branch:'')+' • '+(TDFR_ST[f.status]||''),color:tdGroupColor(f.groupId)};
+      return{id:f.id,dt:f.dt,title:(gg?gg.name:'مباراة')+' × '+(f.opp||'—'),sub:(gg&&gg.branch?gg.branch:'')+(f.status&&TDFR_ST[f.status]?' • '+TDFR_ST[f.status]:''),color:tdGroupColor(f.groupId)};
     }),'tdFr');
     h+='<div class="att-lg" style="margin-top:-.6rem"><span style="color:var(--gray)">'+ic('info',11)+' لون البطاقة = المجموعة، وحالة المباراة تظهر كشارة داخلها</span></div>';
   }
