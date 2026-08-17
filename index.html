@@ -3306,6 +3306,31 @@ var FA={
         });
     }catch(e){return Promise.reject(e);}
   },
+  /* ===== جدول اللاعبين المنفصل (مرحلة الترحيل) ===== */
+  playersUpsert:function(rows){
+    var self=this;
+    if(!self.enabled||!self.token||!rows||!rows.length)return Promise.resolve(0);
+    return self.sb.rpc('fa_players_upsert',{p_token:self.token,p_rows:rows}).then(function(r){
+      if(r.error)throw r.error;
+      return r.data||0;
+    });
+  },
+  playersGet:function(system){
+    var self=this;
+    if(!self.enabled||!self.token)return Promise.resolve(null);
+    return self.sb.rpc('fa_players_get',{p_token:self.token,p_system:system||null}).then(function(r){
+      if(r.error)throw r.error;
+      return r.data||[];
+    });
+  },
+  playersCount:function(){
+    var self=this;
+    if(!self.enabled||!self.token)return Promise.resolve([]);
+    return self.sb.rpc('fa_players_count',{p_token:self.token}).then(function(r){
+      if(r.error)throw r.error;
+      return r.data||[];
+    });
+  },
   _loadDirect:function(){
     return this.sb.from('fa_state').select('data').eq('id',1).single().then(function(r){
       if(r.error)throw r.error; return r.data?r.data.data:null;
@@ -8746,6 +8771,8 @@ var MRGOPEN=false;
 function tdMergeToggle(){MRGOPEN=!MRGOPEN;renderATab();}
 function admSettingsHTML(){
   var h='';
+  var _mg=admMigHTML();
+  if(_mg)h+=_mg+'<div style="height:1.8rem"></div>';
   var _bk=admBackupHTML();
   if(_bk)h+=_bk+'<div style="height:1.8rem"></div>';
   var _dg=admDiagHTML();
@@ -9015,6 +9042,123 @@ function issuesTPlayer(p){var r=issuesTPlayerRanked(p);return r.crit.concat(r.wa
 function tPlayerBadge(p){
   var r=issuesTPlayerRanked(p),all=r.crit.concat(r.warn);
   return warnBadge(all,p.name,r.crit.length>0);
+}
+/* ================= ترحيل اللاعبين لجدول منفصل =================
+   المرحلة ٢: نسخ. المصدر يبقى fa_state — الجدول نسخة موازية للمقارنة. */
+function playerToRow(p,system,extra){
+  extra=extra||{};
+  var n=splitName(p);
+  return{
+    id:p.id, system:system,
+    name:p.name||'', fn:p.fn||n.first||'', mn:p.mn||n.mid||'', ln:p.ln||n.last||'',
+    nid:normNid(p.nid||''), nat:p.nat||'', dob:p.dob||'',
+    phone:normPhone(p.phone||''),
+    guard_phone:normPhone(p.guardPhone||p.guard||''),
+    guard_name:p.guardName||'',
+    branch:p.branch||'', group_id:p.groupId||'', cat_id:p.catId||'', cat:p.cat||'',
+    team:extra.team||'', tournament_id:extra.tid||'',
+    pos:p.pos||'', foot:p.foot||'', number:String(p.number||''),
+    status:p.status||'active',
+    goals:+(p.goals||0), matches:+(p.matches||0),
+    img:p.img||'', id_img:p.idImg||'',
+    notes:p.notes||[],
+    extra:{dev:p.dev||'',at:p.at||null}
+  };
+}
+/* يجمع كل اللاعبين من النظامين */
+function allPlayerRows(){
+  var rows=[];
+  (TDX().players||[]).forEach(function(p){rows.push(playerToRow(p,'td'));});
+  (DB.tournaments||[]).forEach(function(t){
+    (t.teams||[]).forEach(function(tm){
+      (tm.players||[]).forEach(function(p){
+        rows.push(playerToRow(p,'tour',{team:tm.name,tid:t.id}));
+      });
+    });
+  });
+  return rows;
+}
+var MIG={busy:false,done:0,total:0,ok:0,fail:0};
+function migRun(){
+  if(MIG.busy)return;
+  if(!FA.enabled||!FA.token){alert('الاتصال بالسحابة غير مفعّل.');return;}
+  var rows=allPlayerRows();
+  if(!rows.length){alert('لا يوجد لاعبون للنسخ.');return;}
+  askConfirm('سيُنسخ '+rows.length+' لاعباً إلى الجدول الجديد.\n\n'
+    +'بياناتك الحالية لا تتأثر إطلاقاً — هذي نسخة موازية للمقارنة فقط.\n\nالمتابعة؟',function(){
+    MIG={busy:true,done:0,total:rows.length,ok:0,fail:0};
+    var CHUNK=100,i=0;
+    var bar=g('mig-bar'),lbl=g('mig-lbl');
+    function step(){
+      if(i>=rows.length){
+        MIG.busy=false;
+        logA('نسخ اللاعبين للجدول الجديد: '+MIG.ok+' من '+MIG.total,'swap','#1565c0');
+        renderATab();
+        addN('انتهى النسخ',MIG.ok+' لاعباً'+(MIG.fail?' • فشل '+MIG.fail:''),MIG.fail?'warning':'success');
+        return;
+      }
+      var batch=rows.slice(i,i+CHUNK);i+=CHUNK;
+      FA.playersUpsert(batch).then(function(){MIG.ok+=batch.length;})
+        .catch(function(e){MIG.fail+=batch.length;console.warn('[FA] فشل نسخ دفعة',e&&e.message);})
+        .then(function(){
+          MIG.done=Math.min(i,rows.length);
+          var pct=Math.round(MIG.done/rows.length*100);
+          if(bar)bar.style.width=pct+'%';
+          if(lbl)lbl.textContent=MIG.done+' من '+rows.length+' — نُسخ '+MIG.ok+(MIG.fail?' • فشل '+MIG.fail:'');
+          setTimeout(step,80);
+        });
+    }
+    step();
+  });
+}
+/* مقارنة: هل الجدول يطابق المصدر؟ */
+function migVerify(){
+  var el=g('mig-cmp');if(el)el.innerHTML='<span style="color:var(--gray)">جارٍ المقارنة…</span>';
+  var local=allPlayerRows();
+  var byId={};local.forEach(function(r){byId[r.id]=r;});
+  FA.playersGet().then(function(remote){
+    var rById={};(remote||[]).forEach(function(r){rById[r.id]=r;});
+    var missing=local.filter(function(r){return !rById[r.id];}).length;
+    var extra=(remote||[]).filter(function(r){return !byId[r.id];}).length;
+    var diff=0,samples=[];
+    local.forEach(function(r){
+      var x=rById[r.id];if(!x)return;
+      ['name','nid','guard_phone','dob','branch'].forEach(function(k){
+        if(String(r[k]||'')!==String(x[k]||'')){
+          diff++;if(samples.length<3)samples.push(r.name+' — '+k);
+        }
+      });
+    });
+    var okAll=(missing===0&&extra===0&&diff===0);
+    var h='<div class="dgbar '+(okAll?'':'warn')+'">'
+      +'<div class="dgl"><b>نتيجة المقارنة</b><span>المصدر '+local.length+' • الجدول '+(remote||[]).length+'</span></div>'
+      +'<div class="dgn">'
+      +(okAll?'✅ الجدول مطابق للمصدر تماماً'
+             :'⚠ ناقص '+missing+' • زائد '+extra+' • مختلف '+diff
+               +(samples.length?'<br><small>مثال: '+samples.join('، ')+'</small>':''))
+      +'</div></div>';
+    if(el)el.innerHTML=h;
+  }).catch(function(e){
+    if(el)el.innerHTML='<div class="ce-note">'+ic('info',13)+'<div>تعذّرت المقارنة: '+esc(e&&e.message||'')+'</div></div>';
+  });
+}
+function admMigHTML(){
+  if(CU.role!=='admin')return '';
+  var rows=allPlayerRows();
+  var h='<div class="sec-t" style="margin-bottom:.8rem"><div class="bar"></div><h2 style="font-size:14px">ترحيل اللاعبين لجدول منفصل</h2></div>';
+  h+='<div class="ce-note">'+ic('info',13)+'<div><b>المرحلة ٢: النسخ.</b> '
+    +'يُنسخ '+rows.length+' لاعباً إلى الجدول الجديد. '
+    +'<b>بياناتك الحالية لا تتأثر</b> — الموقع يواصل القراءة والكتابة من مكانه المعتاد، '
+    +'والجدول الجديد نسخة موازية نقارنها قبل الاعتماد عليها.</div></div>';
+  h+='<div class="dgbar"><div class="dgl"><b>التقدّم</b><span id="mig-lbl">جاهز</span></div>'
+    +'<div class="dgt"><i id="mig-bar" style="width:0%"></i></div></div>';
+  h+='<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.7rem">';
+  h+='<button class="btn btn-g" onclick="backupNow()">'+ic('doc',13)+' ١. نسخة احتياطية</button>';
+  h+='<button class="btn btn-r" onclick="migRun()">'+ic('swap',13)+' ٢. ابدأ النسخ</button>';
+  h+='<button class="btn btn-g" onclick="migVerify()">'+ic('check',13)+' ٣. قارن</button>';
+  h+='</div>';
+  h+='<div id="mig-cmp" style="margin-top:.9rem"></div>';
+  return h;
 }
 function issuesPlayer(p){
   var r=issuesPlayerRanked(p);
