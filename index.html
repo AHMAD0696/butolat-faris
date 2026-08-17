@@ -10636,7 +10636,7 @@ function rTDPlayers(){
       var gg=tdGroup(p.groupId);
       h+='<div class="tdp-card" onclick="tdOpenPlayer(\''+p.id+'\')">'
         +'<div class="tdp-av">'+(p.img?'<img src="'+p.img+'">':esc(ti(p.name)))+'</div>'
-        +'<div style="font-weight:700;font-size:13px">'+esc(p.name)+'</div>'
+        +'<div style="font-weight:700;font-size:13px">'+esc(p.name)+warnBadge(issuesPlayer(p),p.name)+'</div>'
         +'<div style="font-size:10.5px;color:var(--gray);margin:2px 0 6px">'+esc(p.branch)+' • '+esc(gg?(gg.cat||tdCatName(gg.catId)):(p.cat||'—'))+'</div>'
         +'<span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span>'
       +'</div>';
@@ -10738,7 +10738,7 @@ function rTDPlayerProfile(){
   var h='<button class="btn btn-g btn-sm" onclick="tdP(\'players\')" style="margin-bottom:1rem"><span data-ic="swap"></span> رجوع للاعبين</button>';
   h+='<div class="rform" style="margin-bottom:1.2rem"><div style="display:flex;gap:1.1rem;align-items:center;flex-wrap:wrap">';
   h+='<div class="tdp-av" style="width:76px;height:76px;font-size:1.6rem;margin:0">'+(p.img?'<img src="'+p.img+'">':esc(ti(p.name)))+'</div>';
-  h+='<div style="flex:1;min-width:200px"><div style="font-size:1.15rem;font-weight:700">'+esc(p.name)+'</div>';
+  h+='<div style="flex:1;min-width:200px"><div style="font-size:1.15rem;font-weight:700">'+esc(p.name)+warnBadge(issuesPlayer(p),p.name)+'</div>';
   h+='<div style="margin:.35rem 0"><span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span></div>';
   h+='<div style="font-size:11.5px;color:var(--gray)">'+esc(p.branch)+' • '+esc(gg?(gg.cat||tdCatName(gg.catId)):'—')+' • '+esc(gg?gg.name:'—')+'</div></div>';
   if(tdCanManage())h+='<div style="display:flex;gap:.4rem;flex-wrap:wrap"><button class="btn btn-o btn-sm" onclick="tdEditPlayer(\''+p.id+'\')">'+ic('edit',12)+' تعديل</button>'+(tdRole()==='admin'?'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="tdDelPlayer(\''+p.id+'\')">'+ic('trash',12)+' حذف</button>':'')+'</div>';
@@ -11175,7 +11175,7 @@ function rTDCoaches(){
     h+='<div class="rform" style="margin-bottom:.9rem">';
     h+='<div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;cursor:pointer" onclick="TDCO.view=TDCO.view===\''+c.id+'\'?\'\':\''+c.id+'\';rTDCoaches()">';
     h+='<div class="tdp-av" style="margin:0;width:46px;height:46px;font-size:1rem">'+esc(ti(c.name))+'</div>';
-    h+='<div style="flex:1;min-width:180px"><div style="font-weight:700;font-size:13.5px">'+esc(c.name)+warnBadge(issuesCoach(c),c.name)+'</div><div style="font-size:11px;color:var(--gray)">'+esc(coachBranches(c).join(' • ')||'—')+' • '+st.groups.length+' مجموعة • '+st.players.length+' لاعب'+(c.phone?' • '+esc(phoneDisp(c.phone)):'')+'</div></div>';
+    h+='<div style="flex:1;min-width:180px"><div style="font-weight:700;font-size:13.5px">'+esc(c.name)+'</div><div style="font-size:11px;color:var(--gray)">'+esc(coachBranches(c).join(' • ')||'—')+' • '+st.groups.length+' مجموعة • '+st.players.length+' لاعب'+(c.phone?' • '+esc(phoneDisp(c.phone)):'')+'</div></div>';
     h+='<div style="display:flex;gap:1.1rem;font-size:11px;text-align:center;flex-wrap:wrap">';
     h+='<div><div style="font-weight:700;font-size:14px">'+st.plansM+'</div><div style="color:var(--gray)">خطط الشهر</div></div>';
     h+='<div><div style="font-weight:700;font-size:14px">'+(st.evPct===null?'—':st.evPct+'%')+'</div><div style="color:var(--gray)">التزام التقييم</div></div>';
