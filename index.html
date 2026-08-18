@@ -203,6 +203,15 @@ svg{display:block;flex-shrink:0}
   .fxi{font-size:16px;padding:11px 12px;min-height:46px}
   .fxpg{gap:.6rem}
 }
+.tgap{position:absolute;top:9px;inset-inline-start:9px;z-index:3;
+  display:inline-flex;align-items:center;gap:4px;background:var(--red);color:#fff;
+  border-radius:99px;padding:3px 9px 3px 4px;font-size:11.5px;font-weight:800;
+  cursor:pointer;box-shadow:0 3px 10px rgba(221,29,69,.4);transition:.15s;
+  font-variant-numeric:tabular-nums}
+.tgap:hover{transform:scale(1.08);background:#b91538}
+.tgap-i{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1}
+.gap-head{margin-bottom:0}
 .pt-hd{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;margin:.2rem 0 .6rem}
 .pt-hd svg{color:var(--red)}
 .pt-list{display:flex;flex-direction:column;gap:.45rem;margin-bottom:.4rem}
@@ -6425,9 +6434,29 @@ function leagCat(c){LEAGCAT=c;rLeague();}
 function rTeams(){
   var ts=T().teams||[];
   if(!ts.length){g('tg').innerHTML=emptyBox('ball','لا توجد فرق بعد','سيتم عرض الفرق فور اعتمادها');return;}
+  /* شريط تقدّم عام يبيّن كم بقي على مستوى البطولة */
+  var sum=toursGapSummary();
+  var tot=sum.reduce(function(a,x){return a+x.total;},0);
+  var bad=sum.reduce(function(a,x){return a+x.crit;},0);
+  var pct=tot?Math.round((tot-bad)*100/tot):100;
+  var head='';
+  if(tot&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1){
+    head='<div class="dgbar '+(pct>=90?'':(pct>=60?'warn':'bad'))+'" style="margin-bottom:1.1rem">'
+      +'<div class="dgl"><b>اكتمال بيانات اللاعبين</b><span>'+(tot-bad)+' من '+tot+' ('+pct+'٪)</span></div>'
+      +'<div class="dgt"><i style="width:'+pct+'%"></i></div>'
+      +'<div class="dgn">'+(bad?bad+' لاعباً يحتاج إكمالاً — اضغط علامة التعجب على أي فريق لعرض قائمته'
+                              :'كل بيانات اللاعبين مكتملة ✅')+'</div></div>';
+  }
+  var el=g('tg');
+  var prev=el.previousElementSibling;
+  if(prev&&prev.classList&&prev.classList.contains('gap-head'))prev.remove();
+  if(head){
+    var d=document.createElement('div');d.className='gap-head';d.innerHTML=head;
+    el.parentNode.insertBefore(d,el);
+  }
   g('tg').innerHTML=ts.map(function(t){
     var rec=teamRecord(t.name);
-    return '<div class="tcard" style="--tc:'+(t.color||'#181946')+'" onclick="showTP(\''+esc(t.name)+'\')">'+tlogo(t,60)+'<div class="tn">'+esc(t.name)+'</div><div class="tb">'+esc(t.branch||'—')+'</div><div class="tstats"><div><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div><div class="n">'+(t.categories||[]).length+'</div><div class="l">فئة</div></div><div><div class="n">'+rec.pts+'</div><div class="l">نقطة</div></div></div></div>';
+    return '<div class="tcard" style="--tc:'+(t.color||'#181946')+';position:relative" onclick="showTP(\''+esc(t.name)+'\')">'+teamGapBadge(t)+tlogo(t,60)+'<div class="tn">'+esc(t.name)+'</div><div class="tb">'+esc(t.branch||'—')+'</div><div class="tstats"><div><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div><div class="n">'+(t.categories||[]).length+'</div><div class="l">فئة</div></div><div><div class="n">'+rec.pts+'</div><div class="l">نقطة</div></div></div></div>';
   }).join('');
 }
 var TPCAT='';
@@ -6437,6 +6466,16 @@ function showTP(tname,keepCat){
   var rec=teamRecord(t.name);
   var h='<button class="btn btn-g btn-sm" style="margin-bottom:1.1rem" onclick="gP(\'teams\')">→ كل الفرق</button>';
   h+='<div class="tp-hero">'+tlogo(t,76)+'<div><h2>'+esc(t.name)+'</h2><div class="m">'+esc(t.branch||'')+(t.admin?' • الإداري: '+esc(t.admin):'')+'</div><button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:#fff;margin-top:.6rem" onclick="showQR(\''+esc(t.name)+'\')">'+ic('target',13)+' رمز الفريق QR</button></div></div>';
+  (function(){
+    var gp=teamGaps(t);
+    if(gp.crit&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1){
+      h+='<div class="dgbar warn" style="margin-bottom:1rem">'
+        +'<div class="dgl"><b>بيانات ناقصة</b><span>'+gp.crit+' من '+gp.total+' لاعباً</span></div>'
+        +'<div class="dgt"><i style="width:'+gp.pct+'%"></i></div>'
+        +'<div class="dgn"><button class="btn btn-r btn-sm" style="margin-top:.5rem" onclick="teamGapShow('+jqa([t.name])+')">'
+        +ic('users',13)+' عرض اللاعبين الناقصين</button></div></div>';
+    }
+  })();
   h+='<div class="tp-stats"><div class="tp-stat"><div class="n">'+rec.p+'</div><div class="l">لعب</div></div><div class="tp-stat"><div class="n" style="color:var(--green)">'+rec.w+'</div><div class="l">فوز</div></div><div class="tp-stat"><div class="n" style="color:var(--amber)">'+rec.d+'</div><div class="l">تعادل</div></div><div class="tp-stat"><div class="n" style="color:var(--red)">'+rec.l+'</div><div class="l">خسارة</div></div></div>';
   var cats=t.categories||[];
   if(cats.length){
@@ -9395,8 +9434,19 @@ function ptFillTeams(){
   if(tm)tm.innerHTML='<option value="">— اختر الفريق —</option>'
     +((t&&t.teams)||[]).map(function(x){return '<option value="'+esc(x.name)+'">'+esc(x.name)+'</option>';}).join('');
   if(ct){
-    var cats=[];((t&&t.teams)||[]).forEach(function(x){(x.cats||[]).forEach(function(c){if(cats.indexOf(c)<0)cats.push(c);});});
-    if(!cats.length&&t)cats=tCats(t);
+    /* الفئات من إعداد الفرق، وإن لم توجد فمن فئات اللاعبين المسجّلين */
+    var cats=[];
+    ((t&&t.teams)||[]).forEach(function(x){
+      (x.cats||[]).forEach(function(c){if(c&&cats.indexOf(c)<0)cats.push(c);});
+    });
+    if(!cats.length){
+      ((t&&t.teams)||[]).forEach(function(x){
+        (x.players||[]).forEach(function(pl){
+          if(pl.cat&&cats.indexOf(pl.cat)<0)cats.push(pl.cat);
+        });
+      });
+    }
+    cats.sort();
     ct.innerHTML='<option value="">— الفئة —</option>'+cats.map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('');
   }
 }
@@ -9444,6 +9494,72 @@ function ptEdit(tid,pid){
       if(!mod.classList.contains('open')){clearInterval(obs);AT=prevAT;}
     },400);
   }
+}
+/* ================= اكتمال بيانات الفريق =================
+   يحسب كم لاعباً ناقص البيانات في فريق أو فرع. */
+function teamGaps(team){
+  var ps=(team&&team.players)||[];
+  var crit=0,warn=0;
+  ps.forEach(function(p){
+    var r=issuesTPlayerRanked(p);
+    if(r.crit.length)crit++;
+    else if(r.warn.length)warn++;
+  });
+  return{total:ps.length,crit:crit,warn:warn,ok:ps.length-crit-warn,
+         pct:ps.length?Math.round((ps.length-crit)*100/ps.length):100};
+}
+/* شارة الفريق — تُظهر عدد الناقصين */
+function teamGapBadge(team){
+  var gp=teamGaps(team);
+  if(!gp.crit)return '';
+  return '<span class="tgap" title="'+gp.crit+' لاعباً بياناتهم ناقصة" '
+    +'onclick="event.stopPropagation();teamGapShow('+jqa([team.name])+')">'
+    +'<span class="tgap-i">!</span>'+gp.crit+'</span>';
+}
+function teamGapShow(json){
+  var nm='';try{nm=JSON.parse(json)[0];}catch(e){nm=json;}
+  var team=(T().teams||[]).find(function(x){return x.name===nm;});
+  if(!team)return;
+  var gp=teamGaps(team);
+  var bad=(team.players||[]).filter(function(p){return issuesTPlayerRanked(p).crit.length;});
+  var h='<div class="dgbar '+(gp.pct>=90?'':(gp.pct>=60?'warn':'bad'))+'" style="margin-bottom:1rem">'
+    +'<div class="dgl"><b>اكتمال بيانات '+esc(team.name)+'</b><span>'+(gp.total-gp.crit)+' من '+gp.total+' ('+gp.pct+'٪)</span></div>'
+    +'<div class="dgt"><i style="width:'+gp.pct+'%"></i></div>'
+    +'<div class="dgn">'+(gp.crit?gp.crit+' لاعباً يحتاج إكمالاً':'كل البيانات مكتملة ✅')+'</div></div>';
+  if(bad.length){
+    h+='<div class="pt-list">';
+    bad.slice(0,40).forEach(function(p){
+      var r=issuesTPlayerRanked(p);
+      h+='<div class="pt-row"><div class="pt-i"><b>'+esc(p.name||'بلا اسم')+'</b>'
+        +'<small>'+esc(r.crit.join(' • '))+'</small></div>'
+        +'<button class="ab" title="تعديل" onclick="teamGapEdit('+jqa([team.name,p.id])+')">'+ic('edit',13)+'</button>'
+        +'</div>';
+    });
+    if(bad.length>40)h+='<div class="mvp-none">'+ic('info',13)+' و'+(bad.length-40)+' لاعباً آخر…</div>';
+    h+='</div>';
+  }
+  var b=g('warn-body');
+  if(b){b.innerHTML=h;hydrateIcons(b);}
+  var t=g('warnMod');
+  if(t){
+    var hd=t.querySelector('.mhdr div[style*="font-weight:700"]');
+    if(hd)hd.textContent='بيانات ناقصة — '+team.name;
+    t.classList.add('open');
+  }
+}
+function teamGapEdit(json){
+  var a=[];try{a=JSON.parse(json);}catch(e){return;}
+  warnClose();
+  editPlayer(a[0],a[1]);
+}
+/* ملخّص كل الفرق — لمتابعة التقدّم */
+function toursGapSummary(){
+  var out=[];
+  (T().teams||[]).forEach(function(t){
+    var gp=teamGaps(t);
+    out.push({name:t.name,branch:t.branch||'',total:gp.total,crit:gp.crit,pct:gp.pct});
+  });
+  return out.sort(function(a,b){return b.crit-a.crit;});
 }
 function issuesPlayer(p){
   var r=issuesPlayerRanked(p);
