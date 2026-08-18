@@ -2457,7 +2457,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>2026.08.18-1900</div>
+    <div class="ls-ver" id="ls-ver" data-notr>2026.08.18-2200</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3307,10 +3307,11 @@ var FA={
       return self.sb.rpc('fa_load_state',{p_token:self.token}).then(function(r){
         if(r.error)throw r.error;
         self.loadOK=true;              /* ✅ التحميل نجح — الحفظ مسموح */
+        faWarnClear();                 /* أزل أي تحذير سابق */
         return r.data||null;
       });
     }
-    return self._loadDirect().then(function(d){self.loadOK=true;return d;});
+    return self._loadDirect().then(function(d){self.loadOK=true;faWarnClear();return d;});
   },
   /* ===== تخزين الصور خارج قاعدة البيانات ===== */
   BUCKET:'images',
@@ -4478,7 +4479,7 @@ function loginOK(){
   pinReset();
   logA('تسجيل دخول','user','#1565c0');
 }
-function doLogout(){sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
+function doLogout(){faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
 function visibleTournaments(){
   return DB.tournaments.filter(function(t){return t.visible||(CU&&['admin','organizer'].indexOf(CU.role)>-1);});
 }
@@ -7835,10 +7836,10 @@ function editPlayer(tname,pid){
   var parts=(p.dob||'').split(' ');if(parts.length===3){g('ep-dd').value=parts[0];var mi=MONTHS.indexOf(parts[1]);if(mi>=0)g('ep-dm').value=String(mi+1);g('ep-dy').value=parts[2];}
   /* images */
   g('ep-img').value=p.img||'';
-  g('ep-prev').innerHTML=p.img?'<img src="'+p.img+'">':ic('user',22);
+  g('ep-prev').innerHTML=p.img?'<img src="'+driveImg(p.img)+'">':ic('user',22);
   g('ep-rm').style.display=p.img?'inline-block':'none';
   g('epid-img').value=p.idImg||'';
-  g('epid-prev').innerHTML=p.idImg?'<img src="'+p.idImg+'">':ic('card',22);
+  g('epid-prev').innerHTML=p.idImg?'<img src="'+driveImg(p.idImg)+'">':ic('card',22);
   g('epid-rm').style.display=p.idImg?'inline-block':'none';
   g('epMod').classList.add('open');hydrateIcons(g('epMod'));
   setTimeout(function(){
@@ -14309,6 +14310,18 @@ function pwaInit(){
   }catch(e){}
 }
 /* شريط تحذير أعلى الشاشة — يظهر مرة واحدة فقط */
+/* روابط Google Drive من نوع /file/d/<id>/view لا تُعرض داخل <img>.
+   نحوّلها إلى نقطة الصور المصغّرة التي تُرجع صورة فعلية. */
+function driveImg(u){
+  if(!u)return u;
+  var m=String(u).match(/drive\.google\.com\/file\/d\/([A-Za-z0-9_-]+)/);
+  if(m)return 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1600';
+  m=String(u).match(/drive\.google\.com\/open\?id=([A-Za-z0-9_-]+)/);
+  if(m)return 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1600';
+  m=String(u).match(/[?&]id=([A-Za-z0-9_-]+)/);
+  if(m&&/drive\.google\.com|docs\.google\.com/.test(u))return 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1600';
+  return u;
+}
 /* ===== عارض الصور بالحجم الكامل =====
    أي معاينة صورة (.img-prev) تحتوي صورة تصبح قابلة للضغط لعرضها كاملة.
    يُستخدم للتحقق من صورة الهوية ومطابقتها لصورة اللاعب. */
@@ -14316,7 +14329,8 @@ function lbxOpen(src,cap){
   if(!src)return;
   var b=g('lbx'),im=g('lbx-img');if(!b||!im)return;
   im.classList.remove('zi');
-  im.src=src;
+  im.onerror=function(){g('lbx-cap').textContent=(cap||'')+' — تعذّر عرض الصورة (تحقق من صلاحية المشاركة)';};
+  im.src=driveImg(src);
   g('lbx-cap').textContent=cap||'';
   b.classList.add('on');
   document.body.style.overflow='hidden';
@@ -14342,7 +14356,8 @@ document.addEventListener('click',function(e){
   if(im&&im.id==='lbx-img'){im.classList.toggle('zi');return;}
   var pv=e.target.closest?e.target.closest('.img-prev'):null;
   if(!pv)return;
-  var src=pv.querySelector('img')&&pv.querySelector('img').getAttribute('src');
+  var im0=pv.querySelector('img');
+  var src=im0&&(im0.getAttribute('data-full')||im0.getAttribute('src'));
   if(!src)return;
   var lb=pv.parentNode&&pv.parentNode.parentNode?pv.parentNode.parentNode.querySelector('label'):null;
   lbxOpen(src,(lb&&lb.textContent.replace('*','').trim())||'عرض الصورة');
@@ -14350,13 +14365,19 @@ document.addEventListener('click',function(e){
 document.addEventListener('keydown',function(e){if(e.key==='Escape')lbxClose();});
 /* تحديث علامات التكبير كلما تغيّرت الصور */
 setInterval(function(){try{lbxMark();}catch(_){}} ,900);
+/* إزالة شريط التحذير — يُستدعى فور نجاح التحميل أو عند الخروج */
+function faWarnClear(){
+  try{var b=document.getElementById('fa-warn');if(b&&b.parentNode)b.parentNode.removeChild(b);}catch(_){}
+}
 function faWarnBanner(){
   try{
     if(document.getElementById('fa-warn'))return;
     var bn=document.createElement('div');
     bn.id='fa-warn';
     bn.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:#b71c1c;color:#fff;padding:12px 16px;font:600 14px system-ui;text-align:center;direction:rtl';
-    bn.textContent='⛔ تعذّر تحميل البيانات من السحابة. الحفظ معطّل لحماية بياناتك — لا تُدخل أي تعديلات وراجع المسؤول.';
+    bn.innerHTML='<span style="display:inline-block;max-width:calc(100% - 46px)">⛔ تعذّر تحميل البيانات من السحابة. الحفظ معطّل لحماية بياناتك — لا تُدخل أي تعديلات وراجع المسؤول.</span>'
+      +'<button onclick="faWarnClear()" aria-label="إغلاق" style="position:absolute;top:50%;left:10px;transform:translateY(-50%);width:30px;height:30px;border:none;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:18px;line-height:1;cursor:pointer">&times;</button>';
+    bn.style.position='fixed';
     document.body.appendChild(bn);
   }catch(_){}
 }
@@ -14374,10 +14395,17 @@ function faBoot(){
       if(state&&state.tournaments){DB=migrate(state)||DB;}
       else if(FA.loadOK&&FA.token){ /* سحابة فارغة فعلاً وتحميل ناجح — التأسيس آمن */ FA.saveState(cloudState(DB)); }
     }).catch(function(e){
-      /* قبل تسجيل الدخول لا يوجد رمز — الرفض هنا طبيعي ولا يستدعي تحذيراً. */
-      if(!FA.token){console.warn('[FA] القراءة قبل الدخول مرفوضة (طبيعي)');return;}
-      console.error('[FA] ⛔ فشل تحميل البيانات — الحفظ معطّل لحماية بياناتك',e);
-      faWarnBanner();
+      /* لا تحذير عند الإقلاع إطلاقاً:
+         - بلا رمز: الرفض طبيعي قبل الدخول.
+         - برمز مرفوض: الجلسة منتهية أو من مشروع سابق — نُسقطها بهدوء
+           ليعرض الموقع شاشة الدخول، بدل إفزاع المستخدم بشريط أحمر.
+         التحذير الحقيقي مكانه بعد تسجيل دخول ناجح فقط. */
+      if(FA.token){
+        console.warn('[FA] جلسة منتهية — سيُطلب تسجيل الدخول',e&&e.message);
+        FA.token=null;sessClear();
+      }else{
+        console.warn('[FA] القراءة قبل الدخول مرفوضة (طبيعي)');
+      }
     }).then(function(){
       /* استئناف الجلسة إن كانت سارية — قبل عرض شاشة الدخول */
       if(sessRestore())return;
