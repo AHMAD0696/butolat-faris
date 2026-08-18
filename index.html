@@ -2446,7 +2446,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>2026.08.18-1700</div>
+    <div class="ls-ver" id="ls-ver" data-notr>2026.08.18-1800</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -6131,6 +6131,18 @@ function catList(){
   var s=[];
   (T().teams||[]).forEach(function(t){(t.categories||[]).forEach(function(c){if(s.indexOf(c.name)<0)s.push(c.name);});});
   return s;
+}
+/* فئات بطولة محددة — مثل catList لكن لأي بطولة تُمرَّر إليها.
+   تُستخدم في نافذة «بطولات اللاعب» لتعبئة قائمة الفئة. */
+function tCats(t){
+  var s=[];
+  ((t&&t.teams)||[]).forEach(function(x){
+    (x.categories||[]).forEach(function(c){
+      var n=(c&&c.name)||c;
+      if(n&&s.indexOf(n)<0)s.push(n);
+    });
+  });
+  return s.sort(function(a,b){return String(a).localeCompare(String(b),'ar');});
 }
 function teamsInCat(cat){
   return (T().teams||[]).filter(function(t){return (t.categories||[]).some(function(c){return c.name===cat;});});
