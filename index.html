@@ -203,6 +203,15 @@ svg{display:block;flex-shrink:0}
   .fxi{font-size:16px;padding:11px 12px;min-height:46px}
   .fxpg{gap:.6rem}
 }
+.pt-hd{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;margin:.2rem 0 .6rem}
+.pt-hd svg{color:var(--red)}
+.pt-list{display:flex;flex-direction:column;gap:.45rem;margin-bottom:.4rem}
+.pt-row{display:flex;align-items:center;gap:.7rem;background:var(--sur);border:1px solid var(--brd);
+  border-radius:11px;padding:.65rem .75rem}
+.pt-i{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pt-i b{font-size:12.5px;overflow-wrap:anywhere}
+.pt-i small{font-size:11px;color:var(--gray)}
+.pt-st{font-size:11.5px;color:var(--gray);white-space:nowrap;font-variant-numeric:tabular-nums}
 .mvp-tabs{display:flex;gap:.4rem;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:.9rem}
 .mvp-tab{flex:1;background:none;border:none;color:var(--gray);font-family:inherit;font-size:12.5px;font-weight:700;
   padding:0 8px;min-height:42px;border-radius:9px;cursor:pointer;transition:.18s;
@@ -2890,6 +2899,19 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
   </div>
 </div>
 
+<!-- PLAYER TOURNAMENTS MODAL -->
+<div class="modal" id="ptMod" onclick="if(event.target===this)ptClose()">
+  <div class="mbox" style="max-width:520px">
+    <div class="mhdr">
+      <button class="mclose" onclick="ptClose()" data-ic="x"></button>
+      <div class="prof-av" style="background:var(--red)"><span data-ic="trophy"></span></div>
+      <div style="font-size:15px;font-weight:700">بطولات اللاعب</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">هوية واحدة • اشتراك لكل بطولة</div>
+    </div>
+    <div class="mbody" id="pt-body"></div>
+  </div>
+</div>
+
 <!-- MVP MODAL -->
 <div class="modal" id="mvpMod" onclick="if(event.target===this)mvpClose()">
   <div class="mbox" style="max-width:460px">
@@ -3339,6 +3361,25 @@ var FA={
       if(r.error)throw r.error;
       return r.data||[];
     });
+  },
+  /* ===== اشتراكات البطولات ===== */
+  entriesUpsert:function(rows){
+    var self=this;
+    if(!self.enabled||!self.token||!rows||!rows.length)return Promise.resolve(0);
+    return self.sb.rpc('fa_entries_upsert',{p_token:self.token,p_rows:rows})
+      .then(function(r){if(r.error)throw r.error;return r.data||0;});
+  },
+  entriesRemove:function(id){
+    var self=this;
+    if(!self.enabled||!self.token)return Promise.reject(new Error('no-cloud'));
+    return self.sb.rpc('fa_entries_remove',{p_token:self.token,p_id:id})
+      .then(function(r){if(r.error)throw r.error;return true;});
+  },
+  playerTours:function(pid){
+    var self=this;
+    if(!self.enabled||!self.token)return Promise.resolve([]);
+    return self.sb.rpc('fa_player_tours',{p_token:self.token,p_player:pid})
+      .then(function(r){if(r.error)throw r.error;return r.data||[];});
   },
   _loadDirect:function(){
     return this.sb.from('fa_state').select('data').eq('id',1).single().then(function(r){
@@ -7729,6 +7770,7 @@ function renderApList(){
       return '<div class="acl-item plr"><div class="plr-av">'+av+'</div>'
         +'<div class="plr-i"><div class="plr-n">'+esc(p.name)+tPlayerBadge(p)+'</div><div class="plr-s">'+esc(p.pos||'—')+' • رقم '+(p.number||'—')+' • '+(p.goals||0)+' هدف</div></div>'
         +'<div class="plr-a">'
+        +'<button class="ab" title="بطولاته" onclick="event.stopPropagation();ptOpen(\''+p.id+'\',\'tour\')">'+ic('trophy',13)+'</button>'
         +'<button class="btn btn-n btn-sm" onclick="editPlayer(\''+esc(x.t.name)+'\',\''+p.id+'\')">'+ic('edit',12)+' <span class="plr-lbl">تعديل</span></button>'
         +'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="delPlayer(\''+esc(x.t.name)+'\',\''+p.id+'\')">'+ic('trash',12)+' <span class="plr-lbl">حذف</span></button>'
         +'</div></div>';
@@ -9262,6 +9304,146 @@ function admMigHTML(){
   h+='</div>';
   h+='<div id="mig-cmp" style="margin-top:.9rem"></div>';
   return h;
+}
+/* ================= لاعب واحد في عدة بطولات =================
+   الهوية هي الرابط: نفس رقم الهوية = نفس اللاعب في كل البطولات. */
+function playerKey(p){
+  var n=normNid(p&&p.nid||'');
+  return n||('name:'+normName(p&&p.name||''));
+}
+/* كل البطولات التي يظهر فيها هذا اللاعب (من البيانات الحالية) */
+function playerTournaments(p){
+  var key=playerKey(p),out=[];
+  (DB.tournaments||[]).forEach(function(t){
+    (t.teams||[]).forEach(function(tm){
+      (tm.players||[]).forEach(function(x){
+        if(playerKey(x)!==key)return;
+        out.push({tid:t.id,tname:t.name,team:tm.name,pid:x.id,
+          number:x.number||'',cat:x.cat||'',goals:x.goals||0,matches:x.matches||0});
+      });
+    });
+  });
+  return out;
+}
+/* البطولات التي لم يُسجَّل فيها بعد */
+function playerFreeTours(p){
+  var inT={};playerTournaments(p).forEach(function(e){inT[e.tid]=1;});
+  return (DB.tournaments||[]).filter(function(t){return !inT[t.id];});
+}
+var PTX={pid:null,src:null};
+function ptOpen(pid,src){
+  var p=(src==='td')?tdPlayer(pid):findPlayerById(pid);
+  if(!p)return;
+  PTX={pid:pid,src:src||'td',p:p};
+  rPtDlg();
+  g('ptMod').classList.add('open');
+}
+function findPlayerById(id){
+  var found=null;
+  (DB.tournaments||[]).forEach(function(t){(t.teams||[]).forEach(function(tm){
+    (tm.players||[]).forEach(function(x){if(x.id===id)found=x;});});});
+  return found;
+}
+function ptClose(){g('ptMod').classList.remove('open');}
+function rPtDlg(){
+  var p=PTX.p;if(!p)return;
+  var list=playerTournaments(p), free=playerFreeTours(p);
+  var h='';
+  h+='<div class="ce-note">'+ic('info',13)+'<div>بياناته الشخصية (الاسم • الهوية • الميلاد • جوال ولي الأمر) '
+    +'<b>واحدة في كل البطولات</b> — تعدّلها مرة فتنعكس في الكل. '
+    +'أما <b>الفريق ورقم القميص</b> فلكل بطولة على حدة.</div></div>';
+
+  h+='<div class="pt-hd">'+ic('trophy',14)+' البطولات المسجَّل فيها ('+list.length+')</div>';
+  if(!list.length){
+    h+='<div class="mvp-none">'+ic('info',14)+' غير مسجّل في أي بطولة بعد</div>';
+  }else{
+    h+='<div class="pt-list">';
+    list.forEach(function(e){
+      h+='<div class="pt-row">'
+        +'<div class="pt-i"><b>'+esc(e.tname)+'</b>'
+        +'<small>'+esc(e.team)+(e.cat?' • '+esc(e.cat):'')+(e.number?' • رقم '+esc(e.number):'')+'</small></div>'
+        +'<div class="pt-st">'+(e.goals||0)+' هدف</div>'
+        +'<button class="ab" title="تعديل" onclick="ptEdit(\''+e.tid+'\',\''+e.pid+'\')">'+ic('edit',13)+'</button>'
+        +'</div>';
+    });
+    h+='</div>';
+  }
+
+  if(free.length){
+    h+='<div class="pt-hd" style="margin-top:1.1rem">'+ic('plus',14)+' إضافة لبطولة أخرى</div>';
+    h+='<div class="ce-note" style="background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.3)">'
+      +ic('check',13)+'<div>بياناته الشخصية ستُنسخ تلقائياً — تحدد الفريق والرقم فقط.</div></div>';
+    h+='<div class="frow"><div class="fg"><label>البطولة</label><select id="pt-tour" onchange="ptFillTeams()">'
+      +free.map(function(t){return '<option value="'+t.id+'">'+esc(t.name)+'</option>';}).join('')
+      +'</select></div>';
+    h+='<div class="fg"><label>الفريق *</label><select id="pt-team"></select></div></div>';
+    h+='<div class="frow"><div class="fg"><label>رقم القميص</label><input type="text" id="pt-num" inputmode="numeric" maxlength="3" style="direction:ltr"></div>';
+    h+='<div class="fg"><label>الفئة</label><select id="pt-cat"></select></div></div>';
+    h+='<button class="btn btn-r" style="width:100%" onclick="ptAdd()">'+ic('user-plus',14)+' إضافة للبطولة</button>';
+  }else if(list.length){
+    h+='<div class="ce-note" style="margin-top:1rem">'+ic('check',13)+'<div>مسجَّل في كل البطولات المتاحة.</div></div>';
+  }
+  h+='<div class="msg ok" id="pt-ok">تمت الإضافة</div><div class="msg err" id="pt-err">أكمل البيانات</div>';
+  g('pt-body').innerHTML=h;
+  hydrateIcons(g('pt-body'));
+  ptFillTeams();
+}
+function ptFillTeams(){
+  var sel=g('pt-tour');if(!sel)return;
+  var t=(DB.tournaments||[]).find(function(x){return x.id===sel.value;});
+  var tm=g('pt-team'),ct=g('pt-cat');
+  if(tm)tm.innerHTML='<option value="">— اختر الفريق —</option>'
+    +((t&&t.teams)||[]).map(function(x){return '<option value="'+esc(x.name)+'">'+esc(x.name)+'</option>';}).join('');
+  if(ct){
+    var cats=[];((t&&t.teams)||[]).forEach(function(x){(x.cats||[]).forEach(function(c){if(cats.indexOf(c)<0)cats.push(c);});});
+    if(!cats.length&&t)cats=tCats(t);
+    ct.innerHTML='<option value="">— الفئة —</option>'+cats.map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('');
+  }
+}
+function ptAdd(){
+  var p=PTX.p;if(!p)return;
+  var tid=gv('pt-tour'),team=gv('pt-team'),num=gv('pt-num'),cat=gv('pt-cat');
+  if(!tid){g('pt-err').textContent='اختر البطولة';fl('pt-err');return;}
+  if(!team){g('pt-err').textContent='اختر الفريق';fl('pt-err');return;}
+  var t=(DB.tournaments||[]).find(function(x){return x.id===tid;});
+  var tm=(t.teams||[]).find(function(x){return x.name===team;});
+  if(!tm){g('pt-err').textContent='الفريق غير موجود';fl('pt-err');return;}
+  if(num&&(tm.players||[]).some(function(x){return String(x.number)===String(num)&&x.cat===cat;})){
+    g('pt-err').textContent='رقم القميص مستخدم في هذي الفئة';fl('pt-err');return;
+  }
+  var n=splitName(p);
+  tm.players=tm.players||[];
+  tm.players.push({
+    id:uid(),
+    name:p.name||'', fn:p.fn||n.first, mn:p.mn||n.mid, ln:p.ln||n.last,
+    nid:normNid(p.nid||''), nat:p.nat||'', dob:p.dob||'',
+    guard:normPhone(p.guardPhone||p.guard||''),
+    guardPhone:normPhone(p.guardPhone||p.guard||''),
+    guardName:p.guardName||'',
+    phone:normPhone(p.phone||''),
+    img:p.img||'', idImg:p.idImg||'',
+    cat:cat||'', number:num||'', pos:p.pos||'',
+    goals:0, matches:0
+  });
+  logA('إضافة '+(p.name||'لاعب')+' لبطولة '+t.name,'user-plus','#16a34a');
+  sv();
+  fl('pt-ok');
+  setTimeout(function(){rPtDlg();},700);
+}
+function ptEdit(tid,pid){
+  var t=(DB.tournaments||[]).find(function(x){return x.id===tid;});if(!t)return;
+  var tm=(t.teams||[]).find(function(x){return (x.players||[]).some(function(y){return y.id===pid;});});
+  if(!tm)return;
+  ptClose();
+  var prevAT=AT;AT=tid;
+  editPlayer(tm.name,pid);
+  /* أعد المؤشر بعد إغلاق نافذة التعديل */
+  var mod=g('epMod');
+  if(mod){
+    var obs=setInterval(function(){
+      if(!mod.classList.contains('open')){clearInterval(obs);AT=prevAT;}
+    },400);
+  }
 }
 function issuesPlayer(p){
   var r=issuesPlayerRanked(p);
@@ -11228,6 +11410,11 @@ function rTDPlayerProfile(){
   h+='<div class="rform" style="margin-bottom:1.2rem"><div style="display:flex;gap:1.1rem;align-items:center;flex-wrap:wrap">';
   h+='<div class="tdp-av" style="width:76px;height:76px;font-size:1.6rem;margin:0">'+(p.img?'<img src="'+p.img+'">':esc(ti(p.name)))+'</div>';
   h+='<div style="flex:1;min-width:200px"><div style="font-size:1.15rem;font-weight:700">'+esc(p.name)+playerBadge(p)+'</div>';
+  (function(){
+    var tl=playerTournaments(p);
+    h+='<button class="btn btn-g btn-sm" style="margin-top:.5rem" onclick="ptOpen(\''+p.id+'\',\'td\')">'
+      +ic('trophy',13)+' البطولات'+(tl.length?' <b>'+tl.length+'</b>':'')+'</button>';
+  })();
   h+='<div style="margin:.35rem 0"><span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span></div>';
   h+='<div style="font-size:11.5px;color:var(--gray)">'+esc(p.branch)+' • '+esc(gg?(gg.cat||tdCatName(gg.catId)):'—')+' • '+esc(gg?gg.name:'—')+'</div></div>';
   if(tdCanManage())h+='<div style="display:flex;gap:.4rem;flex-wrap:wrap"><button class="btn btn-o btn-sm" onclick="tdEditPlayer(\''+p.id+'\')">'+ic('edit',12)+' تعديل</button>'+(tdRole()==='admin'?'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="tdDelPlayer(\''+p.id+'\')">'+ic('trash',12)+' حذف</button>':'')+'</div>';
