@@ -2446,7 +2446,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>2026.08.18-1600</div>
+    <div class="ls-ver" id="ls-ver" data-notr>2026.08.18-1700</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4371,7 +4371,9 @@ function doLogin(){
       FA.token=u.token;
       loadStep('جارٍ تحميل بياناتك…',u.name||'');
       /* refresh state from cloud on login so we have latest, then enter */
-      FA.loadState().then(function(state){if(state&&state.tournaments)DB=migrate(state)||DB;}).catch(function(){}).then(function(){
+      FA.loadState().then(function(state){if(state&&state.tournaments)DB=migrate(state)||DB;}).catch(function(e){
+        console.error('[FA] ⛔ فشل تحميل البيانات بعد الدخول',e);faWarnBanner();
+      }).then(function(){
         var mem=DB.users.find(function(x){return x.id===u.id;});
         if(!mem){mem={id:u.id,name:u.name,username:u.username,role:u.role,team:u.team||'',phone:normPhone(u.phone||''),coachId:u.coachId||''};DB.users.push(mem);}
         else{
@@ -14283,6 +14285,17 @@ function pwaInit(){
     img.src=m[1];
   }catch(e){}
 }
+/* شريط تحذير أعلى الشاشة — يظهر مرة واحدة فقط */
+function faWarnBanner(){
+  try{
+    if(document.getElementById('fa-warn'))return;
+    var bn=document.createElement('div');
+    bn.id='fa-warn';
+    bn.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:#b71c1c;color:#fff;padding:12px 16px;font:600 14px system-ui;text-align:center;direction:rtl';
+    bn.textContent='⛔ تعذّر تحميل البيانات من السحابة. الحفظ معطّل لحماية بياناتك — لا تُدخل أي تعديلات وراجع المسؤول.';
+    document.body.appendChild(bn);
+  }catch(_){}
+}
 function faBoot(){
   pwaInit();
   hydrateIcons();
@@ -14297,13 +14310,10 @@ function faBoot(){
       if(state&&state.tournaments){DB=migrate(state)||DB;}
       else if(FA.loadOK&&FA.token){ /* سحابة فارغة فعلاً وتحميل ناجح — التأسيس آمن */ FA.saveState(cloudState(DB)); }
     }).catch(function(e){
+      /* قبل تسجيل الدخول لا يوجد رمز — الرفض هنا طبيعي ولا يستدعي تحذيراً. */
+      if(!FA.token){console.warn('[FA] القراءة قبل الدخول مرفوضة (طبيعي)');return;}
       console.error('[FA] ⛔ فشل تحميل البيانات — الحفظ معطّل لحماية بياناتك',e);
-      try{
-        var bn=document.createElement('div');
-        bn.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:#b71c1c;color:#fff;padding:12px 16px;font:600 14px system-ui;text-align:center;direction:rtl';
-        bn.textContent='⛔ تعذّر تحميل البيانات من السحابة. الحفظ معطّل لحماية بياناتك — لا تُدخل أي تعديلات وراجع المسؤول.';
-        document.body.appendChild(bn);
-      }catch(_){}
+      faWarnBanner();
     }).then(function(){
       /* استئناف الجلسة إن كانت سارية — قبل عرض شاشة الدخول */
       if(sessRestore())return;
