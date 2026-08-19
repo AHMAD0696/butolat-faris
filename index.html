@@ -3285,9 +3285,33 @@ var Store={
   load:function(){try{var r=localStorage.getItem(this.KEY);if(r)return JSON.parse(r);}catch(e){}return null;},
   save:function(db){try{localStorage.setItem(this.KEY,JSON.stringify(db));return true;}catch(e){console.warn('storage full',e);return false;}}
 };
+/* ===== تنبيه مرئي خفيف يختفي تلقائياً (بديل console الصامت) ===== */
+function svWarn(msg){
+  try{
+    var el=document.getElementById('sv-warn');
+    if(!el){
+      el=document.createElement('div');
+      el.id='sv-warn';
+      el.style.cssText='position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:99998;background:#7a5900;color:#fff;padding:10px 18px;border-radius:12px;font:600 13px system-ui;direction:rtl;box-shadow:0 6px 20px rgba(0,0,0,.35);max-width:92vw;text-align:center';
+      document.body.appendChild(el);
+    }
+    el.textContent='⚠️ '+msg;
+    el.style.display='block';
+    clearTimeout(el._t);
+    el._t=setTimeout(function(){el.style.display='none';},6000);
+  }catch(e){}
+}
+/* ===== تعارض نسخ: جهاز آخر حفظ تعديلاً أثناء عملك ===== */
+var _FA_CONFLICT=false;
+function faConflict(){
+  if(_FA_CONFLICT)return;
+  _FA_CONFLICT=true;
+  alert('⚠️ تم حفظ تعديلات من جهاز آخر أثناء عملك.\nستُعاد تحميل الصفحة لجلب أحدث نسخة — آخر تعديل لك لم يُحفظ، أعد إدخاله بعد التحميل.');
+  location.reload();
+}
 /* ================= SUPABASE ADAPTER (optional; falls back to localStorage) ================= */
 var FA={
-  enabled:false, sb:null, token:null, _timer:null, loadOK:false,
+  enabled:false, sb:null, token:null, _timer:null, loadOK:false, _rev:null,
   init:function(){
     try{
       var c=window.FA_CONFIG||{};
@@ -3306,12 +3330,13 @@ var FA={
     if(self.token){
       return self.sb.rpc('fa_load_state',{p_token:self.token}).then(function(r){
         if(r.error)throw r.error;
+        self._rev=(r.data&&r.data._rev)||null;   /* رقم نسخة البيانات الحالية */
         self.loadOK=true;              /* ✅ التحميل نجح — الحفظ مسموح */
         faWarnClear();                 /* أزل أي تحذير سابق */
         return r.data||null;
       });
     }
-    return self._loadDirect().then(function(d){self.loadOK=true;faWarnClear();return d;});
+    return self._loadDirect().then(function(d){self._rev=(d&&d._rev)||null;self.loadOK=true;faWarnClear();return d;});
   },
   /* ===== تخزين الصور خارج قاعدة البيانات ===== */
   BUCKET:'images',
@@ -3393,8 +3418,17 @@ var FA={
       .then(function(r){if(r.error)throw r.error;return r.data||[];});
   },
   _loadDirect:function(){
-    return this.sb.from('fa_state').select('data').eq('id',1).single().then(function(r){
-      if(r.error)throw r.error; return r.data?r.data.data:null;
+    var self=this;
+    /* أولاً: الدالة العامة المنقّحة (بلا جوالات ولا طلبات إدارية).
+       إن لم تكن منشأة بعد في Supabase نرجع للقراءة المباشرة القديمة
+       حتى لا يتعطل الموقع قبل تنفيذ ملف SQL. */
+    return self.sb.rpc('fa_public_state').then(function(r){
+      if(r.error)throw r.error;
+      return r.data||null;
+    }).catch(function(){
+      return self.sb.from('fa_state').select('data').eq('id',1).single().then(function(r){
+        if(r.error)throw r.error; return r.data?r.data.data:null;
+      });
     });
   },
   saveState:function(state){
@@ -3405,8 +3439,24 @@ var FA={
       console.error('[FA] ⛔ الحفظ ممنوع — لم يكتمل تحميل البيانات');
       return Promise.resolve(false);
     }
-    return this.sb.rpc('fa_save_state',{p_token:this.token,p_data:state}).then(function(r){
-      if(r.error)throw r.error; return true;
+    /* 🔒 فحص النسخة: نرسل رقم النسخة التي حمّلناها؛ لو تغيّرت في الخادم
+       (تعديل من جهاز آخر) يرفض الخادم الحفظ بدل مسح تعديلات الآخرين. */
+    var self=this, prev=self._rev||null,
+        next=Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+    state._rev=next;
+    return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state,p_rev:prev}).then(function(r){
+      if(r.error){
+        /* خادم لم يُحدَّث بعد (لا يعرف p_rev) — احفظ بالطريقة القديمة */
+        if(/p_rev|PGRST202|Could not find/i.test(String(r.error.message||''))){
+          return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state}).then(function(r2){
+            if(r2.error)throw r2.error; self._rev=next; return true;
+          });
+        }
+        throw r.error;
+      }
+      if(r.data===false){faConflict();return false;}
+      self._rev=next;
+      return true;
     });
   },
   login:function(username,pin){
@@ -3452,7 +3502,7 @@ function cloudState(db){
 var SYS={league:'دوري',groups:'مجموعات',knockout:'خروج مغلوب'};
 var TICONS=['trophy','medal','star','crown','ball','target'];
 function defDB(){return{
-  users:[{id:'u1',name:'عبدالحميد الوابل',username:'عبدالحميد الوابل',password:'1425',role:'admin',team:''}],
+  users:[{id:'u1',name:'عبدالحميد الوابل',username:'عبدالحميد الوابل',password:(window.FA_CONFIG&&window.FA_CONFIG.LOCAL_ADMIN_PIN)||'',role:'admin',team:''}],
   joinReqs:[],resetReqs:[],profileReqs:[],actLog:[],teams:[],td:defTD(),nt:defNT(),
   settings:{birthOld:2007,birthYoung:2022},
   tournaments:[
@@ -3608,12 +3658,15 @@ function closeStoryView(){
 var DB=migrate(Store.load())||defDB();
 function sv(){
   syncGlobalTeams();
-  Store.save(DB);
+  if(!Store.save(DB))svWarn('مساحة التخزين المحلي ممتلئة — قد لا تُحفظ التعديلات على هذا الجهاز');
   if(typeof tdSyncSchedule==='function')tdSyncSchedule();
   if(FA.enabled&&FA.token&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1){
     if(FA._timer)clearTimeout(FA._timer);
     FA._timer=setTimeout(function(){
-      FA.saveState(cloudState(DB)).catch(function(e){console.warn('cloud save failed',e);});
+      FA.saveState(cloudState(DB)).catch(function(e){
+        console.warn('cloud save failed',e);
+        svWarn('تعذّر حفظ آخر تعديل في السحابة — تحقق من الاتصال ثم كرّر التعديل');
+      });
     },600);
   }
   /* الكتابة المزدوجة — معزولة تماماً عن الحفظ الأساسي أعلاه */
@@ -4109,7 +4162,7 @@ function askPhone(){
     h+='<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="ap-pin2" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
   }
   h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="savePhone()">'+ic('check',14)+' حفظ ومتابعة</button>';
-  h+='<div class="msg ok" id="ap-ok">تم الحفظ</div><div class="msg err" id="ap-err">تحقق من البيانات</div>';
+  h+='<div class="msg ok" id="apm-ok">تم الحفظ</div><div class="msg err" id="apm-err">تحقق من البيانات</div>';
   g('ap-body').innerHTML=h;hydrateIcons(g('ap-body'));
   g('apMod').classList.add('open');
 }
@@ -4123,16 +4176,16 @@ function savePhone(){
   var u=(DB.users||[]).find(function(x){return x.id===CU.id;});
   if(!u)return;
   var raw=phoneVal('ap-phone');
-  if(!phoneOK(raw)){g('ap-err').textContent='رقم غير صحيح — أدخل ٩ أرقام تبدأ بـ 5';fl('ap-err');return;}
-  if(phoneFake(raw)){g('ap-err').textContent='هذا الرقم غير مقبول — أدخل رقمك الحقيقي';fl('ap-err');return;}
+  if(!phoneOK(raw)){g('apm-err').textContent='رقم غير صحيح — أدخل ٩ أرقام تبدأ بـ 5';fl('apm-err');return;}
+  if(phoneFake(raw)){g('apm-err').textContent='هذا الرقم غير مقبول — أدخل رقمك الحقيقي';fl('apm-err');return;}
   var n=normPhone(raw);
   var clash=(DB.users||[]).filter(function(x){return x.id!==u.id&&x.phoneVerified&&normPhone(x.phone)===n;});
-  if(clash.length){g('ap-err').textContent='هذا الرقم موثّق لحساب آخر ('+esc(clash[0].name)+')';fl('ap-err');return;}
+  if(clash.length){g('apm-err').textContent='هذا الرقم موثّق لحساب آخر ('+esc(clash[0].name)+')';fl('apm-err');return;}
   var needPin=!u.pinSet, pin='';
   if(needPin){
     pin=gv('ap-pin');var pin2=gv('ap-pin2');
-    if(!/^[0-9]{4}$/.test(pin)){g('ap-err').textContent='الرمز يجب أن يكون 4 أرقام';fl('ap-err');return;}
-    if(pin!==pin2){g('ap-err').textContent='الرمزان غير متطابقين';fl('ap-err');return;}
+    if(!/^[0-9]{4}$/.test(pin)){g('apm-err').textContent='الرمز يجب أن يكون 4 أرقام';fl('apm-err');return;}
+    if(pin!==pin2){g('apm-err').textContent='الرمزان غير متطابقين';fl('apm-err');return;}
   }
   u.phone=n;u.phoneVerified=true;delete u.phoneSkipped;
   if(needPin){u.password=pin;u.pinSet=true;}
@@ -4146,7 +4199,7 @@ function savePhone(){
   sv();
   /* حفظ فوري لا مؤجَّل — حتى لا يُفقد التوثيق لو أُغلقت الصفحة */
   if(FA.enabled&&FA.token)faSync(FA.saveState(cloudState(DB)));
-  fl('ap-ok');
+  fl('apm-ok');
   setTimeout(closeAskPhone,800);
 }
 
@@ -4234,19 +4287,19 @@ function nidSetPinForm(p){
   h+='<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="na-pin2" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
   h+='<div class="fg"><label>رقم الجوال <small>(اختياري — يسهّل دخولك لاحقاً)</small></label>'+phoneField('na-phone',p.phone||'')+'</div>';
   h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidFinish()">'+ic('check',14)+' إنشاء الحساب</button>';
-  h+='<div class="msg err" id="na-err">تحقق من البيانات</div>';
+  h+='<div class="msg err" id="na-err2">تحقق من البيانات</div>';
   g('na-body').innerHTML=h;hydrateIcons(g('na-body'));
 }
 function nidFinish(){
   var p=tdPlayer(NIDFLOW.pid);if(!p){closeNidAct();return;}
   var pin=gv('na-pin'),pin2=gv('na-pin2'),ph=phoneVal('na-phone');
-  if(!/^[0-9]{4}$/.test(pin)){g('na-err').textContent='الرمز يجب أن يكون 4 أرقام';fl('na-err');return;}
-  if(pin!==pin2){g('na-err').textContent='الرمزان غير متطابقان';fl('na-err');return;}
-  if(ph&&!phoneOK(ph)){g('na-err').textContent='رقم الجوال غير صحيح';fl('na-err');return;}
-  if(ph&&phoneFake(ph)){g('na-err').textContent='رقم الجوال غير مقبول';fl('na-err');return;}
+  if(!/^[0-9]{4}$/.test(pin)){g('na-err2').textContent='الرمز يجب أن يكون 4 أرقام';fl('na-err2');return;}
+  if(pin!==pin2){g('na-err2').textContent='الرمزان غير متطابقان';fl('na-err2');return;}
+  if(ph&&!phoneOK(ph)){g('na-err2').textContent='رقم الجوال غير صحيح';fl('na-err2');return;}
+  if(ph&&phoneFake(ph)){g('na-err2').textContent='رقم الجوال غير مقبول';fl('na-err2');return;}
   if(ph){
     var clash=(DB.users||[]).filter(function(u){return u.phoneVerified&&normPhone(u.phone)===ph;});
-    if(clash.length){g('na-err').textContent='هذا الرقم مسجّل لحساب آخر — اتركه فارغاً أو استخدم رقماً غيره';fl('na-err');return;}
+    if(clash.length){g('na-err2').textContent='هذا الرقم مسجّل لحساب آخر — اتركه فارغاً أو استخدم رقماً غيره';fl('na-err2');return;}
   }
   var acc=playerAccount(p.id);
   if(!acc){
@@ -4399,7 +4452,15 @@ function doLogin(){
         LOGIN_BUSY=false;
         setTimeout(function(){loginOK();},260);   /* لحظة قصيرة حتى تُقرأ الرسالة */
       });
-    }).catch(function(e){console.warn('login error',e);LOGIN_BUSY=false;pinErr();});
+    }).catch(function(e){
+      console.warn('login error',e);LOGIN_BUSY=false;
+      if(String(e&&e.message||'').indexOf('locked')>-1){
+        loadHide();goBack();
+        nameErr('أُوقفت المحاولات مؤقتاً بعد محاولات خاطئة متكررة — انتظر ١٥ دقيقة ثم أعد المحاولة');
+        return;
+      }
+      pinErr();
+    });
     return;
   }
   var u=DB.users.find(function(x){return x.username===name&&x.password===pass;});
@@ -4448,6 +4509,9 @@ function sessRead(){
 function sessRestore(){
   var v=sessRead();
   if(!v)return false;
+  /* 🔒 في الوضع السحابي لا تُستعاد جلسة بلا رمز خادم صالح —
+     الرمز نفسه تحقّق منه الخادم في faBoot عبر fa_load_state */
+  if(FA.enabled&&!v.token){sessClear();return false;}
   var u=(DB.users||[]).find(function(x){return x.id===v.uid;});
   if(!u){return false;}
   CU=Object.assign({},u);
@@ -12777,7 +12841,7 @@ function rTDSettings(){
       });
       h+='</tbody></table></div>';
     }
-    h+='<div class="msg err" id="tdst-c-del">لا يمكن حذف فئة تحتوي مجموعات — احذف مجموعاتها أولاً</div>';
+    h+='<div class="msg err" id="tdst-c-del2">لا يمكن حذف فئة تحتوي مجموعات — احذف مجموعاتها أولاً</div>';
   }
   h+='</div>';
 
