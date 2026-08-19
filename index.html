@@ -4198,7 +4198,7 @@ function savePhone(){
   logA('إكمال بيانات الدخول: '+u.name,'shield','#16a34a');
   sv();
   /* حفظ فوري لا مؤجَّل — حتى لا يُفقد التوثيق لو أُغلقت الصفحة */
-  if(FA.enabled&&FA.token)faSync(FA.saveState(cloudState(DB)));
+  if(FA.enabled&&FA.token&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1)faSync(FA.saveState(cloudState(DB)));
   fl('apm-ok');
   setTimeout(closeAskPhone,800);
 }
@@ -4313,7 +4313,7 @@ function nidFinish(){
   if(ph)p.phone=ph;
   logA('تفعيل حساب لاعب: '+p.name,'user','#16a34a');
   sv();
-  if(FA.enabled&&FA.token)faSync(FA.saveState(cloudState(DB)));
+  if(FA.enabled&&FA.token&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1)faSync(FA.saveState(cloudState(DB)));
   closeNidAct();
   addN('تم إنشاء حسابك','سجّل دخولك برقم هويتك ورمزك السري','success');
   lsMode('nid');
@@ -4447,6 +4447,12 @@ function doLogin(){
           if(u.phone&&normPhone(u.phone))mem.phone=normPhone(u.phone);
           else if(!mem.phone)mem.phone='';
         }
+        /* الدخول السحابي نجح ⇒ الرمز السري موجود في الخادم حتماً؛
+           والجوال الراجع من الخادم سبق حفظه عبر «توثيق رقم الجوال».
+           بدون هذا الاستنتاج تعود نافذة التوثيق لكل لاعب في كل دخول،
+           لأن حفظ العلامات في كتلة البيانات مرفوض لغير الأدوار الإدارية. */
+        mem.pinSet=true;
+        if(mem.phone&&phoneOK(mem.phone))mem.phoneVerified=true;
         CU=Object.assign({},mem);
         loadStep('جارٍ تجهيز الواجهة…','مرحباً بك');
         LOGIN_BUSY=false;
