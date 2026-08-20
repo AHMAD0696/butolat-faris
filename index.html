@@ -2656,8 +2656,16 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       </div>
       <div class="cat-wrap"><div class="cw-t"><span data-ic="whistle"></span> المدربون</div>
         <table class="cat-tbl"><thead><tr><th>اسم المدرب</th><th>الجوال</th><th>رمز جديد</th><th></th></tr></thead><tbody id="et-coaches"></tbody></table>
-        <button class="add-row" onclick="etAddCoach()">+ إضافة مدرب</button>
-        <div style="font-size:10.5px;color:var(--gray);margin-top:4px">للمدرب الجديد: أدخل رمزاً من 4 أرقام. للمدرب الحالي: اترك الرمز فارغاً للإبقاء عليه.</div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:stretch;margin-top:.4rem">
+          <button class="add-row" style="flex:1;min-width:140px;margin:0" onclick="etAddCoach()">+ مدرب جديد</button>
+          <div style="flex:2;min-width:220px;display:flex;gap:.4rem">
+            <select id="et-link-sel" style="flex:1"></select>
+            <button class="btn btn-o btn-sm" style="white-space:nowrap" onclick="etLinkCoach()"><span data-ic="link"></span> ربط مدرب موجود</button>
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:var(--gray);margin-top:6px">
+          <b>مدرب جديد:</b> أدخل رمزاً من 4 أرقام. &nbsp;•&nbsp; <b>ربط مدرب موجود:</b> يعمل في فريق آخر — يُضاف بنفس حسابه بلا تكرار. &nbsp;•&nbsp; للمدرب الحالي اترك الرمز فارغاً.
+        </div>
       </div>
       <button class="btn btn-r" style="width:100%;margin-top:.4rem" onclick="saveEditTeam()">حفظ التعديلات</button>
       <div class="msg ok" id="et-ok">تم حفظ التعديلات</div>
@@ -4936,7 +4944,43 @@ function openET(name){
     tr.innerHTML='<td><input type="text" value="'+esc(c.name||'')+'" placeholder="اسم المدرب"></td><td><input type="tel" value="'+esc(c.phone||'')+'" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td><input type="tel" inputmode="numeric" placeholder="'+(c.account?'إبقاء':'1234')+'" maxlength="4" style="direction:ltr;width:70px"></td><td><button class="del-btn" onclick="this.closest(\'tr\').remove()">'+ic('x',13)+'</button></td>';
     tb.appendChild(tr);
   });
+  etFillLinkSel();
   g('etMod').classList.add('open');hydrateIcons(g('etMod'));
+}
+/* كل المدربين في فرق أخرى (بحساب) غير الموجودين حالياً في الجدول */
+function etOtherCoaches(){
+  var inRows={};g('et-coaches').querySelectorAll('tr').forEach(function(tr){if(tr.dataset.cid)inRows[tr.dataset.cid]=1;});
+  var out=[],seen={};
+  (DB.teams||[]).forEach(function(t){
+    if(t.name===ETNAME)return;
+    (t.coaches||[]).forEach(function(c){
+      if(!c.id||seen[c.id]||inRows[c.id])return;
+      seen[c.id]=1;
+      out.push({id:c.id,name:c.name,phone:c.phone||'',account:!!c.account,team:t.name});
+    });
+  });
+  out.sort(function(a,b){return (a.name||'').localeCompare(b.name||'','ar');});
+  return out;
+}
+function etFillLinkSel(){
+  var sel=g('et-link-sel');if(!sel)return;
+  var list=etOtherCoaches();
+  sel.innerHTML='<option value="">'+(list.length?'— اختر مدرباً من فريق آخر —':'لا يوجد مدربون في فرق أخرى')+'</option>'
+    +list.map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+' — '+esc(c.team)+(c.account?'':' (بلا حساب)')+'</option>';}).join('');
+  sel.disabled=!list.length;
+}
+function etLinkCoach(){
+  var sel=g('et-link-sel'),cid=sel?sel.value:'';
+  if(!cid){fl('et-err');g('et-err').textContent='اختر مدرباً من القائمة';return;}
+  var c=etOtherCoaches().find(function(x){return x.id===cid;});if(!c)return;
+  var tr=document.createElement('tr');
+  tr.dataset.cid=c.id;tr.dataset.account=c.account?'1':'';tr.dataset.linked='1';
+  tr.innerHTML='<td><input type="text" value="'+esc(c.name)+'" readonly style="opacity:.85;background:transparent"><div style="font-size:9.5px;color:var(--gray);margin-top:2px">'+ic('link',9)+' مرتبط — من '+esc(c.team)+'</div></td>'
+    +'<td><input type="tel" value="'+esc(c.phone)+'" readonly style="direction:ltr;opacity:.85;background:transparent"></td>'
+    +'<td><input type="tel" disabled placeholder="—" style="direction:ltr;width:70px;opacity:.5"></td>'
+    +'<td><button class="del-btn" onclick="this.closest(\'tr\').remove();etFillLinkSel()">'+ic('x',13)+'</button></td>';
+  g('et-coaches').appendChild(tr);hydrateIcons(tr);
+  etFillLinkSel();
 }
 function etAddCoach(){
   var tr=document.createElement('tr');tr.dataset.cid='';tr.dataset.account='';
@@ -4976,9 +5020,12 @@ function saveEditTeam(){
   var rows=g('et-coaches').querySelectorAll('tr'),newCoaches=[],keptIds=[],bad='';
   var adminUser=DB.users.find(function(u){return u.role==='admin-team'&&u.team===ETNAME;});
   rows.forEach(function(tr){
-    var ins=tr.querySelectorAll('input');var cn=ins[0].value.trim(),cp=ins[1].value.trim(),cpin=ins[2].value.trim();
+    var ins=tr.querySelectorAll('input');var cn=ins[0].value.trim(),cp=ins[1].value.trim(),cpin=(ins[2].value||'').trim();
     if(!cn)return;
-    var cid=tr.dataset.cid||'',hasAcc=tr.dataset.account==='1';
+    var cid=tr.dataset.cid||'',hasAcc=tr.dataset.account==='1',linked=tr.dataset.linked==='1';
+    if(linked){ /* مدرب مرتبط من فريق آخر: نفس المعرّف ونفس الحساب، بلا رمز جديد */
+      newCoaches.push({id:cid,name:cn,phone:cp,pin:'',account:hasAcc,linked:true});keptIds.push(cid);return;
+    }
     if(!hasAcc&&!cid&&cpin.length!==4){bad='new';return;}
     if(!cid)cid=uid();
     /* username uniqueness for new coach accounts */
@@ -5000,23 +5047,35 @@ function saveEditTeam(){
   }
   /* coaches: apply to master + delete removed accounts + create/update */
   var master=gTeam(curName);var oldCoaches=(master.coaches||[]).slice();
-  /* removed coaches with accounts -> delete users */
-  oldCoaches.forEach(function(c){if(c.account&&c.id&&keptIds.indexOf(c.id)<0){var du=DB.users.find(function(u){return u.coachId===c.id;});if(du){DB.users=DB.users.filter(function(u){return u.id!==du.id;});if(FA.enabled)faSync(FA.deleteUser(du.id));}}});
+  /* removed coaches with accounts -> delete users — فقط إن لم يبقَ في أي فريق آخر */
+  function coachInOtherTeam(cid){return (DB.teams||[]).some(function(t2){return t2.name!==curName&&(t2.coaches||[]).some(function(x){return x.id===cid;});});}
+  oldCoaches.forEach(function(c){
+    if(c.account&&c.id&&keptIds.indexOf(c.id)<0&&!coachInOtherTeam(c.id)){
+      var du=DB.users.find(function(u){return u.coachId===c.id;});
+      if(du){DB.users=DB.users.filter(function(u){return u.id!==du.id;});if(FA.enabled)faSync(FA.deleteUser(du.id));}
+    }
+  });
   /* upsert coaches */
   newCoaches.forEach(function(nc){
     var existed=oldCoaches.find(function(x){return x.id===nc.id;});
     var u=DB.users.find(function(x){return x.coachId===nc.id;});
+    if(nc.linked){ /* مرتبط: حسابه قائم، لا نلمس فريقه الأساسي ولا رمزه */
+      return;
+    }
     if(existed&&u){ /* update profile; reset pin if provided */
-      u.name=nc.name;u.username=nc.name;u.phone=nc.phone;u.team=curName;
-      if(FA.enabled)faSync(FA.updateProfile(u.id,nc.name,nc.name,curName,nc.phone));
+      u.name=nc.name;u.username=nc.name;u.phone=nc.phone;
+      if(!u.team||u.team===ETNAME)u.team=curName;   /* لا نسرق فريقه الأساسي لو كان في فريق آخر */
+      if(FA.enabled)faSync(FA.updateProfile(u.id,nc.name,nc.name,u.team,nc.phone));
       if(nc.pin){u.password=nc.pin;if(FA.enabled)faSync(FA.setPin(u.id,nc.pin));}
+    } else if(u){ /* له حساب أصلاً (أضيف بنفس المعرّف) — لا ننشئ نسخة ثانية */
+      return;
     } else if(nc.account){ /* new coach account */
       var nu={id:'u_'+nc.id,name:nc.name,username:nc.name,password:nc.pin,role:'coach',team:curName,coachId:nc.id,phone:nc.phone};
       DB.users.push(nu);if(FA.enabled)faSync(FA.upsertUser(nu,nc.pin));
     }
   });
   /* write coaches array into master + tournament copies */
-  var finalCoaches=newCoaches.map(function(c){return {id:c.id,name:c.name,phone:c.phone,account:c.account,pin:c.pin};});
+  var finalCoaches=newCoaches.map(function(c){return {id:c.id,name:c.name,phone:c.phone,account:c.account,pin:c.linked?'':c.pin};});
   master.coaches=finalCoaches;
   (DB.tournaments||[]).forEach(function(tr){(tr.teams||[]).forEach(function(t2){if(t2.name===curName)t2.coaches=JSON.parse(JSON.stringify(finalCoaches));});});
   logA('تعديل بيانات فريق: '+curName,'edit','#d97706');
@@ -7582,7 +7641,7 @@ function rMyTeam(){
   if(!t){el.innerHTML=emptyBox('trophy','لم يتم ربطك بفريق معتمد بعد','تواصل مع إداري الفريق أو مدير النظام');return;}
   var rec=teamRecord(t.name);
   var isCoach=CU&&CU.role==='coach';
-  var myCats=isCoach?(t.categories||[]).filter(function(c){return c.coach===CU.name;}):(t.categories||[]);
+  var myCats=isCoach?(t.categories||[]).filter(catIsMine):(t.categories||[]);
   var myCatNames=myCats.map(function(c){return c.name;});
   var myPlayers=isCoach?(t.players||[]).filter(function(p){return myCatNames.indexOf(p.cat)>-1;}):(t.players||[]);
   var h='<div class="tp-hero" style="margin-bottom:1rem">'+tlogo(t,68)+'<div><h2 style="font-size:1.1rem">'+esc(t.name)+'</h2><div class="m">'+esc(t.branch||'')+(isCoach?' • مدرب: '+esc(CU.name):'')+'</div></div></div>';
@@ -7599,7 +7658,7 @@ function rMyTeam(){
   /* categories as clickable filters — coach sees only his own */
   h+='<div class="sec-t" style="margin:1.6rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">الفئات السنية'+(CU&&CU.role==='coach'?' <small style="font-weight:500;color:var(--gray)">(تحت إدارتك)</small>':'')+'</h2></div>';
   var allcats=t.categories||[];
-  var cats=(CU&&CU.role==='coach')?allcats.filter(function(c){return c.coach===CU.name;}):allcats;
+  var cats=(CU&&CU.role==='coach')?allcats.filter(catIsMine):allcats;
   if(!cats.length)h+=emptyBox('cal',CU&&CU.role==='coach'?'لا توجد فئات تحت إدارتك بعد':'لا توجد فئات سنية بعد');
   else{
     h+='<div style="margin-bottom:.9rem"><span class="cat-pill'+(MYTCAT===''?' on':'')+'" onclick="mytCat(\'\')">'+ic('users',12)+' الكل</span>';
@@ -7800,8 +7859,15 @@ function saveMyAcad(){
     if(entry.account){var u=DB.users.find(function(x){return x.coachId===entry.id;});if(u){u.name=cn;u.username=cn;u.phone=cp;if(FA.enabled)faSync(FA.updateProfile(u.id,cn,cn,o.name,cp));}}
   });
   if(!name||!city||!admin||!phone||!newCoaches.length){fl('ma-err');return;}
-  /* delete accounts of removed coaches */
-  (o.coaches||[]).forEach(function(c){if(c.account&&c.id&&keptIds.indexOf(c.id)<0){var du=DB.users.find(function(u){return u.coachId===c.id;});DB.users=DB.users.filter(function(u){return u.coachId!==c.id;});if(FA.enabled&&du)faSync(FA.deleteUser(du.id));}});
+  /* delete accounts of removed coaches — فقط إن لم يبقَ المدرب في أي فريق آخر */
+  (o.coaches||[]).forEach(function(c){
+    if(!(c.account&&c.id&&keptIds.indexOf(c.id)<0))return;
+    var elsewhere=(DB.teams||[]).some(function(t2){return t2.name!==o.name&&(t2.coaches||[]).some(function(x){return x.id===c.id;});});
+    if(elsewhere)return;
+    var du=DB.users.find(function(u){return u.coachId===c.id;});
+    DB.users=DB.users.filter(function(u){return u.coachId!==c.id;});
+    if(FA.enabled&&du)faSync(FA.deleteUser(du.id));
+  });
   var dup=DB.tournaments.some(function(tr){return (tr.teams||[]).some(function(t){return t.name===name&&t!==o;})||(tr.regs||[]).some(function(r){return r.name===name&&r!==o&&r.status!=='rejected';});});
   if(dup&&name!==o.name){g('ma-err').textContent='اسم الأكاديمية مستخدم مسبقاً';fl('ma-err');return;}
   if(name!==o.name)renameAcad(o.name,name);
@@ -7888,9 +7954,15 @@ function getCoaches(tbId){
   });
   return out;
 }
+/* هل هذه الفئة مسندة للمستخدم الحالي؟ بالمعرّف أولاً ثم الاسم للتوافق مع البيانات القديمة */
+function catIsMine(c){
+  if(!CU||!c)return false;
+  if(c.coachId&&CU.coachId)return c.coachId===CU.coachId;
+  return c.coach===CU.name;
+}
 function coachCats(t){
   if(!t)return[];
-  if(CU&&CU.role==='coach')return (t.categories||[]).filter(function(c){return c.coach===CU.name;}).map(function(c){return c.name;});
+  if(CU&&CU.role==='coach')return (t.categories||[]).filter(catIsMine).map(function(c){return c.name;});
   return (t.categories||[]).map(function(c){return c.name;});
 }
 function prepAddPlayer(){
@@ -8181,7 +8253,7 @@ function editCatCoach(btn,catName){
   var t=acadForCat();if(!t)return;
   var sel=btn.closest('.acl-body').querySelector('.acl-coach');var cn=sel.value;
   var cat=(t.categories||[]).find(function(x){return x.name===catName;});if(!cat)return;
-  cat.coach=cn;var co=(t.coaches||[]).find(function(x){return x.name===cn;});cat.phone=co?co.phone:'';
+  cat.coach=cn;var co=(t.coaches||[]).find(function(x){return x.name===cn;});cat.phone=co?co.phone:'';cat.coachId=co?(co.id||''):'';
   logA('تعديل مدرب فئة '+catName+' → '+(cn||'بدون')+' — '+t.name,'edit','#d97706');
   sv();renderAcList();
 }
@@ -8201,7 +8273,7 @@ function subAddCat(){
   if((t.categories||[]).some(function(x){return x.name===n;})){g('ac-err').textContent='هذه الفئة مضافة مسبقاً';fl('ac-err');return;}
   var co=(t.coaches||[]).find(function(x){return x.name===c;});
   t.categories=t.categories||[];
-  t.categories.push({name:n,coach:c,phone:co?co.phone:''});
+  t.categories.push({name:n,coach:c,phone:co?co.phone:'',coachId:co?(co.id||''):''});
   logA('إضافة فئة: '+n+' — '+t.name,'cal','#1565c0');
   addN('تمت إضافة فئة '+n,t.name,'success');
   sv();fl('ac-ok');prepAddCat();
