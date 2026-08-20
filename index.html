@@ -142,6 +142,17 @@ svg{display:block;flex-shrink:0}
 .brchip:hover{border-color:var(--navy);color:var(--txt)}
 .brchip.on{background:var(--navy);border-color:var(--navy);color:#fff}
 .brchip.on svg{opacity:.8}
+.brsw{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:0 0 1rem;
+  padding:.55rem .8rem;background:var(--sur);border:1px solid var(--brd);
+  border-right:3px solid var(--red);border-radius:12px}
+.brsw-l{font-size:11.5px;color:var(--gray);display:inline-flex;align-items:center;gap:5px;font-weight:700}
+.brsw-l svg{color:var(--red)}
+.brsw-c{display:flex;gap:.4rem;flex-wrap:wrap}
+.brsw-b{background:transparent;border:1.5px solid var(--brd);color:var(--gray);
+  padding:.32rem .8rem;border-radius:999px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;
+  transition:.15s}
+.brsw-b:hover{border-color:var(--red);color:var(--txt)}
+.brsw-b.on{background:var(--red);border-color:var(--red);color:#fff}
 .tdbr-sec{margin-bottom:1.5rem}
 .tdbr-hd{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin:0 0 .7rem;
   padding:.5rem .8rem;background:var(--sur);border:1px solid var(--brd);
@@ -2811,6 +2822,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
         <div class="addcat-list" id="ap-list"></div>
         <div class="addcat-form">
       <h3><span data-ic="user-plus"></span> إضافة لاعب</h3>
+      <div id="ap-brsw"></div>
       <div class="coach-ban" id="ap-ban" style="display:none"><div class="cb-ic" data-ic="trophy"></div><div><div class="cb-t">الأكاديمية: <span id="ap-tn">—</span></div><div class="cb-s">سيُضاف اللاعب لهذه الأكاديمية</div></div></div>
       <div class="fg"><label>الفئة السنية *</label><select id="ap-cat"></select></div>
       <div class="req-note" id="ap-req"></div>
@@ -2861,6 +2873,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
         <div class="addcat-list" id="ac-list"></div>
         <div class="addcat-form">
           <h3><span data-ic="cal"></span> إضافة فئة سنية للأكاديمية</h3>
+          <div id="ac-brsw"></div>
           <div class="coach-ban" id="ac-ban" style="display:none"><div class="cb-ic" data-ic="trophy"></div><div><div class="cb-t">الأكاديمية: <span id="ac-tn">—</span></div><div class="cb-s">ستُضاف الفئة لهذه الأكاديمية</div></div></div>
           <div class="fg"><label>اسم الفئة السنية *</label><select id="ac-name"></select></div>
           <div class="fg"><label>المدرب المسؤول *</label><select id="ac-coach"></select></div>
@@ -4556,7 +4569,7 @@ function loginOK(){
   pinReset();
   logA('تسجيل دخول','user','#1565c0');
 }
-function doLogout(){faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
+function doLogout(){ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
 function visibleTournaments(){
   return DB.tournaments.filter(function(t){return t.visible||(CU&&['admin','organizer'].indexOf(CU.role)>-1);});
 }
@@ -7790,10 +7803,58 @@ function renameAcad(oldN,newN){
   DB.users.forEach(function(u){if(u.team===oldN){u.team=newN;if(FA.enabled)faSync(FA.updateProfile(u.id,u.name,u.username,newN,u.phone||''));}});
   if(CU&&CU.team===oldN)CU.team=newN;
 }
+/* ===== الفرع النشط: المستخدم قد يعمل في أكثر من فرع/أكاديمية ===== */
+var ACTBR='';
+/* كل الفروع التي يحق له العمل فيها على جانب البطولات */
+function myTeams(){
+  if(!CU)return [];
+  if(CU.role==='admin')return (T().teams||[]).map(function(x){return x.name;});
+  var out=[];
+  if(CU.team)out.push(CU.team);
+  /* فرق يظهر فيها كمدرب (بالمعرّف أولاً ثم الاسم) */
+  (T().teams||[]).forEach(function(tt){
+    var hit=(tt.coaches||[]).some(function(c){
+      return (CU.coachId&&c.id===CU.coachId)||(c.name&&c.name===CU.name);
+    });
+    if(hit&&out.indexOf(tt.name)<0)out.push(tt.name);
+  });
+  /* الفروع المصرّح بها في الإدارة الفنية (إن تطابقت الأسماء) */
+  try{
+    var p=(typeof ACL!=='undefined')?ACL.me():null;
+    if(p)ACL.authBranches(p).forEach(function(b){
+      if(out.indexOf(b)<0&&(T().teams||[]).some(function(x){return x.name===b;}))out.push(b);
+    });
+  }catch(e){}
+  return out;
+}
 function myTeamName(){
   if(!CU)return'';
   if(CU.role==='admin')return'';
-  return CU.team||'';
+  var list=myTeams();
+  if(!ACTBR){try{ACTBR=sessionStorage.getItem('fa_actbr')||'';}catch(e){}}
+  if(ACTBR&&list.indexOf(ACTBR)>-1)return ACTBR;   /* الفرع المختار */
+  return CU.team||list[0]||'';
+}
+function setActiveBranch(b){
+  if(myTeams().indexOf(b)<0)return;                /* لا يُسمح بفرع خارج نطاقه */
+  ACTBR=b;
+  try{sessionStorage.setItem('fa_actbr',b);}catch(e){}
+  if(typeof rBranchSwitch==='function')rBranchSwitch();
+  if(typeof prepAddPlayer==='function'&&g('ap-ban'))prepAddPlayer();
+  if(typeof prepAddCat==='function'&&g('ac-ban'))prepAddCat();
+  if(typeof rReg==='function')rReg();
+}
+/* شريط التبديل — يظهر فقط لمن له أكثر من فرع */
+function branchSwitchHTML(){
+  var list=myTeams();
+  if(list.length<2)return '';
+  var cur=myTeamName();
+  return '<div class="brsw"><span class="brsw-l">'+ic('pin',12)+' الفرع النشط</span>'
+    +'<div class="brsw-c">'
+    +list.map(function(b){
+        return '<button type="button" class="brsw-b'+(b===cur?' on':'')+'" onclick="setActiveBranch(\''+esc(b).replace(/'/g,"\\'")+'\')">'+esc(b)+'</button>';
+      }).join('')
+    +'</div></div>';
 }
 /* coach rows for academy registration */
 function buildCatRow(tbId){var tb=g(tbId);if(tb&&!tb.children.length)addCoachRow(tbId);}
@@ -7820,6 +7881,8 @@ function coachCats(t){
 function prepAddPlayer(){
   var tn=myTeamName();
   var ban=g('ap-ban');
+  var sw=g('ap-brsw');
+  if(sw){sw.innerHTML=branchSwitchHTML();hydrateIcons(sw);}
   if(tn&&CU.role!=='admin'){ban.style.display='flex';g('ap-tn').textContent=tn;}
   else ban.style.display='none';
   var t=(T().teams||[]).find(function(x){return x.name===tn;});
@@ -8064,6 +8127,8 @@ function prepAddCat(){
   var tn=myTeamName();
   var ban=g('ac-ban');
   var t=acadForCat();
+  var sw=g('ac-brsw');
+  if(sw){sw.innerHTML=branchSwitchHTML();hydrateIcons(sw);}
   if(tn&&CU.role!=='admin'){ban.style.display='flex';g('ac-tn').textContent=tn;}
   else ban.style.display='none';
   g('ac-name').innerHTML=catYearOpts();
@@ -10232,31 +10297,222 @@ var TDCOAX=[
 var TDCOW={manual:.7,auto:.3};
 
 /* ---- roles & scope ---- */
-function tdRole(){if(!CU)return null;if(CU.role==='admin')return 'admin';if(CU.role==='admin-team')return 'staff';if(CU.role==='coach')return 'coach';return null;}
-function tdAllowed(p){
-  var r=tdRole();
-  if(r==='admin')return true;
-  if(r==='staff')return ['home','branches','coaches','players','cats','evals','plans','friendly','follow','reports','player','coacheval','fix'].indexOf(p)>-1;
-  if(r==='coach')return ['home','players','evals','plans','friendly','follow','reports','player','fix'].indexOf(p)>-1;
-  return false;
-}
-function tdMyStaff(){var me=CU||{};return TDX().staff.find(function(s){return (s.user&&s.user===me.username)||s.name===me.name;});}
-function tdMyCoach(){var me=CU||{};return TDX().coaches.find(function(c){return (c.user&&c.user===me.username)||c.name===me.name;});}
-function tdScopeBranchNames(){var r=tdRole(),all=TDX().branches.map(function(b){return b.name;});if(r==='admin')return all;if(r==='staff'){var s=tdMyStaff();return s?[s.branch]:[];}if(r==='coach'){var c=tdMyCoach();if(!c)return [];var sc=coachScopeByBranch(c).map(function(m){return m.branch;});return sc.length?sc:coachBranches(c);}return [];}
-function tdScopeGroups(){var r=tdRole(),gs=TDX().groups;if(r==='admin')return gs;if(r==='staff'){var s=tdMyStaff();return s?gs.filter(function(x){return x.branch===s.branch;}):[];}if(r==='coach'){var c=tdMyCoach();return c?gs.filter(function(x){return coachOwnsGroup(c,x);}):[];}return [];}
-function tdScopePlayers(){var r=tdRole(),ps=TDX().players;if(r==='admin')return ps;if(r==='staff'){var s=tdMyStaff();return s?ps.filter(function(x){return x.branch===s.branch;}):[];}if(r==='coach'){var ids=tdScopeGroups().map(function(x){return x.id;});return ps.filter(function(x){return ids.indexOf(x.groupId)>-1;});}return [];}
+/* ==========================================================================
+   ACL — طبقة الصلاحيات الموحّدة (مصدر الحقيقة الوحيد)
+   --------------------------------------------------------------------------
+   ثلاث طبقات صريحة:
+     ١) الهوية  — مَن أنت؟      ACL.me()
+     ٢) القدرة  — ماذا تفعل؟    ACL.can('players.edit')
+     ٣) النطاق  — على مَن؟      ACL.branches() / cats() / groups() / players()
+
+   قاعدة النطاق = تقاطع بوابتين:
+     بوابة ١ (إدارية): الفروع المصرّح بها  → branches[]
+     بوابة ٢ (تشغيلية): الإسناد الفعلي     → coachId على الفئة أو المجموعة
+   المشرف يجتاز البوابة ٢ تلقائياً داخل فروعه. المدير يجتاز البوابتين دائماً.
+   ========================================================================== */
+var ACL=(function(){
+
+  /* ---------- مصفوفة القدرات: الدور → ما يملكه ---------- */
+  var CAPS={
+    admin:['*'],
+    staff:['page.home','page.branches','page.coaches','page.players','page.cats',
+           'page.evals','page.plans','page.friendly','page.follow','page.reports',
+           'page.player','page.coacheval','page.fix',
+           'players.edit','cats.edit','groups.edit','evals.edit','coach.eval',
+           'notes.edit','tasks.assign','reports.view'],
+    coach:['page.home','page.players','page.evals','page.plans','page.friendly',
+           'page.follow','page.reports','page.player','page.fix',
+           'evals.edit','plans.edit','reports.view']
+  };
+
+  /* ---------- ١) الهوية ---------- */
+  /* الربط بالمعرّف أولاً (CU.coachId / CU.staffId)، ثم اسم المستخدم، والاسم آخراً */
+  function linkPerson(list,idKey){
+    var me=CU||{},id=me[idKey];
+    if(id){var byId=list.find(function(x){return x.id===id;});if(byId)return byId;}
+    if(me.username){var byUser=list.find(function(x){return x.user&&x.user===me.username;});if(byUser)return byUser;}
+    if(me.name){
+      var m=list.filter(function(x){return x.name===me.name;});
+      if(m.length===1)return m[0];   /* اسم مكرر = لا نخمّن */
+    }
+    return null;
+  }
+  function role(){
+    if(!CU)return null;
+    if(CU.role==='admin')return 'admin';
+    if(CU.role==='admin-team')return 'staff';
+    if(CU.role==='coach')return 'coach';
+    return null;
+  }
+  function me(){
+    var r=role();
+    if(r==='coach')return linkPerson(TDX().coaches,'coachId');
+    if(r==='staff')return linkPerson(TDX().staff,'staffId');
+    return null;
+  }
+
+  /* ---------- ٢) القدرة ---------- */
+  function can(cap){
+    var r=role();if(!r)return false;
+    var list=CAPS[r]||[];
+    return list.indexOf('*')>-1||list.indexOf(cap)>-1;
+  }
+  function canManage(){return can('players.edit');}
+
+  /* ---------- البوابة ١: الفروع المصرّح بها ---------- */
+  /* موحّدة للمدرب والمشرف: branches[] هي المرجع، وbranch حقل قديم للتوافق */
+  function authBranches(p){
+    if(!p)return [];
+    var a=(p.branches&&p.branches.length)?p.branches.slice():[];
+    if(p.branch&&a.indexOf(p.branch)<0)a.unshift(p.branch);
+    return a.filter(Boolean);
+  }
+  function allBranches(){return TDX().branches.map(function(b){return b.name;});}
+  function inAuthBranch(p,b){
+    if(!b)return true;
+    return authBranches(p).indexOf(b)>-1;
+  }
+
+  /* ---------- البوابة ٢: الإسناد الفعلي ---------- */
+  function ownsCat(p,cat){
+    if(!p||!cat)return false;
+    if(!inAuthBranch(p,cat.branch))return false;      /* بوابة ١ */
+    if(role()==='staff')return true;                  /* المشرف يغطي فرعه كاملاً */
+    return cat.coachId===p.id;                        /* بوابة ٢ */
+  }
+  function ownsGroup(p,gp){
+    if(!p||!gp)return false;
+    if(!inAuthBranch(p,gp.branch))return false;       /* بوابة ١ */
+    if(role()==='staff')return true;
+    if(gp.coachId===p.id)return true;                 /* إسناد مباشر */
+    return ownsCat(p,tdCat(gp.catId));                /* أو عبر الفئة كاملة */
+  }
+
+  /* ---------- ٣) النطاق ---------- */
+  function branches(){
+    var r=role();
+    if(r==='admin')return allBranches();
+    var p=me();if(!p)return [];
+    if(r==='staff')return authBranches(p);
+    /* المدرب: الفروع المصرّح بها التي لديه فيها إسناد فعلي */
+    var active=byBranch(p).map(function(m){return m.branch;});
+    return active.length?active:authBranches(p);
+  }
+  function groups(){
+    var r=role(),gs=TDX().groups;
+    if(r==='admin')return gs;
+    var p=me();if(!p)return [];
+    return gs.filter(function(gp){return ownsGroup(p,gp);});
+  }
+  function cats(){
+    var r=role(),cs=TDX().cats;
+    if(r==='admin')return cs;
+    var p=me();if(!p)return [];
+    var out=[],seen={};
+    cs.forEach(function(c){if(ownsCat(p,c)&&!seen[c.id]){seen[c.id]=1;out.push(c);}});
+    groups().forEach(function(gp){
+      if(seen[gp.catId])return;
+      var c=tdCat(gp.catId);if(c){seen[c.id]=1;out.push(c);}
+    });
+    return out;
+  }
+  function players(){
+    var r=role(),ps=TDX().players;
+    if(r==='admin')return ps;
+    var ids=groups().map(function(x){return x.id;});
+    return ps.filter(function(x){return ids.indexOf(x.groupId)>-1;});
+  }
+  function coaches(){
+    var r=role(),cs=TDX().coaches;
+    if(r==='admin')return cs;
+    var p=me();if(!p)return [];
+    if(r==='staff'){
+      var brs=authBranches(p);
+      return cs.filter(function(c){return authBranches(c).some(function(b){return brs.indexOf(b)>-1;});});
+    }
+    return [p];
+  }
+
+  /* ---------- تجميع النطاق حسب الفرع ---------- */
+  function byBranch(p){
+    p=p||me();
+    if(role()==='admin'){
+      var mAll={},oAll=[];
+      allBranches().forEach(function(b){mAll[b]={branch:b,cats:[],groups:[],players:[]};oAll.push(b);});
+      TDX().groups.forEach(function(gp){if(mAll[gp.branch]){mAll[gp.branch].groups.push(gp);var c=tdCat(gp.catId);if(c&&!mAll[gp.branch].cats.some(function(x){return x.id===c.id;}))mAll[gp.branch].cats.push(c);}});
+      TDX().players.forEach(function(pl){if(mAll[pl.branch])mAll[pl.branch].players.push(pl);});
+      return oAll.map(function(b){return mAll[b];});
+    }
+    if(!p)return [];
+    var gs=TDX().groups.filter(function(gp){return ownsGroup(p,gp);});
+    var map={},order=[];
+    authBranches(p).forEach(function(b){map[b]={branch:b,cats:[],groups:[],players:[]};order.push(b);});
+    gs.forEach(function(gp){
+      if(!map[gp.branch]){map[gp.branch]={branch:gp.branch,cats:[],groups:[],players:[]};order.push(gp.branch);}
+      var m=map[gp.branch];m.groups.push(gp);
+      var c=tdCat(gp.catId);
+      if(c&&!m.cats.some(function(x){return x.id===c.id;}))m.cats.push(c);
+    });
+    TDX().players.forEach(function(pl){
+      var gp=gs.find(function(x){return x.id===pl.groupId;});
+      if(gp&&map[gp.branch])map[gp.branch].players.push(pl);
+    });
+    return order.map(function(b){return map[b];}).filter(function(m){return m.groups.length>0;});
+  }
+
+  /* ---------- فحص عنصر واحد ---------- */
+  function seesPlayer(pl){return players().some(function(x){return x.id===pl.id;});}
+  function seesGroup(gp){var p=me();return role()==='admin'||(p&&ownsGroup(p,gp));}
+  function seesBranch(b){return branches().indexOf(b)>-1;}
+
+  /* ---------- تشخيص: من يرى ماذا ---------- */
+  function audit(){
+    var t=TDX(),rows=[];
+    function scopeOf(person,r){
+      var saveCU=CU;
+      CU={role:r==='coach'?'coach':'admin-team',name:person.name,username:person.user||'',
+          coachId:r==='coach'?person.id:'',staffId:r==='staff'?person.id:''};
+      /* الفروع الفعّالة من byBranch مباشرة — بلا fallback حتى لا يختفي الخلل */
+      var res={active:byBranch(person).map(function(m){return m.branch;}),
+               cats:cats().length,groups:groups().length,players:players().length};
+      CU=saveCU;return res;
+    }
+    /* إسناد خارج التصريح: فئة أو مجموعة مسندة له في فرع غير مصرّح به */
+    function orphan(person){
+      var br=authBranches(person),out=[];
+      t.cats.forEach(function(c){if(c.coachId===person.id&&br.indexOf(c.branch)<0&&out.indexOf(c.branch)<0)out.push(c.branch);});
+      t.groups.forEach(function(gp){if(gp.coachId===person.id&&br.indexOf(gp.branch)<0&&out.indexOf(gp.branch)<0)out.push(gp.branch);});
+      return out;
+    }
+    t.coaches.forEach(function(c){var s=scopeOf(c,'coach');
+      rows.push({name:c.name,role:'مدرب',auth:authBranches(c),active:s.active,cats:s.cats,
+                 groups:s.groups,players:s.players,link:c.user?'مرتبط':'غير مرتبط',orphan:orphan(c)});});
+    (t.staff||[]).forEach(function(s0){var s=scopeOf(s0,'staff');
+      rows.push({name:s0.name,role:'مشرف',auth:authBranches(s0),active:s.active,cats:s.cats,
+                 groups:s.groups,players:s.players,link:s0.user?'مرتبط':'غير مرتبط',orphan:[]});});
+    return rows;
+  }
+
+  return {role:role,me:me,can:can,canManage:canManage,
+          authBranches:authBranches,allBranches:allBranches,inAuthBranch:inAuthBranch,
+          ownsCat:ownsCat,ownsGroup:ownsGroup,
+          branches:branches,cats:cats,groups:groups,players:players,coaches:coaches,
+          byBranch:byBranch,seesPlayer:seesPlayer,seesGroup:seesGroup,seesBranch:seesBranch,
+          audit:audit,CAPS:CAPS};
+})();
+
+/* ---- واجهات التوافق: كل الدوال القديمة تمرّ الآن عبر ACL ---- */
+function tdRole(){return ACL.role();}
+function tdAllowed(p){return ACL.can('page.'+p);}
+function tdMyStaff(){return ACL.role()==='staff'?ACL.me():null;}
+function tdMyCoach(){return ACL.role()==='coach'?ACL.me():null;}
+function tdScopeBranchNames(){return ACL.branches();}
+function tdScopeGroups(){return ACL.groups();}
+function tdScopePlayers(){return ACL.players();}
 /* ===== المدرب قد يعمل في أكثر من فرع =====
    branch يبقى الفرع الأساسي للتوافق، وbranches تحمل كل الفروع. */
-function coachBranches(c){
-  if(!c)return [];
-  var arr=(c.branches&&c.branches.length)?c.branches.slice():[];
-  if(c.branch&&arr.indexOf(c.branch)<0)arr.unshift(c.branch);
-  return arr.filter(Boolean);
-}
-function coachInBranch(c,b){
-  if(!b)return true;
-  return coachBranches(c).indexOf(b)>-1;
-}
+function coachBranches(c){return ACL.authBranches(c);}
+function coachInBranch(c,b){return ACL.inAuthBranch(c,b);}
 function coachBranchLabel(c){
   var a=coachBranches(c);
   if(!a.length)return '—';
@@ -10275,17 +10531,8 @@ function findCoachByName(n){
 /* ===== إسناد المدرب: الفئات والمجموعات التي يمسكها في كل فرع =====
    الفئة والمجموعة كلاهما يحمل coachId.
    إسناد الفئة يشمل كل مجموعاتها تلقائياً، وكله محصور داخل فروعه المعتمدة. */
-function coachOwnsCat(c,cat){
-  if(!c||!cat)return false;
-  if(!coachInBranch(c,cat.branch))return false;
-  return cat.coachId===c.id;
-}
-function coachOwnsGroup(c,gp){
-  if(!c||!gp)return false;
-  if(!coachInBranch(c,gp.branch))return false;   /* خارج فروعه المعتمدة */
-  if(gp.coachId===c.id)return true;              /* مسند للمجموعة مباشرة */
-  return coachOwnsCat(c,tdCat(gp.catId));        /* أو مسؤول عن الفئة كاملة */
-}
+function coachOwnsCat(c,cat){return ACL.ownsCat(c,cat);}
+function coachOwnsGroup(c,gp){return ACL.ownsGroup(c,gp);}
 /* الفئات التي يمسكها المدرب فعلياً — مباشرة أو عبر مجموعاتها
    الاسم tdCoachCats لتفادي التعارض مع coachCats الخاصة بوحدة البطولات */
 function tdCoachCats(c){
@@ -10299,25 +10546,7 @@ function tdCoachCats(c){
   return out;
 }
 /* نطاق المدرب مرتباً حسب الفرع: [{branch,cats,groups,players}] */
-function coachScopeByBranch(c){
-  c=c||tdMyCoach();
-  if(!c)return [];
-  var gs=TDX().groups.filter(function(gp){return coachOwnsGroup(c,gp);});
-  var map={},order=[];
-  coachBranches(c).forEach(function(b){map[b]={branch:b,cats:[],groups:[],players:[]};order.push(b);});
-  gs.forEach(function(gp){
-    if(!map[gp.branch]){map[gp.branch]={branch:gp.branch,cats:[],groups:[],players:[]};order.push(gp.branch);}
-    var m=map[gp.branch];
-    m.groups.push(gp);
-    var cat=tdCat(gp.catId);
-    if(cat&&!m.cats.some(function(x){return x.id===cat.id;}))m.cats.push(cat);
-  });
-  TDX().players.forEach(function(p){
-    var gp=gs.find(function(x){return x.id===p.groupId;});
-    if(gp&&map[gp.branch])map[gp.branch].players.push(p);
-  });
-  return order.map(function(b){return map[b];}).filter(function(m){return m.groups.length>0;});
-}
+function coachScopeByBranch(c){return ACL.byBranch(c);}
 function tdHasDupCoaches(){
   var seen={},dup=false;
   TDX().coaches.forEach(function(c){var k=coachKey(c.name);if(seen[k])dup=true;seen[k]=1;});
@@ -10355,14 +10584,11 @@ function tdMergeDupCoaches(silent){
   }
   return merged;
 }
-function tdScopeCoaches(){var r=tdRole(),cs=TDX().coaches;if(r==='admin')return cs;if(r==='staff'){var s=tdMyStaff();return s?cs.filter(function(x){return coachInBranch(x,s.branch);}):[];}if(r==='coach'){var c=tdMyCoach();return c?[c]:[];}return [];}
+function tdScopeCoaches(){return ACL.coaches();}
 function tdCat(id){return TDX().cats.find(function(x){return x.id===id;});}
 function tdCatName(id){var c=tdCat(id);return c?c.name:'—';}
 function tdCatsOf(branch){return TDX().cats.filter(function(c){return !branch||c.branch===branch;});}
-function tdScopeCats(){
-  if(tdRole()==='coach')return tdCoachCats();
-  var brs=tdScopeBranchNames();return TDX().cats.filter(function(c){return brs.indexOf(c.branch)>-1;});
-}
+function tdScopeCats(){return ACL.cats();}
 var TD_PAL=['#1565c0','#DD1D45','#16a34a','#d97706','#5b2d8f','#0891b2','#be185d','#4d7c0f','#0f766e','#7c3aed'];
 function tdPickColor(branch,skipId){
   var t=TDX(),all={},inBr={};
@@ -10392,7 +10618,7 @@ function tdPlayer(id){return TDX().players.find(function(x){return x.id===id;});
 function tdCoach(id){return TDX().coaches.find(function(x){return x.id===id;});}
 function tdGName(id){var x=tdGroup(id);return x?x.name:'—';}
 function tdCanEditGroup(gid){var r=tdRole();if(r==='admin')return true;if(r==='coach'){var c=tdMyCoach(),gg=tdGroup(gid);return !!(c&&gg&&gg.coachId===c.id);}return false;}
-function tdCanManage(){var r=tdRole();return r==='admin'||r==='staff';}
+function tdCanManage(){return ACL.canManage();}
 
 /* ---- month / sessions ---- */
 function tdPlanDate(pl){return pl.date||((pl.month||'')+'-01');}
@@ -10680,7 +10906,7 @@ function rTDFollow(){
     }
     var tasks=t.tasks.filter(function(x){
       if(tdRole()==='coach')return myC&&x.coachId===myC.id;
-      if(tdRole()==='staff'){var c=tdCoach(x.coachId),s=tdMyStaff();return c&&s&&coachInBranch(c,s.branch);}
+      if(tdRole()==='staff'){var c=tdCoach(x.coachId);return c&&ACL.coaches().some(function(z){return z.id===c.id;});}
       return true;
     }).sort(function(a,b){return (b.at||0)-(a.at||0);});
     h+='<div class="sec-t"><div class="bar"></div><h2 style="font-size:14px">المهام ('+tasks.length+')</h2></div>';
@@ -10994,7 +11220,7 @@ function rTDHome(){
   var openTasks=t.tasks.filter(function(x){
     if(x.status!=='open')return false;
     if(r==='coach')return myC&&x.coachId===myC.id;
-    if(r==='staff'){var c=tdCoach(x.coachId),s=tdMyStaff();return c&&s&&coachInBranch(c,s.branch);}
+    if(r==='staff'){var c=tdCoach(x.coachId);return c&&ACL.coaches().some(function(z){return z.id===c.id;});}
     return true;
   });
   var al=tdAlerts();
@@ -11254,7 +11480,7 @@ function tdRenameBranch(b){
   t.groups.forEach(function(x){if(x.branch===b)x.branch=v;});
   t.players.forEach(function(x){if(x.branch===b)x.branch=v;});
   t.coaches.forEach(function(x){if(x.branch===b)x.branch=v;if(x.branches)x.branches=x.branches.map(function(y){return y===b?v:y;});});
-  t.staff.forEach(function(x){if(x.branch===b)x.branch=v;});
+  t.staff.forEach(function(x){if(x.branch===b)x.branch=v;if(x.branches)x.branches=x.branches.map(function(y){return y===b?v:y;});});
   logA('تعديل اسم فرع: '+b+' ← '+v,'edit','#1565c0');
   TDBR.view=v;sv();rTDBranches();
 }
@@ -12927,12 +13153,16 @@ function rTDSettings(){
   else{
     h+='<div class="frow"><div class="fg"><label>اسم الإداري *</label><input type="text" id="tdst-sname"></div>';
     h+='<div class="fg"><label>اسم المستخدم <small>(لربط حسابه)</small></label><input type="text" id="tdst-suser"></div></div>';
-    h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end"><div class="fg" style="margin-bottom:0"><label>الفرع *</label>'+tdSel('tdst-sbranch',brs,'','اختر الفرع')+'</div><button class="btn btn-r btn-sm" onclick="tdAddStaff()">'+ic('plus',12)+' إضافة</button></div>';
+    h+='<div class="fg"><label>الفروع * <small>(يمكن أن يشرف على أكثر من فرع)</small></label>'
+      +'<div class="brpick" id="tdst-sbrs">'
+      +brs.map(function(b){return '<button type="button" class="brchip" data-br="'+esc(b)+'" onclick="this.classList.toggle(\'on\')">'+ic('pin',11)+' '+esc(b)+'</button>';}).join('')
+      +'</div></div>';
+    h+='<button class="btn btn-r btn-sm" onclick="tdAddStaff()">'+ic('plus',12)+' إضافة</button>';
     h+='<div class="msg ok" id="tdst-s-ok">تمت الإضافة</div><div class="msg err" id="tdst-s-err">أكمل: الاسم والفرع</div>';
     if(t.staff.length){
       h+='<div class="at-wrap" style="margin-top:1rem"><table class="at"><thead><tr><th>الإداري</th><th>اسم المستخدم</th><th>الفرع</th><th></th></tr></thead><tbody>';
       t.staff.forEach(function(s){
-        h+='<tr><td style="font-weight:700">'+esc(s.name)+'</td><td>'+esc(s.user||'—')+'</td><td>'+esc(s.branch)+'</td><td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelStaff(\''+s.id+'\')">'+ic('trash',11)+'</button></td></tr>';
+        h+='<tr><td style="font-weight:700">'+esc(s.name)+'</td><td>'+esc(s.user||'—')+'</td><td>'+esc(ACL.authBranches(s).join('، ')||'—')+'</td><td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelStaff(\''+s.id+'\')">'+ic('trash',11)+'</button></td></tr>';
       });
       h+='</tbody></table></div>';
     }
@@ -12992,6 +13222,32 @@ function rTDSettings(){
   h+='</div>';
   h+=tdStoriesSettingsHTML();
 
+  /* ===== لوحة تدقيق الصلاحيات: من يرى ماذا ===== */
+  if(tdRole()==='admin'){
+    h+='<div class="rform" style="margin-top:1.4rem">';
+    h+='<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem">'+ic('shield',15)+'<b style="font-size:13.5px">تدقيق الصلاحيات — من يرى ماذا</b></div>';
+    h+='<div style="font-size:11.5px;color:var(--gray);margin-bottom:.8rem">النطاق = الفروع المصرّح بها ∩ الإسناد الفعلي. الصف الأحمر يعني خللاً: حساب غير مرتبط، أو فرع مصرّح بلا إسناد (لن يرى فيه شيئاً).</div>';
+    var aud=ACL.audit();
+    if(!aud.length)h+='<div style="font-size:12px;color:var(--gray)">لا يوجد مدربون أو مشرفون بعد.</div>';
+    else{
+      h+='<div class="at-wrap"><table class="at"><thead><tr><th>الاسم</th><th>الدور</th><th>الحساب</th><th>فروع مصرّحة</th><th>فروع فعّالة</th><th>فئات</th><th>مجموعات</th><th>لاعبون</th></tr></thead><tbody>';
+      aud.forEach(function(r){
+        var idle=r.auth.filter(function(b){return r.active.indexOf(b)<0;});
+        var warn=(r.link!=='مرتبط')||!r.auth.length||idle.length>0||(r.orphan&&r.orphan.length>0);
+        h+='<tr'+(warn?' style="background:rgba(221,29,69,.06)"':'')+'>'
+          +'<td style="font-weight:700">'+esc(r.name)+'</td>'
+          +'<td>'+r.role+'</td>'
+          +'<td>'+(r.link==='مرتبط'?'<span style="color:#16a34a">مرتبط</span>':'<span style="color:var(--red)">غير مرتبط</span>')+'</td>'
+          +'<td>'+esc(r.auth.join('، ')||'—')+'</td>'
+          +'<td>'+esc(r.active.join('، ')||'—')
+            +(idle.length?'<div style="font-size:10px;color:var(--red)">فرع بلا إسناد: '+esc(idle.join('، '))+'</div>':'')
+            +((r.orphan&&r.orphan.length)?'<div style="font-size:10px;color:#d97706">إسناد خارج التصريح: '+esc(r.orphan.join('، '))+'</div>':'')+'</td>'
+          +'<td>'+r.cats+'</td><td>'+r.groups+'</td><td>'+r.players+'</td></tr>';
+      });
+      h+='</tbody></table></div>';
+    }
+    h+='</div>';
+  }
   h+='<div style="height:1.6rem"></div>'+tdImpHTML();
   g('tdc-settings').innerHTML=h;
   hydrateIcons(g('tdc-settings'));
@@ -13145,9 +13401,9 @@ function tdDelGroup(id){
 });
 }
 function tdAddStaff(){
-  var name=gv('tdst-sname'),branch=gv('tdst-sbranch');
-  if(!name||!branch){fl('tdst-s-err');return;}
-  TDX().staff.push({id:uid(),name:name,user:gv('tdst-suser'),branch:branch,at:Date.now()});
+  var name=gv('tdst-sname'),sbrs=pickedBranches('tdst-sbrs');
+  if(!name||!sbrs.length){fl('tdst-s-err');return;}
+  TDX().staff.push({id:uid(),name:name,user:gv('tdst-suser'),branch:sbrs[0],branches:sbrs,at:Date.now()});
   logA('إضافة إداري فرع (إدارة فنية): '+name,'shield','#16a34a');
   sv();rTDSettings();fl('tdst-s-ok');
 }
