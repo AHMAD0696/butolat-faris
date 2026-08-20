@@ -10235,9 +10235,9 @@ function tdAllowed(p){
 }
 function tdMyStaff(){var me=CU||{};return TDX().staff.find(function(s){return (s.user&&s.user===me.username)||s.name===me.name;});}
 function tdMyCoach(){var me=CU||{};return TDX().coaches.find(function(c){return (c.user&&c.user===me.username)||c.name===me.name;});}
-function tdScopeBranchNames(){var r=tdRole(),all=TDX().branches.map(function(b){return b.name;});if(r==='admin')return all;if(r==='staff'){var s=tdMyStaff();return s?[s.branch]:[];}if(r==='coach'){var c=tdMyCoach();return c&&c.branch?[c.branch]:[];}return [];}
+function tdScopeBranchNames(){var r=tdRole(),all=TDX().branches.map(function(b){return b.name;});if(r==='admin')return all;if(r==='staff'){var s=tdMyStaff();return s?[s.branch]:[];}if(r==='coach'){var c=tdMyCoach();return c?coachBranches(c):[];}return [];}
 function tdScopeGroups(){var r=tdRole(),gs=TDX().groups;if(r==='admin')return gs;if(r==='staff'){var s=tdMyStaff();return s?gs.filter(function(x){return x.branch===s.branch;}):[];}if(r==='coach'){var c=tdMyCoach();return c?gs.filter(function(x){return x.coachId===c.id;}):[];}return [];}
-function tdScopePlayers(){var r=tdRole(),ps=TDX().players;if(r==='admin')return ps;if(r==='staff'){var s=tdMyStaff();return s?ps.filter(function(x){return x.branch===s.branch;}):[];}if(r==='coach'){var ids=tdScopeGroups().map(function(x){return x.id;});return ps.filter(function(x){return ids.indexOf(x.groupId)>-1;});}return [];}
+function tdScopePlayers(){var r=tdRole(),ps=TDX().players;if(r==='admin')return ps;if(r==='staff'){var s=tdMyStaff();return s?ps.filter(function(x){return x.branch===s.branch;}):[];}if(r==='coach'){var c=tdMyCoach(),brs=coachBranches(c),ids=tdScopeGroups().map(function(x){return x.id;});return ps.filter(function(x){return ids.indexOf(x.groupId)>-1||brs.indexOf(x.branch)>-1;});}return [];}
 /* ===== المدرب قد يعمل في أكثر من فرع =====
    branch يبقى الفرع الأساسي للتوافق، وbranches تحمل كل الفروع. */
 function coachBranches(c){
@@ -10255,6 +10255,52 @@ function coachBranchLabel(c){
   if(!a.length)return '—';
   if(a.length===1)return a[0];
   return a[0]+' +'+(a.length-1);
+}
+/* توحيد كتابة الاسم لمقارنة المدربين ومنع التكرار */
+function coachKey(n){
+  return String(n||'').replace(/[أإآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي')
+    .replace(/[ًٌٍَُِّْـ]/g,'').replace(/\s+/g,' ').trim().toLowerCase();
+}
+function findCoachByName(n){
+  var k=coachKey(n);
+  return TDX().coaches.find(function(c){return coachKey(c.name)===k;});
+}
+function tdHasDupCoaches(){
+  var seen={},dup=false;
+  TDX().coaches.forEach(function(c){var k=coachKey(c.name);if(seen[k])dup=true;seen[k]=1;});
+  return dup;
+}
+/* دمج المدربين المكررين: سجل واحد لكل مدرب بكل فروعه */
+function tdMergeDupCoaches(silent){
+  var t=TDX(),map={},merged=0,names=[];
+  t.coaches.slice().forEach(function(c){
+    var k=coachKey(c.name);
+    if(!map[k]){map[k]=c;c.branches=coachBranches(c);return;}
+    var keep=map[k];
+    coachBranches(c).forEach(function(b){if(keep.branches.indexOf(b)<0)keep.branches.push(b);});
+    keep.branch=keep.branches[0];
+    t.groups.forEach(function(x){if(x.coachId===c.id)x.coachId=keep.id;});
+    (t.tasks||[]).forEach(function(x){if(x.coachId===c.id)x.coachId=keep.id;});
+    (t.coachEvals||[]).forEach(function(x){if(x.coachId===c.id)x.coachId=keep.id;});
+    (t.notes||[]).forEach(function(x){if(x.coachId===c.id)x.coachId=keep.id;});
+    (t.plans||[]).forEach(function(x){if(x.coachId===c.id)x.coachId=keep.id;});
+    (t.evals||[]).forEach(function(x){if(x.coachId===c.id)x.coachId=keep.id;});
+    if(!keep.phone&&c.phone)keep.phone=c.phone;
+    if(!keep.user&&c.user)keep.user=c.user;
+    if(!keep.note&&c.note)keep.note=c.note;
+    t.coaches=t.coaches.filter(function(x){return x.id!==c.id;});
+    merged++;if(names.indexOf(keep.name)<0)names.push(keep.name);
+  });
+  if(merged){
+    logA('دمج مدربين مكررين: '+names.join('، '),'whistle','#1565c0');
+    sv();
+  }
+  if(!silent){
+    if(merged)alert('تم دمج '+merged+' سجل مكرر: '+names.join('، '));
+    else alert('لا يوجد مدربون مكررون');
+    if(typeof rTDCoaches==='function'&&g('tdc-coaches'))rTDCoaches();
+  }
+  return merged;
 }
 function tdScopeCoaches(){var r=tdRole(),cs=TDX().coaches;if(r==='admin')return cs;if(r==='staff'){var s=tdMyStaff();return s?cs.filter(function(x){return coachInBranch(x,s.branch);}):[];}if(r==='coach'){var c=tdMyCoach();return c?[c]:[];}return [];}
 function tdCat(id){return TDX().cats.find(function(x){return x.id===id;});}
@@ -10924,10 +10970,10 @@ function rTDHome(){
   h+='<div class="sub-head"><span class="sh-line"></span><h2>التقييمات المتأخرة ('+late.length+')</h2>'+(late.length?'<button class="more" onclick="tdP(\'evals\')">تقييم الآن</button>':'')+'</div>';
   if(!late.length)h+=emptyBox('check-big','كل اللاعبين مُقيَّمون لهذه الفترة');
   else{
-    h+='<div class="at-wrap" style="margin-bottom:1.4rem"><table class="at"><thead><tr><th>اللاعب</th><th>المجموعة</th>'+(r==='coach'?'':'<th>الفرع</th>')+'<th>آخر تقييم سابق</th></tr></thead><tbody>';
+    h+='<div class="at-wrap" style="margin-bottom:1.4rem"><table class="at"><thead><tr><th>اللاعب</th><th>المجموعة</th>'+(r==='coach'&&tdScopeBranchNames().length<2?'':'<th>الفرع</th>')+'<th>آخر تقييم سابق</th></tr></thead><tbody>';
     late.slice(0,8).forEach(function(p){
       var evs=tdPlayerEvals(p.id);
-      h+='<tr style="cursor:pointer" onclick="tdOpenPlayer(\''+p.id+'\')"><td style="font-weight:700">'+esc(p.name)+playerBadge(p)+'</td><td>'+esc(tdGName(p.groupId))+'</td>'+(r==='coach'?'':'<td>'+esc(p.branch)+'</td>')+'<td>'+(evs.length?tdMonthLabel(evs[evs.length-1].period)+' — '+tdEvalOf5(evs[evs.length-1])+' / 5':'لم يُقيَّم من قبل')+'</td></tr>';
+      h+='<tr style="cursor:pointer" onclick="tdOpenPlayer(\''+p.id+'\')"><td style="font-weight:700">'+esc(p.name)+playerBadge(p)+'</td><td>'+esc(tdGName(p.groupId))+'</td>'+(r==='coach'&&tdScopeBranchNames().length<2?'':'<td>'+esc(p.branch)+'</td>')+'<td>'+(evs.length?tdMonthLabel(evs[evs.length-1].period)+' — '+tdEvalOf5(evs[evs.length-1])+' / 5':'لم يُقيَّم من قبل')+'</td></tr>';
     });
     h+='</tbody></table>'+(late.length>8?'<div style="font-size:11px;color:var(--gray);padding:.5rem">+'+(late.length-8)+' لاعبين آخرين</div>':'')+'</div>';
   }
@@ -11932,6 +11978,7 @@ function rTDCoaches(){
   var t=TDX(),cs=tdScopeCoaches(),brs=tdScopeBranchNames();
   var h=tdHead('whistle','المدربون','متابعة أداء المدربين والتزامهم بالخطط والتقييمات',
     (tdCanManage()?'<button class="btn btn-r btn-sm" onclick="TDCO.showForm=!TDCO.showForm;rTDCoaches()">'+ic(TDCO.showForm?'x':'plus',13)+' '+(TDCO.showForm?'إغلاق النموذج':'إضافة مدرب')+'</button>':'')
+    +(tdRole()==='admin'&&tdHasDupCoaches()?'<button class="btn btn-o btn-sm" onclick="tdMergeDupCoaches()">'+ic('whistle',12)+' دمج المدربين المكررين</button>':'')
     +'<span class="pg-chip">'+cs.length+' مدرب</span>');
   if(TDCO.showForm&&tdCanManage()){
     h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem">';
@@ -11990,6 +12037,19 @@ function pickedBranches(wrapId){
 function tdSaveCoach(){
   var name=gv('tdco-name'),brs=pickedBranches('tdco-brs');
   if(!name||!brs.length){g('tdco-err').textContent='أكمل: الاسم واختر فرعاً واحداً على الأقل';fl('tdco-err');return;}
+  var ex=findCoachByName(name);
+  if(ex){
+    var add=brs.filter(function(b){return !coachInBranch(ex,b);});
+    if(!add.length){g('tdco-err').textContent='المدرب «'+ex.name+'» مضاف مسبقاً في هذه الفروع';fl('tdco-err');return;}
+    askConfirm('المدرب «'+ex.name+'» موجود في: '+coachBranches(ex).join('، ')+'\nهل نضيف له الفروع: '+add.join('، ')+' بدل إنشاء سجل جديد؟',function(){
+      ex.branches=coachBranches(ex).concat(add);ex.branch=ex.branches[0];
+      if(!ex.phone)ex.phone=phoneVal('tdco-phone');
+      if(!ex.user)ex.user=gv('tdco-user');
+      logA('إضافة فروع للمدرب: '+ex.name+' — '+add.join('، '),'pin','#1565c0');
+      sv();TDCO.showForm=false;rTDCoaches();fl('tdco-ok');
+    });
+    return;
+  }
   TDX().coaches.push({id:uid(),name:name,branch:brs[0],branches:brs,phone:phoneVal('tdco-phone'),user:gv('tdco-user'),note:'',at:Date.now()});
   logA('إضافة مدرب (إدارة فنية): '+name,'whistle','#16a34a');
   sv();TDCO.showForm=false;rTDCoaches();fl('tdco-ok');
