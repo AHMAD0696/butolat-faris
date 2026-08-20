@@ -153,6 +153,7 @@ svg{display:block;flex-shrink:0}
   transition:.15s}
 .brsw-b:hover{border-color:var(--red);color:var(--txt)}
 .brsw-b.on{background:var(--red);border-color:var(--red);color:#fff}
+.acc-brsw{display:flex;gap:.4rem;flex-wrap:wrap;padding:.2rem 0 .6rem}
 .tdbr-sec{margin-bottom:1.5rem}
 .tdbr-hd{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin:0 0 .7rem;
   padding:.5rem .8rem;background:var(--sur);border:1px solid var(--brd);
@@ -2890,6 +2891,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 <!-- MY TEAM -->
 <div id="page-myteam" class="page"><div class="sec">
   <div class="sec-t"><div class="bar"></div><h2>فريقي</h2></div>
+  <div id="myt-brsw"></div>
   <div id="myt-content"></div>
 </div></div>
 
@@ -3924,7 +3926,8 @@ function openAccount(e){
   /* معلومات الحساب */
   var rows=[];
   if(CU.phone)rows.push(['phone','رقم الجوال',phoneDisp(CU.phone)]);
-  if(CU.team)rows.push(['shield',(CU.role==='viewer'?'فرع ابنك':'الفريق'),CU.team]);
+  var _tn=(CU.role==='viewer')?CU.team:(myTeamName()||CU.team);
+  if(_tn)rows.push(['shield',(CU.role==='viewer'?'فرع ابنك':'الفريق'),_tn]);
   if(CU.child)rows.push(['user','اسم ابنك',CU.child]);
   if(CU.childCat||CU.cat)rows.push(['cal','الفئة',CU.childCat||CU.cat]);
   rows.push(['trophy','البطولة الحالية',(T()&&T().name)||'—']);
@@ -3932,6 +3935,13 @@ function openAccount(e){
   h+='<div class="acc-rows">'+rows.map(function(r){
     return '<div class="acc-row"><span class="acc-l">'+ic(r[0],12)+' '+r[1]+'</span><b>'+esc(r[2])+'</b></div>';
   }).join('')+'</div>';
+  /* مبدّل الفرع — لمن يعمل في أكثر من فرع */
+  if(CU.role!=='viewer'&&myTeams().length>1){
+    h+='<div class="acc-sec">'+ic('pin',12)+' تبديل الفرع</div>';
+    h+='<div class="acc-brsw">'+myTeams().map(function(b){
+      return '<button type="button" class="brsw-b'+(b===myTeamName()?' on':'')+'" onclick="setActiveBranch(\''+esc(b).replace(/'/g,"\\'")+'\');openAccount()">'+esc(b)+'</button>';
+    }).join('')+'</div>';
+  }
   /* الإشعارات */
   var unread=NOTIFS.filter(function(n){return !n.read;}).length;
   h+='<div class="acc-sec">'+ic('bell',12)+' الإشعارات'
@@ -7564,7 +7574,9 @@ function parentMatchRow(m,tn){
 }
 function rMyTeam(){
   var el=g('myt-content');
-  var tn=CU?CU.team:'';
+  var tn=CU?(CU.role==='viewer'?CU.team:myTeamName()):'';
+  var swEl=g('myt-brsw');
+  if(swEl){swEl.innerHTML=(CU&&CU.role!=='viewer')?branchSwitchHTML():'';hydrateIcons(swEl);}
   if(CU&&CU.role==='viewer'){rParentTeam(el,tn);return;}
   var t=(T().teams||[]).find(function(x){return x.name===tn;});
   if(!t){el.innerHTML=emptyBox('trophy','لم يتم ربطك بفريق معتمد بعد','تواصل مع إداري الفريق أو مدير النظام');return;}
@@ -7717,10 +7729,12 @@ function rRegGuard(){
 }
 function swR(t){RTAB=t;rRegGuard();}
 function myAcad(){
-  if(!CU||!CU.team)return null;
-  var t=(T().teams||[]).find(function(x){return x.name===CU.team;});
+  if(!CU)return null;
+  var tn=myTeamName();
+  if(!tn)return null;
+  var t=(T().teams||[]).find(function(x){return x.name===tn;});
   if(t)return{obj:t,kind:'team'};
-  var r=(T().regs||[]).find(function(x){return x.name===CU.team&&x.status!=='rejected';});
+  var r=(T().regs||[]).find(function(x){return x.name===tn&&x.status!=='rejected';});
   if(r)return{obj:r,kind:'reg'};
   return null;
 }
@@ -7839,10 +7853,11 @@ function setActiveBranch(b){
   if(myTeams().indexOf(b)<0)return;                /* لا يُسمح بفرع خارج نطاقه */
   ACTBR=b;
   try{sessionStorage.setItem('fa_actbr',b);}catch(e){}
-  if(typeof rBranchSwitch==='function')rBranchSwitch();
-  if(typeof prepAddPlayer==='function'&&g('ap-ban'))prepAddPlayer();
-  if(typeof prepAddCat==='function'&&g('ac-ban'))prepAddCat();
-  if(typeof rReg==='function')rReg();
+  /* إعادة رسم الصفحة المفتوحة حالياً بالكامل */
+  if(typeof rAllSoft==='function')rAllSoft();
+  /* وتحديث النماذج المفتوحة إن وُجدت */
+  if(typeof prepAddPlayer==='function'&&g('ap-ban'))try{prepAddPlayer();}catch(e){}
+  if(typeof prepAddCat==='function'&&g('ac-ban'))try{prepAddCat();}catch(e){}
 }
 /* شريط التبديل — يظهر فقط لمن له أكثر من فرع */
 function branchSwitchHTML(){
@@ -9159,7 +9174,8 @@ function admLogHTML(){
 
 /* --- my dash (admin-team) --- */
 function admMyDashHTML(){
-  var t=(T().teams||[]).find(function(x){return x.name===CU.team;});
+  var _tn=myTeamName()||CU.team;
+  var t=(T().teams||[]).find(function(x){return x.name===_tn;});
   if(!t)return emptyBox('trophy','لم يتم اعتماد أكاديميتك بعد','بانتظار موافقة مدير النظام');
   var rec=teamRecord(t.name);
   var h='<div class="tp-hero" style="margin-bottom:1rem">'+tlogo(t,64)+'<div><h2 style="font-size:1.1rem">'+esc(t.name)+'</h2><div class="m">'+esc(t.branch||'')+'</div></div></div>';
