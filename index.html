@@ -142,6 +142,13 @@ svg{display:block;flex-shrink:0}
 .brchip:hover{border-color:var(--navy);color:var(--txt)}
 .brchip.on{background:var(--navy);border-color:var(--navy);color:#fff}
 .brchip.on svg{opacity:.8}
+.tdbr-sec{margin-bottom:1.5rem}
+.tdbr-hd{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin:0 0 .7rem;
+  padding:.5rem .8rem;background:var(--sur);border:1px solid var(--brd);
+  border-right:3px solid var(--red);border-radius:10px}
+.tdbr-hd .tdbr-nm{font-weight:800;font-size:13.5px}
+.tdbr-hd .tdbr-meta{font-size:10.5px;color:var(--gray);flex:1;min-width:120px}
+.tdbr-hd svg{color:var(--red)}
 /* شارة تنبيه البيانات الناقصة — لا تحذف ولا تحجب */
 .dgbar{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r2);padding:1rem;margin-top:1rem}
 .dgbar.warn{border-color:rgba(217,119,6,.45)}
@@ -10235,9 +10242,9 @@ function tdAllowed(p){
 }
 function tdMyStaff(){var me=CU||{};return TDX().staff.find(function(s){return (s.user&&s.user===me.username)||s.name===me.name;});}
 function tdMyCoach(){var me=CU||{};return TDX().coaches.find(function(c){return (c.user&&c.user===me.username)||c.name===me.name;});}
-function tdScopeBranchNames(){var r=tdRole(),all=TDX().branches.map(function(b){return b.name;});if(r==='admin')return all;if(r==='staff'){var s=tdMyStaff();return s?[s.branch]:[];}if(r==='coach'){var c=tdMyCoach();return c?coachBranches(c):[];}return [];}
-function tdScopeGroups(){var r=tdRole(),gs=TDX().groups;if(r==='admin')return gs;if(r==='staff'){var s=tdMyStaff();return s?gs.filter(function(x){return x.branch===s.branch;}):[];}if(r==='coach'){var c=tdMyCoach();return c?gs.filter(function(x){return x.coachId===c.id;}):[];}return [];}
-function tdScopePlayers(){var r=tdRole(),ps=TDX().players;if(r==='admin')return ps;if(r==='staff'){var s=tdMyStaff();return s?ps.filter(function(x){return x.branch===s.branch;}):[];}if(r==='coach'){var c=tdMyCoach(),brs=coachBranches(c),ids=tdScopeGroups().map(function(x){return x.id;});return ps.filter(function(x){return ids.indexOf(x.groupId)>-1||brs.indexOf(x.branch)>-1;});}return [];}
+function tdScopeBranchNames(){var r=tdRole(),all=TDX().branches.map(function(b){return b.name;});if(r==='admin')return all;if(r==='staff'){var s=tdMyStaff();return s?[s.branch]:[];}if(r==='coach'){var c=tdMyCoach();if(!c)return [];var sc=coachScopeByBranch(c).map(function(m){return m.branch;});return sc.length?sc:coachBranches(c);}return [];}
+function tdScopeGroups(){var r=tdRole(),gs=TDX().groups;if(r==='admin')return gs;if(r==='staff'){var s=tdMyStaff();return s?gs.filter(function(x){return x.branch===s.branch;}):[];}if(r==='coach'){var c=tdMyCoach();return c?gs.filter(function(x){return coachOwnsGroup(c,x);}):[];}return [];}
+function tdScopePlayers(){var r=tdRole(),ps=TDX().players;if(r==='admin')return ps;if(r==='staff'){var s=tdMyStaff();return s?ps.filter(function(x){return x.branch===s.branch;}):[];}if(r==='coach'){var ids=tdScopeGroups().map(function(x){return x.id;});return ps.filter(function(x){return ids.indexOf(x.groupId)>-1;});}return [];}
 /* ===== المدرب قد يعمل في أكثر من فرع =====
    branch يبقى الفرع الأساسي للتوافق، وbranches تحمل كل الفروع. */
 function coachBranches(c){
@@ -10264,6 +10271,52 @@ function coachKey(n){
 function findCoachByName(n){
   var k=coachKey(n);
   return TDX().coaches.find(function(c){return coachKey(c.name)===k;});
+}
+/* ===== إسناد المدرب: الفئات والمجموعات التي يمسكها في كل فرع =====
+   الفئة والمجموعة كلاهما يحمل coachId.
+   إسناد الفئة يشمل كل مجموعاتها تلقائياً، وكله محصور داخل فروعه المعتمدة. */
+function coachOwnsCat(c,cat){
+  if(!c||!cat)return false;
+  if(!coachInBranch(c,cat.branch))return false;
+  return cat.coachId===c.id;
+}
+function coachOwnsGroup(c,gp){
+  if(!c||!gp)return false;
+  if(!coachInBranch(c,gp.branch))return false;   /* خارج فروعه المعتمدة */
+  if(gp.coachId===c.id)return true;              /* مسند للمجموعة مباشرة */
+  return coachOwnsCat(c,tdCat(gp.catId));        /* أو مسؤول عن الفئة كاملة */
+}
+/* الفئات التي يمسكها المدرب فعلياً — مباشرة أو عبر مجموعاتها
+   الاسم tdCoachCats لتفادي التعارض مع coachCats الخاصة بوحدة البطولات */
+function tdCoachCats(c){
+  c=c||tdMyCoach();
+  var t=TDX(),out=[],seen={};
+  t.cats.forEach(function(cat){if(coachOwnsCat(c,cat)&&!seen[cat.id]){seen[cat.id]=1;out.push(cat);}});
+  t.groups.forEach(function(gp){
+    if(!coachOwnsGroup(c,gp)||seen[gp.catId])return;
+    var cat=tdCat(gp.catId);if(cat){seen[cat.id]=1;out.push(cat);}
+  });
+  return out;
+}
+/* نطاق المدرب مرتباً حسب الفرع: [{branch,cats,groups,players}] */
+function coachScopeByBranch(c){
+  c=c||tdMyCoach();
+  if(!c)return [];
+  var gs=TDX().groups.filter(function(gp){return coachOwnsGroup(c,gp);});
+  var map={},order=[];
+  coachBranches(c).forEach(function(b){map[b]={branch:b,cats:[],groups:[],players:[]};order.push(b);});
+  gs.forEach(function(gp){
+    if(!map[gp.branch]){map[gp.branch]={branch:gp.branch,cats:[],groups:[],players:[]};order.push(gp.branch);}
+    var m=map[gp.branch];
+    m.groups.push(gp);
+    var cat=tdCat(gp.catId);
+    if(cat&&!m.cats.some(function(x){return x.id===cat.id;}))m.cats.push(cat);
+  });
+  TDX().players.forEach(function(p){
+    var gp=gs.find(function(x){return x.id===p.groupId;});
+    if(gp&&map[gp.branch])map[gp.branch].players.push(p);
+  });
+  return order.map(function(b){return map[b];}).filter(function(m){return m.groups.length>0;});
 }
 function tdHasDupCoaches(){
   var seen={},dup=false;
@@ -10306,7 +10359,10 @@ function tdScopeCoaches(){var r=tdRole(),cs=TDX().coaches;if(r==='admin')return 
 function tdCat(id){return TDX().cats.find(function(x){return x.id===id;});}
 function tdCatName(id){var c=tdCat(id);return c?c.name:'—';}
 function tdCatsOf(branch){return TDX().cats.filter(function(c){return !branch||c.branch===branch;});}
-function tdScopeCats(){var brs=tdScopeBranchNames();return TDX().cats.filter(function(c){return brs.indexOf(c.branch)>-1;});}
+function tdScopeCats(){
+  if(tdRole()==='coach')return tdCoachCats();
+  var brs=tdScopeBranchNames();return TDX().cats.filter(function(c){return brs.indexOf(c.branch)>-1;});
+}
 var TD_PAL=['#1565c0','#DD1D45','#16a34a','#d97706','#5b2d8f','#0891b2','#be185d','#4d7c0f','#0f766e','#7c3aed'];
 function tdPickColor(branch,skipId){
   var t=TDX(),all={},inBr={};
@@ -11392,6 +11448,15 @@ function rTDFix(){
   }
   el.innerHTML=h;hydrateIcons(el);
 }
+function tdPlayerCard(p){
+  var gg=tdGroup(p.groupId);
+  return '<div class="tdp-card" onclick="tdOpenPlayer(\''+p.id+'\')">'
+    +'<div class="tdp-av">'+(p.img?'<img src="'+p.img+'">':esc(ti(p.name)))+'</div>'
+    +'<div style="font-weight:700;font-size:13px">'+esc(p.name)+playerBadge(p)+'</div>'
+    +'<div style="font-size:10.5px;color:var(--gray);margin:2px 0 6px">'+esc(p.branch)+' • '+esc(gg?(gg.cat||tdCatName(gg.catId)):(p.cat||'—'))+'</div>'
+    +'<span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span>'
+  +'</div>';
+}
 function rTDPlayers(){
   var ps=tdScopePlayers(),gs=tdScopeGroups(),brs=tdScopeBranchNames(),m=tdMonthKey();
   if(TDPF.branch)ps=ps.filter(function(x){return x.branch===TDPF.branch;});
@@ -11449,17 +11514,25 @@ function rTDPlayers(){
   h+='<div class="frow" style="max-width:760px;margin-bottom:1.1rem;grid-template-columns:1fr 1fr 1fr"><div class="fg" style="margin-bottom:0"><label>الفرع</label>'+tdSel('tdpf-branch',brs,TDPF.branch,'كل الفروع')+'</div><div class="fg" style="margin-bottom:0"><label>الفئة</label>'+tdSel('tdpf-cat',tdScopeCats().filter(function(c){return !TDPF.branch||c.branch===TDPF.branch;}).map(function(c){return [c.id,c.name];}),TDPF.cat,'كل الفئات')+'</div><div class="fg" style="margin-bottom:0"><label>المجموعة</label>'+tdSel('tdpf-group',gs.filter(function(x){return !TDPF.cat||x.catId===TDPF.cat;}).map(function(x){return [x.id,x.name];}),TDPF.group,'كل المجموعات')+'</div></div>';
   /* الشبكة */
   if(!ps.length)h+=emptyBox('users','لا يوجد لاعبون',tdCanManage()?'أضف اللاعبين من زر «إضافة لاعب»':'');
+  else if(brs.length>1&&!TDPF.branch){
+    /* أكثر من فرع: نعرض كل فرع في قسم مستقل مع فئاته */
+    brs.forEach(function(b){
+      var bp=ps.filter(function(p){return p.branch===b;});
+      if(!bp.length)return;
+      var bcats=[];
+      bp.forEach(function(p){var gg=tdGroup(p.groupId),cn=gg?(gg.cat||tdCatName(gg.catId)):(p.cat||'');if(cn&&bcats.indexOf(cn)<0)bcats.push(cn);});
+      h+='<div class="tdbr-sec">'
+        +'<div class="tdbr-hd">'+ic('pin',13)+' <span class="tdbr-nm">'+esc(b)+'</span>'
+        +'<span class="tdbr-meta">'+bcats.join(' • ')+'</span>'
+        +'<span class="pg-chip">'+bp.length+' لاعب</span></div>';
+      h+='<div class="tg" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr))">';
+      bp.forEach(function(p){h+=tdPlayerCard(p);});
+      h+='</div></div>';
+    });
+  }
   else{
     h+='<div class="tg" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr))">';
-    ps.forEach(function(p){
-      var gg=tdGroup(p.groupId);
-      h+='<div class="tdp-card" onclick="tdOpenPlayer(\''+p.id+'\')">'
-        +'<div class="tdp-av">'+(p.img?'<img src="'+p.img+'">':esc(ti(p.name)))+'</div>'
-        +'<div style="font-weight:700;font-size:13px">'+esc(p.name)+playerBadge(p)+'</div>'
-        +'<div style="font-size:10.5px;color:var(--gray);margin:2px 0 6px">'+esc(p.branch)+' • '+esc(gg?(gg.cat||tdCatName(gg.catId)):(p.cat||'—'))+'</div>'
-        +'<span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span>'
-      +'</div>';
-    });
+    ps.forEach(function(p){h+=tdPlayerCard(p);});
     h+='</div>';
   }
   g('tdc-players').innerHTML=h;
