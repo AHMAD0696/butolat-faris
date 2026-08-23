@@ -10038,14 +10038,63 @@ function imgmRun(){
 /* ===== حالة التخزين — قسم واحد مبسّط =====
    يحل محل: قياس حجم البيانات + ضغط الصور + نقل الصور.
    الصور تُرفع تلقائياً، فلا حاجة لأزرار يدوية. */
-/* حالة التخزين: لا شريط ولا نِسَب — الصور تُرفع تلقائياً ورفعها بلا إنترنت ممنوع،
-   فلم يبقَ قرار يتخذه المستخدم. نعرض سطراً واحداً فقط أثناء بقاء صور غير مرفوعة. */
+/* حالة التخزين + فحص الصور الذاتي.
+   الفحص يجري تلقائياً عند فتح الصفحة ويعرض النتيجة والعلاج بالعربي — بلا Console. */
 function admStorageHTML(){
   if(CU.role!=='admin'||!FA.enabled)return '';
+  var h='';
   var pend=imgmScan();
-  if(!pend.count)return '';                  /* كل شيء مرفوع — لا نعرض شيئاً */
-  return '<div class="ce-note">'+ic('image',13)
-    +'<div>'+pend.count+' صورة قيد الرفع للتخزين — تتم تلقائياً بعد الدخول، لا حاجة لأي إجراء منك.</div></div>';
+  if(pend.count)h+='<div class="ce-note">'+ic('image',13)
+    +'<div>'+pend.count+' صورة قيد الرفع للتخزين — تتم تلقائياً، لا حاجة لأي إجراء منك.</div></div><div style="height:.8rem"></div>';
+  h+='<div class="sec-t" style="margin-bottom:.8rem"><div class="bar"></div><h2 style="font-size:14px">فحص عرض الصور</h2></div>';
+  h+='<div id="imgdx" class="ce-note">'+ic('info',13)+'<div>جارٍ الفحص…</div></div>';
+  setTimeout(imgDxRun,300);
+  return h;
+}
+/* يجمع أول رابط تخزين من البيانات ويختبره فعلياً ثم يعرض الحكم والعلاج */
+function imgDxFirstUrl(){
+  var found=null;
+  (function scan(o){
+    if(found||!o||typeof o!=='object')return;
+    for(var k in o){
+      var v=o[k];
+      if(typeof v==='string'&&v.indexOf('/storage/v1/object/')>-1){found=v;return;}
+      if(v&&typeof v==='object')scan(v);
+      if(found)return;
+    }
+  })(DB);
+  return found;
+}
+function imgDxShow(kind,html){
+  var el=g('imgdx');if(!el)return;
+  var colors={ok:'rgba(22,163,74,.07)|rgba(22,163,74,.3)',bad:'rgba(221,29,69,.06)|rgba(221,29,69,.35)',warn:'rgba(217,119,6,.07)|rgba(217,119,6,.35)'};
+  var c=(colors[kind]||colors.warn).split('|');
+  el.style.background=c[0];el.style.borderColor=c[1];
+  el.innerHTML=ic(kind==='ok'?'check':'info',13)+'<div>'+html+'</div>';
+}
+function imgDxRun(){
+  var u=imgDxFirstUrl();
+  if(!u){imgDxShow('ok','لا توجد صور في التخزين السحابي بعد — لا شيء يُفحص.');return;}
+  fetch(u).then(function(r){
+    if(r.status===200){
+      imgDxShow('ok','<b>التخزين يعمل ✅</b> الرابط المفحوص فُتح بنجاح. إن بقيت صورة لا تظهر فحدّث الصفحة (Ctrl+F5) لمسح النسخة القديمة.');
+      return;
+    }
+    return r.text().then(function(body){
+      var bucketMissing=/Bucket not found/i.test(body);
+      if(bucketMissing){
+        imgDxShow('bad','<b>الـ bucket غير موجود.</b> في Supabase → Storage أنشئ bucket باسم <b dir="ltr">images</b> وفعّل خيار <b>Public bucket</b>. الصور الحالية روابطها ميتة وسيلزم إعادة رفعها.');
+      }else if(r.status===400||r.status===404){
+        imgDxShow('bad','<b>الملف غير موجود في التخزين (خطأ '+r.status+').</b> الرابط محفوظ لكن الملف حُذف أو لم يكتمل رفعه. أعد اختيار الصور المتأثرة من نماذج التعديل وستُرفع من جديد.');
+      }else if(r.status===403){
+        imgDxShow('bad','<b>القراءة ممنوعة (خطأ 403).</b> في Supabase → Storage → bucket <b dir="ltr">images</b> → ⋮ → Edit bucket → فعّل <b>Public bucket</b> → Save، ثم حدّث هذه الصفحة.');
+      }else{
+        imgDxShow('warn','خطأ غير متوقع ('+r.status+'): <span dir="ltr" style="font-size:10px">'+esc(body.slice(0,120))+'</span>');
+      }
+    });
+  }).catch(function(e){
+    imgDxShow('warn','تعذّر الاتصال بالتخزين نهائياً — تحقق من الإنترنت. <span dir="ltr" style="font-size:10px">'+esc(e&&e.message||'')+'</span>');
+  });
 }
 function admImgmHTML(){
   if(CU.role!=='admin')return '';
@@ -15161,6 +15210,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-imgfix</div>
 </div>
 </body>
 </html>
