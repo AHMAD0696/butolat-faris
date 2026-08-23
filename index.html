@@ -14967,7 +14967,16 @@ function lbxOpen(src,cap){
       FA.signedUrl(target).then(function(u){
         IMGSIGN.cache[target]=u;im.src=u;g('lbx-cap').textContent=cap||'';
       }).catch(function(){
-        g('lbx-cap').textContent=(cap||'')+' — تعذّر عرض الصورة';
+        /* حتى التوقيع رُفض — نفحص الرابط ونعرض السبب الفعلي على الشاشة */
+        fetch(target).then(function(r){
+          var msg;
+          if(r.status===400||r.status===404)msg='الملف غير موجود في التخزين (خطأ '+r.status+')';
+          else if(r.status===403)msg='الوصول للتخزين ممنوع — يجب جعل الـ bucket عاماً (خطأ 403)';
+          else msg='تعذّر عرض الصورة (خطأ '+r.status+')';
+          g('lbx-cap').textContent=(cap||'')+' — '+msg;
+        }).catch(function(){
+          g('lbx-cap').textContent=(cap||'')+' — تعذّر الاتصال بالتخزين';
+        });
       });
       return;
     }
@@ -14990,6 +14999,34 @@ function lbxClose(e){
    إن كان الـ bucket خاصاً فالرابط العام لا يعمل؛ نستبدله برابط موقّع تلقائياً.
    نتذكّر ما وُقّع في هذه الجلسة حتى لا نكرر الطلب. */
 var IMGSIGN={cache:{},busy:{}};
+/* تشخيص: اكتب imgDiag() في الـ Console لمعرفة سبب فشل الصور بالضبط */
+function imgDiag(){
+  var t=imgTargets?imgTargets():[];
+  var urls=[];
+  (function scan(o,path){
+    if(!o||typeof o!=='object')return;
+    Object.keys(o).forEach(function(k){
+      var v=o[k];
+      if(typeof v==='string'&&v.indexOf('/storage/v1/object/')>-1&&urls.length<3)urls.push(v);
+      else if(typeof v==='object')scan(v,path+'.'+k);
+    });
+  })(DB,'DB');
+  if(!urls.length){console.log('%cلا توجد روابط تخزين في البيانات إطلاقاً — الصور إما base64 أو فارغة','color:orange;font-weight:bold');return;}
+  console.log('فحص '+urls.length+' رابط...');
+  urls.forEach(function(u){
+    fetch(u,{method:'GET'}).then(function(r){
+      var st=r.status;
+      if(st===200){console.log('%c✓ 200 — الرابط يعمل. المشكلة في العرض وليس التخزين','color:#16a34a',u.slice(-50));}
+      else if(st===400||st===404){console.log('%c✗ '+st+' — الملف غير موجود: الرفع فشل وحُفظ رابط ميت','color:red',u.slice(-50));}
+      else if(st===403){console.log('%c✗ 403 — الـ bucket خاص وسياسات القراءة تمنع الوصول','color:red',u.slice(-50));}
+      else console.log('✗ '+st,u.slice(-50));
+      return r.text().then(function(b){if(st!==200)console.log('   التفاصيل:',b.slice(0,140));});
+    }).catch(function(e){console.log('%c✗ فشل الاتصال نهائياً: '+e.message,'color:red',u.slice(-50));});
+    FA.signedUrl(u).then(function(su){
+      return fetch(su).then(function(r2){console.log((r2.status===200?'%c✓':'%c✗')+' الرابط الموقّع: '+r2.status,r2.status===200?'color:#16a34a':'color:red');});
+    }).catch(function(e){console.log('%c✗ التوقيع نفسه رُفض: '+(e&&e.message),'color:red');});
+  });
+}
 function imgRescue(el){
   if(!el||el.dataset.rescued==='1')return;
   var src=el.getAttribute('src')||'';
