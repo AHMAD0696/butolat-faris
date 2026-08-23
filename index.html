@@ -3319,8 +3319,17 @@ function hydrateIcons(root){(root||document).querySelectorAll('[data-ic]').forEa
 /* ================= STORE (isolated — swap with Supabase later) ================= */
 var Store={
   KEY:'faris_tour_v2',
-  load:function(){try{var r=localStorage.getItem(this.KEY);if(r)return JSON.parse(r);}catch(e){}return null;},
-  save:function(db){try{localStorage.setItem(this.KEY,JSON.stringify(db));return true;}catch(e){console.warn('storage full',e);return false;}}
+  cloudOnly:function(){var c=window.FA_CONFIG||{};return !!(c.SUPABASE_URL&&c.SUPABASE_ANON_KEY);},
+  /* السحابة مصدر الحقيقة الوحيد: لا قراءة ولا كتابة محلية للبيانات.
+     المحلي يعمل فقط إن لم تكن السحابة مهيأة أصلاً (نسخة تجريبية بلا إعدادات). */
+  load:function(){
+    if(this.cloudOnly()){try{localStorage.removeItem(this.KEY);}catch(e){}return null;}
+    try{var r=localStorage.getItem(this.KEY);if(r)return JSON.parse(r);}catch(e){}return null;
+  },
+  save:function(db){
+    if(this.cloudOnly())return true;   /* لا كتابة محلية — الحفظ سحابي حصراً عبر cloudQueue */
+    try{localStorage.setItem(this.KEY,JSON.stringify(db));return true;}catch(e){console.warn('storage full',e);return false;}
+  }
 };
 /* ===== تنبيه مرئي خفيف يختفي تلقائياً (بديل console الصامت) ===== */
 function svWarn(msg){
@@ -3709,22 +3718,62 @@ function closeStoryView(){
 var DB=migrate(Store.load())||defDB();
 function sv(){
   syncGlobalTeams();
-  /* امتلاء الذاكرة المحلية لا يعني ضياع البيانات ما دامت السحابة تعمل —
-     ننبّه فقط عند انعدام الحفظ في الجهتين معاً. */
-  if(!Store.save(DB)&&!(FA.enabled&&FA.token))
-    svWarn('تعذّر الحفظ على هذا الجهاز — تحقق من الاتصال');
+  Store.save(DB);   /* في وضع السحابة: لا يفعل شيئاً — الحفظ عبر cloudQueue حصراً */
   if(typeof tdSyncSchedule==='function')tdSyncSchedule();
-  if(FA.enabled&&FA.token&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1){
-    if(FA._timer)clearTimeout(FA._timer);
-    FA._timer=setTimeout(function(){
-      FA.saveState(cloudState(DB)).catch(function(e){
-        console.warn('cloud save failed',e);
-        svWarn('تعذّر حفظ آخر تعديل في السحابة — تحقق من الاتصال ثم كرّر التعديل');
-      });
-    },600);
-  }
+  if(FA.enabled&&FA.token&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1)cloudQueue();
   /* الكتابة المزدوجة — معزولة تماماً عن الحفظ الأساسي أعلاه */
   try{dualWrite();}catch(e){console.warn('[FA] الكتابة المزدوجة',e&&e.message);}
+}
+
+/* ===== المزامنة الصامتة =====
+   يفشل الحفظ السحابي؟ نعيد المحاولة تلقائياً بتباعد متدرّج حتى ينجح.
+   البيانات محفوظة على الجهاز طوال الوقت، فلا يُطلب من المستخدم شيء أبداً.
+   عند عودة الاتصال تُعاد المحاولة فوراً. مؤشر صغير هادئ يظهر فقط عند انقطاع مطوّل. */
+var CQ={timer:null,fails:0,dirty:false};
+function cloudQueue(delay){
+  /* صمام أمان: في وضع السحابة الحصري لا نحفظ أبداً قبل تحميل ناجح لبياناتها —
+     وإلا استُبدلت القاعدة الحقيقية بحالة فارغة. نعيد محاولة التحميل بدلاً من الحفظ. */
+  if(Store.cloudOnly()&&!FA.loadOK){
+    console.warn('[FA] الحفظ محجوب: بيانات السحابة لم تُحمَّل بعد — إعادة محاولة التحميل');
+    cloudChip(true);
+    FA.loadState().then(function(st){
+      if(st&&st.tournaments){DB=migrate(st)||DB;cloudChip(false);if(typeof rAllSoft==='function')rAllSoft();}
+    }).catch(function(){setTimeout(function(){cloudQueue(0);},8000);});
+    return;
+  }
+  CQ.dirty=true;
+  if(CQ.timer)clearTimeout(CQ.timer);
+  CQ.timer=setTimeout(function(){
+    FA.saveState(cloudState(DB)).then(function(){
+      CQ.fails=0;CQ.dirty=false;cloudChip(false);
+    }).catch(function(e){
+      CQ.fails++;
+      console.warn('[FA] مزامنة مؤجلة (محاولة '+CQ.fails+')',e&&e.message);
+      if(CQ.fails>=3)cloudChip(true);           /* لا نزعج إلا بعد فشل متكرر */
+      cloudQueue(Math.min(60000,4000*CQ.fails)); /* 4ث، 8ث، 12ث… حتى دقيقة */
+    });
+  },delay==null?600:delay);
+}
+window.addEventListener('online',function(){if(CQ.fails||CQ.dirty)cloudQueue(300);});
+/* بلا نسخة محلية: نمنع إغلاق الصفحة وفيها تعديل لم يصل للسحابة بعد */
+window.addEventListener('beforeunload',function(e){
+  if(CQ.dirty&&Store.cloudOnly()){
+    e.preventDefault();
+    e.returnValue='توجد تعديلات لم تُحفظ في قاعدة البيانات بعد';
+    /* محاولة أخيرة فورية */
+    try{cloudQueue(0);}catch(_){}
+    return e.returnValue;
+  }
+});
+function cloudChip(show){
+  var el=document.getElementById('cq-chip');
+  if(!show){if(el)el.remove();return;}
+  if(el)return;
+  el=document.createElement('div');
+  el.id='cq-chip';
+  el.style.cssText='position:fixed;bottom:14px;inset-inline-start:14px;z-index:99997;background:rgba(30,35,60,.92);color:#cbd5e1;padding:7px 14px;border-radius:999px;font:600 11px/1.4 inherit;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:7px;backdrop-filter:blur(4px)';
+  el.innerHTML='<span style="width:7px;height:7px;border-radius:50%;background:#f59e0b;display:inline-block"></span> بانتظار الاتصال للمزامنة — بياناتك محفوظة على الجهاز';
+  document.body.appendChild(el);
 }
 
 /* ================= المرحلة ٣: الكتابة المزدوجة =================
@@ -3826,13 +3875,6 @@ function fillSel(id,arr,ph){var e=g(id);if(e)e.innerHTML=opts(arr,ph);}
 /* image compress → dataURL (max 300px, jpeg .82) */
 function prvImg(inp,pref){
   var f=inp.files&&inp.files[0];if(!f)return;
-  /* الصور تُرفع للتخزين السحابي فقط — بلا إنترنت لا نحفظها داخل القاعدة
-     حتى لا تمتلئ مساحة الجهاز كما حدث سابقاً */
-  if(FA.enabled&&!navigator.onLine){
-    inp.value='';
-    alert('رفع الصور يحتاج اتصالاً بالإنترنت.\n\nبقية التعديلات تعمل عادي بدون اتصال — الصور فقط هي التي تحتاج اتصالاً.');
-    return;
-  }
   var img=new Image(),rd=new FileReader();
   rd.onload=function(){img.onload=function(){
     var mx=900,w=img.width,h=img.height,k=Math.min(1,mx/Math.max(w,h));
@@ -3857,13 +3899,8 @@ function toStorage(dataUrl,folder,pref){
     if(el.value===dataUrl)el.value=url;          /* لم يغيّرها المستخدم أثناء الرفع */
     if(prev)prev.innerHTML='<img src="'+url+'">';
   }).catch(function(e){
-    console.warn('[FA] تعذّر رفع الصورة',e&&e.message);
-    if(el.value===dataUrl){                       /* تراجع: لا نُبقيها داخل القاعدة */
-      el.value='';
-      if(prev)prev.innerHTML=ic('image',22);
-      var rm=g(pref+'-rm');if(rm)rm.style.display='none';
-      alert('تعذّر رفع الصورة. تأكد من الاتصال وحاول مرة أخرى.');
-    }
+    /* بصمت: تبقى الصورة محفوظة محلياً والرافع الخلفي يرفعها عند توفر الاتصال */
+    console.warn('[FA] تأجّل رفع الصورة — سيتكفل بها الرافع الخلفي',e&&e.message);
   }).then(function(){
     if(prev)prev.classList.remove('uping');
   });
@@ -5273,6 +5310,10 @@ function setNavLogo(){
 }
 function enterApp(){
   setTimeout(imgmAuto,8000);
+  if(!window._imgaIv){
+    window._imgaIv=setInterval(imgmAuto,60000);
+    window.addEventListener('online',function(){setTimeout(imgmAuto,1500);});
+  }
   g('nav-tn').textContent=tName(AT);
   setNavLogo();
   g('chip-nm').textContent=CU.name;g('chip-rl').textContent=RL[CU.role];
@@ -9964,13 +10005,15 @@ function imgmScan(){
 /* ===== النقل التلقائي الصامت =====
    بعد الدخول بقليل: أي صورة ما زالت base64 داخل القاعدة تُرفع للتخزين بهدوء.
    نفس ضمانات النقل اليدوي: الاستبدال بعد نجاح الرفع فقط، والفاشلة تبقى كما هي. */
-var IMGA={busy:false,doneThisSession:false};
+var IMGA={busy:false};
 function imgmAuto(){
-  if(IMGA.busy||IMGA.doneThisSession)return;
-  if(!FA.enabled||!FA.token||!CU||CU.role!=='admin')return;
-  if(IMGM.busy)return;
+  if(IMGA.busy)return;
+  if(!FA.enabled||!FA.token||!CU)return;
+  if(['admin','organizer','admin-team','coach'].indexOf(CU.role)<0)return;
+  if(IMGM&&IMGM.busy)return;
+  if(!navigator.onLine)return;
   var list=imgTargets().filter(function(x){return String(x.obj[x.key]||'').indexOf('data:image')===0;});
-  if(!list.length){IMGA.doneThisSession=true;return;}
+  if(!list.length)return;
   IMGA.busy=true;
   var i=0,ok=0,fail=0,saved=0;
   function folderOf(path){
@@ -9982,7 +10025,7 @@ function imgmAuto(){
     return 'misc';
   }
   function finish(){
-    IMGA.busy=false;IMGA.doneThisSession=true;
+    IMGA.busy=false;
     if(ok){
       sv();
       logA('نقل تلقائي للصور — نُقل '+ok+' ووُفّر '+fmtKB(saved),'image','#16a34a');
@@ -15214,6 +15257,8 @@ function faWarnBanner(){
   }catch(_){}
 }
 function faBoot(){
+  /* وضع السحابة فقط: مسح بيانات محلية متبقية من النسخ السابقة لتحرير مساحة الجهاز */
+  if(Store.cloudOnly()){try{localStorage.removeItem(Store.KEY);}catch(e){}}
   pwaInit();
   hydrateIcons();
   welShow();
@@ -15284,7 +15329,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-misscount</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-cloudonly</div>
 </div>
 </body>
 </html>
