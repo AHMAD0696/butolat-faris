@@ -10089,6 +10089,10 @@ function imgDxRun(){
       imgDxShow('bad','<b>صور الهوية محفوظة على Google Drive والملفات غير متاحة.</b> الحل: افتح المجلد في Drive → مشاركة → غيّرها إلى <b>«أي شخص لديه الرابط»</b>. أو أعد اختيار الصور من نماذج التعديل لتُرفع للتخزين السحابي الجديد.');
     };
     probe.src=tries[0];
+    setTimeout(function(){
+      if(probe.complete&&probe.naturalWidth>0)return;
+      imgDxShow('bad','<b>الاتصال بـ Google Drive عالق — الأرجح أن هذه الشبكة تحجبه.</b> افتح التطبيق من الجوال ببيانات الهاتف: إن ظهرت الصور هناك فالمشكلة حجب شبكتك الحالية لـ Drive، والحل الدائم إعادة اختيار صور الهوية من نماذج التعديل لتُرفع للتخزين السحابي (لا يُحجب).');
+    },8000);
     return;
   }
   fetch(u).then(function(r){
@@ -15027,7 +15031,22 @@ function lbxOpen(src,cap){
   im.setAttribute('data-orig',target);
   im.referrerPolicy='no-referrer';
   im.dataset.dstep='0';im.dataset.rescued='';
-  im.onload=function(){if(g('lbx-cap').textContent.indexOf('جارٍ')>-1)g('lbx-cap').textContent=cap||'';};
+  if(window._lbxWd)clearTimeout(window._lbxWd);
+  var isDrive=/drive\.google\.com|googleusercontent\.com/.test(target);
+  var dId=(target.match(/(?:thumbnail\?id=|\/d\/|uc\?export=view&id=)([A-Za-z0-9_-]+)/)||[])[1]||'';
+  /* حارس المهلة: الطلب المحجوب شبكياً يعلق بلا خطأ — نكشف ذلك بعد 8 ثوانٍ */
+  window._lbxWd=setTimeout(function(){
+    if(im.complete&&im.naturalWidth>0)return;   /* حُمّلت فعلاً */
+    var msg=isDrive
+      ?'الاتصال بـ Google Drive عالق — الأرجح أن شبكتك تحجبه. جرّب من الجوال ببيانات الهاتف.'
+      :'تحميل الصورة عالق — تحقق من الاتصال.';
+    g('lbx-cap').innerHTML=esc(cap||'')+' — '+esc(msg)
+      +(dId?' <a href="https://drive.google.com/file/d/'+dId+'/view" target="_blank" rel="noopener" style="color:#7db3ff;text-decoration:underline">فتح في Drive</a>':'');
+  },8000);
+  im.onload=function(){
+    if(window._lbxWd)clearTimeout(window._lbxWd);
+    if(g('lbx-cap').textContent.indexOf('جارٍ')>-1)g('lbx-cap').textContent=cap||'';
+  };
   im.onerror=function(){
     if(/drive\.google\.com|googleusercontent\.com/.test(im.src)){
       var st=im.dataset.dstep||'0';
@@ -15063,6 +15082,7 @@ function lbxOpen(src,cap){
 }
 function lbxClose(e){
   if(e&&e.target&&e.target.id==='lbx-img')return;   /* الضغط على الصورة = تكبير لا إغلاق */
+  if(window._lbxWd)clearTimeout(window._lbxWd);
   var b=g('lbx');if(!b)return;
   b.classList.remove('on');
   g('lbx-img').src='';
@@ -15250,7 +15270,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-drivefix</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-watchdog</div>
 </div>
 </body>
 </html>
