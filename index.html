@@ -8097,7 +8097,7 @@ function renderApList(){
   var el=g('ap-list');if(!el)return;
   var list=managePlayers();
   var pc=g('pm-count');if(pc)pc.textContent=list.length;
-  var nMiss=0;list.forEach(function(x){if(issuesPlayer(x.p).length)nMiss++;});
+  var nMiss=0;list.forEach(function(x){if(issuesTPlayer(x.p).length)nMiss++;});
   var missChip=nMiss
     ?'<span class="miss-chip" title="لاعبون ببيانات ناقصة">'+ic('info',11)+' ناقص البيانات: '+nMiss+'</span>'
     :'<span class="miss-chip ok" title="جميع البيانات مكتملة">'+ic('check',11)+' البيانات مكتملة</span>';
@@ -9800,7 +9800,7 @@ function issuesCoach(c){
 }
 /* عدّاد اللاعبين ناقصي البيانات — يُعرض بجانب عنوان القائمة */
 function missChipOf(players){
-  var n=0;(players||[]).forEach(function(p){if(issuesPlayer(p).length)n++;});
+  var n=0;(players||[]).forEach(function(p){if(issuesTPlayer(p).length)n++;});
   if(!n)return '<span class="miss-chip ok">'+ic('check',11)+' مكتملة</span>';
   return '<span class="miss-chip">'+ic('info',11)+' ناقص: '+n+'</span>';
 }
@@ -15329,7 +15329,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-cloudonly</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-countfix</div>
 </div>
 </body>
 </html>
