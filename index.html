@@ -10058,7 +10058,7 @@ function imgDxFirstUrl(){
     if(found||!o||typeof o!=='object')return;
     for(var k in o){
       var v=o[k];
-      if(typeof v==='string'&&v.indexOf('/storage/v1/object/')>-1){found=v;return;}
+      if(typeof v==='string'&&(v.indexOf('/storage/v1/object/')>-1||v.indexOf('drive.google.com')>-1||v.indexOf('googleusercontent.com')>-1)){found=v;return;}
       if(v&&typeof v==='object')scan(v);
       if(found)return;
     }
@@ -10074,7 +10074,23 @@ function imgDxShow(kind,html){
 }
 function imgDxRun(){
   var u=imgDxFirstUrl();
-  if(!u){imgDxShow('ok','لا توجد صور في التخزين السحابي بعد — لا شيء يُفحص.');return;}
+  if(!u){imgDxShow('ok','لا توجد صور خارجية في البيانات — لا شيء يُفحص.');return;}
+  /* روابط Google Drive: نختبرها بعنصر صورة (fetch يُحجب بسياسات جوجل) */
+  if(/drive\.google\.com|googleusercontent\.com/.test(u)){
+    var idm=u.match(/(?:thumbnail\?id=|\/d\/|uc\?export=view&id=)([A-Za-z0-9_-]+)/);
+    var id=idm?idm[1]:'';
+    var probe=new Image();probe.referrerPolicy='no-referrer';
+    var tries=['https://drive.google.com/thumbnail?id='+id+'&sz=w400','https://lh3.googleusercontent.com/d/'+id+'=w400'];
+    var ti=0;
+    probe.onload=function(){imgDxShow('ok','<b>صور Google Drive تعمل ✅</b> إن بقيت صورة لا تظهر فحدّث الصفحة (Ctrl+F5).');};
+    probe.onerror=function(){
+      ti++;
+      if(ti<tries.length){probe.src=tries[ti];return;}
+      imgDxShow('bad','<b>صور الهوية محفوظة على Google Drive والملفات غير متاحة.</b> الحل: افتح المجلد في Drive → مشاركة → غيّرها إلى <b>«أي شخص لديه الرابط»</b>. أو أعد اختيار الصور من نماذج التعديل لتُرفع للتخزين السحابي الجديد.');
+    };
+    probe.src=tries[0];
+    return;
+  }
   fetch(u).then(function(r){
     if(r.status===200){
       imgDxShow('ok','<b>التخزين يعمل ✅</b> الرابط المفحوص فُتح بنجاح. إن بقيت صورة لا تظهر فحدّث الصفحة (Ctrl+F5) لمسح النسخة القديمة.');
@@ -15009,7 +15025,16 @@ function lbxOpen(src,cap){
   im.classList.remove('zi');
   var target=driveImg(src);
   im.setAttribute('data-orig',target);
+  im.referrerPolicy='no-referrer';
+  im.dataset.dstep='0';im.dataset.rescued='';
+  im.onload=function(){if(g('lbx-cap').textContent.indexOf('جارٍ')>-1)g('lbx-cap').textContent=cap||'';};
   im.onerror=function(){
+    if(/drive\.google\.com|googleusercontent\.com/.test(im.src)){
+      var st=im.dataset.dstep||'0';
+      if(st!=='2'){g('lbx-cap').textContent=(cap||'')+' — جارٍ التحميل…';imgRescue(im);return;}
+      g('lbx-cap').textContent=(cap||'')+' — ملف Google Drive غير متاح: افتح الملف في Drive واجعل المشاركة «أي شخص لديه الرابط»';
+      return;
+    }
     if(IMGSIGN.cache[target]){im.src=IMGSIGN.cache[target];return;}
     if(String(target).indexOf('/storage/v1/object/')>-1){
       g('lbx-cap').textContent=(cap||'')+' — جارٍ التحميل…';
@@ -15077,9 +15102,21 @@ function imgDiag(){
   });
 }
 function imgRescue(el){
-  if(!el||el.dataset.rescued==='1')return;
+  if(!el)return;
   var src=el.getAttribute('src')||'';
-  if(!src||src.indexOf('/storage/v1/object/')<0)return;   /* ليست صورة تخزين */
+  if(!src)return;
+  /* ---- صور Google Drive: جوجل يرفض أحياناً بسبب Referer أو نقطة النهاية ----
+     نجرب بالترتيب: thumbnail ← lh3.googleusercontent ← uc?export=view */
+  var dm=src.match(/(?:drive\.google\.com\/thumbnail\?id=|lh3\.googleusercontent\.com\/d\/|drive\.google\.com\/uc\?export=view&id=)([A-Za-z0-9_-]+)/);
+  if(dm){
+    el.referrerPolicy='no-referrer';
+    var st=el.dataset.dstep||'0';
+    if(st==='0'){el.dataset.dstep='1';el.src='https://lh3.googleusercontent.com/d/'+dm[1]+'=w1600';return;}
+    if(st==='1'){el.dataset.dstep='2';el.src='https://drive.google.com/uc?export=view&id='+dm[1];return;}
+    return;   /* استُنفدت البدائل — الملف نفسه غير متاح للمشاركة */
+  }
+  if(el.dataset.rescued==='1')return;
+  if(src.indexOf('/storage/v1/object/')<0)return;   /* ليست صورة تخزين */
   el.dataset.rescued='1';
   if(IMGSIGN.cache[src]){el.src=IMGSIGN.cache[src];return;}
   if(IMGSIGN.busy[src])return;
@@ -15102,6 +15139,9 @@ document.addEventListener('error',function(e){
   if(t&&t.tagName==='IMG')imgRescue(t);
 },true);
 function lbxMark(root){
+  /* ضبط سياسة الإحالة لصور Drive قبل فشلها — جوجل يرفض بعض الإحالات */
+  var gi=(root||document).querySelectorAll('img[src*="drive.google.com"],img[src*="googleusercontent.com"]');
+  for(var j=0;j<gi.length;j++){if(gi[j].referrerPolicy!=='no-referrer')gi[j].referrerPolicy='no-referrer';}
   var list=(root||document).querySelectorAll('.img-prev');
   for(var i=0;i<list.length;i++){
     var el=list[i],im=el.querySelector('img');
@@ -15210,7 +15250,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-imgfix</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-drivefix</div>
 </div>
 </body>
 </html>
