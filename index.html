@@ -175,6 +175,10 @@ svg{display:block;flex-shrink:0}
 .dgn.ok{color:#16a34a}
 .dgn.warn{color:#d97706}
 .dgn.bad{color:var(--red)}
+.miss-chip{display:inline-flex;align-items:center;gap:4px;background:rgba(217,119,6,.12);
+  border:1px solid rgba(217,119,6,.4);color:#f59e0b;font-size:10.5px;font-weight:700;
+  padding:.18rem .55rem;border-radius:999px;vertical-align:middle}
+.miss-chip.ok{background:rgba(22,163,74,.1);border-color:rgba(22,163,74,.35);color:#16a34a}
 .dgmini{display:inline-block;width:52px;height:5px;border-radius:99px;background:var(--bg);overflow:hidden;vertical-align:middle;margin-inline-end:5px}
 .dgmini i{display:block;height:100%;background:var(--navy);border-radius:99px}
 .wbadge{display:inline-flex;align-items:center;justify-content:center;position:relative;
@@ -4854,7 +4858,7 @@ function renderTM(){
   if(!cos.length)h+=emptyBox('whistle','لا يوجد مدربون');
   else h+='<div class="at-wrap"><table class="at"><thead><tr><th>الاسم</th><th>الجوال</th><th>الحساب</th><th>الفئات</th></tr></thead><tbody>'+cos.map(function(c){var his=(t.categories||[]).filter(function(x){return x.coach===c.name;}).map(function(x){return esc(x.name);}).join('، ')||'—';return '<tr><td><strong>'+esc(c.name)+'</strong></td><td style="direction:ltr">'+esc(c.phone?phoneDisp(c.phone):'—')+'</td><td>'+(c.account?'<span class="badge approved">له حساب</span>':'<span class="badge pending">بدون</span>')+'</td><td>'+his+'</td></tr>';}).join('')+'</tbody></table></div>';
   /* players full */
-  h+='<div class="sec-t" style="margin:1.5rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">اللاعبون ('+(t.players||[]).length+')</h2></div>';
+  h+='<div class="sec-t" style="margin:1.5rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">اللاعبون ('+(t.players||[]).length+') '+missChipOf(t.players)+'</h2></div>';
   var ps=t.players||[];
   if(!ps.length)h+=emptyBox('user','لا يوجد لاعبون');
   else{
@@ -8052,7 +8056,11 @@ function renderApList(){
   var el=g('ap-list');if(!el)return;
   var list=managePlayers();
   var pc=g('pm-count');if(pc)pc.textContent=list.length;
-  var head='<div class="acl-title" style="display:flex;justify-content:space-between;align-items:center;gap:.5rem"><span>'+ic('users',14)+' اللاعبون ('+list.length+')</span>'+(list.length?'<button class="btn btn-n btn-sm" onclick="exportPlayers()">'+ic('doc',12)+' تصدير Excel</button>':'')+'</div>';
+  var nMiss=0;list.forEach(function(x){if(issuesPlayer(x.p).length)nMiss++;});
+  var missChip=nMiss
+    ?'<span class="miss-chip" title="لاعبون ببيانات ناقصة">'+ic('info',11)+' ناقص البيانات: '+nMiss+'</span>'
+    :'<span class="miss-chip ok" title="جميع البيانات مكتملة">'+ic('check',11)+' البيانات مكتملة</span>';
+  var head='<div class="acl-title" style="display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:.5rem">'+ic('users',14)+' اللاعبون ('+list.length+') '+missChip+'</span>'+(list.length?'<button class="btn btn-n btn-sm" onclick="exportPlayers()">'+ic('doc',12)+' تصدير Excel</button>':'')+'</div>';
   if(!list.length){el.innerHTML=head+emptyBox('user','لا يوجد لاعبون بعد','أضِف لاعباً من النموذج المجاور');hydrateIcons(el);return;}
   var byCat={};list.forEach(function(x){var k=x.p.cat||'بدون فئة';(byCat[k]=byCat[k]||[]).push(x);});
   var h=head;
@@ -8573,7 +8581,7 @@ function admTeamInfoHTML(){
   if(!cats.length)h2+=emptyBox('cal','لا توجد فئات');
   else h2+='<div>'+cats.map(function(c){var n=(t.players||[]).filter(function(p){return p.cat===c.name;}).length;return '<span class="cat-pill" style="cursor:default">'+ic('cal',12)+' '+esc(c.name)+' — '+esc(c.coach||'بدون مدرب')+' ('+n+' لاعب)</span>';}).join('')+'</div>';
   /* players full details */
-  h2+='<div class="sec-t" style="margin:1.5rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">اللاعبون ('+(t.players||[]).length+')</h2></div>';
+  h2+='<div class="sec-t" style="margin:1.5rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">اللاعبون ('+(t.players||[]).length+') '+missChipOf(t.players)+'</h2></div>';
   var ps=t.players||[];
   if(!ps.length)h2+=emptyBox('user','لا يوجد لاعبون');
   else{
@@ -9748,6 +9756,12 @@ function issuesCoach(c){
   else if(phoneFake(c.phone))out.push('رقم الجوال يبدو وهمياً');
   if(!coachBranches(c).length)out.push('غير مسند لفرع');
   return out;
+}
+/* عدّاد اللاعبين ناقصي البيانات — يُعرض بجانب عنوان القائمة */
+function missChipOf(players){
+  var n=0;(players||[]).forEach(function(p){if(issuesPlayer(p).length)n++;});
+  if(!n)return '<span class="miss-chip ok">'+ic('check',11)+' مكتملة</span>';
+  return '<span class="miss-chip">'+ic('info',11)+' ناقص: '+n+'</span>';
 }
 /* شارة التنبيه — تُعرض بجانب الاسم ولا تحجب شيئاً */
 function warnBadge(list,label,crit){
@@ -15270,7 +15284,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-watchdog</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-misscount</div>
 </div>
 </body>
 </html>
