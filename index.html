@@ -172,6 +172,9 @@ svg{display:block;flex-shrink:0}
 .dgbar.warn .dgt i{background:#d97706}
 .dgbar.bad .dgt i{background:var(--red)}
 .dgn{font-size:11px;color:var(--gray);margin-top:.45rem;font-weight:600}
+.dgn.ok{color:#16a34a}
+.dgn.warn{color:#d97706}
+.dgn.bad{color:var(--red)}
 .dgmini{display:inline-block;width:52px;height:5px;border-radius:99px;background:var(--bg);overflow:hidden;vertical-align:middle;margin-inline-end:5px}
 .dgmini i{display:block;height:100%;background:var(--navy);border-radius:99px}
 .wbadge{display:inline-flex;align-items:center;justify-content:center;position:relative;
@@ -3802,6 +3805,13 @@ function fillSel(id,arr,ph){var e=g(id);if(e)e.innerHTML=opts(arr,ph);}
 /* image compress → dataURL (max 300px, jpeg .82) */
 function prvImg(inp,pref){
   var f=inp.files&&inp.files[0];if(!f)return;
+  /* الصور تُرفع للتخزين السحابي فقط — بلا إنترنت لا نحفظها داخل القاعدة
+     حتى لا تمتلئ مساحة الجهاز كما حدث سابقاً */
+  if(FA.enabled&&!navigator.onLine){
+    inp.value='';
+    alert('رفع الصور يحتاج اتصالاً بالإنترنت.\n\nبقية التعديلات تعمل عادي بدون اتصال — الصور فقط هي التي تحتاج اتصالاً.');
+    return;
+  }
   var img=new Image(),rd=new FileReader();
   rd.onload=function(){img.onload=function(){
     var mx=900,w=img.width,h=img.height,k=Math.min(1,mx/Math.max(w,h));
@@ -3826,7 +3836,13 @@ function toStorage(dataUrl,folder,pref){
     if(el.value===dataUrl)el.value=url;          /* لم يغيّرها المستخدم أثناء الرفع */
     if(prev)prev.innerHTML='<img src="'+url+'">';
   }).catch(function(e){
-    console.warn('[FA] تعذّر رفع الصورة — حُفظت داخل القاعدة مؤقتاً',e&&e.message);
+    console.warn('[FA] تعذّر رفع الصورة',e&&e.message);
+    if(el.value===dataUrl){                       /* تراجع: لا نُبقيها داخل القاعدة */
+      el.value='';
+      if(prev)prev.innerHTML=ic('image',22);
+      var rm=g(pref+'-rm');if(rm)rm.style.display='none';
+      alert('تعذّر رفع الصورة. تأكد من الاتصال وحاول مرة أخرى.');
+    }
   }).then(function(){
     if(prev)prev.classList.remove('uping');
   });
@@ -5235,6 +5251,7 @@ function setNavLogo(){
   lg.innerHTML=timg?'<img src="'+timg+'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">':NAV_LG_SVG;
 }
 function enterApp(){
+  setTimeout(imgmAuto,8000);
   g('nav-tn').textContent=tName(AT);
   setNavLogo();
   g('chip-nm').textContent=CU.name;g('chip-rl').textContent=RL[CU.role];
@@ -9141,16 +9158,10 @@ var MRGOPEN=false;
 function tdMergeToggle(){MRGOPEN=!MRGOPEN;renderATab();}
 function admSettingsHTML(){
   var h='';
-  var _mg=admMigHTML();
-  if(_mg)h+=_mg+'<div style="height:1.8rem"></div>';
   var _bk=admBackupHTML();
   if(_bk)h+=_bk+'<div style="height:1.8rem"></div>';
-  var _dg=admDiagHTML();
-  if(_dg)h+=_dg+'<div style="height:1.8rem"></div>';
-  var _iz=admImgzHTML();
-  if(_iz)h+=_iz+'<div style="height:1.8rem"></div>';
-  var _im=admImgmHTML();
-  if(_im)h+=_im+'<div style="height:1.8rem"></div>';
+  var _sto=admStorageHTML();
+  if(_sto)h+=_sto+'<div style="height:1.8rem"></div>';
   if(CU.role==='admin'&&!(TDX().merged)){
     var sc=tdMergeScan();
     h+='<div class="mrg-fold'+(MRGOPEN?' on':'')+'">';
@@ -9919,6 +9930,48 @@ function imgmScan(){
   t.forEach(function(x){if(String(x.obj[x.key]||'').indexOf('data:image')===0){n++;b+=x.size;}});
   return{count:n,bytes:b};
 }
+/* ===== النقل التلقائي الصامت =====
+   بعد الدخول بقليل: أي صورة ما زالت base64 داخل القاعدة تُرفع للتخزين بهدوء.
+   نفس ضمانات النقل اليدوي: الاستبدال بعد نجاح الرفع فقط، والفاشلة تبقى كما هي. */
+var IMGA={busy:false,doneThisSession:false};
+function imgmAuto(){
+  if(IMGA.busy||IMGA.doneThisSession)return;
+  if(!FA.enabled||!FA.token||!CU||CU.role!=='admin')return;
+  if(IMGM.busy)return;
+  var list=imgTargets().filter(function(x){return String(x.obj[x.key]||'').indexOf('data:image')===0;});
+  if(!list.length){IMGA.doneThisSession=true;return;}
+  IMGA.busy=true;
+  var i=0,ok=0,fail=0,saved=0;
+  function folderOf(path){
+    if(/stories?/i.test(path))return 'stories';
+    if(/sysImg/i.test(path))return 'systems';
+    if(/idImg/i.test(path))return 'ids';
+    if(/players?/i.test(path))return 'players';
+    if(/teams?/i.test(path))return 'teams';
+    return 'misc';
+  }
+  function finish(){
+    IMGA.busy=false;IMGA.doneThisSession=true;
+    if(ok){
+      sv();
+      logA('نقل تلقائي للصور — نُقل '+ok+' ووُفّر '+fmtKB(saved),'image','#16a34a');
+      addN('نقل تلقائي للصور',ok+' صورة نُقلت للتخزين'+(fail?' • '+fail+' ستُعاد محاولتها لاحقاً':''),'success');
+      if(document.querySelector('.page.on#page-admin'))renderATab();
+    }
+  }
+  function step(){
+    if(i>=list.length)return finish();
+    var x=list[i++];
+    var before=String(x.obj[x.key]||'');
+    FA.uploadImage(before,folderOf(x.path)).then(function(url){
+      x.obj[x.key]=url;ok++;saved+=(before.length-url.length);
+    }).catch(function(){fail++;}).then(function(){
+      if((ok+fail)%10===0&&ok)sv();
+      setTimeout(step,400);
+    });
+  }
+  setTimeout(step,100);
+}
 function imgmRun(){
   if(IMGM.busy)return;
   if(!FA.enabled){alert('الاتصال بالسحابة غير مفعّل — لا يمكن رفع الصور.');return;}
@@ -9964,6 +10017,34 @@ function imgmRun(){
     }
     step();
   });
+}
+/* ===== حالة التخزين — قسم واحد مبسّط =====
+   يحل محل: قياس حجم البيانات + ضغط الصور + نقل الصور.
+   الصور تُرفع تلقائياً، فلا حاجة لأزرار يدوية. */
+function admStorageHTML(){
+  if(CU.role!=='admin')return '';
+  var st=dbStats(),LIM=5*1024*1024;
+  var pct=Math.min(100,Math.round(st.ls/LIM*100));
+  var lvl=pct>=80?'bad':(pct>=50?'warn':'ok');
+  var pend=imgmScan();                       /* صور لم تُرفع بعد */
+  var h='<div class="sec-t" style="margin-bottom:.8rem"><div class="bar"></div><h2 style="font-size:14px">حالة التخزين</h2></div>';
+  h+='<div class="dgbar '+lvl+'"><div class="dgl"><b>مساحة هذا الجهاز</b><span>'+fmtKB(st.ls)+' من 5 ميغابايت ('+pct+'٪)</span></div>'
+    +'<div class="dgt"><i style="width:'+pct+'%"></i></div>';
+  if(lvl==='bad')h+='<div class="dgn bad">ممتلئة — بياناتك محفوظة في السحابة، لكن هذا الجهاز قد لا يحفظ نسخته المحلية.</div>';
+  else if(lvl==='warn')h+='<div class="dgn warn">مرتفعة قليلاً — لا يوجد ما يستدعي القلق.</div>';
+  else h+='<div class="dgn ok">سليمة ✅</div>';
+  h+='</div>';
+  if(!FA.enabled){
+    h+='<div class="ce-note" style="margin-top:.8rem">'+ic('info',13)+'<div>الاتصال بالسحابة غير مفعّل — الحفظ على هذا الجهاز فقط.</div></div>';
+  } else if(pend.count){
+    h+='<div class="ce-note" style="margin-top:.8rem">'+ic('image',13)
+      +'<div><b>'+pend.count+' صورة بانتظار الرفع ('+fmtKB(pend.bytes)+').</b> '
+      +'تُرفع تلقائياً بعد الدخول — لا حاجة لأي إجراء منك.</div></div>';
+  } else {
+    h+='<div class="ce-note" style="margin-top:.8rem;background:rgba(22,163,74,.07);border-color:rgba(22,163,74,.3)">'+ic('check',13)
+      +'<div>كل الصور مرفوعة للتخزين السحابي ✅</div></div>';
+  }
+  return h;
 }
 function admImgmHTML(){
   if(CU.role!=='admin')return '';
