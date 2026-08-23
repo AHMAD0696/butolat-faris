@@ -3397,6 +3397,20 @@ var FA={
         });
     }catch(e){return Promise.reject(e);}
   },
+  /* رابط موقّع مؤقت — يعمل حتى لو كان الـ bucket خاصاً */
+  signedUrl:function(publicUrl){
+    var self=this;
+    if(!self.enabled||!self.sb||!publicUrl)return Promise.reject(new Error('no-cloud'));
+    var m=String(publicUrl).match(/\/storage\/v1\/object\/(?:public|sign)\/([^\/]+)\/(.+?)(?:\?|$)/);
+    if(!m)return Promise.reject(new Error('not-storage'));
+    return self.sb.storage.from(m[1]).createSignedUrl(decodeURIComponent(m[2]),60*60*6)
+      .then(function(r){
+        if(r.error)throw r.error;
+        var u=r.data&&(r.data.signedUrl||r.data.signedURL);
+        if(!u)throw new Error('no-signed');
+        return u;
+      });
+  },
   /* ===== جدول اللاعبين المنفصل (مرحلة الترحيل) ===== */
   playersUpsert:function(rows){
     var self=this;
@@ -14944,8 +14958,22 @@ function lbxOpen(src,cap){
   if(!src)return;
   var b=g('lbx'),im=g('lbx-img');if(!b||!im)return;
   im.classList.remove('zi');
-  im.onerror=function(){g('lbx-cap').textContent=(cap||'')+' — تعذّر عرض الصورة (تحقق من صلاحية المشاركة)';};
-  im.src=driveImg(src);
+  var target=driveImg(src);
+  im.setAttribute('data-orig',target);
+  im.onerror=function(){
+    if(IMGSIGN.cache[target]){im.src=IMGSIGN.cache[target];return;}
+    if(String(target).indexOf('/storage/v1/object/')>-1){
+      g('lbx-cap').textContent=(cap||'')+' — جارٍ التحميل…';
+      FA.signedUrl(target).then(function(u){
+        IMGSIGN.cache[target]=u;im.src=u;g('lbx-cap').textContent=cap||'';
+      }).catch(function(){
+        g('lbx-cap').textContent=(cap||'')+' — تعذّر عرض الصورة';
+      });
+      return;
+    }
+    g('lbx-cap').textContent=(cap||'')+' — تعذّر عرض الصورة';
+  };
+  im.src=target;
   g('lbx-cap').textContent=cap||'';
   b.classList.add('on');
   document.body.style.overflow='hidden';
@@ -14958,6 +14986,35 @@ function lbxClose(e){
   document.body.style.overflow='';
 }
 /* تعليم المعاينات التي تحوي صوراً + فتحها عند الضغط */
+/* ===== إنقاذ الصور التي يفشل عرضها =====
+   إن كان الـ bucket خاصاً فالرابط العام لا يعمل؛ نستبدله برابط موقّع تلقائياً.
+   نتذكّر ما وُقّع في هذه الجلسة حتى لا نكرر الطلب. */
+var IMGSIGN={cache:{},busy:{}};
+function imgRescue(el){
+  if(!el||el.dataset.rescued==='1')return;
+  var src=el.getAttribute('src')||'';
+  if(!src||src.indexOf('/storage/v1/object/')<0)return;   /* ليست صورة تخزين */
+  el.dataset.rescued='1';
+  if(IMGSIGN.cache[src]){el.src=IMGSIGN.cache[src];return;}
+  if(IMGSIGN.busy[src])return;
+  IMGSIGN.busy[src]=true;
+  FA.signedUrl(src).then(function(u){
+    IMGSIGN.cache[src]=u;
+    /* حدّث كل الصور التي تحمل نفس الرابط */
+    var all=document.querySelectorAll('img');
+    for(var i=0;i<all.length;i++){
+      var x=all[i];
+      if(x.getAttribute('src')===src||x.getAttribute('data-orig')===src)x.src=u;
+    }
+  }).catch(function(e){
+    console.warn('[FA] تعذّر توقيع رابط الصورة',e&&e.message);
+  }).then(function(){IMGSIGN.busy[src]=false;});
+}
+/* أي صورة تفشل في الصفحة تُعالَج تلقائياً */
+document.addEventListener('error',function(e){
+  var t=e.target;
+  if(t&&t.tagName==='IMG')imgRescue(t);
+},true);
 function lbxMark(root){
   var list=(root||document).querySelectorAll('.img-prev');
   for(var i=0;i<list.length;i++){
