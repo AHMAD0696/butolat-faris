@@ -3691,7 +3691,10 @@ function closeStoryView(){
 var DB=migrate(Store.load())||defDB();
 function sv(){
   syncGlobalTeams();
-  if(!Store.save(DB))svWarn('مساحة التخزين المحلي ممتلئة — قد لا تُحفظ التعديلات على هذا الجهاز');
+  /* امتلاء الذاكرة المحلية لا يعني ضياع البيانات ما دامت السحابة تعمل —
+     ننبّه فقط عند انعدام الحفظ في الجهتين معاً. */
+  if(!Store.save(DB)&&!(FA.enabled&&FA.token))
+    svWarn('تعذّر الحفظ على هذا الجهاز — تحقق من الاتصال');
   if(typeof tdSyncSchedule==='function')tdSyncSchedule();
   if(FA.enabled&&FA.token&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1){
     if(FA._timer)clearTimeout(FA._timer);
@@ -10021,30 +10024,14 @@ function imgmRun(){
 /* ===== حالة التخزين — قسم واحد مبسّط =====
    يحل محل: قياس حجم البيانات + ضغط الصور + نقل الصور.
    الصور تُرفع تلقائياً، فلا حاجة لأزرار يدوية. */
+/* حالة التخزين: لا شريط ولا نِسَب — الصور تُرفع تلقائياً ورفعها بلا إنترنت ممنوع،
+   فلم يبقَ قرار يتخذه المستخدم. نعرض سطراً واحداً فقط أثناء بقاء صور غير مرفوعة. */
 function admStorageHTML(){
-  if(CU.role!=='admin')return '';
-  var st=dbStats(),LIM=5*1024*1024;
-  var pct=Math.min(100,Math.round(st.ls/LIM*100));
-  var lvl=pct>=80?'bad':(pct>=50?'warn':'ok');
-  var pend=imgmScan();                       /* صور لم تُرفع بعد */
-  var h='<div class="sec-t" style="margin-bottom:.8rem"><div class="bar"></div><h2 style="font-size:14px">حالة التخزين</h2></div>';
-  h+='<div class="dgbar '+lvl+'"><div class="dgl"><b>مساحة هذا الجهاز</b><span>'+fmtKB(st.ls)+' من 5 ميغابايت ('+pct+'٪)</span></div>'
-    +'<div class="dgt"><i style="width:'+pct+'%"></i></div>';
-  if(lvl==='bad')h+='<div class="dgn bad">ممتلئة — بياناتك محفوظة في السحابة، لكن هذا الجهاز قد لا يحفظ نسخته المحلية.</div>';
-  else if(lvl==='warn')h+='<div class="dgn warn">مرتفعة قليلاً — لا يوجد ما يستدعي القلق.</div>';
-  else h+='<div class="dgn ok">سليمة ✅</div>';
-  h+='</div>';
-  if(!FA.enabled){
-    h+='<div class="ce-note" style="margin-top:.8rem">'+ic('info',13)+'<div>الاتصال بالسحابة غير مفعّل — الحفظ على هذا الجهاز فقط.</div></div>';
-  } else if(pend.count){
-    h+='<div class="ce-note" style="margin-top:.8rem">'+ic('image',13)
-      +'<div><b>'+pend.count+' صورة بانتظار الرفع ('+fmtKB(pend.bytes)+').</b> '
-      +'تُرفع تلقائياً بعد الدخول — لا حاجة لأي إجراء منك.</div></div>';
-  } else {
-    h+='<div class="ce-note" style="margin-top:.8rem;background:rgba(22,163,74,.07);border-color:rgba(22,163,74,.3)">'+ic('check',13)
-      +'<div>كل الصور مرفوعة للتخزين السحابي ✅</div></div>';
-  }
-  return h;
+  if(CU.role!=='admin'||!FA.enabled)return '';
+  var pend=imgmScan();
+  if(!pend.count)return '';                  /* كل شيء مرفوع — لا نعرض شيئاً */
+  return '<div class="ce-note">'+ic('image',13)
+    +'<div>'+pend.count+' صورة قيد الرفع للتخزين — تتم تلقائياً بعد الدخول، لا حاجة لأي إجراء منك.</div></div>';
 }
 function admImgmHTML(){
   if(CU.role!=='admin')return '';
