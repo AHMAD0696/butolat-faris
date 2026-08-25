@@ -2483,7 +2483,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-loginfix2</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-dobfix</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4433,17 +4433,36 @@ function playerAccount(pid){
   return (DB.users||[]).find(function(u){return u.role==='player'&&u.pid===pid;})||null;
 }
 /* مقارنة تاريخ الميلاد بصيغ مختلفة */
+/* تفكيك أي صيغة تاريخ إلى {d,m,y} — يدعم 2016-12-22 و«22 ديسمبر 2016» و22/12/2016 */
+function parseDob(x){
+  if(!x)return null;
+  var str=String(x).trim();
+  /* اسم شهر عربي؟ */
+  var mi=-1;
+  for(var i=0;i<MONTHS.length;i++){if(str.indexOf(MONTHS[i])>-1){mi=i+1;break;}}
+  var nums=(str.match(/\d+/g)||[]).map(Number);
+  if(mi>0){
+    var d1=nums.find(function(v){return v>=1&&v<=31;});
+    var y1=nums.find(function(v){return v>=1900&&v<=2100;});
+    if(d1&&y1)return {d:d1,m:mi,y:y1};
+    return null;
+  }
+  if(nums.length<3)return null;
+  /* ISO: 2016-12-22 */
+  if(nums[0]>=1900){return {y:nums[0],m:nums[1],d:nums[2]};}
+  /* dd/mm/yyyy */
+  var y=nums.find(function(v){return v>=1900&&v<=2100;});
+  if(!y)return null;
+  return {d:nums[0],m:nums[1],y:y};
+}
+/* مقارنة دقيقة: يوم=يوم، شهر=شهر، سنة=سنة — لا تساهل مع الأرقام المبعثرة */
 function sameDob(a,b){
-  var f=function(x){return String(x||'').replace(/[^0-9]/g,'');};
-  var A=f(a),B=f(b);
+  var A=parseDob(a),B=parseDob(b);
   if(!A||!B)return false;
-  if(A===B)return true;
-  /* 2013-05-01 مقابل 01 مايو 2013 — قارن بالمجموعة */
-  var pa=A.match(/\d{2}/g)||[],pb=B.match(/\d{2}/g)||[];
-  return pa.length&&pb.length&&pa.sort().join('')===pb.sort().join('');
+  return A.d===B.d&&A.m===B.m&&A.y===B.y;
 }
 
-var NIDFLOW={pid:null,step:0};
+var NIDFLOW={pid:null,step:0},NIDPEND=null;
 function goNid(){
   var raw=gv('l-nid');
   if(!nidOK(raw)){nameErr('أدخل رقم هوية صحيح (١٠ أرقام)');return;}
@@ -4464,6 +4483,23 @@ function goNid(){
   nameErr('رقم الهوية غير مسجّل — تواصل مع إدارة الأكاديمية');
 }
 function nidProceed(p){
+  /* حماية: لا يُفعَّل حساب لاعب وجلسة مستخدم آخر مفتوحة على الجهاز */
+  if(CU&&CU.role!=='player'){
+    if(!confirm('أنت مسجّل دخول حالياً كـ '+(RL[CU.role]||CU.role)+' ('+CU.name+').\n\nتفعيل حساب لاعب يتطلب الخروج من حسابك الحالي. هل تريد المتابعة؟')){
+      var t=document.getElementById('vf-toast');if(t)t.style.display='none';
+      return;
+    }
+    NIDPEND=p.id;      /* نُكمل التفعيل بعد الخروج */
+    doLogout();
+    setTimeout(function(){
+      lsMode('nid');
+      var e=g('l-nid');if(e)e.value=normNid(p.nid);
+      var pp=findPlayerByNid(p.nid);
+      if(pp){NIDFLOW={pid:pp.id,step:1};openNidActivate(pp);}
+      NIDPEND=null;
+    },700);
+    return;
+  }
   var acc=playerAccount(p.id);
   if(acc&&acc.pinSet){
     /* له حساب — انتقل لشاشة الرمز */
@@ -4481,7 +4517,17 @@ function openNidActivate(p){
   var h='';
   h+='<div class="ped-note warn">'+ic('shield',14)+'<div><b>تأكيد الهوية.</b><br>'
     +'أدخل تاريخ ميلاد اللاعب المسجّل لدى الأكاديمية للتأكد أنك صاحب الحساب أو وليّ أمره.</div></div>';
-  h+='<div class="fg req"><label>تاريخ الميلاد *</label><input type="date" id="na-dob" style="direction:ltr"></div>';
+  var dOpts='<option value="">اليوم</option>',mOpts='<option value="">الشهر</option>',yOpts='<option value="">السنة</option>';
+  for(var d=1;d<=31;d++)dOpts+='<option value="'+d+'">'+d+'</option>';
+  for(var m=1;m<=12;m++)mOpts+='<option value="'+m+'">'+MONTHS[m-1]+'</option>';
+  var yNow=new Date().getFullYear();
+  for(var y=yNow;y>=yNow-45;y--)yOpts+='<option value="'+y+'">'+y+'</option>';
+  h+='<div class="fg req"><label>تاريخ الميلاد *</label>'
+    +'<div style="display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:.45rem">'
+    +'<select id="na-dd">'+dOpts+'</select>'
+    +'<select id="na-dm">'+mOpts+'</select>'
+    +'<select id="na-dy">'+yOpts+'</select>'
+    +'</div></div>';
   h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidVerifyDob()">'+ic('check',14)+' تأكيد</button>';
   h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="closeNidAct()">رجوع</button>';
   h+='<div class="msg err" id="na-err">تاريخ الميلاد غير مطابق</div>';
@@ -4491,8 +4537,9 @@ function openNidActivate(p){
 function closeNidAct(){g('naMod').classList.remove('open');NIDFLOW={pid:null,step:0};}
 function nidVerifyDob(){
   var p=anyPlayer(NIDFLOW.pid);if(!p){closeNidAct();return;}
-  var d=gv('na-dob');
-  if(!d){fl('na-err');return;}
+  var dd=gv('na-dd'),dm=gv('na-dm'),dy=gv('na-dy');
+  if(!dd||!dm||!dy){g('na-err').textContent='اختر اليوم والشهر والسنة';fl('na-err');return;}
+  var d=dy+'-'+dm+'-'+dd;
   if(!p.dob){
     /* تاريخ الميلاد غير مسجّل — لا يمكن التحقق */
     g('na-err').textContent='تاريخ ميلادك غير مسجّل لدى الأكاديمية — تواصل مع الإدارة لتفعيل حسابك';
@@ -15442,7 +15489,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-loginfix</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-dobfix</div>
 </div>
 </body>
 </html>
