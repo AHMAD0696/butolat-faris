@@ -2483,7 +2483,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-modalfix</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-srvauth</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3500,6 +3500,25 @@ var FA={
       if(r.error)throw r.error;
       return r.data||null;
     });
+  },
+  /* تفعيل حساب اللاعب على الخادم (اللاعب لا يملك صلاحية كتابة مباشرة) */
+  playerActivate:function(nid,dob,pin){
+    var self=this;
+    if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
+    return self.sb.rpc('fa_player_activate',{p_nid:String(nid),p_dob:String(dob),p_pin:String(pin)})
+      .then(function(r){if(r.error)throw r.error;return r.data||null;});
+  },
+  playerLogin:function(nid,pin){
+    var self=this;
+    if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
+    return self.sb.rpc('fa_player_login',{p_nid:String(nid),p_pin:String(pin)})
+      .then(function(r){if(r.error)throw r.error;return r.data||null;});
+  },
+  playerHasAccount:function(nid){
+    var self=this;
+    if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
+    return self.sb.rpc('fa_player_has_account',{p_nid:String(nid)})
+      .then(function(r){if(r.error)throw r.error;return !!(r.data&&r.data.has);});
   },
   loadForLogin:function(){
     var self=this;
@@ -4625,14 +4644,50 @@ function nidProceed(p){
   }
   var acc=playerAccount(p.id);
   if(acc&&acc.pinSet){
-    /* له حساب — انتقل لشاشة الرمز */
     var nEl=g('l-name');if(nEl)nEl.value=acc.username||acc.name;
     goPin();
     return;
   }
-  /* أول مرة — تفعيل */
+  /* نسأل الخادم: هل فُعِّل حسابه من قبل؟ بيانات الحسابات لا تصل لشاشة الدخول */
+  if(FA.enabled){
+    lsBusy(true);
+    FA.playerHasAccount(p.nid||'').then(function(has){
+      lsBusy(false);
+      if(has){nidPinPrompt(p);return;}
+      NIDFLOW={pid:p.id,step:1};openNidActivate(p);
+    }).catch(function(){
+      lsBusy(false);
+      NIDFLOW={pid:p.id,step:1};openNidActivate(p);
+    });
+    return;
+  }
   NIDFLOW={pid:p.id,step:1};
   openNidActivate(p);
+}
+/* شاشة إدخال الرمز للاعب مفعَّل — تتحقق عبر الخادم */
+function nidPinPrompt(p){
+  NIDFLOW={pid:p.id,step:3,nid:normNid(p.nid||'')};
+  g('na-av').textContent=ti(p.name||'');
+  g('na-nm').textContent='تسجيل الدخول';
+  var h='<div class="ped-note free">'+ic('check',14)+'<div><b>'+esc(p.name||'')+'</b><br>أدخل رمزك السري للدخول.</div></div>';
+  h+='<div class="fg"><label>الرمز السري (4 أرقام) *</label><input type="password" id="na-lpin" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px" onkeydown="if(event.key===\'Enter\')nidDoLogin()"></div>';
+  h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidDoLogin()">'+ic('check',14)+' دخول</button>';
+  h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="closeNidAct()">رجوع</button>';
+  h+='<div class="msg err" id="na-lerr">الرمز غير صحيح</div>';
+  g('na-body').innerHTML=h;hydrateIcons(g('na-body'));
+  g('naMod').classList.add('open');
+  setTimeout(function(){var e=g('na-lpin');if(e)e.focus();},150);
+}
+function nidDoLogin(){
+  var pin=gv('na-lpin');
+  if(!/^[0-9]{4}$/.test(pin)){g('na-lerr').textContent='الرمز 4 أرقام';fl('na-lerr');return;}
+  FA.playerLogin(NIDFLOW.nid,pin).then(function(res){
+    if(!res||!res.ok){g('na-lerr').textContent='الرمز غير صحيح';fl('na-lerr');return;}
+    closeNidAct();
+    CU={id:res.id,name:res.name,username:res.username,role:'player',pid:res.pid,team:res.team||'',nid:NIDFLOW.nid};
+    sessSave&&sessSave();
+    loginOK();
+  }).catch(function(){g('na-lerr').textContent='تعذّر الاتصال — حاول مجدداً';fl('na-lerr');});
 }
 function openNidActivate(p){
   g('na-av').textContent=ti(p.name);
@@ -4663,8 +4718,9 @@ function nidVerifyDob(){
   var dd=gv('na-dd'),dm=gv('na-dm'),dy=gv('na-dy');
   if(!dd||!dm||!dy){g('na-err').textContent='اختر اليوم والشهر والسنة';fl('na-err');return;}
   var d=dy+'-'+dm+'-'+dd;
+  NIDFLOW.dobStr=d;
+  if(!p.dob&&FA.enabled){NIDFLOW.step=2;nidSetPinForm(p);return;}  /* الخادم سيتحقق */
   if(!p.dob){
-    /* تاريخ الميلاد غير مسجّل — لا يمكن التحقق */
     g('na-err').textContent='تاريخ ميلادك غير مسجّل لدى الأكاديمية — تواصل مع الإدارة لتفعيل حسابك';
     fl('na-err');return;
   }
@@ -4696,6 +4752,32 @@ function nidFinish(){
     var clash=(DB.users||[]).filter(function(u){return u.phoneVerified&&normPhone(u.phone)===ph;});
     if(clash.length){g('na-err2').textContent='هذا الرقم مسجّل لحساب آخر — اتركه فارغاً أو استخدم رقماً غيره';fl('na-err2');return;}
   }
+  /* اللاعب لا يملك صلاحية كتابة — التفعيل يتم على الخادم ليبقى محفوظاً */
+  if(FA.enabled){
+    var btn=g('na-err2');
+    g('na-err2').textContent='جارٍ التفعيل…';fl('na-err2');
+    var dobStr=(NIDFLOW.dobStr||p.dob||'');
+    FA.playerActivate(normNid(p.nid),dobStr,pin).then(function(res){
+      if(!res||!res.ok){
+        var m={nid:'رقم الهوية غير صحيح',pin:'الرمز يجب أن يكون 4 أرقام',
+               notfound:'رقم الهوية غير مسجّل',nodob:'تاريخ ميلادك غير مسجّل لدى الأكاديمية — راجع الإدارة',
+               dob:'تاريخ الميلاد غير مطابق',state:'تعذّر الوصول لقاعدة البيانات'};
+        g('na-err2').textContent=(res&&m[res.err])||'تعذّر التفعيل — حاول مجدداً';
+        fl('na-err2');return;
+      }
+      closeNidAct();
+      /* دخول مباشر بعد التفعيل */
+      CU={id:'pu_'+normNid(p.nid),name:res.name||p.name,username:normNid(p.nid),role:'player',
+          pid:res.pid||p.id,team:res.team||'',nid:normNid(p.nid)};
+      try{sessSave();}catch(e){}
+      addN('تم إنشاء حسابك','ستدخل الآن — وفي المرات القادمة استخدم هويتك ورمزك السري','success');
+      loginOK();
+    }).catch(function(e){
+      g('na-err2').textContent='تعذّر الاتصال بالخادم — تحقق من الإنترنت';fl('na-err2');
+    });
+    return;
+  }
+  /* بلا سحابة (وضع محلي فقط) */
   var acc=playerAccount(p.id);
   if(!acc){
     acc={id:uid(),name:p.name,username:normNid(p.nid),role:'player',pid:p.id,nid:normNid(p.nid),
@@ -4708,7 +4790,6 @@ function nidFinish(){
   if(ph)p.phone=ph;
   logA('تفعيل حساب لاعب: '+p.name,'user','#16a34a');
   sv();
-  if(FA.enabled&&FA.token&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1)faSync(FA.saveState(cloudState(DB)));
   closeNidAct();
   addN('تم إنشاء حسابك','سجّل دخولك برقم هويتك ورمزك السري','success');
   lsMode('nid');
@@ -15618,7 +15699,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-modalfix</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-srvauth</div>
 </div>
 </body>
 </html>
