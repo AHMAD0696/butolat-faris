@@ -2483,7 +2483,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-nidbtn</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-nidsrv</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3476,6 +3476,57 @@ var FA={
     if(!self.enabled||!self.token)return Promise.resolve([]);
     return self.sb.rpc('fa_player_tours',{p_token:self.token,p_player:pid})
       .then(function(r){if(r.error)throw r.error;return r.data||[];});
+  },
+  /* ===== تحميل خاص بشاشة دخول اللاعب =====
+     النسخة العامة المنقّحة قد تُسقِط أرقام الهوية، فيتعذّر مطابقتها.
+     نجرّب هنا القراءة الكاملة أولاً، ونقيس النتيجة فعلياً: إن خلت من أرقام
+     الهوية ننتقل للمصدر التالي. النتيجة تحمل وسماً يوضّح المصدر للتشخيص. */
+  _hasNid:function(st){
+    if(!st)return false;
+    var found=false;
+    (st.tournaments||[]).forEach(function(t){
+      (t.teams||[]).forEach(function(tm){
+        (tm.players||[]).forEach(function(p){if(p&&p.nid)found=true;});
+      });
+    });
+    if(!found&&st.td&&st.td.players)st.td.players.forEach(function(p){if(p&&p.nid)found=true;});
+    return found;
+  },
+  /* استعلام خادمي مباشر عن لاعب برقم الهوية (يعمل إن نُفِّذ ملف SQL) */
+  playerCheck:function(nid){
+    var self=this;
+    if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
+    return self.sb.rpc('fa_player_check',{p_nid:String(nid)}).then(function(r){
+      if(r.error)throw r.error;
+      return r.data||null;
+    });
+  },
+  loadForLogin:function(){
+    var self=this;
+    var viaTable=function(){
+      return self.sb.from('fa_state').select('data').eq('id',1).single().then(function(r){
+        if(r.error)throw r.error;
+        return {st:(r.data?r.data.data:null),src:'table'};
+      });
+    };
+    var viaPublic=function(){
+      return self.sb.rpc('fa_public_state').then(function(r){
+        if(r.error)throw r.error;
+        return {st:r.data||null,src:'public'};
+      });
+    };
+    /* ١) القراءة الكاملة */
+    return viaTable().then(function(a){
+      if(a.st&&self._hasNid(a.st))return a;
+      /* ٢) إن لم تتضمن أرقام هوية — جرّب النسخة العامة */
+      return viaPublic().then(function(b){
+        if(b.st&&self._hasNid(b.st))return b;
+        return a.st?a:b;              /* أفضل المتاح */
+      }).catch(function(){return a;});
+    }).catch(function(){
+      /* القراءة الكاملة محجوبة — اعتمد النسخة العامة */
+      return viaPublic().catch(function(){return {st:null,src:'none'};});
+    });
   },
   _loadDirect:function(){
     var self=this;
@@ -4477,6 +4528,7 @@ function lsBusy(on,txt){
   }
 }
 /* تشخيص: كم لاعباً وصل لهذا الجهاز وكم منهم يحمل رقم هوية */
+var NIDSRC='';
 function nidStats(){
   var tot=0,withNid=0;
   ((DB&&DB.tournaments)||[]).forEach(function(tt){
@@ -4509,17 +4561,45 @@ function goNid(){
         if(st2.total===0)
           nameErr('لم تصل بيانات اللاعبين لهذا الجهاز — حدّث الصفحة وحاول مجدداً');
         else if(st2.withNid===0)
-          nameErr('أرقام الهوية غير متاحة على هذا الجهاز — راجع إدارة الأكاديمية');
+          nameErr('الخادم لا يرسل أرقام الهوية لشاشة الدخول ('+(NIDSRC||'?')+') — راجع إدارة الأكاديمية');
         else
           nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');
       }
     };
-    setTimeout(function(){finish('timeout');},7000);      /* شبكة الأمان */
+    setTimeout(function(){finish('timeout');},9000);      /* شبكة الأمان */
+    /* ١) الأفضل: سؤال الخادم مباشرة — لا يحتاج تنزيل أي بيانات */
+    FA.playerCheck(raw).then(function(res){
+      if(done)return;
+      if(res&&res.found){
+        done=true;lsBusy(false);
+        var t=document.getElementById('vf-toast');if(t)t.style.display='none';
+        /* أدرج اللاعب في الذاكرة ليكمل مسار التفعيل المعتاد */
+        DB.td=DB.td||{};DB.td.players=DB.td.players||[];
+        var exists=DB.td.players.some(function(x){return normNid(x.nid)===normNid(raw);});
+        if(!exists)DB.td.players.push({id:res.pid||('srv_'+normNid(raw)),name:res.name||'',
+                                       nid:normNid(raw),dob:res.dob||'',branch:res.team||''});
+        var pS=findPlayerByNid(raw);
+        if(pS){nidProceed(pS);return;}
+      }
+      if(res&&res.found===false){
+        done=true;lsBusy(false);
+        nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');
+      }
+    }).catch(function(){ /* الدالة غير منشأة — نكمل بالمسار التالي */ });
+    /* ٢) بديل: تحميل متعدد المصادر */
     try{
-      var pr=FA.loadState();
+      var pr=FA.loadForLogin();
       if(pr&&pr.then){
-        pr.then(function(st){
-          if(st&&st.tournaments){try{DB=migrate(st)||DB;}catch(e){}}
+        pr.then(function(res){
+          var st=res&&res.st;
+          NIDSRC=(res&&res.src)||'?';
+          if(st&&st.tournaments){
+            try{
+              /* دمج آمن: نأخذ اللاعبين من المصدر الجديد دون إفساد الجلسة */
+              var m=migrate(st);
+              if(m)DB=m;
+            }catch(e){}
+          }
         }).catch(function(){}).then(function(){finish('loaded');});
       }else finish('loaded');
     }catch(e){finish('loaded');}
@@ -15535,7 +15615,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-nidbtn</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-nidsrv</div>
 </div>
 </body>
 </html>
