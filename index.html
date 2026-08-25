@@ -2483,7 +2483,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-dobfix</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-nidbtn</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4229,6 +4229,7 @@ function showErrToast(msg,ms){
   clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none';},ms||4500);
 }
 function nameErr(msg){
+  try{lsBusy(false);}catch(e){}
   var e=g('n-err');if(e)e.textContent=msg;
   fl('n-err');
   showErrToast(msg,6000);   /* رسالة عائمة لا تُفوَّت أينما كان النظر */
@@ -4463,26 +4464,71 @@ function sameDob(a,b){
 }
 
 var NIDFLOW={pid:null,step:0},NIDPEND=null;
+/* حالة زر الدخول: استجابة فورية مرئية عند كل ضغطة */
+function lsBusy(on,txt){
+  var b=g('l-next');if(!b)return;
+  if(on){
+    if(!b._orig)b._orig=b.textContent;
+    b.textContent=txt||'جارٍ التحقق…';
+    b.disabled=true;b.style.opacity='.65';b.style.cursor='wait';
+  }else{
+    if(b._orig)b.textContent=b._orig;
+    b.disabled=false;b.style.opacity='';b.style.cursor='';
+  }
+}
+/* تشخيص: كم لاعباً وصل لهذا الجهاز وكم منهم يحمل رقم هوية */
+function nidStats(){
+  var tot=0,withNid=0;
+  ((DB&&DB.tournaments)||[]).forEach(function(tt){
+    ((tt&&tt.teams)||[]).forEach(function(t){
+      ((t&&t.players)||[]).forEach(function(x){tot++;if(normNid(x.nid))withNid++;});
+    });
+  });
+  (((DB&&DB.td)||{}).players||[]).forEach(function(x){tot++;if(normNid(x.nid))withNid++;});
+  return {total:tot,withNid:withNid};
+}
 function goNid(){
   var raw=gv('l-nid');
   if(!nidOK(raw)){nameErr('أدخل رقم هوية صحيح (١٠ أرقام)');return;}
   var p=findPlayerByNid(raw);
   if(p){nidProceed(p);return;}
-  /* غير موجودة محلياً: ربما سجّلها المدرب للتو من جهاز آخر — نجلب أحدث نسخة ونعيد البحث */
+  /* غير موجودة في النسخة الحالية: قد يكون المدرب سجّلها للتو من جهاز آخر.
+     نجلب أحدث نسخة — مع مهلة قصوى حتى لا يعلق الزر إن لم يردّ الخادم. */
   if(FA.enabled){
-    showErrToast('جارٍ التحقق من قاعدة البيانات…',8000);
-    FA.loadState().then(function(st){
-      if(st&&st.tournaments)DB=migrate(st)||DB;
-    }).catch(function(){}).then(function(){
+    lsBusy(true);
+    var done=false;
+    var finish=function(reason){
+      if(done)return;done=true;
+      lsBusy(false);
       var p2=findPlayerByNid(raw);
       if(p2){var t=document.getElementById('vf-toast');if(t)t.style.display='none';nidProceed(p2);return;}
-      nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');
-    });
+      if(reason==='timeout'){
+        nameErr('تعذّر الوصول لقاعدة البيانات — تحقق من الإنترنت وحاول مجدداً');
+      }else{
+        var st2=nidStats();
+        if(st2.total===0)
+          nameErr('لم تصل بيانات اللاعبين لهذا الجهاز — حدّث الصفحة وحاول مجدداً');
+        else if(st2.withNid===0)
+          nameErr('أرقام الهوية غير متاحة على هذا الجهاز — راجع إدارة الأكاديمية');
+        else
+          nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');
+      }
+    };
+    setTimeout(function(){finish('timeout');},7000);      /* شبكة الأمان */
+    try{
+      var pr=FA.loadState();
+      if(pr&&pr.then){
+        pr.then(function(st){
+          if(st&&st.tournaments){try{DB=migrate(st)||DB;}catch(e){}}
+        }).catch(function(){}).then(function(){finish('loaded');});
+      }else finish('loaded');
+    }catch(e){finish('loaded');}
     return;
   }
   nameErr('رقم الهوية غير مسجّل — تواصل مع إدارة الأكاديمية');
 }
 function nidProceed(p){
+  lsBusy(false);
   /* حماية: لا يُفعَّل حساب لاعب وجلسة مستخدم آخر مفتوحة على الجهاز */
   if(CU&&CU.role!=='player'){
     if(!confirm('أنت مسجّل دخول حالياً كـ '+(RL[CU.role]||CU.role)+' ('+CU.name+').\n\nتفعيل حساب لاعب يتطلب الخروج من حسابك الحالي. هل تريد المتابعة؟')){
@@ -15489,7 +15535,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-dobfix</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-nidbtn</div>
 </div>
 </body>
 </html>
