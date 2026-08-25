@@ -2473,6 +2473,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       <label>رقم هوية اللاعب</label>
       <input type="tel" id="l-nid" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:2px;font-size:17px" oninput="this.value=normNid(this.value)" onkeydown="if(event.key==='Enter')goNid()">
       <div class="lhint">أدخل رقم هويتك أو إقامتك — أول مرة يُطلب تاريخ ميلادك</div>
+      <div id="nid-trace" style="display:none;margin-top:.5rem;padding:.5rem .7rem;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.18);border-radius:8px;font-size:10px;line-height:1.9;color:#9aa4c7;direction:rtl;text-align:right;word-break:break-word"></div>
     </div>
     <div class="lf" id="lf-name" style="display:none">
       <label>الاسم الكامل</label>
@@ -2483,7 +2484,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-srvauth</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-trace</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4548,6 +4549,15 @@ function lsBusy(on,txt){
 }
 /* تشخيص: كم لاعباً وصل لهذا الجهاز وكم منهم يحمل رقم هوية */
 var NIDSRC='';
+/* مقتفي خطوات مرئي — يكشف أين يتوقف المسار على جهاز المستخدم بالضبط */
+var NIDTRACE=[];
+function trc(m){
+  NIDTRACE.push(m);
+  var el=g('nid-trace');
+  if(el){el.style.display='block';el.innerHTML=NIDTRACE.map(function(x,i){return (i+1)+'. '+x;}).join('<br>');}
+  try{console.log('[nid]',m);}catch(e){}
+}
+function trcReset(){NIDTRACE=[];var el=g('nid-trace');if(el){el.style.display='none';el.innerHTML='';}}
 function nidStats(){
   var tot=0,withNid=0;
   ((DB&&DB.tournaments)||[]).forEach(function(tt){
@@ -4559,9 +4569,11 @@ function nidStats(){
   return {total:tot,withNid:withNid};
 }
 function goNid(){
+  trcReset();trc('بدأ الفحص');
   var raw=gv('l-nid');
-  if(!nidOK(raw)){nameErr('أدخل رقم هوية صحيح (١٠ أرقام)');return;}
+  if(!nidOK(raw)){trc('رقم غير صالح');nameErr('أدخل رقم هوية صحيح (١٠ أرقام)');return;}
   var p=findPlayerByNid(raw);
+  trc('البحث المحلي: '+(p?'وُجد '+(p.name||''):'غير موجود'));
   if(p){nidProceed(p);return;}
   /* غير موجودة في النسخة الحالية: قد يكون المدرب سجّلها للتو من جهاز آخر.
      نجلب أحدث نسخة — مع مهلة قصوى حتى لا يعلق الزر إن لم يردّ الخادم. */
@@ -4585,9 +4597,11 @@ function goNid(){
           nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');
       }
     };
-    setTimeout(function(){finish('timeout');},9000);      /* شبكة الأمان */
+    setTimeout(function(){if(!done)trc('انتهت المهلة (9ث) بلا حسم');finish('timeout');},9000);
     /* ١) الأفضل: سؤال الخادم مباشرة — لا يحتاج تنزيل أي بيانات */
+    trc('سؤال الخادم (fa_player_check)…');
     FA.playerCheck(raw).then(function(res){
+      trc('رد الخادم: '+JSON.stringify(res||null).slice(0,80));
       if(done)return;
       if(res&&res.found){
         done=true;lsBusy(false);
@@ -4604,7 +4618,7 @@ function goNid(){
         done=true;lsBusy(false);
         nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');
       }
-    }).catch(function(){ /* الدالة غير منشأة — نكمل بالمسار التالي */ });
+    }).catch(function(e){ trc('خطأ الخادم: '+((e&&e.message)||e)); });
     /* ٢) بديل: تحميل متعدد المصادر */
     try{
       var pr=FA.loadForLogin();
@@ -4651,12 +4665,15 @@ function nidProceed(p){
   /* نسأل الخادم: هل فُعِّل حسابه من قبل؟ بيانات الحسابات لا تصل لشاشة الدخول */
   if(FA.enabled){
     lsBusy(true);
+    trc('فحص وجود حساب سابق…');
     FA.playerHasAccount(p.nid||'').then(function(has){
       lsBusy(false);
+      trc('له حساب؟ '+(has?'نعم → شاشة الرمز':'لا → التفعيل'));
       if(has){nidPinPrompt(p);return;}
-      NIDFLOW={pid:p.id,step:1};openNidActivate(p);
-    }).catch(function(){
+      NIDFLOW={pid:p.id,step:1};trc('فتح نافذة التفعيل');openNidActivate(p);
+    }).catch(function(e){
       lsBusy(false);
+      trc('فحص الحساب تعذّر ('+((e&&e.message)||'?')+') → التفعيل');
       NIDFLOW={pid:p.id,step:1};openNidActivate(p);
     });
     return;
@@ -15699,7 +15716,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-srvauth</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-trace</div>
 </div>
 </body>
 </html>
