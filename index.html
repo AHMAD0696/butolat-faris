@@ -2483,7 +2483,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>2026.08.18-2200</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-nidlogin22</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3894,15 +3894,7 @@ function fl(id){var e=g(id);if(e){e.style.display='block';setTimeout(function(){
    بدون هذا كانت الرسالة تظهر أعلى النموذج بعيداً عن زر الحفظ فيظن المستخدم أن شيئاً لم يحدث. */
 function vFail(errId,msg,fieldId){
   var e=g(errId);if(e){e.textContent=msg;fl(errId);}
-  /* الرسالة العائمة */
-  var t=document.getElementById('vf-toast');
-  if(!t){
-    t=document.createElement('div');t.id='vf-toast';
-    t.style.cssText='position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:100000;background:#8f1330;color:#fff;padding:10px 18px;border-radius:12px;font:700 12.5px/1.5 inherit;max-width:88vw;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.45)';
-    document.body.appendChild(t);
-  }
-  t.textContent=msg;t.style.display='block';
-  clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none';},4000);
+  showErrToast(msg);
   /* القفز للحقل وتظليله */
   var f=g(fieldId);
   if(f){
@@ -4222,10 +4214,21 @@ function dropReset(id){
   DB.resetReqs=resetReqs().filter(function(x){return x.id!==id;});sv();
   if(typeof renderATab==='function')renderATab();
 }
+function showErrToast(msg,ms){
+  var t=document.getElementById('vf-toast');
+  if(!t){
+    t=document.createElement('div');t.id='vf-toast';
+    t.style.cssText='position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:100000;background:#8f1330;color:#fff;padding:10px 18px;border-radius:12px;font:700 12.5px/1.5 inherit;max-width:88vw;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.45)';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;t.style.display='block';
+  clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none';},ms||4500);
+}
 function nameErr(msg){
   var e=g('n-err');if(e)e.textContent=msg;
   fl('n-err');
-  var inp=g('l-name');
+  showErrToast(msg,6000);   /* رسالة عائمة لا تُفوَّت أينما كان النظر */
+  var inp=(typeof LSMODE!=='undefined'&&LSMODE==='nid')?g('l-nid'):(g('l-name')||g('l-phone'));
   if(inp){inp.classList.remove('err');void inp.offsetWidth;inp.classList.add('err');setTimeout(function(){inp.classList.remove('err');},700);inp.focus();}
 }
 /* ================= الدخول بالجوال ================= */
@@ -4425,7 +4428,22 @@ function goNid(){
   var raw=gv('l-nid');
   if(!nidOK(raw)){nameErr('أدخل رقم هوية صحيح (١٠ أرقام)');return;}
   var p=findPlayerByNid(raw);
-  if(!p){nameErr('رقم الهوية غير مسجّل — تواصل مع إدارة الأكاديمية');return;}
+  if(p){nidProceed(p);return;}
+  /* غير موجودة محلياً: ربما سجّلها المدرب للتو من جهاز آخر — نجلب أحدث نسخة ونعيد البحث */
+  if(FA.enabled){
+    showErrToast('جارٍ التحقق من قاعدة البيانات…',8000);
+    FA.loadState().then(function(st){
+      if(st&&st.tournaments)DB=migrate(st)||DB;
+    }).catch(function(){}).then(function(){
+      var p2=findPlayerByNid(raw);
+      if(p2){var t=document.getElementById('vf-toast');if(t)t.style.display='none';nidProceed(p2);return;}
+      nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');
+    });
+    return;
+  }
+  nameErr('رقم الهوية غير مسجّل — تواصل مع إدارة الأكاديمية');
+}
+function nidProceed(p){
   var acc=playerAccount(p.id);
   if(acc&&acc.pinSet){
     /* له حساب — انتقل لشاشة الرمز */
@@ -15404,7 +15422,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-nidlogin</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-nidlogin2</div>
 </div>
 </body>
 </html>
