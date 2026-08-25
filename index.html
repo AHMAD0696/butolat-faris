@@ -2483,7 +2483,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-nidsrv</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-modalfix</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -2974,7 +2974,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 </div>
 
 <!-- PLAYER ACTIVATION MODAL -->
-<div class="modal" id="naMod">
+<div class="modal" id="naMod" onclick="if(event.target===this)closeNidAct()">
   <div class="mbox">
     <div class="mhdr">
       <button class="mclose" onclick="closeNidAct()" data-ic="x"></button>
@@ -4514,7 +4514,7 @@ function sameDob(a,b){
   return A.d===B.d&&A.m===B.m&&A.y===B.y;
 }
 
-var NIDFLOW={pid:null,step:0},NIDPEND=null;
+var NIDFLOW={pid:null,step:0};
 /* حالة زر الدخول: استجابة فورية مرئية عند كل ضغطة */
 function lsBusy(on,txt){
   var b=g('l-next');if(!b)return;
@@ -4609,21 +4609,18 @@ function goNid(){
 }
 function nidProceed(p){
   lsBusy(false);
-  /* حماية: لا يُفعَّل حساب لاعب وجلسة مستخدم آخر مفتوحة على الجهاز */
+  /* حماية: لا يُفعَّل حساب لاعب وجلسة مستخدم آخر مفتوحة على الجهاز.
+     لا نفتح النافذة تلقائياً بعد الخروج — كانت تعلق فوق التطبيق عند الدخول من جديد. */
   if(CU&&CU.role!=='player'){
-    if(!confirm('أنت مسجّل دخول حالياً كـ '+(RL[CU.role]||CU.role)+' ('+CU.name+').\n\nتفعيل حساب لاعب يتطلب الخروج من حسابك الحالي. هل تريد المتابعة؟')){
-      var t=document.getElementById('vf-toast');if(t)t.style.display='none';
-      return;
+    var t0=document.getElementById('vf-toast');if(t0)t0.style.display='none';
+    if(confirm('هذا الجهاز مسجّل دخول باسم '+(CU.name||'')+' ('+(RL[CU.role]||CU.role)+').\n\nحساب اللاعب يُفعَّل من جهاز اللاعب نفسه.\n\nاضغط «موافق» لتسجيل الخروج والمتابعة هنا، أو «إلغاء» للبقاء في حسابك.')){
+      doLogout();
+      setTimeout(function(){
+        lsMode('nid');
+        var e=g('l-nid');if(e){e.value=normNid(p.nid||'');e.focus();}
+        showErrToast('تم تسجيل الخروج — اضغط «التالي» لمتابعة التفعيل',6000);
+      },500);
     }
-    NIDPEND=p.id;      /* نُكمل التفعيل بعد الخروج */
-    doLogout();
-    setTimeout(function(){
-      lsMode('nid');
-      var e=g('l-nid');if(e)e.value=normNid(p.nid);
-      var pp=findPlayerByNid(p.nid);
-      if(pp){NIDFLOW={pid:pp.id,step:1};openNidActivate(pp);}
-      NIDPEND=null;
-    },700);
     return;
   }
   var acc=playerAccount(p.id);
@@ -4947,7 +4944,7 @@ function loginOK(){
   pinReset();
   logA('تسجيل دخول','user','#1565c0');
 }
-function doLogout(){ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
+function doLogout(){try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
 function visibleTournaments(){
   return DB.tournaments.filter(function(t){return t.visible||(CU&&['admin','organizer'].indexOf(CU.role)>-1);});
 }
@@ -5595,6 +5592,12 @@ function setNavLogo(){
   lg.innerHTML=timg?'<img src="'+timg+'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">':NAV_LG_SVG;
 }
 function enterApp(){
+  /* أمان: لا تبقَ نافذة تفعيل لاعب معلّقة فوق التطبيق */
+  try{
+    var na=g('naMod');if(na)na.classList.remove('open');
+    NIDFLOW={pid:null,step:0};
+    var vt=document.getElementById('vf-toast');if(vt)vt.style.display='none';
+  }catch(e){}
   setTimeout(imgmAuto,8000);
   if(!window._imgaIv){
     window._imgaIv=setInterval(imgmAuto,60000);
@@ -15615,7 +15618,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-nidsrv</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-modalfix</div>
 </div>
 </body>
 </html>
