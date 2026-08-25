@@ -2483,7 +2483,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-nidlogin22</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-loginfix2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3868,7 +3868,11 @@ function catYearOpts(sel){
 }
 /* full range (ignores tournament restriction) — used when creating a tournament */
 function catYearOptsAll(sel){return '<option value="">— اختر المواليد —</option>'+birthYearList().map(function(y){return '<option'+(sel===('مواليد '+y)?' selected':'')+'>مواليد '+y+'</option>';}).join('');}
-function T(){return DB.tournaments.find(function(x){return x.id===AT;})||DB.tournaments[0];}
+function T(){
+  /* آمنة قبل تحميل البيانات: تُستدعى في شاشة الدخول قبل وجود DB.tournaments */
+  if(!DB||!DB.tournaments||!DB.tournaments.length)return {teams:[],regs:[],name:'',categories:[]};
+  return DB.tournaments.find(function(x){return x.id===AT;})||DB.tournaments[0]||{teams:[],regs:[],name:'',categories:[]};
+}
 
 /* ================= CONSTANTS ================= */
 var USER_ROLES=['admin','organizer','admin-team','coach','player','media','viewer'];
@@ -4248,9 +4252,14 @@ function lsMode(m){
   var er=g('n-err');if(er)er.style.display='none';
 }
 function lsNext(){
-  if(LSMODE==='phone')return goPhone();
-  if(LSMODE==='nid')return goNid();
-  return goPin();
+  try{
+    if(LSMODE==='phone')return goPhone();
+    if(LSMODE==='nid')return goNid();
+    return goPin();
+  }catch(e){
+    console.error('[login] خطأ:',e);
+    nameErr('تعذّر إكمال العملية — حدّث الصفحة وحاول مجدداً');
+  }
 }
 /* حسابات موثّقة بهذا الرقم */
 function usersByPhone(v){
@@ -4382,29 +4391,40 @@ function nidOK(v){return /^[0-9]{10}$/.test(normNid(v));}
 /* اللاعب قد يكون في الإدارة الفنية أو في فرق البطولات — الدخول بالهوية يشمل الاثنين */
 function findPlayerByNid(v){
   var n=normNid(v);if(!n)return null;
-  var p=(TDX().players||[]).find(function(x){return normNid(x.nid)===n;});
-  if(p)return p;
+  try{
+    var p=(TDX().players||[]).find(function(x){return normNid(x.nid)===n;});
+    if(p)return p;
+  }catch(e){}
   var f=null;
-  (T().teams||[]).forEach(function(t){
-    if(f)return;
-    f=(t.players||[]).find(function(x){return normNid(x.nid)===n;})||null;
-  });
+  try{
+    /* البحث في كل البطولات لا البطولة الحالية فقط */
+    ((DB&&DB.tournaments)||[]).forEach(function(tt){
+      ((tt&&tt.teams)||[]).forEach(function(t){
+        if(f)return;
+        f=((t&&t.players)||[]).find(function(x){return normNid(x.nid)===n;})||null;
+      });
+    });
+  }catch(e){}
   return f;
 }
 function anyPlayer(pid){
-  var p=tdPlayer(pid);if(p)return p;
+  try{var p=tdPlayer(pid);if(p)return p;}catch(e){}
   var f=null;
-  (T().teams||[]).forEach(function(t){
-    if(f)return;
-    f=(t.players||[]).find(function(x){return x.id===pid;})||null;
+  ((DB&&DB.tournaments)||[]).forEach(function(tt){
+    ((tt&&tt.teams)||[]).forEach(function(t){
+      if(f)return;
+      f=((t&&t.players)||[]).find(function(x){return x.id===pid;})||null;
+    });
   });
   return f;
 }
 function playerTeamName(pid){
   var nm='';
-  (T().teams||[]).forEach(function(t){
-    if(nm)return;
-    if((t.players||[]).some(function(x){return x.id===pid;}))nm=t.name;
+  ((DB&&DB.tournaments)||[]).forEach(function(tt){
+    ((tt&&tt.teams)||[]).forEach(function(t){
+      if(nm)return;
+      if(((t&&t.players)||[]).some(function(x){return x.id===pid;}))nm=t.name;
+    });
   });
   return nm;
 }
@@ -15422,7 +15442,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-nidlogin2</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-loginfix</div>
 </div>
 </body>
 </html>
