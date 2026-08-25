@@ -3352,7 +3352,7 @@ var _FA_CONFLICT=false;
 function faConflict(){
   if(_FA_CONFLICT)return;
   _FA_CONFLICT=true;
-  alert('⚠️ تم حفظ تعديلات من جهاز آخر أثناء عملك.\nستُعاد تحميل الصفحة لجلب أحدث نسخة — آخر تعديل لك لم يُحفظ، أعد إدخاله بعد التحميل.');
+  alert('زميل آخر حفظ تعديلات في قاعدة البيانات في نفس اللحظة.\n\nحمايةً لعمله، سنجلب أحدث نسخة الآن — تعديلك الأخير فقط يحتاج إعادة إدخال بعد التحديث، وكل ما قبله محفوظ.');
   location.reload();
 }
 /* ================= SUPABASE ADAPTER (optional; falls back to localStorage) ================= */
@@ -3755,6 +3755,32 @@ function cloudQueue(delay){
   },delay==null?600:delay);
 }
 window.addEventListener('online',function(){if(CQ.fails||CQ.dirty)cloudQueue(300);});
+/* ===== السحب الدوري الصامت =====
+   سبب رسالة «تعديلات من جهاز آخر»: جهاز خامل يحمل نسخة قديمة ثم يحفظ.
+   الحل: الجهاز الخامل يجلب أحدث نسخة كل دقيقة بصمت — بشروط صارمة حتى لا
+   يقاطع المستخدم: لا تعديل معلّق، لا نافذة مفتوحة، لا كتابة جارية في حقل. */
+function cloudPoll(){
+  if(!FA.enabled||!FA.token||!CU)return;
+  if(CQ.dirty||CQ.fails)return;                       /* عنده تعديل بالطريق — لا نلمس */
+  if(document.visibilityState!=='visible')return;
+  if(document.querySelector('.modal.open,.mod.open'))return;   /* نافذة تعديل مفتوحة */
+  var ae=document.activeElement;
+  if(ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName))return;
+  var prevRev=FA._rev;
+  FA.loadState().then(function(st){
+    if(!st||!st.tournaments)return;
+    if(FA._rev===prevRev)return;                      /* لا جديد */
+    DB=migrate(st)||DB;
+    if(typeof rAllSoft==='function')rAllSoft();
+    console.log('[FA] تحدّثت البيانات من جهاز آخر بصمت');
+  }).catch(function(){});
+}
+if(!window._cpIv){
+  window._cpIv=setInterval(cloudPoll,60000);
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='visible')setTimeout(cloudPoll,800);
+  });
+}
 /* بلا نسخة محلية: نمنع إغلاق الصفحة وفيها تعديل لم يصل للسحابة بعد */
 window.addEventListener('beforeunload',function(e){
   if(CQ.dirty&&Store.cloudOnly()){
@@ -3864,6 +3890,30 @@ function ti(n){return n?n.charAt(0):'؟';}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function gc(n){var t=(T().teams||[]).find(function(x){return x.name===n;});if(t&&t.color)return t.color;var h=0;for(var i=0;i<n.length;i++)h=((h<<5)-h)+n.charCodeAt(i);return COLS[Math.abs(h)%COLS.length];}
 function fl(id){var e=g(id);if(e){e.style.display='block';setTimeout(function(){e.style.display='none';},4000);}}
+/* فشل تحقق في نموذج طويل: رسالة عائمة تظهر أينما كان المستخدم + الانتقال للحقل الناقص وتظليله.
+   بدون هذا كانت الرسالة تظهر أعلى النموذج بعيداً عن زر الحفظ فيظن المستخدم أن شيئاً لم يحدث. */
+function vFail(errId,msg,fieldId){
+  var e=g(errId);if(e){e.textContent=msg;fl(errId);}
+  /* الرسالة العائمة */
+  var t=document.getElementById('vf-toast');
+  if(!t){
+    t=document.createElement('div');t.id='vf-toast';
+    t.style.cssText='position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:100000;background:#8f1330;color:#fff;padding:10px 18px;border-radius:12px;font:700 12.5px/1.5 inherit;max-width:88vw;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.45)';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;t.style.display='block';
+  clearTimeout(t._h);t._h=setTimeout(function(){t.style.display='none';},4000);
+  /* القفز للحقل وتظليله */
+  var f=g(fieldId);
+  if(f){
+    try{f.scrollIntoView({behavior:'smooth',block:'center'});}catch(_){f.scrollIntoView();}
+    var box=f.closest('.fg')||f;
+    box.style.transition='box-shadow .2s';
+    box.style.boxShadow='0 0 0 3px rgba(221,29,69,.55)';
+    setTimeout(function(){box.style.boxShadow='';},2600);
+    if(/INPUT|SELECT|TEXTAREA/.test(f.tagName)){try{f.focus({preventScroll:true});}catch(_){}}
+  }
+}
 function tlogo(t,sz){var s=sz||28;var bg=t&&t.color?t.color:gc(t&&t.name||'');
   if(t&&t.img)return '<div class="tlogo" style="width:'+s+'px;height:'+s+'px"><img src="'+t.img+'" alt=""></div>';
   return '<div class="tlogo" style="width:'+s+'px;height:'+s+'px;background:'+bg+'">'+esc(ti(t&&t.name||''))+'</div>';}
@@ -4326,9 +4376,34 @@ function normNid(v){
   return out.replace(/[^0-9]/g,'').slice(0,10);
 }
 function nidOK(v){return /^[0-9]{10}$/.test(normNid(v));}
+/* اللاعب قد يكون في الإدارة الفنية أو في فرق البطولات — الدخول بالهوية يشمل الاثنين */
 function findPlayerByNid(v){
   var n=normNid(v);if(!n)return null;
-  return (TDX().players||[]).find(function(p){return normNid(p.nid)===n;})||null;
+  var p=(TDX().players||[]).find(function(x){return normNid(x.nid)===n;});
+  if(p)return p;
+  var f=null;
+  (T().teams||[]).forEach(function(t){
+    if(f)return;
+    f=(t.players||[]).find(function(x){return normNid(x.nid)===n;})||null;
+  });
+  return f;
+}
+function anyPlayer(pid){
+  var p=tdPlayer(pid);if(p)return p;
+  var f=null;
+  (T().teams||[]).forEach(function(t){
+    if(f)return;
+    f=(t.players||[]).find(function(x){return x.id===pid;})||null;
+  });
+  return f;
+}
+function playerTeamName(pid){
+  var nm='';
+  (T().teams||[]).forEach(function(t){
+    if(nm)return;
+    if((t.players||[]).some(function(x){return x.id===pid;}))nm=t.name;
+  });
+  return nm;
 }
 /* حساب اللاعب المرتبط بسجله في الإدارة الفنية */
 function playerAccount(pid){
@@ -4377,7 +4452,7 @@ function openNidActivate(p){
 }
 function closeNidAct(){g('naMod').classList.remove('open');NIDFLOW={pid:null,step:0};}
 function nidVerifyDob(){
-  var p=tdPlayer(NIDFLOW.pid);if(!p){closeNidAct();return;}
+  var p=anyPlayer(NIDFLOW.pid);if(!p){closeNidAct();return;}
   var d=gv('na-dob');
   if(!d){fl('na-err');return;}
   if(!p.dob){
@@ -4403,7 +4478,7 @@ function nidSetPinForm(p){
   g('na-body').innerHTML=h;hydrateIcons(g('na-body'));
 }
 function nidFinish(){
-  var p=tdPlayer(NIDFLOW.pid);if(!p){closeNidAct();return;}
+  var p=anyPlayer(NIDFLOW.pid);if(!p){closeNidAct();return;}
   var pin=gv('na-pin'),pin2=gv('na-pin2'),ph=phoneVal('na-phone');
   if(!/^[0-9]{4}$/.test(pin)){g('na-err2').textContent='الرمز يجب أن يكون 4 أرقام';fl('na-err2');return;}
   if(pin!==pin2){g('na-err2').textContent='الرمزان غير متطابقان';fl('na-err2');return;}
@@ -4416,7 +4491,7 @@ function nidFinish(){
   var acc=playerAccount(p.id);
   if(!acc){
     acc={id:uid(),name:p.name,username:normNid(p.nid),role:'player',pid:p.id,nid:normNid(p.nid),
-         branch:p.branch||'',team:'',phone:ph,phoneVerified:!!ph,password:pin,pinSet:true,at:Date.now()};
+         branch:p.branch||'',team:playerTeamName(p.id)||'',phone:ph,phoneVerified:!!ph,password:pin,pinSet:true,at:Date.now()};
     DB.users.push(acc);
   }else{
     acc.password=pin;acc.pinSet=true;
@@ -8189,17 +8264,17 @@ function saveEditPlayer(){
   var name=joinName(fn,mn,ln);
   var nid=normNid(gv('ep-nid'));
   var dd=gv('ep-dd'),dm=g('ep-dm').value,dy=gv('ep-dy'),nat=gv('ep-nat'),gd=phoneVal('ep-gd');
-  if(!cat){g('ep-err').textContent='اختر الفئة السنية';fl('ep-err');return;}
-  if(!fn||!mn||!ln){g('ep-err').textContent='الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة';fl('ep-err');return;}
-  if(nid.length!==10){g('ep-err').textContent='رقم الهوية / الإقامة مطلوب — ١٠ أرقام';fl('ep-err');return;}
-  if(!dd||!dm||!dy){g('ep-err').textContent='تاريخ الميلاد مطلوب';fl('ep-err');return;}
-  if(!phoneOK(gd)){g('ep-err').textContent='جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5';fl('ep-err');return;}
-  if(phoneFake(gd)){g('ep-err').textContent='جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً';fl('ep-err');return;}
+  if(!cat){vFail('ep-err','اختر الفئة السنية','ep-cat');return;}
+  if(!fn||!mn||!ln){vFail('ep-err','الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة',!fn?'ep-fn':(!mn?'ep-mn':'ep-ln'));return;}
+  if(nid.length!==10){vFail('ep-err','رقم الهوية / الإقامة مطلوب — ١٠ أرقام','ep-nid');return;}
+  if(!dd||!dm||!dy){vFail('ep-err','تاريخ الميلاد مطلوب','ep-dd');return;}
+  if(!phoneOK(gd)){vFail('ep-err','جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5','ep-gd');return;}
+  if(phoneFake(gd)){vFail('ep-err','جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً','ep-gd');return;}
   var dupN=null;
   (T().teams||[]).forEach(function(tt){(tt.players||[]).forEach(function(pp){
     if(pp.id!==p.id&&pp.nid&&normNid(pp.nid)===nid)dupN=pp;});});
-  if(dupN){g('ep-err').textContent='رقم الهوية مسجّل للاعب: '+dupN.name;fl('ep-err');return;}
-  if(!gv('epid-img')){g('ep-err').textContent='صورة الهوية مطلوبة';fl('ep-err');return;}
+  if(dupN){vFail('ep-err','رقم الهوية مسجّل للاعب: '+dupN.name,'ep-nid');return;}
+  if(!gv('epid-img')){vFail('ep-err','صورة الهوية مطلوبة','epid-prev');return;}
   if(num&&(t.players||[]).some(function(x){return x.id!==p.id&&String(x.number)===num&&x.cat===cat;})){g('ep-err').textContent='رقم القميص مستخدم في هذه الفئة';fl('ep-err');return;}
   p.name=name;p.fn=fn;p.mn=mn;p.ln=ln;p.nid=nid;p.guardName=gv('ep-gname')||mn||'';p.number=num;p.pos=pos;p.cat=cat;p.dob=dd+' '+MONTHS[dm-1]+' '+dy;p.nat=nat;p.guard=gd;p.guardPhone=gd;p.phone=phoneVal('ep-ph');p.img=gv('ep-img');p.idImg=gv('epid-img');
   logA('تعديل لاعب: '+name+' — '+t.name,'edit','#d97706');
@@ -8258,16 +8333,16 @@ function subAddPlayer(){
   var dd=gv('ap-dd'),dm=g('ap-dm').value,dy=gv('ap-dy'),nat=gv('ap-nat'),gd=phoneVal('ap-gd'),img=gv('ap-img'),idImg=gv('apid-img');
   if(!cat){g('ap-err').textContent='اختر الفئة السنية';fl('ap-err');return;}
   if(!fn||!mn||!ln){g('ap-err').textContent='الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة';fl('ap-err');return;}
-  if(nid.length!==10){g('ap-err').textContent='رقم الهوية / الإقامة مطلوب — ١٠ أرقام';fl('ap-err');return;}
-  if(!dd||!dm||!dy){g('ap-err').textContent='تاريخ الميلاد مطلوب';fl('ap-err');return;}
-  if(!phoneOK(gd)){g('ap-err').textContent='جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5';fl('ap-err');return;}
-  if(phoneFake(gd)){g('ap-err').textContent='جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً';fl('ap-err');return;}
-  if(!idImg){g('ap-err').textContent='صورة الهوية مطلوبة';fl('ap-err');return;}
+  if(nid.length!==10){vFail('ap-err','رقم الهوية / الإقامة مطلوب — ١٠ أرقام','ap-nid');return;}
+  if(!dd||!dm||!dy){vFail('ap-err','تاريخ الميلاد مطلوب','ap-dd');return;}
+  if(!phoneOK(gd)){vFail('ap-err','جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5','ap-gd');return;}
+  if(phoneFake(gd)){vFail('ap-err','جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً','ap-gd');return;}
+  if(!idImg){vFail('ap-err','صورة الهوية مطلوبة','apid-prev');return;}
   /* الهوية فريدة — لا تتكرر بين اللاعبين */
   var dupNid=null;
   (T().teams||[]).forEach(function(tt){(tt.players||[]).forEach(function(pp){
     if(pp.nid&&normNid(pp.nid)===nid)dupNid=pp;});});
-  if(dupNid){g('ap-err').textContent='رقم الهوية مسجّل للاعب: '+dupNid.name;fl('ap-err');return;}
+  if(dupNid){vFail('ap-err','رقم الهوية مسجّل للاعب: '+dupNid.name,'ap-nid');return;}
   var tname,catName;
   if(CU.role==='admin'&&cat.indexOf(' — ')>-1){var sp=cat.split(' — ');tname=sp[0];catName=sp[1];}
   else{tname=myTeamName();catName=cat;}
@@ -15329,7 +15404,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.23-countfix</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-nidlogin</div>
 </div>
 </body>
 </html>
