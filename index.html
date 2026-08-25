@@ -2484,7 +2484,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-trace</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-visible</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -2974,18 +2974,6 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
   </div>
 </div>
 
-<!-- PLAYER ACTIVATION MODAL -->
-<div class="modal" id="naMod" onclick="if(event.target===this)closeNidAct()">
-  <div class="mbox">
-    <div class="mhdr">
-      <button class="mclose" onclick="closeNidAct()" data-ic="x"></button>
-      <div class="prof-av" id="na-av">؟</div>
-      <div style="font-size:15px;font-weight:700" id="na-nm">تفعيل حساب</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">لاعبو الأكاديمية</div>
-    </div>
-    <div class="mbody" id="na-body"></div>
-  </div>
-</div>
 
 <!-- ADD PHONE MODAL -->
 <div class="modal" id="apMod">
@@ -15716,7 +15704,20 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-trace</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-visible</div>
+</div>
+
+<!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
+<div class="modal" id="naMod" style="z-index:9999" onclick="if(event.target===this)closeNidAct()">
+  <div class="mbox">
+    <div class="mhdr">
+      <button class="mclose" onclick="closeNidAct()" data-ic="x"></button>
+      <div class="prof-av" id="na-av">؟</div>
+      <div style="font-size:15px;font-weight:700" id="na-nm">تفعيل حساب</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">لاعبو الأكاديمية</div>
+    </div>
+    <div class="mbody" id="na-body"></div>
+  </div>
 </div>
 </body>
 </html>
