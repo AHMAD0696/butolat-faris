@@ -2484,7 +2484,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.08.24-visible</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.06-teamwork</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3338,10 +3338,57 @@ function svWarn(msg){
 }
 /* ===== تعارض نسخ: جهاز آخر حفظ تعديلاً أثناء عملك ===== */
 var _FA_CONFLICT=false;
+/* دمج حالتين: الأساس نسخة الزميل (remote)، وفوقها عناصرنا (local).
+   المصفوفات ذات المعرّفات تُتَّحد: عنصر بنفس id → نسختنا تغلب (تعديلنا أحدث)،
+   وعناصر الزميل التي لا نملكها تُضاف. الحقول المفردة: نسختنا (آخر من حفظ). */
+function faMergeStates(remote,local){
+  function mergeArr(a,b,key,depth){    /* a=زميل، b=نحن */
+    key=key||'id';
+    var out=[],rmap={};
+    (a||[]).forEach(function(x){var k=x&&x[key];if(k!=null)rmap[k]=x;});
+    var seen={};
+    (b||[]).forEach(function(x){
+      var k=x&&x[key];
+      if(k!=null&&rmap[k]!==undefined){
+        seen[k]=1;
+        out.push(mergeObj(rmap[k],x,depth+1));   /* نفس العنصر لدى الطرفين: دمج داخلي */
+      }else if(k!=null){
+        seen[k]=1;
+        /* عندنا فقط: إن أنشأناه هذه الجلسة فهو إضافة حقيقية،
+           وإلا فهو عنصر حذفه الزميل — نحترم حذفه */
+        if(typeof SESSION_NEW!=='undefined'&&SESSION_NEW[k])out.push(x);
+      }else{
+        out.push(x);                              /* بلا معرّف: نبقيه */
+      }
+    });
+    (a||[]).forEach(function(x){var k=x&&x[key];if(k==null||!seen[k])out.push(x);}); /* إضافات الزميل */
+    return out;
+  }
+  function mergeObj(r,l,depth){
+    if(depth>6)return l!==undefined?l:r;
+    if(Array.isArray(r)||Array.isArray(l)){
+      var A=Array.isArray(r)?r:[],B=Array.isArray(l)?l:[];
+      var keyed=A.concat(B).some(function(x){return x&&typeof x==='object'&&x.id!=null;});
+      if(keyed)return mergeArr(A,B,'id',depth);
+      /* مصفوفة بلا معرّفات: اتحاد حسب name إن وُجد وإلا نسختنا */
+      var named=A.concat(B).some(function(x){return x&&typeof x==='object'&&x.name!=null;});
+      if(named)return mergeArr(A,B,'name',depth);
+      return B.length?B:A;
+    }
+    if(r&&l&&typeof r==='object'&&typeof l==='object'){
+      var out={},k;
+      for(k in r)out[k]=r[k];
+      for(k in l)out[k]=mergeObj(r?r[k]:undefined,l[k],depth+1);
+      return out;
+    }
+    return l!==undefined?l:r;
+  }
+  try{return mergeObj(remote,local,0);}catch(e){console.warn('merge fallback',e);return local;}
+}
 function faConflict(){
   if(_FA_CONFLICT)return;
   _FA_CONFLICT=true;
-  alert('زميل آخر حفظ تعديلات في قاعدة البيانات في نفس اللحظة.\n\nحمايةً لعمله، سنجلب أحدث نسخة الآن — تعديلك الأخير فقط يحتاج إعادة إدخال بعد التحديث، وكل ما قبله محفوظ.');
+  alert('تعذّر دمج تعديلك مع تعديلات زملائك تلقائياً هذه المرة.\nسنجلب أحدث نسخة — أعد إدخال آخر تعديل فقط.');
   location.reload();
 }
 /* ================= SUPABASE ADAPTER (optional; falls back to localStorage) ================= */
@@ -3573,9 +3620,43 @@ var FA={
         }
         throw r.error;
       }
-      if(r.data===false){faConflict();return false;}
+      if(r.data===false){
+        /* زميل حفظ قبلنا: ندمج تلقائياً بدل إسقاط عمل أي طرف */
+        return self._mergeAndRetry(state);
+      }
       self._rev=next;
       return true;
+    });
+  },
+  /* ===== الدمج التلقائي عند التصادم =====
+     نجلب نسخة الزميل، ندمج مجموعاتنا معها (اتحاد حسب المعرّف: إضافاتنا
+     وإضافاته تبقى معاً، وعند تعديل نفس العنصر تغلب نسختنا الأحدث)، ثم نحفظ.
+     محاولتان كحد أقصى ثم نلجأ للتحديث الكامل حمايةً من الدوران. */
+  _mergeTries:0,
+  _mergeAndRetry:function(localState){
+    var self=this;
+    self._mergeTries++;
+    if(self._mergeTries>2){self._mergeTries=0;faConflict();return false;}
+    return self.sb.rpc('fa_load_state',{p_token:self.token}).then(function(r){
+      if(r.error)throw r.error;
+      var remote=r.data||null;
+      if(!remote){self._mergeTries=0;faConflict();return false;}
+      var merged=faMergeStates(remote,localState);
+      merged._rev=remote._rev;
+      self._rev=remote._rev;
+      try{DB=migrate(merged)||DB;}catch(e){}
+      try{if(typeof cloudChip==='function')cloudChip(false);}catch(e){}
+      try{console.log('[FA] دُمجت تعديلات زميلك تلقائياً');}catch(e){}
+      return self.saveState(cloudState(DB)).then(function(ok){
+        self._mergeTries=0;
+        if(ok&&typeof rAllSoft==='function')try{rAllSoft();}catch(e){}
+        return ok;
+      });
+    }).catch(function(e){
+      self._mergeTries=0;
+      console.warn('[FA] تعذّر الدمج',e&&e.message);
+      faConflict();
+      return false;
     });
   },
   login:function(username,pin){
@@ -3948,7 +4029,10 @@ function tName(id){var t=DB.tournaments.find(function(x){return x.id===(id||AT);
 /* ================= HELPERS ================= */
 function g(id){return document.getElementById(id);}
 function gv(id){var e=g(id);return e?e.value.trim():'';}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+/* معرّفات أُنشئت في هذه الجلسة — يعتمد عليها الدمج للتفريق بين
+   «إضافة جديدة منا» و«أثر قديم لعنصر حذفه زميل» */
+var SESSION_NEW={};
+function uid(){var v=Date.now().toString(36)+Math.random().toString(36).slice(2,6);SESSION_NEW[v]=1;return v;}
 function ti(n){return n?n.charAt(0):'؟';}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function gc(n){var t=(T().teams||[]).find(function(x){return x.name===n;});if(t&&t.color)return t.color;var h=0;for(var i=0;i<n.length;i++)h=((h<<5)-h)+n.charCodeAt(i);return COLS[Math.abs(h)%COLS.length];}
@@ -7494,9 +7578,26 @@ function editResult(id){
     /* prefill existing values */
     g('rm-s1').value=m.s1||0;g('rm-s2').value=m.s2||0;syncGoals();
     var g1=(m.goals||[]).filter(function(x){return x.team===m.t1;}),g2=(m.goals||[]).filter(function(x){return x.team===m.t2;});
-    var r1=g('gl1-r').querySelectorAll('.g-row');g1.forEach(function(go,i){if(r1[i]){r1[i].querySelector('select').value=go.name;r1[i].querySelector('.min').value=go.min||'';}});
-    var r2=g('gl2-r').querySelectorAll('.g-row');g2.forEach(function(go,i){if(r2[i]){r2[i].querySelector('select').value=go.name;r2[i].querySelector('.min').value=go.min||'';}});
-    g('cards-r').innerHTML='';(m.cards||[]).forEach(function(c){addCard(c.type);var rows=g('cards-r').querySelectorAll('.card-row');var last=rows[rows.length-1];if(last){last.querySelector('select').value=c.name;last.querySelector('.min').value=c.min||'';}});
+    /* الصفوف تستخدم حقل كتابة .gnm (وقد تكون select في نسخ أقدم) — نتعامل مع الاثنين بأمان */
+    function setRow(row,name,min){
+      if(!row)return;
+      var f=row.querySelector('.gnm')||row.querySelector('select')||row.querySelector('input:not(.min)');
+      if(f)f.value=name||'';
+      var mn=row.querySelector('.min');
+      if(mn)mn.value=(min==null?'':min);
+    }
+    var r1=g('gl1-r')?g('gl1-r').querySelectorAll('.g-row'):[];
+    g1.forEach(function(go,i){setRow(r1[i],go.name,go.min);});
+    var r2=g('gl2-r')?g('gl2-r').querySelectorAll('.g-row'):[];
+    g2.forEach(function(go,i){setRow(r2[i],go.name,go.min);});
+    if(g('cards-r')){
+      g('cards-r').innerHTML='';
+      (m.cards||[]).forEach(function(c){
+        addCard(c.type);
+        var rows=g('cards-r').querySelectorAll('.card-row');
+        setRow(rows[rows.length-1],c.name,c.min);
+      });
+    }
     if(g('rm-mvp'))g('rm-mvp').value=m.mvp||'';
     try{g('rm-match').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
   },60);
@@ -15704,7 +15805,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.08.24-visible</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.06-teamwork</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
