@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.15-mod">
+<meta name="build" content="2026.09.15-reg">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2627,7 +2627,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-mod</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-reg</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -17854,7 +17854,7 @@ function tdSlotInfoLine(gg){
    والمشاركات في البطولات. كل جدول له زر تعديل يفتح نموذجه معبّأً.
    ========================================================================== */
 var ADBR={sel:'',tab:'staff',edit:''};
-var ADBR_TABS=[['staff','الموظفون','shield'],['coaches','المدربون','whistle'],
+var ADBR_TABS=[['info','معلومات الفرع','pin'],['staff','الموظفون','shield'],['coaches','المدربون','whistle'],
                ['pitches','الملاعب','pin'],['periods','الفترات','clock'],
                ['cats','الفئات','list'],['slots','الحصص','cal'],
                ['tours','المشاركات','trophy']];
@@ -17883,6 +17883,16 @@ function adbCancelBtn(){
   return ADBR.edit?'<button class="btn btn-g btn-sm" onclick="adbCancel()">إلغاء التعديل</button>':'';
 }
 
+/* حقل صورة موحّد — نفس شكل شعار الأكاديمية في تسجيل الفريق */
+function adbImgField(pfx,val,icn){
+  icn=icn||'shield';
+  return '<div class="img-pick"><div class="img-prev" id="'+pfx+'-prev">'
+    +(val?'<img src="'+esc(val)+'">':ic(icn,22))+'</div><div>'
+    +'<label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة'
+    +'<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,\''+pfx+'\')"></label>'
+    +'<button class="img-rm" id="'+pfx+'-rm" onclick="rmImg(\''+pfx+'\',\''+icn+'\')" style="'+(val?'display:inline-block':'')+'">إزالة</button></div>'
+    +'<input type="hidden" id="'+pfx+'-img" value="'+esc(val||'')+'"></div>';
+}
 function adbStats(bn){
   var t=TDX();
   var cats=(t.cats||[]).filter(function(c){return c.branch===bn;});
@@ -17899,10 +17909,12 @@ function adbStats(bn){
 }
 /* البطولات التي يشارك فيها هذا الفرع — اسم الفريق في البطولات = اسم الفرع */
 function adbTours(bn){
-  var out=[];
+  var out=[],b=((TDX().branches)||[]).find(function(x){return x.name===bn;});
+  var picked=(b&&b.tours)||[];
   ((DB&&DB.tournaments)||[]).forEach(function(tr){
     var team=(tr.teams||[]).find(function(x){return normName(x.name)===normName(bn);});
     if(team)out.push({tour:tr,team:team});
+    else if(picked.indexOf(tr.name)>-1)out.push({tour:tr,team:null});
   });
   return out;
 }
@@ -17913,23 +17925,30 @@ function rADBranches(){
   if(ADBR.sel)return adbDetail(el);
   var h=adHead('pin','الفروع','كل فرع وما تحته من موظفين وملاعب وفترات وفئات',
     '<span class="pg-chip">'+ceN((t.branches||[]).length)+' فرع</span>');
-  h+='<div class="rform" style="max-width:520px;margin-bottom:1.4rem">';
-  h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end;gap:.5rem">';
-  h+='<div class="fg" style="margin-bottom:0"><label>اسم الفرع الجديد</label><input type="text" id="adb-new" placeholder="مثال: فارس القيروان" onkeydown="if(event.key===\'Enter\')adbAddBranch()"></div>';
-  h+='<button class="btn btn-r btn-sm" onclick="adbAddBranch()">'+ic('plus',13)+' إضافة فرع</button>';
-  h+='</div><div class="msg err" id="adb-err">اكتب اسم الفرع</div></div>';
+  h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem">';
+  h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic('pin',13)+' فرع جديد</div>';
+  h+='<div class="frow"><div class="fg req"><label>اسم الفرع *</label><input type="text" id="adb-new" placeholder="مثال: فارس القيروان" onkeydown="if(event.key===\'Enter\')adbAddBranch()"></div>';
+  h+='<div class="fg req"><label>المدينة *</label><select id="adb-new-city">'+opts(CITIES,'اختر')+'</select></div></div>';
+  h+='<div class="fg"><label>شعار الفرع</label>'+adbImgField('adbn','')+'</div>';
+  h+='<button class="btn btn-r btn-sm" style="width:100%" onclick="adbAddBranch()">'+ic('plus',13)+' إضافة الفرع</button>';
+  h+='<div class="msg err" id="adb-err">أكمل اسم الفرع والمدينة</div></div>';
   if(!(t.branches||[]).length)h+=emptyBox('pin','لا توجد فروع بعد','أضف أول فرع من الحقل أعلاه');
   else{
     h+='<div class="adb-grid">';
     (t.branches||[]).forEach(function(b){
       var s=adbStats(b.name);
       h+='<div class="adb-card" onclick="adbOpen(\''+jq(b.name)+'\')">';
-      h+='<div class="adb-hd"><div class="adb-ic">'+ic('pin',17)+'</div><div class="adb-nm">'+esc(b.name)+'</div></div>';
+      h+='<div class="adb-hd">'
+        +(b.img?'<div class="adb-ic" style="overflow:hidden;padding:0"><img src="'+esc(b.img)+'" style="width:100%;height:100%;object-fit:cover"></div>'
+               :'<div class="adb-ic">'+ic('pin',17)+'</div>')
+        +'<div class="adb-nm">'+esc(b.name)
+        +(b.city?'<div style="font-size:10.5px;font-weight:500;color:var(--gray)">'+esc(b.city)+'</div>':'')+'</div></div>';
       h+='<div class="adb-st">';
       [['موظف',s.staff],['مدرب',s.coaches],['ملعب',s.pitches],['فترة',s.periods],['فئة',s.cats],['لاعب',s.players]]
         .forEach(function(x){h+='<div><b>'+ceN(x[1])+'</b><span>'+x[0]+'</span></div>';});
       h+='</div>';
       var gaps=[];
+      if(!b.city)gaps.push('مدينة');
       if(!s.pitches)gaps.push('ملاعب');
       if(!s.periods)gaps.push('فترات');
       if(!s.coaches)gaps.push('مدربين');
@@ -17941,21 +17960,21 @@ function rADBranches(){
   el.innerHTML=h;hydrateIcons(el);
 }
 function adbAddBranch(){
-  var v=gv('adb-new');
-  if(!v){fl('adb-err');return;}
+  var v=gv('adb-new'),city=gv('adb-new-city');
+  if(!v||!city){fl('adb-err');return;}
   var t=TDX();
   if((t.branches||[]).some(function(b){return normName(b.name)===normName(v);})){
     g('adb-err').textContent='يوجد فرع بنفس الاسم';fl('adb-err');return;
   }
-  t.branches.push({id:uid(),name:v,pitches:[]});
+  t.branches.push({id:uid(),name:v,city:city,img:gv('adbn-img')||'',tours:[],pitches:[]});
   logA('إضافة فرع: '+v,'pin','#16a34a');
   /* نفتح صفحة الفرع فوراً — الفرع بلا ملاعب ولا فترات لا يفيد،
      فالمطلوب إكمال بياناته في نفس اللحظة لا البحث عنه بعدين. */
-  ADBR.sel=v;ADBR.tab='staff';ADBR.edit='';
+  ADBR.sel=v;ADBR.tab='info';ADBR.edit='';
   sv();rADBranches();
   addN('تم إضافة الفرع',v+' — أكمل بياناته الآن','success');
 }
-function adbOpen(bn){ADBR.sel=bn;ADBR.tab='staff';ADBR.edit='';rADBranches();}
+function adbOpen(bn){ADBR.sel=bn;ADBR.tab='info';ADBR.edit='';rADBranches();}
 function adbTab(k){ADBR.tab=k;ADBR.edit='';rADBranches();}
 
 function adbDetail(el){
@@ -17964,17 +17983,19 @@ function adbDetail(el){
   var s=adbStats(bn);
   var h='<button class="btn btn-g btn-sm" onclick="ADBR.sel=\'\';ADBR.edit=\'\';rADBranches()" style="margin-bottom:1rem">'
     +ic('swap',12)+' كل الفروع</button>';
-  h+='<div class="adb-hero"><div class="adb-ic" style="width:48px;height:48px">'+ic('pin',22)+'</div>'
-    +'<div style="flex:1;min-width:160px"><div class="adb-hn">'+esc(bn)+'</div>'
+  h+='<div class="adb-hero">'
+    +(b&&b.img?'<div class="adb-ic" style="width:48px;height:48px;overflow:hidden;padding:0"><img src="'+esc(b.img)+'" style="width:100%;height:100%;object-fit:cover"></div>'
+              :'<div class="adb-ic" style="width:48px;height:48px">'+ic('pin',22)+'</div>')
+    +'<div style="flex:1;min-width:160px"><div class="adb-hn">'+esc(bn)+(b&&b.city?' <small style="font-weight:500;color:var(--gray);font-size:11px">'+esc(b.city)+'</small>':'')+'</div>'
     +'<div class="adb-hs">'+ceN(s.players)+' لاعب • '+ceN(s.coaches)+' مدرب • '+ceN(s.slots)+' حصة • '+ceN(s.tours)+' بطولة</div></div>'
     +'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="adbDelBranch(\''+(b?b.id:'')+'\')">'
     +ic('trash',12)+' حذف الفرع</button></div>';
   h+='<div class="ce2-tabs">'+ADBR_TABS.map(function(x){
     var n={staff:s.staff,coaches:s.coaches,pitches:s.pitches,periods:s.periods,cats:s.cats,slots:s.slots,tours:s.tours}[x[0]];
     return '<button class="ce2-tab'+(ADBR.tab===x[0]?' on':'')+'" onclick="adbTab(\''+x[0]+'\')">'
-      +ic(x[2],13)+' '+x[1]+' <b style="opacity:.75">'+ceN(n)+'</b></button>';
+      +ic(x[2],13)+' '+x[1]+(n==null?'':' <b style="opacity:.75">'+ceN(n)+'</b>')+'</button>';
   }).join('')+'</div>';
-  h+={staff:adbStaff,coaches:adbCoaches,pitches:adbPitches,periods:adbPeriods,
+  h+={info:adbInfo,staff:adbStaff,coaches:adbCoaches,pitches:adbPitches,periods:adbPeriods,
       cats:adbCats,slots:adbSlots,tours:adbToursTab}[ADBR.tab](bn,b);
   el.innerHTML=h;hydrateIcons(el);
 }
@@ -17994,6 +18015,80 @@ function adbDelBranch(bid){
   });
 }
 
+/* ---------- معلومات الفرع: نفس ما يُطلب عند تسجيل فريق ---------- */
+function adbInfo(bn,b){
+  if(!b)return emptyBox('pin','الفرع غير موجود');
+  var h='<div class="rform" style="margin-bottom:1rem;max-width:680px">';
+  h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic('pin',13)+' بيانات الفرع</div>';
+  h+='<div class="frow"><div class="fg req"><label>اسم الفرع *</label><input type="text" id="adbi-name" value="'+esc(b.name)+'"></div>';
+  h+='<div class="fg req"><label>المدينة *</label><select id="adbi-city">'+opts(CITIES,'اختر')+'</select></div></div>';
+  h+='<div class="fg"><label>شعار الفرع</label>'+adbImgField('adbi',b.img||'')+'</div>';
+  h+='<button class="btn btn-r btn-sm" style="width:100%" onclick="adbSaveInfo(\''+b.id+'\')">'+ic('check',12)+' حفظ بيانات الفرع</button>';
+  h+='<div class="msg ok" id="adbi-ok">تم الحفظ</div><div class="msg err" id="adbi-err">أكمل اسم الفرع والمدينة</div></div>';
+
+  /* البطولات المشارِك فيها — اختيار صريح إضافة لما يُطابق الاسم تلقائياً */
+  var picked=(b.tours||[]);
+  h+='<div class="rform" style="max-width:680px">';
+  h+='<div class="cw-t" style="margin-bottom:.4rem">'+ic('trophy',13)+' البطولات المشارِك فيها <small style="font-weight:500;color:var(--gray)">(اختر واحدة أو أكثر — اختياري)</small></div>';
+  var trs=((DB&&DB.tournaments)||[]);
+  if(!trs.length)h+='<div style="font-size:12px;color:var(--gray)">لا توجد بطولات في نظام بطولات فارس بعد.</div>';
+  else{
+    h+='<div class="brpick" id="adbi-tours">'+trs.map(function(tr){
+      var auto=(tr.teams||[]).some(function(x){return normName(x.name)===normName(bn);});
+      return '<button type="button" class="brchip'+((auto||picked.indexOf(tr.name)>-1)?' on':'')+'" data-br="'+esc(tr.name)+'"'
+        +(auto?' title="مسجّل كفريق في هذه البطولة" disabled style="opacity:.75"':' onclick="this.classList.toggle(\'on\')"')+'>'
+        +ic(tr.icon||'trophy',11)+' '+esc(tr.name)+'</button>';}).join('')+'</div>';
+    h+='<button class="btn btn-o btn-sm" style="margin-top:.7rem" onclick="adbSaveTours(\''+b.id+'\')">'+ic('check',12)+' حفظ البطولات</button>';
+    h+='<div class="jnote" style="margin-top:.7rem">'+ic('info',12)
+      +' البطولة التي الفرع مسجّل فيها كفريق تظهر مفعّلة تلقائياً ولا تُلغى من هنا — تُدار من نظام بطولات فارس.</div>';
+  }
+  h+='</div>';
+  setTimeout(function(){var c=g('adbi-city');if(c)c.value=b.city||'';},0);
+  return h;
+}
+function adbSaveInfo(bid){
+  var t=TDX(),b=(t.branches||[]).find(function(x){return x.id===bid;});
+  if(!b)return;
+  var n=gv('adbi-name'),city=gv('adbi-city');
+  if(!n||!city){fl('adbi-err');return;}
+  if((t.branches||[]).some(function(x){return x.id!==bid&&normName(x.name)===normName(n);})){
+    g('adbi-err').textContent='يوجد فرع بنفس الاسم';fl('adbi-err');return;
+  }
+  var old=b.name;
+  b.city=city;b.img=gv('adbi-img')||'';
+  if(normName(old)!==normName(n)||old!==n){
+    /* تغيير الاسم يسري على كل ما يشير للفرع بالاسم لا بالمعرّف */
+    b.name=n;
+    ['cats','groups','players','periods'].forEach(function(k){
+      (t[k]||[]).forEach(function(x){if(x.branch===old)x.branch=n;});
+    });
+    ['coaches','staff'].forEach(function(k){
+      (t[k]||[]).forEach(function(x){
+        if(x.branch===old)x.branch=n;
+        if(x.branches)x.branches=x.branches.map(function(y){return y===old?n:y;});
+      });
+    });
+    ((DB.ce&&DB.ce.sups)||[]).forEach(function(sp){
+      sp.branches=(sp.branches||[]).map(function(y){return y===old?n:y;});
+    });
+    (DB.users||[]).forEach(function(u){
+      if(u.branch===old)u.branch=n;
+      if(u.branches)u.branches=u.branches.map(function(y){return y===old?n:y;});
+    });
+    ADBR.sel=n;
+    logA('تعديل اسم فرع: '+old+' ← '+n,'edit','#1565c0');
+  }else logA('تعديل بيانات الفرع: '+n,'edit','#1565c0');
+  sv();rADBranches();
+  addN('تم الحفظ',n,'success');
+}
+function adbSaveTours(bid){
+  var t=TDX(),b=(t.branches||[]).find(function(x){return x.id===bid;});
+  if(!b)return;
+  b.tours=pickedBranches('adbi-tours');
+  logA('تحديث بطولات الفرع: '+b.name,'trophy','#1565c0');
+  sv();rADBranches();addN('تم الحفظ',b.name,'success');
+}
+
 /* ---------- حقول الشخص: نفس ما يُطلب عند تسجيل فريق ---------- */
 function adbPersonForm(pfx,rec){
   var n=splitName(rec||{});
@@ -18005,15 +18100,70 @@ function adbPersonForm(pfx,rec){
   h+='<div class="fg"><label>الجنسية</label><input type="text" id="'+pfx+'-nat" value="'+esc(rec&&rec.nat?rec.nat:'')+'" placeholder="سعودي"></div></div>';
   h+='<div class="frow"><div class="fg"><label>رقم الجوال</label>'+phoneField(pfx+'-ph',(rec&&rec.phone)||'')+'</div>';
   h+='<div class="fg"><label>تاريخ الميلاد</label><input type="date" id="'+pfx+'-dob" style="direction:ltr" value="'+esc(rec&&rec.dob?rec.dob:'')+'"></div></div>';
-  h+='<div class="frow"><div class="fg"><label>اسم المستخدم <small>(لربط حسابه بالنظام)</small></label><input type="text" id="'+pfx+'-user" value="'+esc(rec&&rec.user?rec.user:'')+'"></div>';
-  h+='<div class="fg"><label>تاريخ الانضمام</label><input type="date" id="'+pfx+'-joined" style="direction:ltr" value="'+esc(rec&&rec.joined?rec.joined:'')+'"></div></div>';
+  h+='<div class="fg"><label>تاريخ الانضمام</label><input type="date" id="'+pfx+'-joined" style="direction:ltr" value="'+esc(rec&&rec.joined?rec.joined:'')+'"></div>';
+  /* حساب الدخول — نفس ما يُطلب عند تسجيل فريق: اسم + جوال + رمز 4 أرقام.
+     بدونه يبقى الشخص سجلاً بلا حساب، ولا يستطيع الدخول للنظام. */
+  var acc=adbAccountOf(rec);
+  h+='<div class="cat-wrap" style="margin-top:.2rem"><div class="cw-t">'+ic('shield',12)+' حساب الدخول'
+    +(acc?' <small style="font-weight:500;color:#16a34a">(حساب قائم)</small>':' <small style="font-weight:500;color:var(--gray)">(اتركه فارغاً إن كنت لا تريد حساباً الآن)</small>')+'</div>';
+  h+='<div class="frow"><div class="fg"><label>اسم المستخدم</label><input type="text" id="'+pfx+'-user" value="'+esc((acc&&acc.username)||(rec&&rec.user)||'')+'" placeholder="يُملأ من الاسم تلقائياً"></div>';
+  h+='<div class="fg"><label>الرمز السري (4 أرقام)</label><input type="tel" inputmode="numeric" id="'+pfx+'-pin" maxlength="4" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="'+(acc?'إبقاء الرمز الحالي':'1234')+'"></div></div>';
+  h+='</div>';
   return h;
+}
+/* حالة الحساب في الجداول */
+function adbAccCell(rec){
+  var a=adbAccountOf(rec);
+  if(a)return '<span style="color:#16a34a">'+esc(a.username||a.name)+'</span>';
+  return '<span style="color:var(--amber)">بلا حساب</span>';
+}
+/* حساب الدخول المرتبط بسجل مدرب/موظف */
+function adbAccountOf(rec){
+  if(!rec||!rec.id)return null;
+  var byId=(DB.users||[]).find(function(u){return u.coachId===rec.id||u.staffId===rec.id;});
+  if(byId)return byId;
+  if(!rec.user)return null;
+  /* اسم مستخدم مطابق يُربط فقط إن كان حساباً حرّاً — وإلا فهو حساب شخص آخر
+     وكتابة اسمه هنا كانت ستسرق حسابه بدل إنشاء حساب جديد. */
+  var free=(DB.users||[]).find(function(u){
+    return u.username&&normName(u.username)===normName(rec.user)&&!u.coachId&&!u.staffId;});
+  return free||null;
+}
+/* إنشاء/تحديث الحساب من سجل الشخص. يعيد نص خطأ أو '' */
+function adbSyncAccount(rec,role,bn,pin,un){
+  un=(un||rec.user||rec.name||'').trim();
+  var acc=adbAccountOf(rec);
+  if(!acc&&!pin)return '';                      /* لا حساب مطلوب الآن */
+  if(!acc&&pin&&!/^[0-9]{4}$/.test(pin))return 'الرمز السري يجب أن يكون 4 أرقام';
+  if(pin&&!/^[0-9]{4}$/.test(pin))return 'الرمز السري يجب أن يكون 4 أرقام';
+  var clash=(DB.users||[]).some(function(u){
+    return (!acc||u.id!==acc.id)&&normName(u.username||u.name)===normName(un);});
+  if(clash)return 'اسم المستخدم «'+un+'» مستخدم في حساب آخر';
+  var idKey=(role==='coach')?'coachId':'staffId';
+  if(!acc){
+    acc={id:uid(),name:rec.name,username:un,password:pin,role:role,phone:rec.phone||'',branch:bn,branches:[bn]};
+    acc[idKey]=rec.id;
+    DB.users.push(acc);
+    if(FA.enabled)faSync(FA.upsertUser(acc,pin));
+    logA('إنشاء حساب '+(role==='coach'?'مدرب':'مدير فرع')+': '+rec.name,'user-plus','#16a34a');
+  }else{
+    acc.name=rec.name;acc.username=un;acc.role=acc.role||role;
+    if(rec.phone)acc.phone=rec.phone;
+    acc[idKey]=rec.id;
+    var brs=coachBranches(rec);
+    acc.branches=brs.slice();acc.branch=brs[0]||acc.branch||bn;
+    if(pin){acc.password=pin;if(FA.enabled)faSync(FA.setPin(acc.id,pin));}
+    if(FA.enabled)faSync(FA.upsertUser(acc,pin||null));
+  }
+  rec.user=un;
+  return '';
 }
 function adbPersonRead(pfx){
   var fn=gv(pfx+'-fn'),mn=gv(pfx+'-mn'),ln=gv(pfx+'-ln');
   var name=[fn,mn,ln].filter(Boolean).join(' ').trim();
   return {name:name,fn:fn,mn:mn,ln:ln,nid:normNid(gv(pfx+'-nid')),nat:gv(pfx+'-nat'),
-          phone:phoneVal(pfx+'-ph'),dob:gv(pfx+'-dob'),user:gv(pfx+'-user'),joined:gv(pfx+'-joined')};
+          phone:phoneVal(pfx+'-ph'),dob:gv(pfx+'-dob'),user:gv(pfx+'-user'),joined:gv(pfx+'-joined'),
+          pin:gv(pfx+'-pin')};
 }
 
 /* ---------- الموظفون ---------- */
@@ -18035,7 +18185,7 @@ function adbStaff(bn){
   list.forEach(function(x){
     h+='<tr><td style="font-weight:700">'+esc(x.name)+'</td><td>'+esc(x.title||'—')+'</td>'
       +'<td style="direction:ltr;text-align:start">'+esc(x.phone?phoneDisp(x.phone):'—')+'</td>'
-      +'<td>'+esc(x.user||'غير مرتبط')+'</td>'
+      +'<td>'+adbAccCell(x)+'</td>'
       +'<td style="font-size:10.5px">'+esc(coachBranches(x).join('، '))+'</td>'
       +'<td style="white-space:nowrap">'+adbEditBtn('staff',x.id)
       +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="adbDelStaff(\''+x.id+'\')">'+ic('trash',11)+'</button></td></tr>';
@@ -18044,16 +18194,27 @@ function adbStaff(bn){
 }
 function adbSaveStaff(bn){
   var d=adbPersonRead('adb-s');
-  if(!d.fn||!d.mn||!d.ln){fl('adb-s-err');return;}
-  var t=TDX(),ed=adbEditing('staff');
+  var t=TDX(),ed=adbEditing('staff'),rec;
+  /* الاسم الثلاثي مطلوب في التسجيل الجديد فقط — السجلات القديمة قد تكون
+     مسجّلة باسم ثنائي، وإلزامها بالثالث كان يمنع تعديلها أصلاً. */
+  if(!d.fn||(!ed&&(!d.mn||!d.ln))){
+    g('adb-s-err').textContent=d.fn?'أكمل اسم الموظف ثلاثياً':'اكتب اسم الموظف';fl('adb-s-err');return;}
+  var pin=d.pin,un=d.user;delete d.pin;   /* الرمز لا يُخزَّن في سجل الموظف */
   var extra={title:gv('adb-s-title')};
   if(ed){
-    var x=(t.staff||[]).find(function(y){return y.id===ed;});
-    if(x){Object.assign(x,d,extra);logA('تعديل موظف: '+d.name,'edit','#1565c0');}
+    rec=(t.staff||[]).find(function(y){return y.id===ed;});
+    if(!rec)return;
+    Object.assign(rec,d,extra);
   }else{
-    t.staff.push(Object.assign({id:uid(),branch:bn,branches:[bn],at:Date.now()},d,extra));
-    logA('إضافة موظف: '+d.name+' — '+bn,'shield','#16a34a');
+    rec=Object.assign({id:uid(),branch:bn,branches:[bn],at:Date.now()},d,extra);
+    t.staff.push(rec);
   }
+  var err=adbSyncAccount(rec,'admin-team',bn,pin,un);
+  if(err){
+    if(!ed)t.staff=t.staff.filter(function(y){return y!==rec;});
+    g('adb-s-err').textContent=err;fl('adb-s-err');return;
+  }
+  logA((ed?'تعديل موظف: ':'إضافة موظف: ')+rec.name+(ed?'':' — '+bn),ed?'edit':'shield',ed?'#1565c0':'#16a34a');
   sv();ADBR.edit='';rADBranches();
 }
 function adbDelStaff(id){
@@ -18088,7 +18249,7 @@ function adbCoaches(bn){
       +'<td style="direction:ltr;text-align:start">'+esc(c.nid||'—')+'</td>'
       +'<td style="direction:ltr;text-align:start">'+esc(c.phone?phoneDisp(c.phone):'—')+'</td>'
       +'<td>'+esc(c.exp||'—')+'</td>'
-      +'<td>'+esc(c.user||'غير مرتبط')+'</td><td>'+ceN(n)+'</td>'
+      +'<td>'+adbAccCell(c)+'</td><td>'+ceN(n)+'</td>'
       +'<td style="white-space:nowrap">'+adbEditBtn('coach',c.id)
       +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelCoach(\''+c.id+'\')">'+ic('trash',11)+'</button></td></tr>';
   });
@@ -18096,23 +18257,34 @@ function adbCoaches(bn){
 }
 function adbSaveCoach(bn){
   var d=adbPersonRead('adb-c');
-  if(!d.fn||!d.mn||!d.ln){fl('adb-c-err');return;}
-  var t=TDX(),ed=adbEditing('coach');
+  var t=TDX(),ed=adbEditing('coach'),rec;
+  if(!d.fn||(!ed&&(!d.mn||!d.ln))){
+    g('adb-c-err').textContent=d.fn?'أكمل اسم المدرب ثلاثياً':'اكتب اسم المدرب';fl('adb-c-err');return;}
+  var pin=d.pin,un=d.user;delete d.pin;   /* الرمز لا يُخزَّن في سجل المدرب */
   var extra={exp:gv('adb-c-exp'),certs:gv('adb-c-certs'),img:gv('adbc-img')};
   if(ed){
-    var c=tdCoach(ed);
-    if(c){Object.assign(c,d,extra);logA('تعديل مدرب: '+d.name,'edit','#1565c0');}
+    rec=tdCoach(ed);
+    if(!rec)return;
+    Object.assign(rec,d,extra);
   }else{
     var ex=findCoachByName(d.name);
     if(ex&&coachBranches(ex).indexOf(bn)<0){
       ex.branches=coachBranches(ex).concat([bn]);ex.branch=ex.branches[0];
+      var e2=adbSyncAccount(ex,'coach',bn,pin,un);
+      if(e2){g('adb-c-err').textContent=e2;fl('adb-c-err');return;}
       logA('إضافة فرع للمدرب: '+ex.name+' — '+bn,'pin','#1565c0');
-      sv();rADBranches();return;
+      sv();ADBR.edit='';rADBranches();return;
     }
     if(ex){g('adb-c-err').textContent='المدرب مضاف مسبقاً في هذا الفرع';fl('adb-c-err');return;}
-    t.coaches.push(Object.assign({id:uid(),branch:bn,branches:[bn],note:'',at:Date.now()},d,extra));
-    logA('إضافة مدرب: '+d.name+' — '+bn,'whistle','#16a34a');
+    rec=Object.assign({id:uid(),branch:bn,branches:[bn],note:'',at:Date.now()},d,extra);
+    t.coaches.push(rec);
   }
+  var err=adbSyncAccount(rec,'coach',bn,pin,un);
+  if(err){
+    if(!ed)t.coaches=t.coaches.filter(function(y){return y!==rec;});
+    g('adb-c-err').textContent=err;fl('adb-c-err');return;
+  }
+  logA((ed?'تعديل مدرب: ':'إضافة مدرب: ')+rec.name+(ed?'':' — '+bn),ed?'edit':'whistle',ed?'#1565c0':'#16a34a');
   sv();ADBR.edit='';rADBranches();
 }
 
@@ -18328,9 +18500,9 @@ function adbToursTab(bn){
   var h='<div class="jnote" style="margin-bottom:1rem">'+ic('info',12)
     +' البطولات التي يشارك فيها هذا الفرع كفريق. تُدار من نظام «بطولات فارس».</div>';
   if(!list.length)return h+emptyBox('trophy','هذا الفرع لا يشارك في أي بطولة',
-    'سجّل الفرع كفريق من نظام بطولات فارس ليظهر هنا');
+    'اخترها من «معلومات الفرع» أو سجّل الفرع كفريق في نظام بطولات فارس');
   list.forEach(function(x){
-    var tr=x.tour,team=x.team;
+    var tr=x.tour,team=x.team||{};
     var pls=(team.players||[]).length;
     var cats=(team.categories||[]).map(function(c){return c.name;});
     var ms=(tr.matches||[]).filter(function(m){
@@ -18351,6 +18523,7 @@ function adbToursTab(bn){
       +(cats.length?' • '+esc(cats.join('، ')):'')+'</div></div>';
     h+='<span class="ce2-st" style="background:'+(tr.visible!==false?'#16a34a':'var(--gray)')+'1f;color:'+(tr.visible!==false?'#16a34a':'var(--gray)')+'">'
       +(tr.visible!==false?'نشطة':'مخفية')+'</span>';
+    if(!x.team)h+='<span class="ce2-st" style="background:var(--amber)1f;color:var(--amber)">غير مسجّل كفريق</span>';
     h+='</div>';
     h+='<div class="adb-st" style="grid-template-columns:repeat(auto-fit,minmax(64px,1fr))">';
     [['لاعب',pls],['مباراة',ms.length],['فوز',w],['تعادل',d],['خسارة',l],['له',gf],['عليه',ga]]
@@ -18959,7 +19132,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-mod</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-reg</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
