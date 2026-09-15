@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.08.11-1714">
+<meta name="build" content="2026.09.15-playerlogin">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2472,7 +2472,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lf" id="lf-nid" style="display:none">
       <label>رقم هوية اللاعب</label>
       <input type="tel" id="l-nid" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:2px;font-size:17px" oninput="this.value=normNid(this.value)" onkeydown="if(event.key==='Enter')goNid()">
-      <div class="lhint">أدخل رقم هويتك أو إقامتك — أول مرة يُطلب تاريخ ميلادك</div>
+      <div class="lhint">حسابك جاهز تلقائياً — أدخل رقم هويتك أو إقامتك، وأول مرة فقط تؤكد تاريخ ميلادك وتختار رمزك</div>
       <div id="nid-trace" style="display:none;margin-top:.5rem;padding:.5rem .7rem;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.18);border-radius:8px;font-size:10px;line-height:1.9;color:#9aa4c7;direction:rtl;text-align:right;word-break:break-word"></div>
     </div>
     <div class="lf" id="lf-name" style="display:none">
@@ -2484,7 +2484,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.06-teamwork</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-playerlogin</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -2517,10 +2517,10 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="jstep on" id="js1">
       <div class="jhdr"><div><h3>إنشاء حساب جديد</h3><p>اختر نوع حسابك للبدء</p></div><button class="jclose" onclick="closeJoin()" data-ic="x"></button></div>
       <div class="rc-grid">
-        <div class="rc" onclick="sJR('player',this)"><div class="ric" data-ic="user"></div><div class="rn">لاعب</div><div class="rd">مشاهدة + بطاقة رقمية</div></div>
         <div class="rc" onclick="sJR('viewer',this)"><div class="ric" data-ic="eye"></div><div class="rn">ولي أمر</div><div class="rd">متابعة النتائج والجداول</div></div>
         <div class="rc" onclick="sJR('admin-team',this)"><div class="ric" data-ic="shield"></div><div class="rn">إداري أكاديمية</div><div class="rd">تسجيل وإدارة أكاديمية</div></div>
       </div>
+      <div class="jnote" style="margin-top:.9rem"><span data-ic="info"></span> اللاعبون لا ينشئون حسابات — حساب اللاعب جاهز تلقائياً بمجرد تسجيل بياناته لدى الأكاديمية، ويدخل من تبويب «لاعب» برقم هويته.</div>
       <div class="msg err" id="j-e1">يرجى اختيار نوع الحساب</div>
       <button class="btn btn-r" style="width:100%;margin-top:1.1rem" onclick="jN(1)">التالي</button>
     </div>
@@ -4778,60 +4778,48 @@ function nidDoLogin(){
     loginOK();
   }).catch(function(){g('na-lerr').textContent='تعذّر الاتصال — حاول مجدداً';fl('na-lerr');});
 }
+/* شاشة واحدة لأول دخول: الحساب موجود أصلاً منذ تسجيل بيانات اللاعب،
+   فلا «تفعيل» ولا «إنشاء حساب» — فقط تأكيد الميلاد واختيار رمز. */
 function openNidActivate(p){
   g('na-av').textContent=ti(p.name);
-  g('na-nm').textContent='تفعيل حساب لاعب';
+  g('na-nm').textContent='أول دخول لك';
   var h='';
-  h+='<div class="ped-note warn">'+ic('shield',14)+'<div><b>تأكيد الهوية.</b><br>'
-    +'أدخل تاريخ ميلاد اللاعب المسجّل لدى الأكاديمية للتأكد أنك صاحب الحساب أو وليّ أمره.</div></div>';
+  h+='<div class="ped-note free">'+ic('check',14)+'<div><b>'+esc(p.name||'')+'</b><br>'
+    +'حسابك جاهز لدى الأكاديمية. أكّد تاريخ ميلادك واختر رمزاً سرياً تدخل به في المرات القادمة.</div></div>';
   var dOpts='<option value="">اليوم</option>',mOpts='<option value="">الشهر</option>',yOpts='<option value="">السنة</option>';
   for(var d=1;d<=31;d++)dOpts+='<option value="'+d+'">'+d+'</option>';
   for(var m=1;m<=12;m++)mOpts+='<option value="'+m+'">'+MONTHS[m-1]+'</option>';
   var yNow=new Date().getFullYear();
   for(var y=yNow;y>=yNow-45;y--)yOpts+='<option value="'+y+'">'+y+'</option>';
-  h+='<div class="fg req"><label>تاريخ الميلاد *</label>'
+  h+='<div class="fg req"><label>تاريخ ميلادك *</label>'
     +'<div style="display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:.45rem">'
     +'<select id="na-dd">'+dOpts+'</select>'
     +'<select id="na-dm">'+mOpts+'</select>'
     +'<select id="na-dy">'+yOpts+'</select>'
     +'</div></div>';
-  h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidVerifyDob()">'+ic('check',14)+' تأكيد</button>';
+  h+='<div class="fg"><label>رمز سري (4 أرقام) *</label><input type="password" id="na-pin" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
+  h+='<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="na-pin2" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px" onkeydown="if(event.key===\'Enter\')nidFinish()"></div>';
+  h+='<div class="fg"><label>رقم الجوال <small>(اختياري — يسهّل دخولك لاحقاً)</small></label>'+phoneField('na-phone',p.phone||'')+'</div>';
+  h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidFinish()">'+ic('check',14)+' دخول</button>';
   h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="closeNidAct()">رجوع</button>';
-  h+='<div class="msg err" id="na-err">تاريخ الميلاد غير مطابق</div>';
+  h+='<div class="msg err" id="na-err2">تحقق من البيانات</div>';
   g('na-body').innerHTML=h;hydrateIcons(g('na-body'));
   g('naMod').classList.add('open');
 }
 function closeNidAct(){g('naMod').classList.remove('open');NIDFLOW={pid:null,step:0};}
-function nidVerifyDob(){
-  var p=anyPlayer(NIDFLOW.pid);if(!p){closeNidAct();return;}
-  var dd=gv('na-dd'),dm=gv('na-dm'),dy=gv('na-dy');
-  if(!dd||!dm||!dy){g('na-err').textContent='اختر اليوم والشهر والسنة';fl('na-err');return;}
-  var d=dy+'-'+dm+'-'+dd;
-  NIDFLOW.dobStr=d;
-  if(!p.dob&&FA.enabled){NIDFLOW.step=2;nidSetPinForm(p);return;}  /* الخادم سيتحقق */
-  if(!p.dob){
-    g('na-err').textContent='تاريخ ميلادك غير مسجّل لدى الأكاديمية — تواصل مع الإدارة لتفعيل حسابك';
-    fl('na-err');return;
-  }
-  if(!sameDob(d,p.dob)){
-    g('na-err').textContent='تاريخ الميلاد غير مطابق للمسجّل لدى الأكاديمية';
-    fl('na-err');return;
-  }
-  NIDFLOW.step=2;
-  nidSetPinForm(p);
-}
-function nidSetPinForm(p){
-  var h='';
-  h+='<div class="ped-note free">'+ic('check',14)+'<div><b>تم التأكد من هويتك.</b><br>'+esc(p.name)+' — اختر رمزاً سرياً تعرفه أنت وحدك.</div></div>';
-  h+='<div class="fg"><label>رمز سري (4 أرقام) *</label><input type="password" id="na-pin" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
-  h+='<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="na-pin2" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
-  h+='<div class="fg"><label>رقم الجوال <small>(اختياري — يسهّل دخولك لاحقاً)</small></label>'+phoneField('na-phone',p.phone||'')+'</div>';
-  h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidFinish()">'+ic('check',14)+' إنشاء الحساب</button>';
-  h+='<div class="msg err" id="na-err2">تحقق من البيانات</div>';
-  g('na-body').innerHTML=h;hydrateIcons(g('na-body'));
-}
 function nidFinish(){
   var p=anyPlayer(NIDFLOW.pid);if(!p){closeNidAct();return;}
+  /* ١) تأكيد الميلاد — الخادم يعيد التحقق منه أيضاً، هذا فحص مبكر للمستخدم */
+  var dd=gv('na-dd'),dm=gv('na-dm'),dy=gv('na-dy');
+  if(!dd||!dm||!dy){g('na-err2').textContent='اختر يوم وشهر وسنة ميلادك';fl('na-err2');return;}
+  var dstr=dy+'-'+dm+'-'+dd;
+  if(p.dob&&!sameDob(dstr,p.dob)){
+    g('na-err2').textContent='تاريخ الميلاد غير مطابق للمسجّل لدى الأكاديمية';fl('na-err2');return;
+  }
+  if(!p.dob&&!FA.enabled){
+    g('na-err2').textContent='تاريخ ميلادك غير مسجّل لدى الأكاديمية — تواصل مع الإدارة';fl('na-err2');return;
+  }
+  NIDFLOW.dobStr=dstr;NIDFLOW.step=2;
   var pin=gv('na-pin'),pin2=gv('na-pin2'),ph=phoneVal('na-phone');
   if(!/^[0-9]{4}$/.test(pin)){g('na-err2').textContent='الرمز يجب أن يكون 4 أرقام';fl('na-err2');return;}
   if(pin!==pin2){g('na-err2').textContent='الرمزان غير متطابقان';fl('na-err2');return;}
@@ -4841,25 +4829,25 @@ function nidFinish(){
     var clash=(DB.users||[]).filter(function(u){return u.phoneVerified&&normPhone(u.phone)===ph;});
     if(clash.length){g('na-err2').textContent='هذا الرقم مسجّل لحساب آخر — اتركه فارغاً أو استخدم رقماً غيره';fl('na-err2');return;}
   }
-  /* اللاعب لا يملك صلاحية كتابة — التفعيل يتم على الخادم ليبقى محفوظاً */
+  /* اللاعب لا يملك صلاحية كتابة — تسجيل الرمز يتم على الخادم ليبقى محفوظاً */
   if(FA.enabled){
     var btn=g('na-err2');
-    g('na-err2').textContent='جارٍ التفعيل…';fl('na-err2');
+    g('na-err2').textContent='جارٍ الدخول…';fl('na-err2');
     var dobStr=(NIDFLOW.dobStr||p.dob||'');
     FA.playerActivate(normNid(p.nid),dobStr,pin).then(function(res){
       if(!res||!res.ok){
         var m={nid:'رقم الهوية غير صحيح',pin:'الرمز يجب أن يكون 4 أرقام',
                notfound:'رقم الهوية غير مسجّل',nodob:'تاريخ ميلادك غير مسجّل لدى الأكاديمية — راجع الإدارة',
                dob:'تاريخ الميلاد غير مطابق',state:'تعذّر الوصول لقاعدة البيانات'};
-        g('na-err2').textContent=(res&&m[res.err])||'تعذّر التفعيل — حاول مجدداً';
+        g('na-err2').textContent=(res&&m[res.err])||'تعذّر الدخول — حاول مجدداً';
         fl('na-err2');return;
       }
       closeNidAct();
-      /* دخول مباشر بعد التفعيل */
+      /* دخول مباشر */
       CU={id:'pu_'+normNid(p.nid),name:res.name||p.name,username:normNid(p.nid),role:'player',
           pid:res.pid||p.id,team:res.team||'',nid:normNid(p.nid)};
       try{sessSave();}catch(e){}
-      addN('تم إنشاء حسابك','ستدخل الآن — وفي المرات القادمة استخدم هويتك ورمزك السري','success');
+      addN('أهلاً بك '+(res.name||p.name||''),'في المرات القادمة ادخل برقم هويتك ورمزك السري','success');
       loginOK();
     }).catch(function(e){
       g('na-err2').textContent='تعذّر الاتصال بالخادم — تحقق من الإنترنت';fl('na-err2');
@@ -4877,12 +4865,15 @@ function nidFinish(){
     if(ph){acc.phone=ph;acc.phoneVerified=true;}
   }
   if(ph)p.phone=ph;
-  logA('تفعيل حساب لاعب: '+p.name,'user','#16a34a');
+  logA('أول دخول للاعب: '+p.name,'user','#16a34a');
   sv();
   closeNidAct();
-  addN('تم إنشاء حسابك','سجّل دخولك برقم هويتك ورمزك السري','success');
-  lsMode('nid');
-  var e=g('l-nid');if(e)e.focus();
+  /* دخول مباشر — لا نعيده لشاشة الدخول بعد أن أثبت هويته للتو */
+  CU={id:acc.id,name:acc.name,username:acc.username,role:'player',
+      pid:p.id,team:acc.team||'',nid:normNid(p.nid)};
+  try{sessSave();}catch(e){}
+  addN('أهلاً بك '+(p.name||''),'في المرات القادمة ادخل برقم هويتك ورمزك السري','success');
+  loginOK();
 }
 
 function goPin(){
@@ -9931,11 +9922,11 @@ function issuesPlayerRanked(p){
   else if(!n.first||!n.mid||!n.last){crit.push('الاسم غير ثلاثي (اللاعب • الأب • العائلة)');codes.name=1;}
   if(!p.nid){crit.push('لا يوجد رقم هوية');codes.nid=1;}
   else if(String(p.nid).replace(/[^0-9]/g,'').length!==10){crit.push('رقم الهوية ناقص — يجب ١٠ أرقام');codes.nid=1;}
+  if(!p.dob){crit.push('لا يوجد تاريخ ميلاد — لن يستطيع الدخول لحسابه');codes.dob=1;}
   if(!p.guardPhone){crit.push('لا يوجد جوال ولي أمر');codes.gph=1;}
   else if(!phoneOK(p.guardPhone)){crit.push('جوال ولي الأمر غير صحيح');codes.gph=1;}
   else if(phoneFake(p.guardPhone)){crit.push('جوال ولي الأمر يبدو وهمياً');codes.gph=1;}
   /* ــ مهمة: تؤثر لكن لا توقف ــ */
-  if(!p.dob)warn.push('لا يوجد تاريخ ميلاد');
   if(!p.branch)warn.push('غير مسند لفرع');
   if(p.phone&&!phoneOK(p.phone))warn.push('جوال اللاعب غير صحيح');
   if(p.guardPhone&&phoneOK(p.guardPhone)){
@@ -12475,15 +12466,17 @@ function rTDPlayers(){
     /* شرح أعلى النموذج — ما المطلوب ولماذا */
     var _r=ed?issuesPlayerRanked(ed):null;
     h+='<div class="req-note">';
-    h+='<div class="req-hd">'+ic('shield',15)+'<b>بيانات لازمة لتفعيل حساب اللاعب</b></div>';
+    h+='<div class="req-hd">'+ic('shield',15)+'<b>بيانات لازمة — بها يُنشأ حساب اللاعب تلقائياً</b></div>';
     h+='<div class="req-list">';
-    var _c=(_r&&_r.codes)||{name:1,nid:1,gph:1};
+    var _c=(_r&&_r.codes)||{name:1,nid:1,gph:1,dob:1};
     h+='<div class="req-i'+((!ed||_c.name)?' miss':' ok')+'">'
       +'<span class="req-n">١</span><div><b>الاسم ثلاثياً</b><small>اسم اللاعب • اسم الأب • اسم العائلة</small></div></div>';
     h+='<div class="req-i'+((!ed||_c.nid)?' miss':' ok')+'">'
       +'<span class="req-n">٢</span><div><b>رقم الهوية أو الإقامة</b><small>١٠ أرقام — به يدخل اللاعب لحسابه</small></div></div>';
+    h+='<div class="req-i'+((!ed||_c.dob)?' miss':' ok')+'">'
+      +'<span class="req-n">٣</span><div><b>تاريخ الميلاد</b><small>يتحقق به اللاعب من نفسه أول دخول — بدونه لا يستطيع الدخول</small></div></div>';
     h+='<div class="req-i'+((!ed||_c.gph)?' miss':' ok')+'">'
-      +'<span class="req-n">٣</span><div><b>جوال ولي الأمر</b><small>وسيلة التواصل الرسمية مع الأسرة</small></div></div>';
+      +'<span class="req-n">٤</span><div><b>جوال ولي الأمر</b><small>وسيلة التواصل الرسمية مع الأسرة</small></div></div>';
     h+='</div></div>';
     h+='<div class="sub-head" style="margin:.2rem 0 .6rem"><span class="sh-line"></span><h2 style="font-size:12px">الهوية</h2></div>';
     h+='<div class="frow" style="grid-template-columns:1fr 1fr 1fr"><div class="fg req"><label>اسم اللاعب *</label><input type="text" id="tdp-fn" value="'+esc(_n.first)+'" placeholder="محمد"></div>';
@@ -12501,7 +12494,7 @@ function rTDPlayers(){
     h+='<div class="fg" id="tdp-gwrap" style="display:none">'+tdSel('tdp-group',tdCatOpts(),ed?ed.groupId:'','')+'</div></div>';
     h+='<div class="fg"><label>المركز</label>'+tdSel('tdp-pos',['حارس مرمى','مدافع','وسط','مهاجم'],ed?ed.pos:'','اختر المركز')+'</div>';
     h+='<div class="frow"><div class="fg"><label>القدم المفضلة</label>'+tdSel('tdp-foot',['اليمنى','اليسرى','كلتاهما'],ed?ed.foot:'','اختر')+'</div>';
-    h+='<div class="fg"><label>تاريخ الميلاد</label><input type="date" id="tdp-dob" style="direction:ltr" value="'+esc(ed?ed.dob:'')+'"></div></div>';
+    h+='<div class="fg req"><label>تاريخ الميلاد *</label><input type="date" id="tdp-dob" style="direction:ltr" value="'+esc(ed?ed.dob:'')+'"></div></div>';
     h+='<div class="fg"><label>حالة اللاعب</label>'+tdSel('tdp-status',Object.keys(TDPST).map(function(k){return [k,TDPST[k]];}),ed?ed.status:'active','اختر الحالة')+'</div>';
     h+='<div class="fg"><label>الصورة <small>(اختياري)</small></label><div class="img-pick"><div class="img-prev" id="tdp-prev">'+(ed&&ed.img?'<img src="'+ed.img+'">':ic('image',22))+'</div><div><label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,\'tdp\')"></label><button class="img-rm" id="tdp-rm" onclick="rmImg(\'tdp\',\'image\')" style="'+(ed&&ed.img?'display:inline-block':'')+'">إزالة</button></div><input type="hidden" id="tdp-img" value="'+esc(ed?ed.img||'':'')+'"></div></div>';
     h+='<button class="btn btn-r" style="width:100%" onclick="tdSavePlayer()">'+(ed?'حفظ التعديلات':'إضافة اللاعب')+'</button>';
@@ -12576,7 +12569,13 @@ function tdSavePlayer(){
   if(gp&&!phoneOK(gp)){g('tdp-err').textContent='رقم جوال ولي الأمر غير صحيح';fl('tdp-err');return;}
   var pp=phoneVal('tdp-phone');
   if(pp&&!phoneOK(pp)){g('tdp-err').textContent='جوال اللاعب غير صحيح';fl('tdp-err');return;}
-  if(id.nid&&id.nid.length!==10){g('tdp-err').textContent='رقم الهوية يجب أن يكون 10 أرقام';fl('tdp-err');return;}
+  if(!id.nid){g('tdp-err').textContent='رقم الهوية مطلوب — به يدخل اللاعب لحسابه';fl('tdp-err');return;}
+  if(id.nid.length!==10){g('tdp-err').textContent='رقم الهوية يجب أن يكون 10 أرقام';fl('tdp-err');return;}
+  /* الهوية فريدة: لا يُسمح بلاعبين يحملان نفس الرقم — وإلا تعذّر ربط الحساب */
+  var _dupNid=(TDX().players||[]).find(function(x){return x.id!==TDPF.edit&&normNid(x.nid)===normNid(id.nid);});
+  if(_dupNid){g('tdp-err').textContent='رقم الهوية مسجّل مسبقاً للاعب: '+(_dupNid.name||'');fl('tdp-err');return;}
+  var _dob=gv('tdp-dob');
+  if(!_dob){g('tdp-err').textContent='تاريخ الميلاد مطلوب — بدونه لا يستطيع اللاعب الدخول لحسابه';fl('tdp-err');return;}
   var t=TDX(),gg=tdGroup(gid);
   if(gg){branch=gg.branch;}
   if(TDPF.edit){
@@ -15805,7 +15804,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.06-teamwork</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-playerlogin</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
