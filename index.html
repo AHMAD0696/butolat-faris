@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.15-fix1">
+<meta name="build" content="2026.09.15-mod">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2627,7 +2627,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-fix1</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-mod</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3067,124 +3067,15 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 </div></div>
 
 <!-- PROFILE MODAL -->
-<div class="modal" id="profMod" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="mbox">
-    <div class="mhdr">
-      <button class="mclose" onclick="profMod.classList.remove('open')" data-ic="x"></button>
-      <div class="prof-av" id="prof-av">؟</div>
-      <div style="font-size:15px;font-weight:700" id="prof-name">—</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)" id="prof-role">—</div>
-    </div>
-    <div class="mbody" id="prof-body"></div>
-  </div>
-</div>
-
 <!-- WARN MODAL -->
-<div class="modal" id="warnMod" onclick="if(event.target===this)warnClose()">
-  <div class="mbox">
-    <div class="mhdr">
-      <button class="mclose" onclick="warnClose()" data-ic="x"></button>
-      <div class="prof-av" style="background:#d97706">!</div>
-      <div style="font-size:15px;font-weight:700">بيانات تحتاج إكمالاً</div>
-    </div>
-    <div class="mbody" id="warn-body"></div>
-  </div>
-</div>
-
 <!-- PLAYER TOURNAMENTS MODAL -->
-<div class="modal" id="ptMod" onclick="if(event.target===this)ptClose()">
-  <div class="mbox" style="max-width:520px">
-    <div class="mhdr">
-      <button class="mclose" onclick="ptClose()" data-ic="x"></button>
-      <div class="prof-av" style="background:var(--red)"><span data-ic="trophy"></span></div>
-      <div style="font-size:15px;font-weight:700">بطولات اللاعب</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">هوية واحدة • اشتراك لكل بطولة</div>
-    </div>
-    <div class="mbody" id="pt-body"></div>
-  </div>
-</div>
-
 <!-- MVP MODAL -->
-<div class="modal" id="mvpMod" onclick="if(event.target===this)mvpClose()">
-  <div class="mbox" style="max-width:460px">
-    <div class="mhdr">
-      <button class="mclose" onclick="mvpClose()" data-ic="x"></button>
-      <div class="prof-av" style="background:var(--red)"><span data-ic="crown"></span></div>
-      <div style="font-size:15px;font-weight:700">لاعب الجولة</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">اختر من القائمة أو أدخل الاسم يدوياً</div>
-    </div>
-    <div class="mbody" id="mvp-body"></div>
-  </div>
-</div>
-
 
 <!-- ADD PHONE MODAL -->
-<div class="modal" id="apMod">
-  <div class="mbox">
-    <div class="mhdr">
-      <div class="prof-av" id="ap-av">؟</div>
-      <div style="font-size:15px;font-weight:700" id="ap-nm">—</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">توثيق رقم الجوال</div>
-    </div>
-    <div class="mbody" id="ap-body"></div>
-  </div>
-</div>
-
 <!-- USER EDIT MODAL (admin) -->
-<div class="modal" id="uedMod" onclick="if(event.target===this)uedClose()">
-  <div class="mbox">
-    <div class="mhdr">
-      <button class="mclose" onclick="uedClose()" data-ic="x"></button>
-      <div class="prof-av" id="ued-av">؟</div>
-      <div style="font-size:15px;font-weight:700" id="ued-name">—</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)" id="ued-sub">—</div>
-    </div>
-    <div class="mbody" id="ued-body"></div>
-  </div>
-</div>
-
 <!-- PROFILE EDIT MODAL (self) -->
-<div class="modal" id="pedMod" onclick="if(event.target===this)pedClose()">
-  <div class="mbox">
-    <div class="mhdr">
-      <button class="mclose" onclick="pedClose()" data-ic="x"></button>
-      <div class="prof-av" id="ped-av">؟</div>
-      <div style="font-size:15px;font-weight:700" id="ped-name">—</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">تعديل بياناتي</div>
-    </div>
-    <div class="mbody" id="ped-body"></div>
-  </div>
-</div>
-
 <!-- CONTACT MODAL -->
-<div class="modal" id="contMod" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="mbox">
-    <div class="mhdr">
-      <button class="mclose" onclick="contMod.classList.remove('open')" data-ic="x"></button>
-      <div style="font-size:15px;font-weight:700">اتصل بنا</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">أكاديمية فارس</div>
-    </div>
-    <div class="mbody">
-      <div class="cont-item"><div class="cont-icon" data-ic="whatsapp"></div><div><div class="ct">واتساب</div><div class="cs" style="direction:ltr">920031974</div></div></div>
-      <div class="cont-item"><div class="cont-icon" data-ic="mail"></div><div><div class="ct">البريد الإلكتروني</div><div class="cs">info@farisacademy.com</div></div></div>
-      <div class="cont-item"><div class="cont-icon" data-ic="globe"></div><div><div class="ct">الموقع الإلكتروني</div><div class="cs">farisacademy.com</div></div></div>
-      <div class="cont-item"><div class="cont-icon" data-ic="pin"></div><div><div class="ct">الموقع</div><div class="cs">الرياض، المملكة العربية السعودية</div></div></div>
-    </div>
-  </div>
-</div>
-
 <!-- QR MODAL -->
-<div class="modal" id="QM" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="mbox" style="text-align:center">
-    <div class="mhdr">
-      <button class="mclose" onclick="QM.classList.remove('open')" data-ic="x"></button>
-      <div style="font-size:15px;font-weight:700" id="q-name">—</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">أكاديمية فارس</div>
-    </div>
-    <div class="mbody"><div id="qcvs" style="display:inline-block;padding:10px;background:var(--sur);border:1px solid var(--brd);border-radius:14px"></div></div>
-  </div>
-</div>
-
 <footer>
   <div class="flg"></div>
   <strong>أكاديمية فارس</strong>
@@ -9931,10 +9822,19 @@ function rUED(){
   h+='<div class="fg"><label>الفريق</label><select id="ued-team-i"><option value="">— بدون —</option>'
     +teams.map(function(t){return '<option value="'+esc(t)+'"'+(u.team===t?' selected':'')+'>'+esc(t)+'</option>';}).join('')
     +'</select></div></div>';
-  h+='<div class="frow"><div class="fg"><label>الفرع</label><select id="ued-branch-i"><option value="">— بدون —</option>'
-    +brs.map(function(b){return '<option value="'+esc(b)+'"'+(u.branch===b?' selected':'')+'>'+esc(b)+'</option>';}).join('')
-    +'</select></div>';
-  h+='<div class="fg"><label>رقم الجوال</label>'+phoneField('ued-phone-i',u.phone||'')+'</div></div>';
+  h+='<div class="fg"><label>رقم الجوال</label>'+phoneField('ued-phone-i',u.phone||'')+'</div>';
+
+  /* ===== الفروع: اختيار متعدد =====
+     مدير الفرع قد يدير فرعين، والمدرب قد يدرّب في أكثر من فرع. الحقل
+     المفرد القديم كان يجبر على فتح حساب مكرر باسم «فلان 2». الاختيار
+     هنا يُكتب في سجل الموظف/المدرب نفسه، فيسري على كل الأنظمة. */
+  var cur=userBranches(u);
+  h+='<div class="fg"><label>الفروع <small>(اختر أكثر من فرع لمن يدير/يدرّب في أكثر من فرع)</small></label>';
+  if(!brs.length)h+='<div style="font-size:12px;color:var(--gray)">لا توجد فروع مسجّلة بعد — أضفها من الإدارة والمتابعة ← الفروع.</div>';
+  else h+='<div class="brpick" id="ued-brs">'+brs.map(function(b){
+      return '<button type="button" class="brchip'+(cur.indexOf(b)>-1?' on':'')+'" data-br="'+esc(b)+'" onclick="this.classList.toggle(\'on\')">'
+        +ic('pin',11)+' '+esc(b)+'</button>';}).join('')+'</div>';
+  h+='</div>';
 
   /* الرمز السري */
   h+='<div class="ued-pin">';
@@ -9965,12 +9865,42 @@ function uedSave(){
     g('ued-err').textContent='لا يمكن إزالة صلاحيتك — يجب بقاء مدير نظام واحد على الأقل';fl('ued-err');return;
   }
   var before=RL[u.role];
-  u.name=n;u.username=un;u.role=r;u.team=gv('ued-team-i')||'';u.branch=gv('ued-branch-i')||'';u.phone=phoneVal('ued-phone-i');
+  u.name=n;u.username=un;u.role=r;u.team=gv('ued-team-i')||'';u.phone=phoneVal('ued-phone-i');
+  if(g('ued-brs'))uedApplyBranches(u,pickedBranches('ued-brs'));
   if(FA.enabled)faSync(FA.updateProfile(u.id,u.name,u.username,u.team,u.phone));
   if(FA.enabled&&before!==RL[r])faSync(FA.upsertUser(u,u.password||null));
   if(u.id===CU.id)CU=Object.assign({},u);
   logA('تعديل مستخدم: '+n+(before!==RL[r]?' — الصلاحية: '+before+' ← '+RL[r]:''),'edit','#1565c0');
   sv();rUED();renderATab();fl('ued-ok');
+}
+/* كتابة الفروع في مصدرها الحقيقي لا في الحساب وحده:
+   الحساب يعرض، لكن النطاق في الإدارة الفنية يُبنى من سجل المدرب/الموظف. */
+function uedApplyBranches(u,brs){
+  brs=brs||[];
+  u.branches=brs.slice();
+  u.branch=brs[0]||'';
+  var t=TDX();
+  if(u.role==='coach'){
+    var c=userCoachRec(u);
+    if(!c&&brs.length){
+      c={id:uid(),name:u.name,branch:brs[0],branches:brs.slice(),user:u.username||'',phone:u.phone||'',note:'',src:'account',at:Date.now()};
+      t.coaches.push(c);u.coachId=c.id;
+      logA('إنشاء سجل مدرب من الحساب: '+u.name,'whistle','#16a34a');
+    }
+    if(c){c.branches=brs.slice();c.branch=brs[0]||c.branch;if(!c.user&&u.username)c.user=u.username;u.coachId=c.id;}
+  }else if(u.role==='admin-team'){
+    var st=userStaffRec(u);
+    if(!st&&brs.length){
+      st={id:uid(),name:u.name,role:'مدير فرع',branch:brs[0],branches:brs.slice(),user:u.username||'',phone:u.phone||'',src:'account',at:Date.now()};
+      t.staff=t.staff||[];t.staff.push(st);u.staffId=st.id;
+      logA('إنشاء سجل مدير فرع من الحساب: '+u.name,'shield','#16a34a');
+    }
+    if(st){st.branches=brs.slice();st.branch=brs[0]||st.branch;if(!st.user&&u.username)st.user=u.username;u.staffId=st.id;}
+  }else if(u.role==='supervisor'){
+    var c2=CEX(),rec=c2.sups.find(function(x){return x.userId===u.id;});
+    if(!rec&&brs.length){rec={id:uid(),userId:u.id,name:u.name,branches:[]};c2.sups.push(rec);}
+    if(rec){rec.branches=brs.slice();rec.name=u.name;}
+  }
 }
 function uedSetPin(){
   var u=uedUser();if(!u)return;
@@ -15822,7 +15752,9 @@ var CENAV=[
 ];
 
 /* الأرقام بالعربي في كل واجهة هذا النظام */
-function ceN(v){return String(v==null?'':v).replace(/[0-9]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'[+d];});}
+/* الأرقام بالإنجليزي في كل الواجهة (كانت عربية-هندية).
+   الدالة تبقى موجودة لتعمل كل مواضع النداء بلا تغيير. */
+function ceN(v){return String(v==null?'':v);}
 
 function defCE(){return{cycles:[],qs:null,resp:[],dec:[],plans:[],sups:[],
                         settings:{minPl:3,weights:{pl:25,sup:50,mgr:25}}};}
@@ -16982,6 +16914,7 @@ function adHead(icn,title,sub,actions){
 function rADUsers(){
   var el=g('adc-users');
   var h=adHead('users','المستخدمون والصلاحيات','كل الحسابات ونطاق كل واحد منها');
+  h+=adDupHTML();
   h+=adLinkHTML();
   h+='<div style="height:1.6rem"></div>';
   h+='<div class="ad-wrap">'+admUsersHTML()+'</div>';
@@ -17007,6 +16940,84 @@ function rADUsers(){
   }
   el.innerHTML=h;hydrateIcons(el);
 }
+/* ===== الحسابات المكرّرة لنفس الشخص =====
+   نشأت لأن حقل الفرع كان مفرداً، فمن يدير فرعين اضطر لفتح «فلان 2».
+   الفروع صارت متعددة الآن، فنعرض المكرر ونعرض دمجه بلا فقد بيانات:
+   الفروع تُوحَّد، والتقييمات والقرارات تُنقل للحساب المُبقى. */
+function dupKey(n){
+  return normName(String(n||'').replace(/[\s\u0660-\u0669\d]+$/,''));
+}
+function adDupScan(){
+  var map={};
+  (DB.users||[]).forEach(function(u){
+    if(u.role==='player')return;
+    var k=dupKey(u.name);if(!k)return;
+    (map[k]=map[k]||[]).push(u);
+  });
+  return Object.keys(map).map(function(k){return map[k];}).filter(function(a){return a.length>1;});
+}
+function adDupHTML(){
+  var groups=adDupScan();
+  if(!groups.length)return '';
+  var h=tdSubHead('حسابات مكرّرة لنفس الشخص','<span class="pg-chip">'+ceN(groups.length)+'</span>');
+  h+='<div class="ce2-note warn">'+ic('info',13)
+    +'<div>لم يعد هناك داعٍ لحساب ثانٍ لمن يدير أكثر من فرع — افتح بطاقة الحساب واختر له فرعين. الدمج هنا يوحّد الفروع وينقل التقييمات والقرارات للحساب الذي تختاره، ثم يحذف الحساب الزائد.</div></div>';
+  groups.forEach(function(gr,i){
+    h+='<div class="rform" style="margin-bottom:.9rem">';
+    h+='<b style="font-size:13px">'+esc(gr[0].name)+'</b>';
+    h+='<div class="ce2-tw" style="margin-top:.6rem"><table class="ce2-tb"><thead><tr><th style="width:70px">يُبقى</th><th>الحساب</th><th>الصلاحية</th><th>الفروع</th></tr></thead><tbody>';
+    gr.forEach(function(u,j){
+      h+='<tr><td><input type="radio" name="addup'+i+'" value="'+u.id+'"'+(j===0?' checked':'')+'></td>'
+        +'<td><b>'+esc(u.name)+'</b><br><small style="color:var(--gray)">'+esc(u.username||'—')+'</small></td>'
+        +'<td>'+RL[u.role]+'</td><td>'+esc(userBranches(u).join('، ')||'—')+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+    h+='<button class="btn btn-o btn-sm" style="margin-top:.7rem" onclick="adMergeDup('+i+')">'+ic('swap',12)+' دمج هذه الحسابات</button>';
+    h+='</div>';
+  });
+  return h;
+}
+function adMergeDup(i){
+  var gr=adDupScan()[i];if(!gr)return;
+  var sel=document.querySelector('input[name="addup'+i+'"]:checked');
+  var keepId=sel?sel.value:gr[0].id;
+  var keep=gr.find(function(u){return u.id===keepId;});if(!keep)return;
+  var drop=gr.filter(function(u){return u.id!==keepId;});
+  askConfirm('دمج '+ceN(drop.length)+' حساب في «'+keep.name+'»؟\nالفروع ستُوحَّد والتقييمات ستُنقل، ثم يُحذف الحساب الزائد.',function(){
+    var brs=userBranches(keep).slice();
+    drop.forEach(function(d){
+      userBranches(d).forEach(function(b){if(brs.indexOf(b)<0)brs.push(b);});
+      if(!keep.phone&&d.phone)keep.phone=d.phone;
+      if(!keep.team&&d.team)keep.team=d.team;
+      var c=CEX();
+      (c.resp||[]).forEach(function(r){if(r.by===d.id)r.by=keep.id;});
+      (c.dec||[]).forEach(function(r){if(r.by===d.id){r.by=keep.id;r.byName=keep.name;}});
+      (c.sups||[]).forEach(function(x){if(x.userId===d.id){x.userId=keep.id;x.name=keep.name;}});
+      if(!keep.coachId&&d.coachId)keep.coachId=d.coachId;
+      if(!keep.staffId&&d.staffId)keep.staffId=d.staffId;
+      DB.users=DB.users.filter(function(x){return x.id!==d.id;});
+      if(FA.enabled)faSync(FA.deleteUser(d.id));
+    });
+    /* سجلات الإدارة الفنية المكرّرة لنفس الشخص تُوحَّد فروعها أيضاً */
+    var t=TDX();
+    [['coaches','coachId'],['staff','staffId']].forEach(function(p){
+      var list=t[p[0]]||[];
+      var mine=list.filter(function(x){return dupKey(x.name)===dupKey(keep.name);});
+      if(mine.length>1){
+        var m0=mine[0],all=[];
+        mine.forEach(function(x){coachBranches(x).forEach(function(b){if(all.indexOf(b)<0)all.push(b);});});
+        m0.branches=all;m0.branch=all[0]||m0.branch;
+        t[p[0]]=list.filter(function(x){return x===m0||mine.indexOf(x)<0;});
+        keep[p[1]]=m0.id;
+      }
+    });
+    uedApplyBranches(keep,brs);
+    logA('دمج حسابات مكرّرة: '+keep.name+' — الفروع: '+(brs.join('، ')||'—'),'swap','#d97706');
+    sv();rADUsers();
+    addN('تم الدمج',keep.name+' — '+(brs.join('، ')||'بلا فروع'),'success');
+  });
+}
+
 /* ===== ربط الحسابات بسجلات الإدارة الفنية =====
    الحساب غير المرتبط يدخل فيجد الإدارة الفنية فارغة أمامه — لا فئات
    ولا لاعبين — لأن النطاق يُبنى من سجل المدرب لا من الحساب. */
@@ -17402,9 +17413,23 @@ function tdAddPitch(bid){
   var nm=gv('tdpt-n-'+bid);
   if(!nm){alert('اكتب اسم الملعب');return;}
   b.pitches=b.pitches||[];
+  var data={name:nm,size:gv('tdpt-z-'+bid)||'',desc:gv('tdpt-d-'+bid)||'',
+            cap:+gv('tdpt-c-'+bid)||0,opCap:+gv('tdpt-o-'+bid)||0};
+  /* وضع التعديل: نفس النموذج يحدّث الملعب المختار */
+  var ed=(typeof adbEditing==='function')?adbEditing('pitch'):'';
+  if(ed){
+    var p0=(b.pitches||[]).find(function(p){return p.id===ed;});
+    if(p0){
+      if(b.pitches.some(function(p){return p.id!==ed&&normName(p.name)===normName(nm);})){
+        alert('يوجد ملعب بنفس الاسم في هذا الفرع');return;
+      }
+      Object.assign(p0,data);
+      logA('تعديل ملعب: '+nm+' — '+b.name,'edit','#1565c0');
+      sv();if(typeof ADBR!=='undefined')ADBR.edit='';tdRefresh();return;
+    }
+  }
   if(b.pitches.some(function(p){return normName(p.name)===normName(nm);})){alert('يوجد ملعب بنفس الاسم في هذا الفرع');return;}
-  b.pitches.push({id:uid(),name:nm,size:gv('tdpt-z-'+bid)||'',desc:gv('tdpt-d-'+bid)||'',
-                  cap:+gv('tdpt-c-'+bid)||0,opCap:+gv('tdpt-o-'+bid)||0,active:true});
+  b.pitches.push(Object.assign({id:uid(),active:true},data));
   logA('إضافة ملعب: '+nm+' — '+b.name,'pin','#16a34a');
   sv();tdRefresh();
 }
@@ -17620,7 +17645,7 @@ function tdSubRead(){
    «الحصة» (المجموعة سابقاً) هي تقاطعهما: فترة + ملعب + فئة + مدرب + سعة.
    اللاعب يبقى مربوطاً بـ groupId كما هو، فلا تتأثر التقييمات ولا الخطط.
    ========================================================================== */
-var TDSIZES=['6*6','7*7','9*9','11*11'];
+var TDSIZES=['5*5','6*6','7*7','8*8','9*9','10*10','11*11'];
 
 function tdPeriods(bname){
   var t=TDX();
@@ -17825,13 +17850,14 @@ function tdSlotInfoLine(gg){
 /* ==========================================================================
    الإدارة والمتابعة ← الفروع
    --------------------------------------------------------------------------
-   مركز واحد لكل فرع: الموظفون والمدربون والملاعب والفترات والفئات والحصص.
-   نفس البيانات التي تديرها الإدارة الفنية — هنا مرتّبة تحت الفرع لا مبعثرة.
+   مركز واحد لكل فرع: الموظفون والمدربون والملاعب والفترات والفئات والحصص
+   والمشاركات في البطولات. كل جدول له زر تعديل يفتح نموذجه معبّأً.
    ========================================================================== */
-var ADBR={sel:'',tab:'staff'};
+var ADBR={sel:'',tab:'staff',edit:''};
 var ADBR_TABS=[['staff','الموظفون','shield'],['coaches','المدربون','whistle'],
                ['pitches','الملاعب','pin'],['periods','الفترات','clock'],
-               ['cats','الفئات','list'],['slots','الحصص','cal']];
+               ['cats','الفئات','list'],['slots','الحصص','cal'],
+               ['tours','المشاركات','trophy']];
 
 /* إعادة الرسم للصفحة النشطة — الحفظ يأتي من الإدارة الفنية أو من هنا */
 function tdRefresh(){
@@ -17840,49 +17866,65 @@ function tdRefresh(){
     if(typeof ADPAGE!=='undefined'&&ADPAGE==='branches'&&typeof rADBranches==='function')rADBranches();
     return;
   }
-  if(typeof rTDSettings==='function'&&typeof TDPAGE!=='undefined'&&TDPAGE==='settings')rTDSettings();
-  else if(typeof rTDSched==='function'&&typeof TDPAGE!=='undefined'&&TDPAGE==='sched')rTDSched();
+  if(typeof TDPAGE!=='undefined'&&TDPAGE==='sched'&&typeof rTDSched==='function')rTDSched();
   else if(typeof rTDSettings==='function')rTDSettings();
+}
+function adbEditBtn(kind,id){
+  return '<button class="ab" style="background:var(--bg);color:var(--accent)" title="تعديل" onclick="adbSetEdit(\''+kind+':'+id+'\')">'+ic('edit',11)+'</button>';
+}
+function adbSetEdit(k){ADBR.edit=(ADBR.edit===k?'':k);rADBranches();window.scrollTo({top:0,behavior:'smooth'});}
+function adbEditing(kind){
+  if(!ADBR.edit)return '';
+  var p=ADBR.edit.split(':');
+  return p[0]===kind?p[1]:'';
+}
+function adbCancel(){ADBR.edit='';rADBranches();}
+function adbCancelBtn(){
+  return ADBR.edit?'<button class="btn btn-g btn-sm" onclick="adbCancel()">إلغاء التعديل</button>':'';
 }
 
 function adbStats(bn){
   var t=TDX();
   var cats=(t.cats||[]).filter(function(c){return c.branch===bn;});
-  var catIds=cats.map(function(c){return c.id;});
-  var slots=(t.groups||[]).filter(function(gg){return gg.branch===bn;});
   return {
     staff:(t.staff||[]).filter(function(s){return coachBranches(s).indexOf(bn)>-1;}).length,
     coaches:(t.coaches||[]).filter(function(c){return coachBranches(c).indexOf(bn)>-1;}).length,
     pitches:tdPitches(bn).length,
     periods:tdPeriods(bn).length,
     cats:cats.length,
-    slots:slots.length,
+    slots:(t.groups||[]).filter(function(gg){return gg.branch===bn;}).length,
+    tours:adbTours(bn).length,
     players:(t.players||[]).filter(function(p){return p.branch===bn;}).length
   };
+}
+/* البطولات التي يشارك فيها هذا الفرع — اسم الفريق في البطولات = اسم الفرع */
+function adbTours(bn){
+  var out=[];
+  ((DB&&DB.tournaments)||[]).forEach(function(tr){
+    var team=(tr.teams||[]).find(function(x){return normName(x.name)===normName(bn);});
+    if(team)out.push({tour:tr,team:team});
+  });
+  return out;
 }
 
 function rADBranches(){
   var el=g('adc-branches'),t=TDX();
   if(ADBR.sel&&!(t.branches||[]).some(function(b){return b.name===ADBR.sel;}))ADBR.sel='';
   if(ADBR.sel)return adbDetail(el);
-
   var h=adHead('pin','الفروع','كل فرع وما تحته من موظفين وملاعب وفترات وفئات',
     '<span class="pg-chip">'+ceN((t.branches||[]).length)+' فرع</span>');
-  /* إضافة فرع */
   h+='<div class="rform" style="max-width:520px;margin-bottom:1.4rem">';
   h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end;gap:.5rem">';
   h+='<div class="fg" style="margin-bottom:0"><label>اسم الفرع الجديد</label><input type="text" id="adb-new" placeholder="مثال: فارس القيروان" onkeydown="if(event.key===\'Enter\')adbAddBranch()"></div>';
   h+='<button class="btn btn-r btn-sm" onclick="adbAddBranch()">'+ic('plus',13)+' إضافة فرع</button>';
   h+='</div><div class="msg err" id="adb-err">اكتب اسم الفرع</div></div>';
-
   if(!(t.branches||[]).length)h+=emptyBox('pin','لا توجد فروع بعد','أضف أول فرع من الحقل أعلاه');
   else{
     h+='<div class="adb-grid">';
     (t.branches||[]).forEach(function(b){
       var s=adbStats(b.name);
       h+='<div class="adb-card" onclick="adbOpen(\''+jq(b.name)+'\')">';
-      h+='<div class="adb-hd"><div class="adb-ic">'+ic('pin',17)+'</div>'
-        +'<div class="adb-nm">'+esc(b.name)+'</div></div>';
+      h+='<div class="adb-hd"><div class="adb-ic">'+ic('pin',17)+'</div><div class="adb-nm">'+esc(b.name)+'</div></div>';
       h+='<div class="adb-st">';
       [['موظف',s.staff],['مدرب',s.coaches],['ملعب',s.pitches],['فترة',s.periods],['فئة',s.cats],['لاعب',s.players]]
         .forEach(function(x){h+='<div><b>'+ceN(x[1])+'</b><span>'+x[0]+'</span></div>';});
@@ -17892,8 +17934,7 @@ function rADBranches(){
       if(!s.periods)gaps.push('فترات');
       if(!s.coaches)gaps.push('مدربين');
       if(gaps.length)h+='<div class="adb-warn">'+ic('info',11)+' بلا '+gaps.join(' و')+'</div>';
-      h+='<div class="adb-go">'+ic('chevron',13)+' فتح الفرع</div>';
-      h+='</div>';
+      h+='<div class="adb-go">'+ic('chevron',13)+' فتح الفرع</div></div>';
     });
     h+='</div>';
   }
@@ -17908,29 +17949,33 @@ function adbAddBranch(){
   }
   t.branches.push({id:uid(),name:v,pitches:[]});
   logA('إضافة فرع: '+v,'pin','#16a34a');
+  /* نفتح صفحة الفرع فوراً — الفرع بلا ملاعب ولا فترات لا يفيد،
+     فالمطلوب إكمال بياناته في نفس اللحظة لا البحث عنه بعدين. */
+  ADBR.sel=v;ADBR.tab='staff';ADBR.edit='';
   sv();rADBranches();
-  addN('تم إضافة الفرع',v,'success');
+  addN('تم إضافة الفرع',v+' — أكمل بياناته الآن','success');
 }
-function adbOpen(bn){ADBR.sel=bn;ADBR.tab='staff';rADBranches();}
-function adbTab(k){ADBR.tab=k;rADBranches();}
+function adbOpen(bn){ADBR.sel=bn;ADBR.tab='staff';ADBR.edit='';rADBranches();}
+function adbTab(k){ADBR.tab=k;ADBR.edit='';rADBranches();}
 
 function adbDetail(el){
   var t=TDX(),bn=ADBR.sel;
   var b=(t.branches||[]).find(function(x){return x.name===bn;});
   var s=adbStats(bn);
-  var h='<button class="btn btn-g btn-sm" onclick="ADBR.sel=\'\';rADBranches()" style="margin-bottom:1rem">'
+  var h='<button class="btn btn-g btn-sm" onclick="ADBR.sel=\'\';ADBR.edit=\'\';rADBranches()" style="margin-bottom:1rem">'
     +ic('swap',12)+' كل الفروع</button>';
   h+='<div class="adb-hero"><div class="adb-ic" style="width:48px;height:48px">'+ic('pin',22)+'</div>'
     +'<div style="flex:1;min-width:160px"><div class="adb-hn">'+esc(bn)+'</div>'
-    +'<div class="adb-hs">'+ceN(s.players)+' لاعب • '+ceN(s.coaches)+' مدرب • '+ceN(s.slots)+' حصة</div></div>'
+    +'<div class="adb-hs">'+ceN(s.players)+' لاعب • '+ceN(s.coaches)+' مدرب • '+ceN(s.slots)+' حصة • '+ceN(s.tours)+' بطولة</div></div>'
     +'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="adbDelBranch(\''+(b?b.id:'')+'\')">'
     +ic('trash',12)+' حذف الفرع</button></div>';
   h+='<div class="ce2-tabs">'+ADBR_TABS.map(function(x){
-    var n={staff:s.staff,coaches:s.coaches,pitches:s.pitches,periods:s.periods,cats:s.cats,slots:s.slots}[x[0]];
+    var n={staff:s.staff,coaches:s.coaches,pitches:s.pitches,periods:s.periods,cats:s.cats,slots:s.slots,tours:s.tours}[x[0]];
     return '<button class="ce2-tab'+(ADBR.tab===x[0]?' on':'')+'" onclick="adbTab(\''+x[0]+'\')">'
       +ic(x[2],13)+' '+x[1]+' <b style="opacity:.75">'+ceN(n)+'</b></button>';
   }).join('')+'</div>';
-  h+={staff:adbStaff,coaches:adbCoaches,pitches:adbPitches,periods:adbPeriods,cats:adbCats,slots:adbSlots}[ADBR.tab](bn,b);
+  h+={staff:adbStaff,coaches:adbCoaches,pitches:adbPitches,periods:adbPeriods,
+      cats:adbCats,slots:adbSlots,tours:adbToursTab}[ADBR.tab](bn,b);
   el.innerHTML=h;hydrateIcons(el);
 }
 function adbDelBranch(bid){
@@ -17949,32 +17994,67 @@ function adbDelBranch(bid){
   });
 }
 
+/* ---------- حقول الشخص: نفس ما يُطلب عند تسجيل فريق ---------- */
+function adbPersonForm(pfx,rec){
+  var n=splitName(rec||{});
+  var h='<div class="frow" style="grid-template-columns:1fr 1fr 1fr">';
+  h+='<div class="fg req"><label>الاسم الأول *</label><input type="text" id="'+pfx+'-fn" value="'+esc(n.first||'')+'" placeholder="محمد"></div>';
+  h+='<div class="fg req"><label>اسم الأب *</label><input type="text" id="'+pfx+'-mn" value="'+esc(n.mid||'')+'" placeholder="عبدالله"></div>';
+  h+='<div class="fg req"><label>اسم العائلة *</label><input type="text" id="'+pfx+'-ln" value="'+esc(n.last||'')+'" placeholder="الأحمد"></div></div>';
+  h+='<div class="frow"><div class="fg"><label>رقم الهوية / الإقامة</label><input type="text" id="'+pfx+'-nid" inputmode="numeric" maxlength="10" style="direction:ltr" value="'+esc(rec&&rec.nid?rec.nid:'')+'"></div>';
+  h+='<div class="fg"><label>الجنسية</label><input type="text" id="'+pfx+'-nat" value="'+esc(rec&&rec.nat?rec.nat:'')+'" placeholder="سعودي"></div></div>';
+  h+='<div class="frow"><div class="fg"><label>رقم الجوال</label>'+phoneField(pfx+'-ph',(rec&&rec.phone)||'')+'</div>';
+  h+='<div class="fg"><label>تاريخ الميلاد</label><input type="date" id="'+pfx+'-dob" style="direction:ltr" value="'+esc(rec&&rec.dob?rec.dob:'')+'"></div></div>';
+  h+='<div class="frow"><div class="fg"><label>اسم المستخدم <small>(لربط حسابه بالنظام)</small></label><input type="text" id="'+pfx+'-user" value="'+esc(rec&&rec.user?rec.user:'')+'"></div>';
+  h+='<div class="fg"><label>تاريخ الانضمام</label><input type="date" id="'+pfx+'-joined" style="direction:ltr" value="'+esc(rec&&rec.joined?rec.joined:'')+'"></div></div>';
+  return h;
+}
+function adbPersonRead(pfx){
+  var fn=gv(pfx+'-fn'),mn=gv(pfx+'-mn'),ln=gv(pfx+'-ln');
+  var name=[fn,mn,ln].filter(Boolean).join(' ').trim();
+  return {name:name,fn:fn,mn:mn,ln:ln,nid:normNid(gv(pfx+'-nid')),nat:gv(pfx+'-nat'),
+          phone:phoneVal(pfx+'-ph'),dob:gv(pfx+'-dob'),user:gv(pfx+'-user'),joined:gv(pfx+'-joined')};
+}
+
 /* ---------- الموظفون ---------- */
 function adbStaff(bn){
-  var t=TDX();
+  var t=TDX(),ed=adbEditing('staff');
+  var rec=ed?(t.staff||[]).find(function(x){return x.id===ed;}):null;
   var list=(t.staff||[]).filter(function(x){return coachBranches(x).indexOf(bn)>-1;});
   var h='<div class="rform" style="margin-bottom:1rem">';
-  h+='<div class="frow"><div class="fg"><label>اسم الموظف *</label><input type="text" id="adb-sn" placeholder="الاسم الكامل"></div>';
-  h+='<div class="fg"><label>اسم المستخدم <small>(لربط حسابه)</small></label><input type="text" id="adb-su"></div></div>';
-  h+='<button class="btn btn-r btn-sm" onclick="adbAddStaff(\''+jq(bn)+'\')">'+ic('plus',12)+' إضافة موظف للفرع</button>';
-  h+='<div class="msg err" id="adb-s-err">اكتب اسم الموظف</div></div>';
+  h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic('shield',13)+' '+(rec?'تعديل «'+esc(rec.name)+'»':'موظف جديد')+'</div>';
+  h+=adbPersonForm('adb-s',rec);
+  h+='<div class="fg"><label>المسمى الوظيفي</label><input type="text" id="adb-s-title" value="'+esc(rec&&rec.title?rec.title:'')+'" placeholder="مثال: مدير الفرع"></div>';
+  h+='<div style="display:flex;gap:.5rem"><button class="btn btn-r btn-sm" style="flex:1" onclick="adbSaveStaff(\''+jq(bn)+'\')">'
+    +ic(rec?'check':'plus',12)+' '+(rec?'حفظ التعديلات':'إضافة موظف للفرع')+'</button>'+adbCancelBtn()+'</div>';
+  h+='<div class="msg err" id="adb-s-err">أكمل اسم الموظف ثلاثياً</div></div>';
   h+='<div class="jnote" style="margin-bottom:.9rem">'+ic('info',12)
-    +' الموظف هنا هو مدير الفرع أو الإداري. صلاحيته على الحساب تُضبط من «المستخدمون والصلاحيات».</div>';
+    +' الموظف هو مدير الفرع أو الإداري. صلاحية حسابه تُضبط من «المستخدمون والصلاحيات».</div>';
   if(!list.length)return h+emptyBox('shield','لا يوجد موظفون في هذا الفرع');
-  h+='<div class="at-wrap"><table class="at"><thead><tr><th>الاسم</th><th>الحساب</th><th>كل فروعه</th><th></th></tr></thead><tbody>';
+  h+='<div class="at-wrap"><table class="at"><thead><tr><th>الاسم</th><th>المسمى</th><th>الجوال</th><th>الحساب</th><th>كل فروعه</th><th></th></tr></thead><tbody>';
   list.forEach(function(x){
-    h+='<tr><td style="font-weight:700">'+esc(x.name)+'</td><td>'+esc(x.user||'غير مرتبط')+'</td>'
+    h+='<tr><td style="font-weight:700">'+esc(x.name)+'</td><td>'+esc(x.title||'—')+'</td>'
+      +'<td style="direction:ltr;text-align:start">'+esc(x.phone?phoneDisp(x.phone):'—')+'</td>'
+      +'<td>'+esc(x.user||'غير مرتبط')+'</td>'
       +'<td style="font-size:10.5px">'+esc(coachBranches(x).join('، '))+'</td>'
-      +'<td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="adbDelStaff(\''+x.id+'\')">'+ic('trash',11)+'</button></td></tr>';
+      +'<td style="white-space:nowrap">'+adbEditBtn('staff',x.id)
+      +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="adbDelStaff(\''+x.id+'\')">'+ic('trash',11)+'</button></td></tr>';
   });
   return h+'</tbody></table></div>';
 }
-function adbAddStaff(bn){
-  var n=gv('adb-sn');
-  if(!n){fl('adb-s-err');return;}
-  TDX().staff.push({id:uid(),name:n,user:gv('adb-su'),branch:bn,branches:[bn],at:Date.now()});
-  logA('إضافة موظف: '+n+' — '+bn,'shield','#16a34a');
-  sv();rADBranches();
+function adbSaveStaff(bn){
+  var d=adbPersonRead('adb-s');
+  if(!d.fn||!d.mn||!d.ln){fl('adb-s-err');return;}
+  var t=TDX(),ed=adbEditing('staff');
+  var extra={title:gv('adb-s-title')};
+  if(ed){
+    var x=(t.staff||[]).find(function(y){return y.id===ed;});
+    if(x){Object.assign(x,d,extra);logA('تعديل موظف: '+d.name,'edit','#1565c0');}
+  }else{
+    t.staff.push(Object.assign({id:uid(),branch:bn,branches:[bn],at:Date.now()},d,extra));
+    logA('إضافة موظف: '+d.name+' — '+bn,'shield','#16a34a');
+  }
+  sv();ADBR.edit='';rADBranches();
 }
 function adbDelStaff(id){
   askConfirm('حذف الموظف؟',function(){
@@ -17984,148 +18064,194 @@ function adbDelStaff(id){
 
 /* ---------- المدربون ---------- */
 function adbCoaches(bn){
-  var t=TDX();
+  var t=TDX(),ed=adbEditing('coach');
+  var rec=ed?tdCoach(ed):null;
   var list=(t.coaches||[]).filter(function(c){return coachBranches(c).indexOf(bn)>-1;});
   var h='<div class="rform" style="margin-bottom:1rem">';
-  h+='<div class="frow"><div class="fg"><label>اسم المدرب *</label><input type="text" id="adb-cn"></div>';
-  h+='<div class="fg"><label>رقم الجوال</label>'+phoneField('adb-cp','')+'</div></div>';
-  h+='<div class="frow"><div class="fg"><label>اسم المستخدم <small>(لربط حسابه)</small></label><input type="text" id="adb-cu"></div>';
-  h+='<div class="fg"><label>سنوات الخبرة</label><input type="text" id="adb-ce" placeholder="مثال: ٥ سنوات"></div></div>';
-  h+='<button class="btn btn-r btn-sm" onclick="adbAddCoach(\''+jq(bn)+'\')">'+ic('plus',12)+' إضافة مدرب للفرع</button>';
-  h+='<div class="msg err" id="adb-c-err">اكتب اسم المدرب</div></div>';
+  h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic('whistle',13)+' '+(rec?'تعديل «'+esc(rec.name)+'»':'مدرب جديد')+'</div>';
+  h+=adbPersonForm('adb-c',rec);
+  h+='<div class="frow"><div class="fg"><label>سنوات الخبرة</label><input type="text" id="adb-c-exp" value="'+esc(rec&&rec.exp?rec.exp:'')+'" placeholder="مثال: 5 سنوات"></div>';
+  h+='<div class="fg"><label>الشهادات</label><input type="text" id="adb-c-certs" value="'+esc(rec&&rec.certs?rec.certs:'')+'" placeholder="مثال: رخصة تدريب D"></div></div>';
+  h+='<div class="fg"><label>الصورة الشخصية</label><div class="img-pick"><div class="img-prev" id="adbc-prev">'
+    +(rec&&rec.img?'<img src="'+esc(rec.img)+'">':ic('image',22))+'</div><div>'
+    +'<label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,\'adbc\')"></label>'
+    +'<button class="img-rm" id="adbc-rm" onclick="rmImg(\'adbc\',\'image\')" style="'+(rec&&rec.img?'display:inline-block':'')+'">إزالة</button></div>'
+    +'<input type="hidden" id="adbc-img" value="'+esc(rec&&rec.img?rec.img:'')+'"></div></div>';
+  h+='<div style="display:flex;gap:.5rem"><button class="btn btn-r btn-sm" style="flex:1" onclick="adbSaveCoach(\''+jq(bn)+'\')">'
+    +ic(rec?'check':'plus',12)+' '+(rec?'حفظ التعديلات':'إضافة مدرب للفرع')+'</button>'+adbCancelBtn()+'</div>';
+  h+='<div class="msg err" id="adb-c-err">أكمل اسم المدرب ثلاثياً</div></div>';
   if(!list.length)return h+emptyBox('whistle','لا يوجد مدربون في هذا الفرع');
-  h+='<div class="at-wrap"><table class="at"><thead><tr><th>المدرب</th><th>الجوال</th><th>الحساب</th><th>حصصه هنا</th><th></th></tr></thead><tbody>';
+  h+='<div class="at-wrap"><table class="at"><thead><tr><th>المدرب</th><th>الهوية</th><th>الجوال</th><th>الخبرة</th><th>الحساب</th><th>حصصه هنا</th><th></th></tr></thead><tbody>';
   list.forEach(function(c){
     var n=(t.groups||[]).filter(function(gg){return gg.coachId===c.id&&gg.branch===bn;}).length;
     h+='<tr><td style="font-weight:700">'+esc(c.name)+'</td>'
-      +'<td style="direction:ltr">'+esc(c.phone?ceN(c.phone):'—')+'</td>'
+      +'<td style="direction:ltr;text-align:start">'+esc(c.nid||'—')+'</td>'
+      +'<td style="direction:ltr;text-align:start">'+esc(c.phone?phoneDisp(c.phone):'—')+'</td>'
+      +'<td>'+esc(c.exp||'—')+'</td>'
       +'<td>'+esc(c.user||'غير مرتبط')+'</td><td>'+ceN(n)+'</td>'
-      +'<td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelCoach(\''+c.id+'\')">'+ic('trash',11)+'</button></td></tr>';
+      +'<td style="white-space:nowrap">'+adbEditBtn('coach',c.id)
+      +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelCoach(\''+c.id+'\')">'+ic('trash',11)+'</button></td></tr>';
   });
   return h+'</tbody></table></div>';
 }
-function adbAddCoach(bn){
-  var n=gv('adb-cn');
-  if(!n){fl('adb-c-err');return;}
-  var ex=findCoachByName(n);
-  if(ex&&coachBranches(ex).indexOf(bn)<0){
-    ex.branches=coachBranches(ex).concat([bn]);ex.branch=ex.branches[0];
-    logA('إضافة فرع للمدرب: '+ex.name+' — '+bn,'pin','#1565c0');
-    sv();rADBranches();return;
+function adbSaveCoach(bn){
+  var d=adbPersonRead('adb-c');
+  if(!d.fn||!d.mn||!d.ln){fl('adb-c-err');return;}
+  var t=TDX(),ed=adbEditing('coach');
+  var extra={exp:gv('adb-c-exp'),certs:gv('adb-c-certs'),img:gv('adbc-img')};
+  if(ed){
+    var c=tdCoach(ed);
+    if(c){Object.assign(c,d,extra);logA('تعديل مدرب: '+d.name,'edit','#1565c0');}
+  }else{
+    var ex=findCoachByName(d.name);
+    if(ex&&coachBranches(ex).indexOf(bn)<0){
+      ex.branches=coachBranches(ex).concat([bn]);ex.branch=ex.branches[0];
+      logA('إضافة فرع للمدرب: '+ex.name+' — '+bn,'pin','#1565c0');
+      sv();rADBranches();return;
+    }
+    if(ex){g('adb-c-err').textContent='المدرب مضاف مسبقاً في هذا الفرع';fl('adb-c-err');return;}
+    t.coaches.push(Object.assign({id:uid(),branch:bn,branches:[bn],note:'',at:Date.now()},d,extra));
+    logA('إضافة مدرب: '+d.name+' — '+bn,'whistle','#16a34a');
   }
-  if(ex){g('adb-c-err').textContent='المدرب مضاف مسبقاً في هذا الفرع';fl('adb-c-err');return;}
-  TDX().coaches.push({id:uid(),name:n,branch:bn,branches:[bn],phone:phoneVal('adb-cp'),
-    user:gv('adb-cu'),exp:gv('adb-ce'),note:'',at:Date.now()});
-  logA('إضافة مدرب: '+n+' — '+bn,'whistle','#16a34a');
-  sv();rADBranches();
+  sv();ADBR.edit='';rADBranches();
 }
 
 /* ---------- الملاعب ---------- */
 function adbPitches(bn,b){
   if(!b)return emptyBox('pin','الفرع غير موجود');
-  var t=TDX(),ps=tdPitches(bn);
+  var t=TDX(),ps=tdPitches(bn),ed=adbEditing('pitch');
+  var rec=ed?tdPitch(bn,ed):null;
   var h='<div class="rform" style="margin-bottom:1rem">';
+  h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic('pin',13)+' '+(rec?'تعديل «'+esc(rec.name)+'»':'ملعب جديد')+'</div>';
   h+='<div class="frow" style="grid-template-columns:1.2fr 1fr .8fr .8fr">';
-  h+='<div class="fg"><label>اسم الملعب *</label><input type="text" id="tdpt-n-'+b.id+'" placeholder="مثال: ملعب ١"></div>';
-  h+='<div class="fg"><label>الحجم</label>'+tdSel('tdpt-z-'+b.id,TDSIZES,'','اختر')+'</div>';
-  h+='<div class="fg"><label>السعة</label><input type="number" id="tdpt-c-'+b.id+'" min="1" style="direction:ltr" placeholder="٥٠"></div>';
-  h+='<div class="fg"><label>السعة التشغيلية</label><input type="number" id="tdpt-o-'+b.id+'" min="1" style="direction:ltr" placeholder="٣٠"></div></div>';
-  h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end;gap:.5rem">';
-  h+='<div class="fg" style="margin-bottom:0"><label>الوصف</label><input type="text" id="tdpt-d-'+b.id+'" placeholder="مثال: ملعب مغطى مكيّف"></div>';
-  h+='<button class="btn btn-r btn-sm" onclick="tdAddPitch(\''+b.id+'\')">'+ic('plus',12)+' إضافة ملعب</button>';
-  h+='</div></div>';
+  h+='<div class="fg req"><label>اسم الملعب *</label><input type="text" id="tdpt-n-'+b.id+'" value="'+esc(rec?rec.name:'')+'" placeholder="مثال: ملعب 1"></div>';
+  h+='<div class="fg"><label>الحجم</label>'+tdSel('tdpt-z-'+b.id,TDSIZES,rec?(rec.size||''):'','اختر')+'</div>';
+  h+='<div class="fg"><label>السعة</label><input type="number" id="tdpt-c-'+b.id+'" min="1" style="direction:ltr" value="'+esc(rec&&rec.cap?rec.cap:'')+'" placeholder="50"></div>';
+  h+='<div class="fg"><label>السعة التشغيلية</label><input type="number" id="tdpt-o-'+b.id+'" min="1" style="direction:ltr" value="'+esc(rec&&rec.opCap?rec.opCap:'')+'" placeholder="30"></div></div>';
+  h+='<div class="fg"><label>الوصف</label><input type="text" id="tdpt-d-'+b.id+'" value="'+esc(rec&&rec.desc?rec.desc:'')+'" placeholder="مثال: ملعب مغطى مكيّف"></div>';
+  h+='<div style="display:flex;gap:.5rem"><button class="btn btn-r btn-sm" style="flex:1" onclick="tdAddPitch(\''+b.id+'\')">'
+    +ic(rec?'check':'plus',12)+' '+(rec?'حفظ التعديلات':'إضافة ملعب')+'</button>'+adbCancelBtn()+'</div></div>';
   if(!ps.length)return h+emptyBox('pin','لا توجد ملاعب في هذا الفرع');
   h+='<div class="at-wrap"><table class="at"><thead><tr><th>الملعب</th><th>الوصف</th><th>الحجم</th><th>السعة</th><th>التشغيلية</th><th>الحصص</th><th>الحالة</th><th></th></tr></thead><tbody>';
   ps.forEach(function(p){
     var used=(t.groups||[]).filter(function(gg){return gg.pitchId===p.id;}).length;
     var on=p.active!==false;
     h+='<tr><td style="font-weight:700">'+esc(p.name)+'</td><td style="font-size:10.5px">'+esc(p.desc||'—')+'</td>'
-      +'<td>'+esc(p.size||'—')+'</td><td>'+(p.cap?ceN(p.cap):'—')+'</td><td>'+(p.opCap?ceN(p.opCap):'—')+'</td>'
+      +'<td style="direction:ltr;text-align:start">'+esc(p.size||'—')+'</td><td>'+(p.cap?ceN(p.cap):'—')+'</td><td>'+(p.opCap?ceN(p.opCap):'—')+'</td>'
       +'<td>'+ceN(used)+'</td>'
       +'<td><button class="ce2-st" style="border:none;cursor:pointer;background:'+(on?'#16a34a':'var(--gray)')+'1f;color:'+(on?'#16a34a':'var(--gray)')+'" onclick="tdTogglePitch(\''+b.id+'\',\''+p.id+'\')">'+(on?'نشط':'متوقف')+'</button></td>'
-      +'<td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelPitch(\''+b.id+'\',\''+p.id+'\')">'+ic('trash',11)+'</button></td></tr>';
+      +'<td style="white-space:nowrap">'+adbEditBtn('pitch',p.id)
+      +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelPitch(\''+b.id+'\',\''+p.id+'\')">'+ic('trash',11)+'</button></td></tr>';
   });
   return h+'</tbody></table></div>';
 }
 
 /* ---------- الفترات ---------- */
 function adbPeriods(bn){
-  var t=TDX(),prs=tdPeriods(bn);
+  var t=TDX(),prs=tdPeriods(bn),ed=adbEditing('period');
+  var rec=ed?tdPeriod(ed):null;
   var h='<div class="rform" style="margin-bottom:1rem">';
-  h+='<div class="frow"><div class="fg"><label>اسم الفترة *</label><input type="text" id="adb-pn" placeholder="مثال: الفترة الأولى"></div>';
-  h+='<div class="fg"><label>الأيام *</label>'+tdSel('adb-pd',[['smw',TDDAYS.smw],['stt',TDDAYS.stt]],'','اختر الأيام')+'</div></div>';
-  h+='<div class="frow" style="grid-template-columns:1fr 1fr auto;align-items:end;gap:.5rem">';
-  h+='<div class="fg" style="margin-bottom:0"><label>من</label><input type="time" id="adb-p1" style="direction:ltr"></div>';
-  h+='<div class="fg" style="margin-bottom:0"><label>إلى</label><input type="time" id="adb-p2" style="direction:ltr"></div>';
-  h+='<button class="btn btn-r btn-sm" onclick="adbAddPeriod(\''+jq(bn)+'\')">'+ic('plus',12)+' إضافة فترة</button>';
-  h+='</div><div class="msg err" id="adb-p-err">أكمل: اسم الفترة والأيام</div></div>';
+  h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic('clock',13)+' '+(rec?'تعديل «'+esc(rec.name)+'»':'فترة جديدة')+'</div>';
+  h+='<div class="frow"><div class="fg req"><label>اسم الفترة *</label><input type="text" id="adb-pn" value="'+esc(rec?rec.name:'')+'" placeholder="مثال: الفترة الأولى"></div>';
+  h+='<div class="fg req"><label>الأيام *</label>'+tdSel('adb-pd',[['smw',TDDAYS.smw],['stt',TDDAYS.stt]],rec?(rec.days||''):'','اختر الأيام')+'</div></div>';
+  h+='<div class="frow" style="grid-template-columns:1fr 1fr"><div class="fg"><label>من</label><input type="time" id="adb-p1" style="direction:ltr" value="'+esc(rec&&rec.t1?rec.t1:'')+'"></div>';
+  h+='<div class="fg"><label>إلى</label><input type="time" id="adb-p2" style="direction:ltr" value="'+esc(rec&&rec.t2?rec.t2:'')+'"></div></div>';
+  h+='<div style="display:flex;gap:.5rem"><button class="btn btn-r btn-sm" style="flex:1" onclick="adbSavePeriod(\''+jq(bn)+'\')">'
+    +ic(rec?'check':'plus',12)+' '+(rec?'حفظ التعديلات':'إضافة فترة')+'</button>'+adbCancelBtn()+'</div>';
+  h+='<div class="msg err" id="adb-p-err">أكمل: اسم الفترة والأيام</div></div>';
   if(!prs.length)return h+emptyBox('clock','لا توجد فترات في هذا الفرع');
   h+='<div class="at-wrap"><table class="at"><thead><tr><th>الفترة</th><th>الأيام</th><th>الوقت</th><th>الحصص</th><th>الإشغال</th><th></th></tr></thead><tbody>';
   prs.forEach(function(pr){
     var slots=(t.groups||[]).filter(function(gg){return gg.periodId===pr.id;});
     var n=0,cp=0;slots.forEach(function(gg){n+=tdSlotCount(gg);cp+=tdSlotCap(gg);});
     h+='<tr><td style="font-weight:700">'+esc(pr.name)+'</td>'
-      +'<td style="font-size:10.5px">'+(TDDAYS[pr.days]||'—')+'</td><td>'+tdPeriodTime(pr)+'</td>'
+      +'<td style="font-size:10.5px">'+(TDDAYS[pr.days]||'<span style="color:var(--amber)">ناقص</span>')+'</td>'
+      +'<td style="direction:ltr;text-align:start">'+(pr.t1?tdPeriodTime(pr):'<span style="color:var(--amber)">ناقص</span>')+'</td>'
       +'<td>'+ceN(slots.length)+'</td><td style="min-width:140px">'+tdFillBar(n,cp)+'</td>'
-      +'<td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelPeriod(\''+pr.id+'\')">'+ic('trash',11)+'</button></td></tr>';
+      +'<td style="white-space:nowrap">'+adbEditBtn('period',pr.id)
+      +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelPeriod(\''+pr.id+'\')">'+ic('trash',11)+'</button></td></tr>';
   });
   return h+'</tbody></table></div>';
 }
-function adbAddPeriod(bn){
+function adbSavePeriod(bn){
   var nm=gv('adb-pn'),dy=gv('adb-pd');
   if(!nm||!dy){fl('adb-p-err');return;}
-  var t=TDX();
+  var t=TDX(),ed=adbEditing('period');
   if(!t.periods)t.periods=[];
-  if(t.periods.some(function(p){return p.branch===bn&&normName(p.name)===normName(nm)&&p.days===dy;})){
-    g('adb-p-err').textContent='توجد فترة بنفس الاسم والأيام';fl('adb-p-err');return;
+  if(ed){
+    var pr=tdPeriod(ed);
+    if(pr){
+      pr.name=nm;pr.days=dy;pr.t1=gv('adb-p1')||'';pr.t2=gv('adb-p2')||'';
+      /* الحصص ترث أيام الفترة ووقتها */
+      (t.groups||[]).forEach(function(gg){if(gg.periodId===pr.id){gg.days=pr.days;gg.t1=pr.t1;gg.t2=pr.t2;}});
+      logA('تعديل فترة: '+nm+' — '+bn,'edit','#1565c0');
+    }
+  }else{
+    if(t.periods.some(function(p){return p.branch===bn&&normName(p.name)===normName(nm)&&p.days===dy;})){
+      g('adb-p-err').textContent='توجد فترة بنفس الاسم والأيام';fl('adb-p-err');return;
+    }
+    t.periods.push({id:uid(),branch:bn,name:nm,days:dy,t1:gv('adb-p1')||'',t2:gv('adb-p2')||'',active:true,at:Date.now()});
+    logA('إضافة فترة: '+nm+' — '+bn,'clock','#16a34a');
   }
-  t.periods.push({id:uid(),branch:bn,name:nm,days:dy,t1:gv('adb-p1')||'',t2:gv('adb-p2')||'',active:true,at:Date.now()});
-  logA('إضافة فترة: '+nm+' — '+bn,'clock','#16a34a');
-  sv();rADBranches();
+  sv();ADBR.edit='';rADBranches();
 }
 
 /* ---------- الفئات ---------- */
 function adbCats(bn){
   var t=TDX(),cats=(t.cats||[]).filter(function(c){return c.branch===bn;});
+  var ed=adbEditing('cat'),rec=ed?tdCat(ed):null;
   var yrs=birthYearList().map(String).reverse();
   var h='<div class="rform" style="margin-bottom:1rem">';
-  h+='<div class="frow"><div class="fg"><label>سنة المواليد * <small>(تُضاف التي بعدها تلقائياً)</small></label>'
-    +tdSel('adb-cy',yrs,'','اختر السنة')+'</div>';
-  h+='<div class="fg"><label>اسم الفئة <small>(اختياري)</small></label><input type="text" id="adb-cl" placeholder="مثال: براعم"></div></div>';
-  h+='<div class="frow" style="grid-template-columns:1fr 1fr auto;align-items:end;gap:.5rem">';
-  h+='<div class="fg" style="margin-bottom:0"><label>التصنيف</label>'+tdSel('adb-cg',TDGRADE,'','بلا تصنيف')+'</div>';
-  h+='<div class="fg" style="margin-bottom:0"><label>المدرب المسؤول</label>'
-    +tdSel('adb-cc',(t.coaches||[]).filter(function(c){return coachBranches(c).indexOf(bn)>-1;}).map(function(c){return [c.id,c.name];}),'','بدون مدرب')+'</div>';
-  h+='<button class="btn btn-r btn-sm" onclick="adbAddCat(\''+jq(bn)+'\')">'+ic('plus',12)+' إضافة فئة</button>';
-  h+='</div><div class="msg err" id="adb-cat-err">اختر سنة المواليد</div></div>';
+  h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic('list',13)+' '+(rec?'تعديل «'+esc(rec.name)+'»':'فئة جديدة')+'</div>';
+  h+='<div class="frow"><div class="fg req"><label>سنة المواليد * <small>(تُضاف التي بعدها تلقائياً)</small></label>'
+    +tdSel('adb-cy',yrs,rec?String(rec.year||''):'','اختر السنة')+'</div>';
+  h+='<div class="fg"><label>اسم الفئة <small>(اختياري)</small></label><input type="text" id="adb-cl" value="'+esc(rec&&rec.label?rec.label:'')+'" placeholder="مثال: براعم"></div></div>';
+  h+='<div class="frow"><div class="fg"><label>التصنيف</label>'+tdSel('adb-cg',TDGRADE,rec?(rec.grade||''):'','بلا تصنيف')+'</div>';
+  h+='<div class="fg"><label>المدرب المسؤول</label>'
+    +tdSel('adb-cc',(t.coaches||[]).filter(function(c){return coachBranches(c).indexOf(bn)>-1;}).map(function(c){return [c.id,c.name];}),rec?(rec.coachId||''):'','بدون مدرب')+'</div></div>';
+  h+='<div style="display:flex;gap:.5rem"><button class="btn btn-r btn-sm" style="flex:1" onclick="adbSaveCat(\''+jq(bn)+'\')">'
+    +ic(rec?'check':'plus',12)+' '+(rec?'حفظ التعديلات':'إضافة فئة')+'</button>'+adbCancelBtn()+'</div>';
+  h+='<div class="msg err" id="adb-cat-err">اختر سنة المواليد</div></div>';
   if(!cats.length)return h+emptyBox('list','لا توجد فئات في هذا الفرع');
   h+='<div class="at-wrap"><table class="at"><thead><tr><th>الفئة</th><th>التصنيف</th><th>المواليد</th><th>المدرب</th><th>الحصص</th><th>اللاعبون</th><th></th></tr></thead><tbody>';
   cats.forEach(function(c){
     var gs=(t.groups||[]).filter(function(gg){return gg.catId===c.id;});
     var pn=(t.players||[]).filter(function(p){return gs.some(function(gg){return gg.id===p.groupId;});}).length;
     h+='<tr><td style="font-weight:700">'+esc(c.name)+'</td>'
-      +'<td>'+(tdCatGrade(c)?'<span class="ce2-st" style="background:#0e749020;color:#0e7490">'+esc(c.grade)+'</span>':'—')+'</td>'
-      +'<td>'+tdCatYearsLabel(c)+'</td>'
+      +'<td>'+(tdCatGrade(c)?'<span class="ce2-st" style="background:#0e749020;color:#0e7490">'+esc(c.grade)+'</span>':'<span style="color:var(--amber)">ناقص</span>')+'</td>'
+      +'<td style="direction:ltr;text-align:start">'+tdCatYearsLabel(c)+'</td>'
       +'<td>'+esc(c.coachId&&tdCoach(c.coachId)?tdCoach(c.coachId).name:'—')+'</td>'
       +'<td>'+ceN(gs.length)+'</td><td>'+ceN(pn)+'</td>'
-      +'<td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelCat(\''+c.id+'\')">'+ic('trash',11)+'</button></td></tr>';
+      +'<td style="white-space:nowrap">'+adbEditBtn('cat',c.id)
+      +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelCat(\''+c.id+'\')">'+ic('trash',11)+'</button></td></tr>';
   });
   return h+'</tbody></table></div>';
 }
-function adbAddCat(bn){
+function adbSaveCat(bn){
   var y=gv('adb-cy');
   if(!y){fl('adb-cat-err');return;}
   var label=gv('adb-cl');
   var name=label?(label+' — مواليد '+y):('مواليد '+y);
-  var t=TDX();
-  if((t.cats||[]).some(function(x){return x.branch===bn&&x.name===name;})){
-    g('adb-cat-err').textContent='توجد فئة بنفس الاسم في هذا الفرع';fl('adb-cat-err');return;
+  var t=TDX(),ed=adbEditing('cat');
+  if(ed){
+    var c=tdCat(ed);
+    if(c){
+      c.name=name;c.year=y;c.label=label;c.grade=gv('adb-cg')||'';
+      c.years=[parseInt(y,10),parseInt(y,10)+1];c.coachId=gv('adb-cc')||'';
+      (t.groups||[]).forEach(function(gg){if(gg.catId===c.id)gg.cat=name;});
+      (t.players||[]).forEach(function(p){if(p.catId===c.id)p.cat=name;});
+      logA('تعديل فئة: '+name+' — '+bn,'edit','#1565c0');
+    }
+  }else{
+    if((t.cats||[]).some(function(x){return x.branch===bn&&x.name===name;})){
+      g('adb-cat-err').textContent='توجد فئة بنفس الاسم في هذا الفرع';fl('adb-cat-err');return;
+    }
+    t.cats.push({id:uid(),name:name,branch:bn,year:y,label:label,grade:gv('adb-cg')||'',
+      years:[parseInt(y,10),parseInt(y,10)+1],days:'',coachId:gv('adb-cc')||'',
+      color:tdPickColor(bn,''),at:Date.now()});
+    logA('إضافة فئة: '+name+' — '+bn,'list','#16a34a');
   }
-  t.cats.push({id:uid(),name:name,branch:bn,year:y,label:label,grade:gv('adb-cg')||'',
-    years:[parseInt(y,10),parseInt(y,10)+1],days:'',coachId:gv('adb-cc')||'',
-    color:tdPickColor(bn,''),at:Date.now()});
-  logA('إضافة فئة: '+name+' — '+bn,'list','#16a34a');
-  sv();rADBranches();
+  sv();ADBR.edit='';rADBranches();
 }
 
 /* ---------- الحصص ---------- */
@@ -18134,6 +18260,7 @@ function adbSlots(bn){
   var cats=(t.cats||[]).filter(function(c){return c.branch===bn;});
   var prs=tdPeriods(bn),pts=tdPitches(bn);
   var slots=(t.groups||[]).filter(function(gg){return gg.branch===bn;});
+  var ed=adbEditing('slot'),rec=ed?tdGroup(ed):null;
   var h='';
   if(!cats.length||!prs.length||!pts.length){
     var need=[];
@@ -18143,18 +18270,19 @@ function adbSlots(bn){
     h+='<div class="ce2-note warn">'+ic('info',13)+'<div>الحصة = فئة داخل فترة على ملعب. ينقص هذا الفرع: <b>'+need.join('، ')+'</b>.</div></div>';
   }else{
     h+='<div class="rform" style="margin-bottom:1rem">';
-    h+='<div class="frow"><div class="fg"><label>الفئة *</label>'
-      +tdSel('adb-gc',cats.map(function(c){return [c.id,tdCatFull(c)];}),'','اختر الفئة')+'</div>';
-    h+='<div class="fg"><label>اسم الحصة *</label><input type="text" id="adb-gn" placeholder="مثال: براعم — ملعب ١"></div></div>';
+    h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic('cal',13)+' '+(rec?'تعديل «'+esc(rec.name)+'»':'حصة جديدة')+'</div>';
+    h+='<div class="frow"><div class="fg req"><label>الفئة *</label>'
+      +tdSel('adb-gc',cats.map(function(c){return [c.id,tdCatFull(c)];}),rec?rec.catId:'','اختر الفئة')+'</div>';
+    h+='<div class="fg req"><label>اسم الحصة *</label><input type="text" id="adb-gn" value="'+esc(rec?rec.name:'')+'" placeholder="مثال: براعم — ملعب 1"></div></div>';
     h+='<div class="frow" style="grid-template-columns:1fr 1fr 1fr">';
-    h+='<div class="fg"><label>الفترة *</label>'+tdSel('adb-gp',prs.map(function(pr){return [pr.id,pr.name+' — '+tdPeriodTime(pr)];}),'','اختر الفترة')+'</div>';
-    h+='<div class="fg"><label>الملعب *</label>'+tdSel('adb-gt',tdPitchOpts(bn),'','اختر الملعب')+'</div>';
-    h+='<div class="fg"><label>السعة التشغيلية</label><input type="number" id="adb-gk" min="1" style="direction:ltr" placeholder="من الملعب"></div></div>';
-    h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end;gap:.5rem">';
-    h+='<div class="fg" style="margin-bottom:0"><label>المدرب</label>'
-      +tdSel('adb-gh',(t.coaches||[]).filter(function(c){return coachBranches(c).indexOf(bn)>-1;}).map(function(c){return [c.id,c.name];}),'','بدون مدرب')+'</div>';
-    h+='<button class="btn btn-r btn-sm" onclick="adbAddSlot(\''+jq(bn)+'\')">'+ic('plus',12)+' إضافة حصة</button>';
-    h+='</div><div class="msg err" id="adb-g-err">أكمل: الفئة والاسم والفترة والملعب</div></div>';
+    h+='<div class="fg req"><label>الفترة *</label>'+tdSel('adb-gp',prs.map(function(pr){return [pr.id,pr.name+' — '+tdPeriodTime(pr)];}),rec?(rec.periodId||''):'','اختر الفترة')+'</div>';
+    h+='<div class="fg req"><label>الملعب *</label>'+tdSel('adb-gt',tdPitchOpts(bn),rec?(rec.pitchId||''):'','اختر الملعب')+'</div>';
+    h+='<div class="fg"><label>السعة التشغيلية</label><input type="number" id="adb-gk" min="1" style="direction:ltr" value="'+esc(rec&&rec.opCap?rec.opCap:'')+'" placeholder="من الملعب"></div></div>';
+    h+='<div class="fg"><label>المدرب</label>'
+      +tdSel('adb-gh',(t.coaches||[]).filter(function(c){return coachBranches(c).indexOf(bn)>-1;}).map(function(c){return [c.id,c.name];}),rec?(rec.coachId||''):'','بدون مدرب')+'</div>';
+    h+='<div style="display:flex;gap:.5rem"><button class="btn btn-r btn-sm" style="flex:1" onclick="adbSaveSlot(\''+jq(bn)+'\')">'
+      +ic(rec?'check':'plus',12)+' '+(rec?'حفظ التعديلات':'إضافة حصة')+'</button>'+adbCancelBtn()+'</div>';
+    h+='<div class="msg err" id="adb-g-err">أكمل: الفئة والاسم والفترة والملعب</div></div>';
   }
   if(!slots.length)return h+emptyBox('cal','لا توجد حصص في هذا الفرع');
   h+='<div class="at-wrap"><table class="at"><thead><tr><th>الحصة</th><th>الفئة</th><th>الفترة</th><th>الملعب</th><th>المدرب</th><th>الإشغال</th><th></th></tr></thead><tbody>';
@@ -18163,25 +18291,85 @@ function adbSlots(bn){
     var c=tdCat(gg.catId),n=tdSlotCount(gg),cp=tdSlotCap(gg);
     h+='<tr><td style="font-weight:700">'+esc(gg.name)+'</td>'
       +'<td>'+esc(c?tdCatFull(c):'—')+'</td>'
-      +'<td>'+(pr?esc(pr.name)+' <small style="color:var(--gray)">'+tdPeriodTime(pr)+'</small>':'<span style="color:var(--amber)">ناقص</span>')+'</td>'
+      +'<td>'+(pr?esc(pr.name)+' <small style="color:var(--gray);direction:ltr">'+tdPeriodTime(pr)+'</small>':'<span style="color:var(--amber)">ناقص</span>')+'</td>'
       +'<td>'+(pt?esc(pt.name):'<span style="color:var(--amber)">ناقص</span>')+'</td>'
       +'<td>'+esc(gg.coachId&&tdCoach(gg.coachId)?tdCoach(gg.coachId).name:'—')+'</td>'
       +'<td style="min-width:140px">'+tdFillBar(n,cp)+'</td>'
-      +'<td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelGroup(\''+gg.id+'\')">'+ic('trash',11)+'</button></td></tr>';
+      +'<td style="white-space:nowrap">'+adbEditBtn('slot',gg.id)
+      +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelGroup(\''+gg.id+'\')">'+ic('trash',11)+'</button></td></tr>';
   });
   return h+'</tbody></table></div>';
 }
-function adbAddSlot(bn){
+function adbSaveSlot(bn){
   var cid=gv('adb-gc'),nm=gv('adb-gn'),pid=gv('adb-gp'),ptid=gv('adb-gt');
   if(!cid||!nm||!pid||!ptid){fl('adb-g-err');return;}
-  var t=TDX(),c=tdCat(cid),pr=tdPeriod(pid);
+  var t=TDX(),c=tdCat(cid),pr=tdPeriod(pid),ed=adbEditing('slot');
   if(!c){fl('adb-g-err');return;}
-  t.groups.push({id:uid(),name:nm,catId:cid,cat:c.name,branch:bn,
-    periodId:pid,pitchId:ptid,opCap:+gv('adb-gk')||0,coachId:gv('adb-gh')||'',
-    days:(pr&&pr.days)||'',t1:(pr&&pr.t1)||'',t2:(pr&&pr.t2)||'',
-    color:tdPickColor(bn,''),at:Date.now()});
-  logA('إضافة حصة: '+nm+' — '+bn,'cal','#16a34a');
-  sv();rADBranches();
+  var data={name:nm,catId:cid,cat:c.name,branch:bn,periodId:pid,pitchId:ptid,
+            opCap:+gv('adb-gk')||0,coachId:gv('adb-gh')||'',
+            days:(pr&&pr.days)||'',t1:(pr&&pr.t1)||'',t2:(pr&&pr.t2)||''};
+  if(ed){
+    var gg=tdGroup(ed);
+    if(gg){
+      Object.assign(gg,data);
+      (t.players||[]).forEach(function(p){if(p.groupId===gg.id){p.catId=cid;p.cat=c.name;p.branch=bn;}});
+      logA('تعديل حصة: '+nm+' — '+bn,'edit','#1565c0');
+    }
+  }else{
+    t.groups.push(Object.assign({id:uid(),color:tdPickColor(bn,''),at:Date.now()},data));
+    logA('إضافة حصة: '+nm+' — '+bn,'cal','#16a34a');
+  }
+  sv();ADBR.edit='';rADBranches();
+}
+
+/* ---------- المشاركات والبطولات ---------- */
+function adbToursTab(bn){
+  var list=adbTours(bn);
+  var h='<div class="jnote" style="margin-bottom:1rem">'+ic('info',12)
+    +' البطولات التي يشارك فيها هذا الفرع كفريق. تُدار من نظام «بطولات فارس».</div>';
+  if(!list.length)return h+emptyBox('trophy','هذا الفرع لا يشارك في أي بطولة',
+    'سجّل الفرع كفريق من نظام بطولات فارس ليظهر هنا');
+  list.forEach(function(x){
+    var tr=x.tour,team=x.team;
+    var pls=(team.players||[]).length;
+    var cats=(team.categories||[]).map(function(c){return c.name;});
+    var ms=(tr.matches||[]).filter(function(m){
+      return normName(m.t1||'')===normName(bn)||normName(m.t2||'')===normName(bn);});
+    var done=ms.filter(function(m){return m.s1!==''&&m.s1!=null&&m.s2!==''&&m.s2!=null;});
+    var w=0,d=0,l=0,gf=0,ga=0;
+    done.forEach(function(m){
+      var home=normName(m.t1||'')===normName(bn);
+      var mine=+(home?m.s1:m.s2),his=+(home?m.s2:m.s1);
+      gf+=mine;ga+=his;
+      if(mine>his)w++;else if(mine===his)d++;else l++;
+    });
+    h+='<div class="rform" style="margin-bottom:1rem">';
+    h+='<div style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:.8rem">';
+    h+='<div class="adb-ic" style="background:'+(tr.color||'var(--red)')+'22;color:'+(tr.color||'var(--red)')+'">'+ic(tr.icon||'trophy',17)+'</div>';
+    h+='<div style="flex:1;min-width:150px"><div style="font-weight:800;font-size:14px">'+esc(tr.name)+'</div>'
+      +'<div style="font-size:10.5px;color:var(--gray)">'+esc(SYS[tr.system]||'بطولة')
+      +(cats.length?' • '+esc(cats.join('، ')):'')+'</div></div>';
+    h+='<span class="ce2-st" style="background:'+(tr.visible!==false?'#16a34a':'var(--gray)')+'1f;color:'+(tr.visible!==false?'#16a34a':'var(--gray)')+'">'
+      +(tr.visible!==false?'نشطة':'مخفية')+'</span>';
+    h+='</div>';
+    h+='<div class="adb-st" style="grid-template-columns:repeat(auto-fit,minmax(64px,1fr))">';
+    [['لاعب',pls],['مباراة',ms.length],['فوز',w],['تعادل',d],['خسارة',l],['له',gf],['عليه',ga]]
+      .forEach(function(y){h+='<div><b>'+ceN(y[1])+'</b><span>'+y[0]+'</span></div>';});
+    h+='</div>';
+    if(ms.length){
+      h+='<div class="at-wrap" style="margin-top:.8rem"><table class="at"><thead><tr><th>المباراة</th><th>الفئة</th><th>التاريخ</th><th>النتيجة</th></tr></thead><tbody>';
+      ms.slice(-8).forEach(function(m){
+        var res=(m.s1!==''&&m.s1!=null&&m.s2!==''&&m.s2!=null)?(ceN(m.s1)+' - '+ceN(m.s2)):'—';
+        h+='<tr><td style="font-weight:700">'+esc(m.t1||'')+' × '+esc(m.t2||'')+'</td>'
+          +'<td>'+esc(m.cat||'—')+'</td>'
+          +'<td style="direction:ltr;text-align:start">'+esc(m.date||'—')+'</td>'
+          +'<td style="direction:ltr;text-align:start">'+res+'</td></tr>';
+      });
+      h+='</tbody></table></div>';
+    }
+    h+='</div>';
+  });
+  return h;
 }
 
 
@@ -18647,11 +18835,131 @@ setTimeout(function(){if(typeof tdMergeGroups==='function'&&DB.td){tdMergeGroups
 initSbarPref();
 faBoot();
 </script>
+<!-- مودالات عامة: كانت داخل #APP فتُحجب كلما فُتح نظام آخر -->
+
+<div class="modal" id="profMod" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mbox">
+    <div class="mhdr">
+      <button class="mclose" onclick="profMod.classList.remove('open')" data-ic="x"></button>
+      <div class="prof-av" id="prof-av">؟</div>
+      <div style="font-size:15px;font-weight:700" id="prof-name">—</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)" id="prof-role">—</div>
+    </div>
+    <div class="mbody" id="prof-body"></div>
+  </div>
+</div>
+
+
+<div class="modal" id="warnMod" onclick="if(event.target===this)warnClose()">
+  <div class="mbox">
+    <div class="mhdr">
+      <button class="mclose" onclick="warnClose()" data-ic="x"></button>
+      <div class="prof-av" style="background:#d97706">!</div>
+      <div style="font-size:15px;font-weight:700">بيانات تحتاج إكمالاً</div>
+    </div>
+    <div class="mbody" id="warn-body"></div>
+  </div>
+</div>
+
+
+<div class="modal" id="ptMod" onclick="if(event.target===this)ptClose()">
+  <div class="mbox" style="max-width:520px">
+    <div class="mhdr">
+      <button class="mclose" onclick="ptClose()" data-ic="x"></button>
+      <div class="prof-av" style="background:var(--red)"><span data-ic="trophy"></span></div>
+      <div style="font-size:15px;font-weight:700">بطولات اللاعب</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">هوية واحدة • اشتراك لكل بطولة</div>
+    </div>
+    <div class="mbody" id="pt-body"></div>
+  </div>
+</div>
+
+
+<div class="modal" id="mvpMod" onclick="if(event.target===this)mvpClose()">
+  <div class="mbox" style="max-width:460px">
+    <div class="mhdr">
+      <button class="mclose" onclick="mvpClose()" data-ic="x"></button>
+      <div class="prof-av" style="background:var(--red)"><span data-ic="crown"></span></div>
+      <div style="font-size:15px;font-weight:700">لاعب الجولة</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">اختر من القائمة أو أدخل الاسم يدوياً</div>
+    </div>
+    <div class="mbody" id="mvp-body"></div>
+  </div>
+</div>
+
+
+<div class="modal" id="apMod">
+  <div class="mbox">
+    <div class="mhdr">
+      <div class="prof-av" id="ap-av">؟</div>
+      <div style="font-size:15px;font-weight:700" id="ap-nm">—</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">توثيق رقم الجوال</div>
+    </div>
+    <div class="mbody" id="ap-body"></div>
+  </div>
+</div>
+
+
+<div class="modal" id="uedMod" onclick="if(event.target===this)uedClose()">
+  <div class="mbox">
+    <div class="mhdr">
+      <button class="mclose" onclick="uedClose()" data-ic="x"></button>
+      <div class="prof-av" id="ued-av">؟</div>
+      <div style="font-size:15px;font-weight:700" id="ued-name">—</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)" id="ued-sub">—</div>
+    </div>
+    <div class="mbody" id="ued-body"></div>
+  </div>
+</div>
+
+
+<div class="modal" id="pedMod" onclick="if(event.target===this)pedClose()">
+  <div class="mbox">
+    <div class="mhdr">
+      <button class="mclose" onclick="pedClose()" data-ic="x"></button>
+      <div class="prof-av" id="ped-av">؟</div>
+      <div style="font-size:15px;font-weight:700" id="ped-name">—</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">تعديل بياناتي</div>
+    </div>
+    <div class="mbody" id="ped-body"></div>
+  </div>
+</div>
+
+
+<div class="modal" id="contMod" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mbox">
+    <div class="mhdr">
+      <button class="mclose" onclick="contMod.classList.remove('open')" data-ic="x"></button>
+      <div style="font-size:15px;font-weight:700">اتصل بنا</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">أكاديمية فارس</div>
+    </div>
+    <div class="mbody">
+      <div class="cont-item"><div class="cont-icon" data-ic="whatsapp"></div><div><div class="ct">واتساب</div><div class="cs" style="direction:ltr">920031974</div></div></div>
+      <div class="cont-item"><div class="cont-icon" data-ic="mail"></div><div><div class="ct">البريد الإلكتروني</div><div class="cs">info@farisacademy.com</div></div></div>
+      <div class="cont-item"><div class="cont-icon" data-ic="globe"></div><div><div class="ct">الموقع الإلكتروني</div><div class="cs">farisacademy.com</div></div></div>
+      <div class="cont-item"><div class="cont-icon" data-ic="pin"></div><div><div class="ct">الموقع</div><div class="cs">الرياض، المملكة العربية السعودية</div></div></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="QM" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mbox" style="text-align:center">
+    <div class="mhdr">
+      <button class="mclose" onclick="QM.classList.remove('open')" data-ic="x"></button>
+      <div style="font-size:15px;font-weight:700" id="q-name">—</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">أكاديمية فارس</div>
+    </div>
+    <div class="mbody"><div id="qcvs" style="display:inline-block;padding:10px;background:var(--sur);border:1px solid var(--brd);border-radius:14px"></div></div>
+  </div>
+</div>
+
+
 <div id="lbx" onclick="lbxClose(event)">
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-fix1</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-mod</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
