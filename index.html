@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.15-playerlogin">
+<meta name="build" content="2026.09.15-coacheval">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -1464,13 +1464,13 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
   .mnav-ov{position:fixed;inset:0;background:rgba(6,7,25,.6);backdrop-filter:blur(2px);z-index:98;opacity:0;pointer-events:none;transition:opacity .22s}
   .mnav-ov.on{opacity:1;pointer-events:auto}
   /* الدرج ينزلق من نفس جهة زر القائمة: يمين في العربية، يسار في الإنجليزية */
-  #APP .sbar,#TD .sbar,#NT .sbar,.sbar{position:fixed;top:0;inset-inline-start:0;height:100dvh;width:min(84vw,300px);background:var(--navy);z-index:99;
+  #APP .sbar,#TD .sbar,#NT .sbar,#CE .sbar,.sbar{position:fixed;top:0;inset-inline-start:0;height:100dvh;width:min(84vw,300px);background:var(--navy);z-index:99;
         display:flex;flex-direction:column;padding:1rem .8rem .9rem;
         transition:transform .26s cubic-bezier(.4,0,.2,1);overflow-y:auto;overscroll-behavior:contain}
   html[dir="rtl"] .sbar{transform:translateX(100%);box-shadow:-10px 0 34px rgba(0,0,0,.45)}
   html[dir="ltr"] .sbar{transform:translateX(-100%);box-shadow:10px 0 34px rgba(0,0,0,.45)}
   .sbar::-webkit-scrollbar{display:none}
-  #APP .sbar.open,#TD .sbar.open,#NT .sbar.open,.sbar.open{transform:none!important}
+  #APP .sbar.open,#TD .sbar.open,#NT .sbar.open,#CE .sbar.open,.sbar.open{transform:none!important}
   .sb-brand{display:flex;padding:.2rem .3rem .9rem;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:.7rem}
   .sb-links{display:flex;flex-direction:column;gap:3px;flex:1}
   .sb-l{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:12px;min-height:46px}
@@ -1486,14 +1486,14 @@ html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
 }
 /* ---- الكمبيوتر: الشريط ثابت دائماً، وزر القائمة يخفيه/يظهره ---- */
 @media(min-width:921px){
-  #APP .sbar,#TD .sbar,#NT .sbar,.sbar{width:270px;box-shadow:none;border-inline-end:1px solid rgba(255,255,255,.07)}
+  #APP .sbar,#TD .sbar,#NT .sbar,#CE .sbar,.sbar{width:270px;box-shadow:none;border-inline-end:1px solid rgba(255,255,255,.07)}
   html[dir="rtl"] .sbar,html[dir="ltr"] .sbar{transform:none}
   html[dir="rtl"] body.sb-hidden .sbar{transform:translateX(100%)}
   html[dir="ltr"] body.sb-hidden .sbar{transform:translateX(-100%)}
-  #APP,#TD,#NT{padding-inline-start:270px;transition:padding .26s cubic-bezier(.4,0,.2,1)}
-  body.sb-hidden #APP,body.sb-hidden #TD,body.sb-hidden #NT{padding-inline-start:0}
+  #APP,#TD,#NT,#CE{padding-inline-start:270px;transition:padding .26s cubic-bezier(.4,0,.2,1)}
+  body.sb-hidden #APP,body.sb-hidden #TD,body.sb-hidden #NT,body.sb-hidden #CE{padding-inline-start:0}
   .mnav-ov{display:none!important}
-  #APP .nav,#TD .nav,#NT .nav{padding-inline-start:1.2rem}
+  #APP .nav,#TD .nav,#NT .nav,#CE .nav{padding-inline-start:1.2rem}
 }
 
 /* جدول الترتيب — الأجهزة اللوحية فقط (641–920): كل الأعمدة ظاهرة */
@@ -2323,6 +2323,98 @@ body.nt-pick #NT .mnav-btn{display:none!important}
 @keyframes flashk{0%,100%{box-shadow:var(--sh)}25%,60%{box-shadow:0 0 0 3px rgba(221,29,69,.4)}}
 @media(max-width:700px){.cal-c{min-height:64px;padding:3px}.cal-hd div{font-size:9.5px;padding:7px 2px}.cal-chip{font-size:9px;padding:2px 4px}}
 
+/* ============ تقييم وتطوير المدربين ============ */
+#CE{display:none}
+.ce2-bar{display:flex;align-items:center;gap:.6rem;background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:.6rem .8rem;margin-bottom:1.2rem;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--gray)}
+.ce2-bar select{flex:1;min-width:180px;margin:0}
+.ce2-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem}
+.ce2-kpi{background:var(--sur);border:1px solid var(--brd);border-radius:14px;padding:.9rem .95rem}
+.ce2-kic{width:30px;height:30px;border-radius:9px;background:var(--sur2);display:flex;align-items:center;justify-content:center;color:var(--accent);margin-bottom:.5rem}
+.ce2-kv{font-size:1.5rem;font-weight:800;line-height:1.1}
+.ce2-kl{font-size:11.5px;color:var(--gray);margin-top:.15rem}
+.ce2-ks{font-size:10px;color:var(--gray);opacity:.75;margin-top:.2rem}
+.ce2-tw{overflow-x:auto;border:1px solid var(--brd);border-radius:14px;background:var(--sur)}
+.ce2-tb{width:100%;border-collapse:collapse;font-size:12.5px;min-width:620px}
+.ce2-tb th{text-align:start;padding:.7rem .8rem;font-size:11px;color:var(--gray);font-weight:700;border-bottom:1px solid var(--brd);white-space:nowrap}
+.ce2-tb td{padding:.7rem .8rem;border-bottom:1px solid var(--brd)}
+.ce2-tb tbody tr:last-child td{border-bottom:none}
+.ce2-tb tbody tr:hover{background:var(--sur2)}
+.ce2-who{display:flex;align-items:center;gap:.5rem}
+.ce2-av{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.ce2-st{display:inline-block;padding:.22rem .6rem;border-radius:99px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.ce2-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:.9rem}
+.ce2-card{background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:1rem .8rem;text-align:center;cursor:pointer;transition:.18s;display:flex;flex-direction:column;align-items:center;gap:.35rem}
+.ce2-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.ce2-card.done{opacity:.62}
+.ce2-cn{font-size:13px;font-weight:700;margin-top:.3rem}
+.ce2-cb{font-size:10.5px;color:var(--gray);display:flex;align-items:center;gap:.25rem}
+.ce2-cs{font-size:1.25rem;font-weight:800}
+.ce2-hero{display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap;background:var(--sur);border:1px solid var(--brd);border-radius:18px;padding:1.2rem;margin-bottom:1.4rem}
+.ce2-hi{flex:1;min-width:190px}
+.ce2-hn{font-size:1.2rem;font-weight:800}
+.ce2-hs{font-size:11.5px;color:var(--gray);margin-top:.25rem;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap}
+.ce2-ring{text-align:center;min-width:104px}
+.ce2-rn{font-size:2rem;font-weight:800;line-height:1}
+.ce2-rl{font-size:11px;color:var(--gray);margin-top:.2rem}
+.ce2-srcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;margin-bottom:1rem}
+.ce2-src{background:var(--sur);border:1px solid var(--brd);border-radius:14px;padding:.85rem}
+.ce2-sl{font-size:11.5px;color:var(--gray);font-weight:600}
+.ce2-sl small{opacity:.7}
+.ce2-sv{font-size:1.45rem;font-weight:800;margin:.2rem 0 .4rem}
+.ce2-track{height:6px;border-radius:99px;background:var(--sur2);overflow:hidden}
+.ce2-fill{height:100%;border-radius:99px;transition:width .5s}
+.ce2-ss{font-size:10px;color:var(--gray);margin-top:.35rem}
+.ce2-note{display:flex;gap:.55rem;align-items:flex-start;background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:.7rem .8rem;font-size:11.5px;line-height:1.75;margin-bottom:.7rem}
+.ce2-note.warn{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.4)}
+.ce2-note.ok{background:rgba(22,163,74,.1);border-color:rgba(22,163,74,.4)}
+.ce2-quote{background:var(--sur2);border-inline-start:3px solid var(--accent);border-radius:8px;padding:.6rem .75rem;font-size:12px;line-height:1.8;margin-bottom:.5rem}
+.ce2-dec{background:var(--sur);border:1px solid var(--brd);border-radius:14px;padding:.95rem;margin-bottom:1rem}
+.ce2-dl{font-weight:800;font-size:13.5px;display:flex;align-items:center;gap:.4rem}
+.ce2-dr{font-size:12px;line-height:1.8;margin-top:.4rem}
+.ce2-dm{font-size:10.5px;color:var(--gray);margin-top:.4rem}
+.ce2-fhero{display:flex;align-items:center;gap:.9rem;background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:.9rem;margin-bottom:1.1rem}
+.ce2-fn{font-size:15px;font-weight:800}
+.ce2-fb{font-size:11px;color:var(--gray);display:flex;align-items:center;gap:.25rem;margin-top:.15rem}
+.ce2-form{max-width:680px}
+.ce2-q{background:var(--sur);border:1px solid var(--brd);border-radius:14px;padding:.9rem;margin-bottom:.8rem}
+.ce2-qt{font-size:13px;font-weight:600;line-height:1.75;display:flex;gap:.5rem;align-items:flex-start;margin-bottom:.7rem}
+.ce2-qn{flex:0 0 auto;width:22px;height:22px;border-radius:7px;background:var(--sur2);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+.ce2-opts{display:grid;grid-template-columns:repeat(5,1fr);gap:.35rem}
+.ce2-opt{padding:.55rem .2rem;border-radius:10px;border:1px solid var(--brd);background:var(--sur2);color:var(--txt);font-size:10.5px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit}
+.ce2-opt:hover{border-color:var(--accent)}
+.ce2-opt.on{background:var(--red);border-color:var(--red);color:#fff}
+.ce2-rev{background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:1rem;margin-bottom:1rem}
+.ce2-rvh{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem;flex-wrap:wrap}
+.ce2-rvs{margin-inline-start:auto;font-size:1.4rem;font-weight:800;text-align:center;line-height:1.1}
+.ce2-rvs small{display:block;font-size:10px;color:var(--gray);font-weight:600}
+.ce2-rvg{display:flex;gap:.9rem;flex-wrap:wrap;font-size:11.5px;color:var(--gray);background:var(--sur2);border-radius:10px;padding:.55rem .7rem;margin-bottom:.8rem}
+.ce2-rvg b{color:var(--txt)}
+.ce2-plan{background:var(--sur);border:1px solid var(--brd);border-inline-start-width:3px;border-radius:12px;padding:.85rem;margin-bottom:.7rem}
+.ce2-ph{display:flex;align-items:center;gap:.6rem;justify-content:space-between;flex-wrap:wrap;font-size:13px}
+.ce2-pl{font-size:11.5px;line-height:1.8;margin-top:.35rem}
+.ce2-pa{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.7rem}
+.ce2-pa .btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.ce2-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.3rem}
+.ce2-tab{display:flex;align-items:center;gap:.35rem;padding:.5rem .85rem;border-radius:10px;border:1px solid var(--brd);background:var(--sur);color:var(--gray);font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.ce2-tab.on{background:var(--red);border-color:var(--red);color:#fff}
+.ce2-qs{margin-bottom:.6rem}
+.ce2-qi{display:flex;align-items:center;gap:.45rem;background:var(--sur);border:1px solid var(--brd);border-radius:10px;padding:.45rem .55rem;margin-bottom:.4rem}
+.ce2-qi.off{opacity:.5}
+.ce2-qi input{flex:1;margin:0;font-size:12px}
+.ce2-qadd{display:flex;gap:.4rem;margin-bottom:.6rem}
+.ce2-qadd input{flex:1;margin:0}
+.ce2-scale{font-size:10.5px;color:var(--gray);margin-bottom:1.4rem}
+.ce2-wsum{font-size:12.5px;font-weight:800;margin-bottom:.8rem}
+.ce2-qrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem}
+.ce2-qr{background:#fff;border-radius:14px;padding:1rem .7rem;text-align:center;color:#181946}
+.ce2-qrn{font-weight:800;font-size:13px;margin-bottom:.6rem}
+.ce2-qrc{display:flex;justify-content:center}
+.ce2-qru{font-size:8px;color:#667;direction:ltr;margin-top:.5rem;word-break:break-all}
+.ce2-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.6rem}
+.ce2-pk{display:flex;flex-direction:column;align-items:center;gap:.45rem;padding:.8rem .4rem;border-radius:12px;border:1px solid var(--brd);background:var(--sur2);color:var(--txt);font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.ce2-pk:hover{border-color:var(--accent)}
+@media(max-width:560px){.ce2-opts{grid-template-columns:repeat(3,1fr)}}
+@media print{#CE .nav,#CE .sbar,.ce2-tabs,.btn{display:none!important}.ce2-qr{break-inside:avoid;border:1px solid #ccc}}
 /* ============ MODALS / PAGES / FOOTER ============ */
 .page{display:none;animation:fadeIn .25s ease}
 .page.on{display:block}
@@ -2484,7 +2576,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-playerlogin</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-coacheval</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3120,6 +3212,48 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 <div id="ntpg-settings" class="page"><div class="sec" id="ntc-settings"></div></div>
 </div>
 
+<!-- ============ تقييم وتطوير المدربين ============ -->
+<div id="CE">
+<nav class="nav">
+  <div class="nav-logo" onclick="ceP('home')">
+    <div class="lg"></div>
+    <div class="nav-logo-t">أكاديمية فارس<small>تقييم وتطوير المدربين</small></div>
+  </div>
+  <div class="nav-links" id="ce-links"></div>
+  <div class="nav-r">
+    <div class="chip" onclick="openAccount(event)" title="حسابي">
+      <div class="chip-av" id="ce-av">؟</div>
+      <div><div class="chip-name" id="ce-nm">—</div><small class="chip-role" id="ce-rl">—</small></div>
+      <span class="chip-cv" data-ic="chevron"></span>
+    </div>
+    <button class="btnav" onclick="ceBack()"><span data-ic="swap"></span> الأنظمة</button>
+    <button class="btnav out" onclick="doLogout()"><span data-ic="logout"></span></button>
+    <div class="hmb" onclick="document.getElementById('cemm').classList.toggle('open')"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<aside class="sbar" id="ce-sbar"><div class="sb-brand"></div><div class="sb-hd">الأقسام</div><nav class="sb-links" id="ce-sbar-links"></nav><div class="sb-foot"></div></aside>
+<div class="mob-menu" id="cemm"></div>
+<div id="cepg-home" class="page on"><div class="sec" id="cec-home"></div></div>
+<div id="cepg-coaches" class="page"><div class="sec" id="cec-coaches"></div></div>
+<div id="cepg-coach" class="page"><div class="sec" id="cec-coach"></div></div>
+<div id="cepg-eval" class="page"><div class="sec" id="cec-eval"></div></div>
+<div id="cepg-review" class="page"><div class="sec" id="cec-review"></div></div>
+<div id="cepg-plans" class="page"><div class="sec" id="cec-plans"></div></div>
+<div id="cepg-settings" class="page"><div class="sec" id="cec-settings"></div></div>
+</div>
+
+<!-- تقييم اللاعب عبر باركود الفرع (بلا حساب) -->
+<div class="modal" id="cePub" style="z-index:9999" onclick="if(event.target===this)cePubClose()">
+  <div class="mbox" style="max-width:430px">
+    <div class="mhdr">
+      <button class="mclose" onclick="cePubClose()" data-ic="x"></button>
+      <div style="font-size:15px;font-weight:700">تقييم المدرب</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">أكاديمية فارس</div>
+    </div>
+    <div class="mbody" id="cepub-body"></div>
+  </div>
+</div>
+
 <!-- NEW TOURNAMENT MODAL (top-level so it shows over the tournament-select screen) -->
 <div class="modal" id="cfMod" onclick="if(event.target===this)cfClose()">
   <div class="mbox" style="max-width:380px">
@@ -3686,6 +3820,15 @@ var FA={
   listUsers:function(){
     if(!this.token)return Promise.resolve([]);
     return this.sb.rpc('fa_list_users',{p_token:this.token}).then(function(r){if(r.error)throw r.error;return r.data||[];});
+  },
+  /* ===== تقييم اللاعب للمدرب =====
+     اللاعب لا يملك صلاحية كتابة قاعدة البيانات، فالإضافة تتم على الخادم:
+     الدالة تتحقق من الهوية وتاريخ الميلاد ومن عدم التكرار ثم تُلحق الإجابة. */
+  ceSubmit:function(nid,dob,payload){
+    var self=this;
+    if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
+    return self.sb.rpc('fa_ce_submit',{p_nid:String(nid),p_dob:String(dob),p_resp:payload})
+      .then(function(r){if(r.error)throw r.error;return r.data||null;});
   }
 };
 /* strip secrets (PINs) before pushing the public state blob */
@@ -3860,7 +4003,7 @@ function sv(){
   syncGlobalTeams();
   Store.save(DB);   /* في وضع السحابة: لا يفعل شيئاً — الحفظ عبر cloudQueue حصراً */
   if(typeof tdSyncSchedule==='function')tdSyncSchedule();
-  if(FA.enabled&&FA.token&&CU&&['admin','organizer','admin-team','coach'].indexOf(CU.role)>-1)cloudQueue();
+  if(FA.enabled&&FA.token&&CU&&['admin','supervisor','organizer','admin-team','coach'].indexOf(CU.role)>-1)cloudQueue();
   /* الكتابة المزدوجة — معزولة تماماً عن الحفظ الأساسي أعلاه */
   try{dualWrite();}catch(e){console.warn('[FA] الكتابة المزدوجة',e&&e.message);}
 }
@@ -4015,9 +4158,10 @@ function T(){
 }
 
 /* ================= CONSTANTS ================= */
-var USER_ROLES=['admin','organizer','admin-team','coach','player','media','viewer'];
-var RL={admin:'مدير النظام',organizer:'منظم','admin-team':'إداري فريق',coach:'مدرب',player:'لاعب',media:'إعلامي',viewer:'ولي أمر'};
-var RC={admin:'#DD1D45',organizer:'#0e7490','admin-team':'#5b2d8f',coach:'#1565c0',player:'#16a34a',media:'#d97706',viewer:'#8b92b0'};
+var USER_ROLES=['admin','supervisor','organizer','admin-team','coach','player','media','viewer'];
+/* admin-team = مدير الفرع/الفريق (كان «إداري فريق») — supervisor = مشرف فني فوق الفروع */
+var RL={admin:'مدير النظام',supervisor:'مشرف فني',organizer:'منظم','admin-team':'مدير فرع',coach:'مدرب',player:'لاعب',media:'إعلامي',viewer:'ولي أمر'};
+var RC={admin:'#DD1D45',supervisor:'#0e7490',organizer:'#0e7490','admin-team':'#5b2d8f',coach:'#1565c0',player:'#16a34a',media:'#d97706',viewer:'#8b92b0'};
 var COLS=['#181946','#DD1D45','#1565c0','#16a34a','#5b2d8f','#d97706','#0e7490','#9d174d','#374151','#7c2d12'];
 var CITIES=['الرياض','جدة','الدمام','المدينة المنورة','مكة المكرمة','الطائف','القصيم','الأحساء','حائل','تبوك','أخرى'];
 var NATS=['سعودي','إماراتي','كويتي','بحريني','قطري','عماني','يمني','أردني','مصري','سوري','لبناني','عراقي','فلسطيني','مغربي','تونسي','جزائري','سوداني','باكستاني','هندي','أخرى'];
@@ -4381,8 +4525,35 @@ function nameErr(msg){
 }
 /* ================= الدخول بالجوال ================= */
 var LSMODE='phone';
+/* ===== نسخة بلا إعدادات سحابية =====
+   يحدث عند فتح index.html وحده (تنزيل مباشر) بلا ملف config.js بجانبه.
+   حينها لا يوجد اتصال بقاعدة البيانات ولا أي حساب حقيقي، فكل محاولة دخول
+   تفشل برسالة «الرمز غير صحيح» وهي مضلّلة تماماً. نوضّح السبب صراحة. */
+function faNoCloud(){
+  var c=window.FA_CONFIG||{};
+  return !(c.SUPABASE_URL&&c.SUPABASE_ANON_KEY);
+}
+function faNoCloudBanner(){
+  try{
+    var box=g('ls-s1');if(!box)return;
+    var el=g('ls-nocloud');
+    if(!faNoCloud()){if(el)el.remove();return;}
+    if(el)return;
+    el=document.createElement('div');
+    el.id='ls-nocloud';
+    el.style.cssText='margin-top:.9rem;padding:.7rem .8rem;border-radius:10px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.45);color:#fcd34d;font-size:11px;line-height:1.75;text-align:start;direction:rtl';
+    el.innerHTML='<b>نسخة غير متصلة بقاعدة البيانات</b><br>'
+      +'هذا الملف مفتوح وحده بدون ملف الإعدادات <span style="direction:ltr;display:inline-block">config.js</span>، '
+      +'فلا توجد حسابات ولا بيانات — وأي رمز سري ستُدخله سيُرفض.<br>'
+      +'للتجربة الصحيحة: ارفع الملف على الموقع وافتحه من رابطه الرسمي.';
+    var ver=g('ls-ver');
+    if(ver&&ver.parentNode===box)box.insertBefore(el,ver);
+    else box.appendChild(el);
+  }catch(e){}
+}
 function lsMode(m){
   LSMODE=m;
+  faNoCloudBanner();
   ['phone','nid','name'].forEach(function(k){
     var f=g('lf-'+k);
     if(f)f.style.display=(m===k)?'':'none';
@@ -4644,6 +4815,7 @@ function goNid(){
   trcReset();trc('بدأ الفحص');
   var raw=gv('l-nid');
   if(!nidOK(raw)){trc('رقم غير صالح');nameErr('أدخل رقم هوية صحيح (١٠ أرقام)');return;}
+  if(faNoCloud()){nameErr('هذه النسخة غير متصلة بقاعدة البيانات — افتح الموقع من رابطه الرسمي');return;}
   var p=findPlayerByNid(raw);
   trc('البحث المحلي: '+(p?'وُجد '+(p.name||''):'غير موجود'));
   if(p){nidProceed(p);return;}
@@ -4943,6 +5115,12 @@ function pinReset(){
 }
 function pinErr(){
   loadHide();
+  /* نسخة بلا قاعدة بيانات: الرمز ليس خاطئاً — لا يوجد حساب أصلاً.
+     نقول السبب الحقيقي بدل «الرمز غير صحيح» المضلّلة. */
+  var _pe=g('p-err');
+  if(_pe)_pe.textContent=faNoCloud()
+    ? 'هذه النسخة غير متصلة بقاعدة البيانات — افتح الموقع من رابطه الرسمي'
+    : 'الرمز السري غير صحيح';
   [1,2,3,4].forEach(function(i){var e=g('p'+i);e.className='pbox err';e.value='';});
   fl('p-err');
   setTimeout(function(){[1,2,3,4].forEach(function(i){g('p'+i).className='pbox';});g('p1').focus();},650);
@@ -5053,7 +5231,8 @@ function sessSave(){
       uid:CU.id, token:FA.token||'', at:Date.now(),
       sys:(g('TD')&&g('TD').style.display==='block')?'td':
           ((g('NT')&&g('NT').style.display==='block')?'nt':
-          ((g('APP')&&g('APP').style.display==='flex')?'app':'ts')),
+          ((g('CE')&&g('CE').style.display==='block')?'ce':
+          ((g('APP')&&g('APP').style.display==='flex')?'app':'ts'))),
       at_id:(typeof AT!=='undefined'?AT:''), nt_team:(typeof NTTEAM!=='undefined'?NTTEAM:'')
     }));
   }catch(e){}
@@ -5089,6 +5268,7 @@ function sessRestore(){
       if(v.nt_team){NTTEAM=v.nt_team;}
       enterNT();
     }
+    else if(v.sys==='ce'&&sysAllowed('ce'))enterCE();
     else if(v.sys==='app'&&AT)selT(AT);
     else showTS();
   }catch(e){showTS();}
@@ -5105,23 +5285,23 @@ function loginOK(){
   pinReset();
   logA('تسجيل دخول','user','#1565c0');
 }
-function doLogout(){try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
+function doLogout(){try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';var ce=g('CE');if(ce)ce.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
 function visibleTournaments(){
   return DB.tournaments.filter(function(t){return t.visible||(CU&&['admin','organizer'].indexOf(CU.role)>-1);});
 }
 function showTS(){
   setTimeout(function(){try{sessSave();}catch(e){}},400);
-  g('TS').style.display='block';g('APP').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt2=g('NT');if(nt2)nt2.style.display='none';
+  g('TS').style.display='block';g('APP').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt2=g('NT');if(nt2)nt2.style.display='none';var ce2=g('CE');if(ce2)ce2.style.display='none';
   g('ts-nm').textContent=CU.name;g('ts-rl').innerHTML=ic('shield',13)+' '+RL[CU.role];
   tsSys();
 }
-function sysVis(){DB.sysVis=DB.sysVis||{td:false,nt:false};return DB.sysVis;}
+function sysVis(){DB.sysVis=DB.sysVis||{td:false,nt:false,ce:false};if(DB.sysVis.ce==null)DB.sysVis.ce=false;return DB.sysVis;}
 function sysAllowed(k){return (CU&&CU.role==='admin')||!!sysVis()[k];}
 function sysVisToggle(k,ev){
   if(ev){ev.stopPropagation();ev.preventDefault();}
   if(!CU||CU.role!=='admin')return;
   var v=sysVis();v[k]=!v[k];sv();
-  logA((v[k]?'إظهار':'إخفاء')+' نظام '+(k==='td'?'الإدارة الفنية':'منتخب فارس')+(v[k]?' للمستخدمين':' عن المستخدمين'),'eye','#1565c0');
+  logA((v[k]?'إظهار':'إخفاء')+' نظام '+({td:'الإدارة الفنية',nt:'منتخب فارس',ce:'تقييم المدربين'}[k]||k)+(v[k]?' للمستخدمين':' عن المستخدمين'),'eye','#1565c0');
   tsSys();
 }
 /* صياغة عربية سليمة: مفرد ومثنى وجمع قلة وجمع كثرة */
@@ -5255,6 +5435,14 @@ function tsSys(){
   var n=NTX();
   var ntCand=(typeof ntCandidates==='function')?ntCandidates().length:0;
   if(v.nt||isAdm)cards+='<div class="ts-card'+(!v.nt?' hidden-t':'')+'" onclick="enterNT()">'+(!v.nt?hidLbl:'')+'<div class="ts-poster" style="--pc:var(--amber)">'+visBtn('nt')+(sysImgs().nt?'<img src="'+sysImgs().nt+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('crown',26)+'</div>')+'</div><div class="ts-cap"><div class="ts-name">منتخب فارس</div><div class="ts-sub">'+arCount((n.teams||[]).length,'منتخب واحد','منتخبان','منتخبات','منتخباً')+'</div></div></div>';
+  if(v.ce||isAdm){
+    var ceX=CEX(),ceCy=ceActiveCycle();
+    var ceSub=ceCy?(ceCy.status==='open'?'دورة مفتوحة: '+ceCy.name:'آخر دورة: '+ceCy.name):'التقييم والتعميد والتطوير';
+    cards+='<div class="ts-card'+(!v.ce?' hidden-t':'')+'" onclick="enterCE()">'+(!v.ce?hidLbl:'')
+      +'<div class="ts-poster" style="--pc:#0e7490">'+visBtn('ce')
+      +(sysImgs().ce?'<img src="'+sysImgs().ce+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('star',26)+'</div>')
+      +'</div><div class="ts-cap"><div class="ts-name">تقييم وتطوير المدربين</div><div class="ts-sub">'+esc(ceSub)+'</div></div></div>';
+  }
   g('ts-sys').innerHTML=cards;
   hydrateIcons(g('TS'));
 }
@@ -6733,7 +6921,7 @@ function closeAllDrawers(){
 }
 function sbarLayout(){
   var wide=false; /* الدرج موحّد لكل المقاسات */
-  [['APP','sbar'],['TD','td-sbar'],['NT','nt-sbar']].forEach(function(p){
+  [['APP','sbar'],['TD','td-sbar'],['NT','nt-sbar'],['CE','ce-sbar']].forEach(function(p){
     var root=g(p[0]),sb=g(p[1]);if(!root||!sb)return;
     var nav=root.querySelector('.nav');if(!nav)return;
     var brand=sb.querySelector('.sb-brand'),foot=sb.querySelector('.sb-foot');
@@ -13059,6 +13247,10 @@ function rTDCoaches(){
       +'</div></div>';
     h+='<div class="frow"><div class="fg"><label>رقم الجوال</label>'+phoneField('tdco-phone','')+'</div>';
     h+='<div class="fg"><label>اسم المستخدم <small>(لربط حسابه بالنظام)</small></label><input type="text" id="tdco-user"></div></div>';
+    h+='<div class="frow"><div class="fg"><label>تاريخ الانضمام</label><input type="date" id="tdco-joined" style="direction:ltr"></div>';
+    h+='<div class="fg"><label>سنوات الخبرة</label><input type="text" id="tdco-exp" placeholder="مثال: ٥ سنوات"></div></div>';
+    h+='<div class="fg"><label>الشهادات <small>(اختياري — بيانات في الملف ولا تضيف درجات)</small></label><input type="text" id="tdco-certs" placeholder="مثال: رخصة تدريب D"></div>';
+    h+='<div class="fg"><label>الصورة الشخصية <small>(اختياري)</small></label><div class="img-pick"><div class="img-prev" id="tdco-prev">'+ic('image',22)+'</div><div><label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,\'tdco\')"></label><button class="img-rm" id="tdco-rm" onclick="rmImg(\'tdco\',\'image\')">إزالة</button></div><input type="hidden" id="tdco-img" value=""></div></div>';
     h+='<button class="btn btn-r" style="width:100%" onclick="tdSaveCoach()">إضافة المدرب</button>';
     h+='<div class="msg ok" id="tdco-ok">تمت الإضافة</div><div class="msg err" id="tdco-err">أكمل: الاسم والفرع</div>';
     h+='</div>';
@@ -13120,7 +13312,8 @@ function tdSaveCoach(){
     });
     return;
   }
-  TDX().coaches.push({id:uid(),name:name,branch:brs[0],branches:brs,phone:phoneVal('tdco-phone'),user:gv('tdco-user'),note:'',at:Date.now()});
+  TDX().coaches.push({id:uid(),name:name,branch:brs[0],branches:brs,phone:phoneVal('tdco-phone'),user:gv('tdco-user'),
+    img:gv('tdco-img'),joined:gv('tdco-joined'),exp:gv('tdco-exp'),certs:gv('tdco-certs'),note:'',at:Date.now()});
   logA('إضافة مدرب (إدارة فنية): '+name,'whistle','#16a34a');
   sv();TDCO.showForm=false;rTDCoaches();fl('tdco-ok');
 }
@@ -15342,6 +15535,1108 @@ function ntAddStaffExisting(){
   sv();rNTSettings();fl('ntst-s-ok');
 }
 
+/* ==========================================================================
+   تقييم وتطوير المدربين (CE) — النظام الرابع
+   --------------------------------------------------------------------------
+   التقييم من ثلاث جهات: اللاعبون، مشرف الفرع، مدير الفرع.
+   الإدارة الفنية تراجع وتعتمد، وتربط خطة تطوير عند الحاجة.
+   لا جهة ناقصة تُحتسب بصفر — تبقى الحالة «غير مكتمل» حتى تكتمل.
+   ========================================================================== */
+var CEQ_DEF={
+  pl:['هل يشرح المدرب التمرين بطريقة تفهمها؟','هل يعاملك باحترام؟','هل تحصل على فرصة كافية للمشاركة؟',
+      'هل يعامل اللاعبين بعدل؟','هل يساعدك على تحسين مهاراتك؟','هل يشجعك أثناء التدريب؟'],
+  sup:['وضوح هدف الحصة والتخطيط لها','مناسبة التمارين للفئة العمرية','تنظيم الملعب وإدارة الوقت',
+       'الملاحظة وتصحيح الأخطاء','مشاركة اللاعبين وسلامة التدريب','تحقيق هدف الحصة'],
+  mgr:['الالتزام بالحضور والمواعيد','الالتزام بالزي والتعليمات','التعاون مع فريق العمل',
+       'جودة التواصل مع الإدارة','إنجاز المهام في وقتها','المحافظة على الأدوات وتنظيمها']
+};
+var CESCALE={pl:['أبداً','نادراً','أحياناً','غالباً','دائماً'],
+             sup:['ضعيف','مقبول','جيد','جيد جداً','ممتاز'],
+             mgr:['ضعيف','مقبول','جيد','جيد جداً','ممتاز']};
+var CESRC={pl:'اللاعبون',sup:'مشرف الفرع',mgr:'مدير الفرع'};
+var CEDEC={ok:'معتمد',okplan:'معتمد بخطة تطوير',watch:'تحت المتابعة',hold:'مؤجل الاعتماد',no:'غير معتمد'};
+var CEDECC={ok:'#16a34a',okplan:'#0e7490',watch:'var(--amber)',hold:'#7c3aed',no:'var(--red)'};
+var CEPST={'new':'لم تبدأ',doing:'قيد التنفيذ',done:'مكتملة'};
+var CENAV=[
+ ['home','لوحة المتابعة','chart'],
+ ['coaches','المدربون','whistle'],
+ ['eval','التقييم','star'],
+ ['review','المراجعة والتعميد','check'],
+ ['plans','خطط التطوير','doc'],
+ ['settings','الإعدادات','gear']
+];
+
+/* الأرقام بالعربي في كل واجهة هذا النظام */
+function ceN(v){return String(v==null?'':v).replace(/[0-9]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'[+d];});}
+
+function defCE(){return{cycles:[],qs:null,resp:[],dec:[],plans:[],sups:[],
+                        settings:{minPl:3,weights:{pl:25,sup:50,mgr:25}}};}
+function CEX(){
+  if(!DB.ce)DB.ce=defCE();
+  var c=DB.ce;
+  ['cycles','resp','dec','plans','sups'].forEach(function(k){if(!c[k])c[k]=[];});
+  if(!c.settings)c.settings={};
+  if(!c.settings.weights)c.settings.weights={pl:25,sup:50,mgr:25};
+  if(c.settings.minPl==null)c.settings.minPl=3;
+  if(!c.qs)c.qs={};
+  ['pl','sup','mgr'].forEach(function(k){
+    if(!c.qs[k]||!c.qs[k].length)
+      c.qs[k]=CEQ_DEF[k].map(function(t){return{id:uid(),text:t,active:true};});
+  });
+  return c;
+}
+
+/* ---------- الأدوار والنطاق ---------- */
+function ceRole(){
+  if(!CU)return null;
+  if(CU.role==='admin')return 'admin';
+  if(CU.role==='supervisor')return 'sup';
+  if(CU.role==='admin-team')return 'mgr';
+  if(CU.role==='coach')return 'coach';
+  if(CU.role==='player')return 'player';
+  return null;
+}
+function ceRoleLabel(){
+  return {admin:'الإدارة الفنية',sup:'مشرف فني',mgr:'مدير فرع',coach:'مدرب',player:'لاعب'}[ceRole()]||'—';
+}
+function ceSupRec(){return CEX().sups.find(function(s){return s.userId===(CU&&CU.id);})||null;}
+function ceAllBranches(){return (TDX().branches||[]).map(function(b){return b.name;});}
+function ceBranches(){
+  var r=ceRole();
+  if(r==='admin')return ceAllBranches();
+  if(r==='sup'){var s=ceSupRec();return (s&&s.branches)||[];}
+  if(r==='mgr'){
+    var me=null;try{me=tdMyStaff();}catch(e){}
+    var b=me?coachBranches(me):[];
+    if(b.length)return b;
+    return (CU&&CU.team)?[CU.team]:[];
+  }
+  if(r==='coach'){var co=null;try{co=tdMyCoach();}catch(e){}return co?coachBranches(co):[];}
+  return [];
+}
+/* المدربون داخل نطاق المستخدم */
+function ceScopeCoaches(){
+  var r=ceRole(),list=(TDX().coaches||[]);
+  if(r==='admin')return list.slice();
+  if(r==='coach'){var me=null;try{me=tdMyCoach();}catch(e){}return me?[me]:[];}
+  var brs=ceBranches();
+  return list.filter(function(c){return coachBranches(c).some(function(b){return brs.indexOf(b)>-1;});});
+}
+function ceCoachesOfBranch(b){
+  return (TDX().coaches||[]).filter(function(c){return coachBranches(c).indexOf(b)>-1;});
+}
+function ceAllowed(p){
+  var r=ceRole();
+  if(!r)return false;
+  if(r==='admin')return true;
+  if(r==='player')return p==='eval';
+  if(r==='coach')return ['home','coach','plans'].indexOf(p)>-1;
+  /* المشرف ومدير الفرع */
+  return ['home','coaches','coach','eval','plans'].indexOf(p)>-1;
+}
+/* الجهة التي يملؤها هذا المستخدم */
+function ceMySrc(){
+  var r=ceRole();
+  return r==='sup'?'sup':(r==='mgr'?'mgr':(r==='player'?'pl':null));
+}
+
+/* ---------- الدورات ---------- */
+function ceCycle(id){return CEX().cycles.find(function(x){return x.id===id;});}
+function ceCyclesSorted(){
+  return CEX().cycles.slice().sort(function(a,b){return String(b.from||'').localeCompare(String(a.from||''));});
+}
+function ceActiveCycle(){
+  var open=ceCyclesSorted().filter(function(c){return c.status==='open';});
+  return open[0]||ceCyclesSorted()[0]||null;
+}
+function ceCycleCoaches(cy){
+  if(!cy)return [];
+  var all=(TDX().coaches||[]);
+  if(!cy.coachIds||!cy.coachIds.length)return all;
+  return all.filter(function(c){return cy.coachIds.indexOf(c.id)>-1;});
+}
+function ceInCycle(cy,coachId){
+  if(!cy)return false;
+  if(!cy.coachIds||!cy.coachIds.length)return true;
+  return cy.coachIds.indexOf(coachId)>-1;
+}
+function ceCycleOpen(cy){
+  if(!cy||cy.status!=='open')return false;
+  var t=new Date().toISOString().slice(0,10);
+  if(cy.from&&t<cy.from)return false;
+  if(cy.to&&t>cy.to)return false;
+  return true;
+}
+
+/* ---------- الأسئلة ---------- */
+function ceQs(src){return (CEX().qs[src]||[]).filter(function(q){return q.active!==false;});}
+
+/* ---------- الاحتساب ---------- */
+function ceRespScore(r){
+  if(!r)return null;
+  var qs=ceQs(r.src),tot=0,n=0;
+  qs.forEach(function(q){var v=+((r.ans||{})[q.id]);if(v>=1&&v<=5){tot+=v;n++;}});
+  if(!n)return null;
+  return tot/(n*5)*100;
+}
+function ceScore(cycleId,coachId){
+  var c=CEX(),cy=ceCycle(cycleId);
+  var w=(cy&&cy.weights)||c.settings.weights;
+  var minPl=(cy&&cy.minPl!=null)?cy.minPl:c.settings.minPl;
+  var rs=c.resp.filter(function(r){return r.cycleId===cycleId&&r.coachId===coachId;});
+  var out={pl:null,sup:null,mgr:null,plCount:0,final:null,complete:false,missing:[],minPl:minPl,w:w,
+           supNote:'',mgrNote:'',openTexts:[]};
+  var pls=rs.filter(function(r){return r.src==='pl';});
+  out.plCount=pls.length;
+  if(pls.length){
+    var s=0,n=0;
+    pls.forEach(function(r){
+      var v=ceRespScore(r);if(v!=null){s+=v;n++;}
+      if(r.open&&String(r.open).trim())out.openTexts.push(String(r.open).trim());
+    });
+    if(n)out.pl=s/n;
+  }
+  ['sup','mgr'].forEach(function(k){
+    var r=rs.filter(function(x){return x.src===k;}).slice(-1)[0];
+    if(r){out[k]=ceRespScore(r);out[k+'Note']=r.note||'';}
+  });
+  if(out.pl==null)out.missing.push('تقييم اللاعبين');
+  else if(out.plCount<minPl)out.missing.push('مشاركات اللاعبين أقل من الحد الأدنى ('+ceN(out.plCount)+' من '+ceN(minPl)+')');
+  if(out.sup==null)out.missing.push('تقييم مشرف الفرع');
+  if(out.mgr==null)out.missing.push('تقييم مدير الفرع');
+  if(!out.missing.length){
+    out.complete=true;
+    out.final=(out.pl*(+w.pl)+out.sup*(+w.sup)+out.mgr*(+w.mgr))/100;
+  }
+  return out;
+}
+function ceLastDec(cycleId,coachId){
+  return CEX().dec.filter(function(d){return d.cycleId===cycleId&&d.coachId===coachId;}).slice(-1)[0]||null;
+}
+function ceStatus(cycleId,coachId){
+  var d=ceLastDec(cycleId,coachId);
+  if(d)return{k:'done',l:CEDEC[d.d]||'معتمد',c:CEDECC[d.d]||'#16a34a',dec:d};
+  var s=ceScore(cycleId,coachId);
+  if(s.complete)return{k:'wait',l:'بانتظار التعميد',c:'var(--amber)',score:s};
+  return{k:'inc',l:'غير مكتمل',c:'var(--gray)',score:s};
+}
+function ceGrade(v){
+  if(v==null)return{l:'—',c:'var(--gray)'};
+  if(v>=90)return{l:'ممتاز',c:'#16a34a'};
+  if(v>=80)return{l:'جيد جداً',c:'#0e7490'};
+  if(v>=70)return{l:'جيد',c:'#1565c0'};
+  if(v>=60)return{l:'مقبول',c:'var(--amber)'};
+  return{l:'يحتاج تطويراً',c:'var(--red)'};
+}
+function cePct(v){return v==null?'—':ceN(Math.round(v))+'٪';}
+
+/* منع التكرار: نفس المقيّم لنفس المدرب في نفس الدورة مرة واحدة */
+function ceHasResp(cycleId,coachId,src,by){
+  return CEX().resp.some(function(r){
+    return r.cycleId===cycleId&&r.coachId===coachId&&r.src===src&&String(r.by)===String(by);
+  });
+}
+function ceMyRespId(){
+  var r=ceRole();
+  if(r==='player')return 'pid:'+(CU.pid||CU.nid||CU.id);
+  return 'uid:'+(CU&&CU.id);
+}
+
+/* ---------- ربط اللاعب بمدربه ---------- */
+function cePlayerCoach(p){
+  if(!p)return null;
+  var gp=tdGroup(p.groupId),c=null;
+  if(gp)c=tdCoach(gp.coachId);
+  if(!c&&gp){var cat=tdCat(gp.catId);if(cat)c=tdCoach(cat.coachId);}
+  return c;
+}
+function ceMyPlayerRec(){
+  if(!CU)return null;
+  var ps=(TDX().players||[]);
+  var byId=CU.pid?ps.find(function(x){return x.id===CU.pid;}):null;
+  if(byId)return byId;
+  if(CU.nid){var n=normNid(CU.nid);return ps.find(function(x){return normNid(x.nid)===n;})||null;}
+  return null;
+}
+
+/* ==================== الغلاف ==================== */
+var CEPAGE='home',CEV='',CEFILT={branch:'',cycle:'',st:''},CEEVAL={coachId:'',ans:{},note:'',open:''};
+function enterCE(){
+  if(!sysAllowed('ce'))return;
+  CEX();
+  if(!ceRole()){alert('نظام تقييم المدربين غير متاح لصلاحيتك');return;}
+  g('TS').style.display='none';g('APP').style.display='none';
+  var td=g('TD');if(td)td.style.display='none';
+  var nt=g('NT');if(nt)nt.style.display='none';
+  g('CE').style.display='block';
+  g('ce-nm').textContent=CU.name;
+  g('ce-rl').textContent=ceRoleLabel();
+  g('ce-av').textContent=ti(CU.name);g('ce-av').style.background=RC[CU.role]||'#0e7490';
+  if(!CEFILT.cycle){var a=ceActiveCycle();CEFILT.cycle=a?a.id:'';}
+  buildCENav();
+  ceP(ceRole()==='player'?'eval':'home');
+  logA('دخول تقييم المدربين','star','#0e7490');
+}
+function ceBack(){g('CE').style.display='none';showTS();}
+function buildCENav(){
+  var items=CENAV.filter(function(x){return ceAllowed(x[0]);});
+  g('ce-links').innerHTML=items.map(function(x){
+    return '<button class="nl'+(x[0]===CEPAGE?' on':'')+'" data-cepg="'+x[0]+'" onclick="ceP(\''+x[0]+'\')">'+x[1]+'</button>';}).join('');
+  var sb=g('ce-sbar-links');
+  if(sb)sb.innerHTML=items.map(function(x){
+    return '<button class="sb-l'+(x[0]===CEPAGE?' on':'')+'" data-cepg="'+x[0]+'" onclick="ceP(\''+x[0]+'\')" title="'+x[1]+'"><span class="sb-ic">'+ic(x[2]||'info',17)+'</span><span class="sb-t">'+x[1]+'</span></button>';}).join('');
+  var mm=g('cemm');
+  if(mm)mm.innerHTML=items.map(function(x){
+    return '<button class="nl" onclick="ceP(\''+x[0]+'\');document.getElementById(\'cemm\').classList.remove(\'open\')">'+ic(x[2]||'info',14)+' '+x[1]+'</button>';}).join('');
+  try{sbarLayout();sbarWatch();}catch(e){}
+}
+function ceP(pg){
+  if(typeof closeAllDrawers==='function')closeAllDrawers();
+  if(pg!=='coach'&&!ceAllowed(pg))pg=ceRole()==='player'?'eval':'home';
+  CEPAGE=pg;
+  document.querySelectorAll('#CE .page').forEach(function(e){e.classList.remove('on');});
+  var el=g('cepg-'+pg);if(el)el.classList.add('on');
+  document.querySelectorAll('#ce-links .nl,#ce-sbar-links .sb-l').forEach(function(b){
+    b.classList.toggle('on',b.dataset.cepg===pg);});
+  var fn={home:rCEHome,coaches:rCECoaches,coach:rCECoach,eval:rCEEval,review:rCEReview,
+          plans:rCEPlans,settings:rCESettings}[pg];
+  if(fn)fn();
+  window.scrollTo({top:0});
+}
+function ceHead(icn,title,sub,actions){
+  return '<div class="pg-head"><div class="pg-ic">'+ic(icn,21)+'</div>'
+    +'<div class="pg-tx"><div class="pg-eb">تقييم وتطوير المدربين</div><h1>'+title+'</h1>'
+    +(sub?'<p>'+sub+'</p>':'')+'</div>'
+    +(actions?'<div class="pg-act">'+actions+'</div>':'')+'</div>';
+}
+/* شريط اختيار الدورة — مشترك بين الصفحات */
+function ceCycleBar(){
+  var cys=ceCyclesSorted();
+  if(!cys.length)return '';
+  var h='<div class="ce2-bar">'+ic('cal',13)+'<span>دورة التقييم</span>';
+  h+=tdSel('ce-cyc',cys.map(function(c){return [c.id,c.name+(c.status==='open'?' (مفتوحة)':' (مغلقة)')];}),CEFILT.cycle,'اختر الدورة');
+  h+='</div>';
+  return h;
+}
+function ceSetCycle(){CEFILT.cycle=gv('ce-cyc');ceP(CEPAGE);}
+
+/* ==================== لوحة المتابعة ==================== */
+function rCEHome(){
+  var el=g('cec-home'),c=CEX();
+  var cy=ceCycle(CEFILT.cycle)||ceActiveCycle();
+  if(cy)CEFILT.cycle=cy.id;
+  var h=ceHead('chart','لوحة المتابعة',cy?('الدورة الحالية: '+esc(cy.name)):'لا توجد دورة تقييم بعد',
+    ceRole()==='admin'?'<button class="btn btn-r btn-sm" onclick="ceP(\'settings\')">'+ic('plus',13)+' دورة جديدة</button>':'');
+  if(!cy){
+    h+=emptyBox('cal','لم تُنشأ أي دورة تقييم بعد',
+      ceRole()==='admin'?'افتح «الإعدادات» وأنشئ أول دورة، ثم تبدأ الجهات الثلاث بالتقييم':'راجع الإدارة الفنية لفتح دورة تقييم');
+    el.innerHTML=h;hydrateIcons(el);return;
+  }
+  h+=ceCycleBar();
+  var coaches=ceScopeCoaches().filter(function(x){return ceInCycle(cy,x.id);});
+  var nWait=0,nInc=0,sum=0,nComp=0,nDec=0;
+  coaches.forEach(function(co){
+    var st=ceStatus(cy.id,co.id),s=ceScore(cy.id,co.id);
+    if(st.k==='wait')nWait++;
+    else if(st.k==='inc')nInc++;
+    else nDec++;
+    if(s.final!=null){nComp++;sum+=s.final;}   /* المتوسط على المكتمل لا على المعتمد فقط */
+  });
+  var avg=nComp?Math.round(sum/nComp):null;
+  var plans=c.plans.filter(function(p){return coaches.some(function(co){return co.id===p.coachId;});});
+  var today=new Date().toISOString().slice(0,10);
+  var late=plans.filter(function(p){return p.st!=='done'&&p.due&&p.due<today;}).length;
+  var act=plans.filter(function(p){return p.st!=='done';}).length;
+
+  h+='<div class="ce2-kpis">';
+  h+=ceKpi('whistle','المدربون في الدورة',ceN(coaches.length),'');
+  h+=ceKpi('chart','متوسط النتائج المكتملة',avg==null?'—':ceN(avg)+'٪',
+    nComp?(ceN(nComp)+' مكتمل • '+ceN(nDec)+' معتمد'):'لا نتائج مكتملة بعد');
+  h+=ceKpi('info','تقييمات غير مكتملة',ceN(nInc),'تنقصها جهة أو أكثر');
+  h+=ceKpi('inbox','بانتظار التعميد',ceN(nWait),'اكتملت جهاتها الثلاث');
+  h+=ceKpi('doc','خطط تطوير نشطة',ceN(act),late?('منها '+ceN(late)+' متأخرة'):'');
+  h+='</div>';
+
+  /* فلاتر */
+  var brs=ceBranches();
+  h+='<div class="frow" style="max-width:640px;margin:1.2rem 0 1rem;grid-template-columns:1fr 1fr">';
+  h+='<div class="fg" style="margin-bottom:0"><label>الفرع</label>'+tdSel('cef-br',brs,CEFILT.branch,'كل الفروع')+'</div>';
+  h+='<div class="fg" style="margin-bottom:0"><label>الحالة</label>'
+    +tdSel('cef-st',[['inc','غير مكتمل'],['wait','بانتظار التعميد'],['done','معتمد']],CEFILT.st,'كل الحالات')+'</div>';
+  h+='</div>';
+
+  var rows=coaches.filter(function(co){
+    if(CEFILT.branch&&coachBranches(co).indexOf(CEFILT.branch)<0)return false;
+    if(CEFILT.st&&ceStatus(cy.id,co.id).k!==CEFILT.st)return false;
+    return true;
+  });
+  h+=tdSubHead('المدربون','<span class="pg-chip">'+ceN(rows.length)+' مدرب</span>');
+  if(!rows.length)h+=emptyBox('whistle','لا يوجد مدربون مطابقون');
+  else{
+    h+='<div class="ce2-tw"><table class="ce2-tb"><thead><tr>'
+      +'<th>المدرب</th><th>الفرع</th><th>اللاعبون</th><th>المشرف</th><th>المدير</th><th>النتيجة</th><th>الحالة</th></tr></thead><tbody>';
+    rows.forEach(function(co){
+      var s=ceScore(cy.id,co.id),st=ceStatus(cy.id,co.id),gr=ceGrade(s.final);
+      h+='<tr onclick="ceOpenCoach(\''+co.id+'\')" style="cursor:pointer">';
+      h+='<td><div class="ce2-who">'+ceAvatar(co,30)+'<b>'+esc(co.name)+'</b></div></td>';
+      h+='<td>'+esc(coachBranchLabel(co))+'</td>';
+      h+='<td>'+(s.pl==null?'—':cePct(s.pl)+' <small style="color:var(--gray)">('+ceN(s.plCount)+')</small>')+'</td>';
+      h+='<td>'+cePct(s.sup)+'</td>';
+      h+='<td>'+cePct(s.mgr)+'</td>';
+      h+='<td><b style="color:'+gr.c+'">'+cePct(s.final)+'</b></td>';
+      h+='<td><span class="ce2-st" style="background:'+st.c+'1f;color:'+st.c+'">'+st.l+'</span></td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table></div>';
+  }
+  el.innerHTML=h;hydrateIcons(el);
+  var s1=g('ce-cyc');if(s1)s1.onchange=ceSetCycle;
+  var s2=g('cef-br');if(s2)s2.onchange=function(){CEFILT.branch=gv('cef-br');rCEHome();};
+  var s3=g('cef-st');if(s3)s3.onchange=function(){CEFILT.st=gv('cef-st');rCEHome();};
+}
+function ceKpi(icn,label,val,sub){
+  return '<div class="ce2-kpi"><div class="ce2-kic">'+ic(icn,15)+'</div>'
+    +'<div class="ce2-kv">'+val+'</div><div class="ce2-kl">'+label+'</div>'
+    +(sub?'<div class="ce2-ks">'+sub+'</div>':'')+'</div>';
+}
+function ceAvatar(co,sz){
+  sz=sz||44;
+  var st='width:'+sz+'px;height:'+sz+'px;border-radius:'+Math.round(sz/3)+'px;flex:0 0 auto;object-fit:cover';
+  if(co&&co.img)return '<img src="'+esc(co.img)+'" style="'+st+'" alt="">';
+  return '<div class="ce2-av" style="'+st+';font-size:'+Math.round(sz/2.4)+'px">'+esc(ti(co?co.name:''))+'</div>';
+}
+
+/* ==================== المدربون ==================== */
+function rCECoaches(){
+  var el=g('cec-coaches'),cy=ceCycle(CEFILT.cycle)||ceActiveCycle();
+  var list=ceScopeCoaches();
+  var h=ceHead('whistle','المدربون','ملف كل مدرب ونتائجه وقراراته',
+    '<span class="pg-chip">'+ceN(list.length)+' مدرب</span>');
+  h+=ceCycleBar();
+  if(!list.length)h+=emptyBox('whistle','لا يوجد مدربون في نطاقك','يضيف المدربين مديرُ النظام من «الإدارة الفنية ← المدربون»');
+  else{
+    h+='<div class="ce2-grid">';
+    list.forEach(function(co){
+      var st=cy?ceStatus(cy.id,co.id):{l:'—',c:'var(--gray)'};
+      var s=cy?ceScore(cy.id,co.id):{final:null};
+      var gr=ceGrade(s.final);
+      h+='<div class="ce2-card" onclick="ceOpenCoach(\''+co.id+'\')">';
+      h+=ceAvatar(co,54);
+      h+='<div class="ce2-cn">'+esc(co.name)+'</div>';
+      h+='<div class="ce2-cb">'+ic('pin',10)+' '+esc(coachBranchLabel(co))+'</div>';
+      h+='<div class="ce2-cs" style="color:'+gr.c+'">'+cePct(s.final)+'</div>';
+      h+='<span class="ce2-st" style="background:'+st.c+'1f;color:'+st.c+'">'+st.l+'</span>';
+      h+='</div>';
+    });
+    h+='</div>';
+  }
+  el.innerHTML=h;hydrateIcons(el);
+  var s1=g('ce-cyc');if(s1)s1.onchange=ceSetCycle;
+}
+function ceOpenCoach(id){CEV=id;ceP('coach');}
+
+/* ==================== ملف المدرب ==================== */
+function rCECoach(){
+  var el=g('cec-coach'),co=tdCoach(CEV);
+  if(!co){el.innerHTML=emptyBox('whistle','المدرب غير موجود');return;}
+  var cy=ceCycle(CEFILT.cycle)||ceActiveCycle();
+  var h='<button class="btn btn-g btn-sm" onclick="ceP(\'coaches\')" style="margin-bottom:1rem">'+ic('swap',12)+' رجوع للمدربين</button>';
+  var s=cy?ceScore(cy.id,co.id):null,st=cy?ceStatus(cy.id,co.id):null,gr=ceGrade(s?s.final:null);
+
+  h+='<div class="ce2-hero">';
+  h+=ceAvatar(co,84);
+  h+='<div class="ce2-hi"><div class="ce2-hn">'+esc(co.name)+'</div>';
+  h+='<div class="ce2-hs">'+ic('pin',11)+' '+esc(coachBranches(co).join('، ')||'—')
+    +(co.phone?' <span style="opacity:.4">•</span> <span style="direction:ltr">'+esc(ceN(co.phone))+'</span>':'')+'</div>';
+  if(co.joined||co.certs||co.exp){
+    h+='<div class="ce2-hs">'+[co.joined?'انضم: '+ceN(co.joined):'',co.certs?'شهادات: '+esc(co.certs):'',co.exp?'خبرة: '+esc(co.exp):''].filter(Boolean).join(' • ')+'</div>';
+  }
+  if(st)h+='<div style="margin-top:.5rem"><span class="ce2-st" style="background:'+st.c+'1f;color:'+st.c+'">'+st.l+'</span></div>';
+  h+='</div>';
+  h+='<div class="ce2-ring"><div class="ce2-rn" style="color:'+gr.c+'">'+cePct(s?s.final:null)+'</div>'
+    +'<div class="ce2-rl">'+gr.l+'</div></div>';
+  h+='</div>';
+
+  if(!cy){h+=emptyBox('cal','لا توجد دورة تقييم');el.innerHTML=h;hydrateIcons(el);return;}
+  h+=ceCycleBar();
+
+  /* نتائج الجهات */
+  h+=tdSubHead('نتيجة كل جهة');
+  h+='<div class="ce2-srcs">';
+  [['pl',s.pl],['sup',s.sup],['mgr',s.mgr]].forEach(function(x){
+    var g2=ceGrade(x[1]),w=s.w[x[0]];
+    h+='<div class="ce2-src"><div class="ce2-sl">'+CESRC[x[0]]+' <small>'+ceN(w)+'٪</small></div>'
+      +'<div class="ce2-sv" style="color:'+g2.c+'">'+cePct(x[1])+'</div>'
+      +'<div class="ce2-track"><div class="ce2-fill" style="width:'+(x[1]||0)+'%;background:'+g2.c+'"></div></div>'
+      +(x[0]==='pl'?'<div class="ce2-ss">'+ceN(s.plCount)+' لاعب شارك (الحد الأدنى '+ceN(s.minPl)+')</div>':'')
+      +'</div>';
+  });
+  h+='</div>';
+  if(s.missing.length)
+    h+='<div class="ce2-note warn">'+ic('info',13)+'<div><b>غير مكتمل.</b> ينقص: '+s.missing.map(esc).join('، ')
+      +'<br><small>الجهة الناقصة لا تُحتسب بصفر — تبقى النتيجة معلّقة حتى تكتمل.</small></div></div>';
+
+  /* الملاحظات */
+  if(s.supNote||s.mgrNote){
+    h+=tdSubHead('الملاحظات');
+    if(s.supNote)h+='<div class="ce2-note"><b>مشرف الفرع:</b> '+esc(s.supNote)+'</div>';
+    if(s.mgrNote)h+='<div class="ce2-note"><b>مدير الفرع:</b> '+esc(s.mgrNote)+'</div>';
+  }
+  /* ملاحظات اللاعبين المفتوحة — للإدارة فقط، ومجمّعة */
+  if(ceRole()==='admin'&&s.openTexts.length&&s.plCount>=s.minPl){
+    h+=tdSubHead('ما كتبه اللاعبون','<span class="pg-chip">'+ceN(s.openTexts.length)+'</span>');
+    h+='<div class="ce2-note">'+ic('info',13)+'<div>تُعرض بلا أسماء. لا يراها المدرب ولا مسؤولو الفرع.</div></div>';
+    s.openTexts.forEach(function(t){h+='<div class="ce2-quote">'+esc(t)+'</div>';});
+  }
+
+  /* القرار */
+  var d=ceLastDec(cy.id,co.id);
+  if(d){
+    h+=tdSubHead('قرار التعميد');
+    h+='<div class="ce2-dec" style="border-color:'+(CEDECC[d.d]||'#16a34a')+'55">';
+    h+='<div class="ce2-dl" style="color:'+(CEDECC[d.d]||'#16a34a')+'">'+ic('check',14)+' '+(CEDEC[d.d]||'—')+'</div>';
+    h+='<div class="ce2-dr">'+esc(d.reason||'')+'</div>';
+    h+='<div class="ce2-dm">'+esc(d.byName||'')+' • '+ceN(d.at?new Date(d.at).toLocaleDateString('ar-SA-u-ca-gregory'):'')
+      +(d.reEval?' • إعادة التقييم: '+ceN(d.reEval):'')+'</div>';
+    if(d.prev&&d.prev.length)h+='<div class="ce2-dm">عُدّل '+ceN(d.prev.length)+' مرة — القرارات السابقة محفوظة</div>';
+    h+='</div>';
+  }
+
+  /* خطط التطوير */
+  var pls=CEX().plans.filter(function(p){return p.coachId===co.id;});
+  h+=tdSubHead('خطط التطوير','<span class="pg-chip">'+ceN(pls.length)+'</span>');
+  if(!pls.length)h+=emptyBox('doc','لا توجد خطط تطوير لهذا المدرب');
+  else pls.forEach(function(p){h+=cePlanCard(p,false);});
+
+  /* السجل */
+  var hist=ceCyclesSorted().filter(function(x){return x.id!==cy.id&&ceLastDec(x.id,co.id);});
+  if(hist.length){
+    h+=tdSubHead('سجل الدورات السابقة');
+    h+='<div class="ce2-tw"><table class="ce2-tb"><thead><tr><th>الدورة</th><th>النتيجة</th><th>القرار</th></tr></thead><tbody>';
+    hist.forEach(function(x){
+      var s2=ceScore(x.id,co.id),d2=ceLastDec(x.id,co.id),g3=ceGrade(s2.final);
+      h+='<tr><td>'+esc(x.name)+'</td><td style="color:'+g3.c+'"><b>'+cePct(s2.final)+'</b></td>'
+        +'<td>'+(d2?esc(CEDEC[d2.d]||''):'—')+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  }
+  el.innerHTML=h;hydrateIcons(el);
+  var s1=g('ce-cyc');if(s1)s1.onchange=ceSetCycle;
+}
+
+/* ==================== نموذج التقييم ==================== */
+function rCEEval(){
+  var el=g('cec-eval'),src=ceMySrc();
+  var cy=ceActiveCycle();
+  if(!src){
+    el.innerHTML=ceHead('star','التقييم','')+emptyBox('star','صلاحيتك لا تشمل تعبئة نموذج تقييم',
+      'التقييم من اللاعبين ومشرف الفرع ومدير الفرع فقط');
+    hydrateIcons(el);return;
+  }
+  if(!cy||!ceCycleOpen(cy)){
+    el.innerHTML=ceHead('star','التقييم','')+emptyBox('cal','لا توجد دورة تقييم مفتوحة حالياً',
+      'ستصلك الدورة عند فتحها من الإدارة الفنية');
+    hydrateIcons(el);return;
+  }
+  /* اللاعب: مدربه محدد تلقائياً */
+  if(src==='pl'){
+    var p=ceMyPlayerRec();
+    if(!p){
+      el.innerHTML=ceHead('star','تقييم مدربي','')+emptyBox('users','لم نعثر على سجلك في الإدارة الفنية',
+        'راجع إدارة الأكاديمية للتأكد من تسجيل بياناتك');
+      hydrateIcons(el);return;
+    }
+    var myCo=cePlayerCoach(p);
+    if(!myCo){
+      el.innerHTML=ceHead('star','تقييم مدربي','')+emptyBox('whistle','لم يُسنَد مدرب لمجموعتك بعد',
+        'راجع إدارة الفرع');
+      hydrateIcons(el);return;
+    }
+    CEEVAL.coachId=myCo.id;
+    el.innerHTML=ceHead('star','تقييم مدربي','رأيك يصل للإدارة بلا اسمك — كن صادقاً')
+      +ceFormHTML(cy,myCo,'pl',true);
+    hydrateIcons(el);return;
+  }
+  /* المشرف/المدير: يختار المدرب */
+  var list=ceScopeCoaches().filter(function(x){return ceInCycle(cy,x.id);});
+  var h=ceHead('star','التقييم','دورة: '+esc(cy.name)+' — بصفتك '+(src==='sup'?'مشرف الفرع':'مدير الفرع'));
+  if(!list.length){h+=emptyBox('whistle','لا يوجد مدربون في نطاقك ضمن هذه الدورة');el.innerHTML=h;hydrateIcons(el);return;}
+  if(!CEEVAL.coachId||!list.some(function(x){return x.id===CEEVAL.coachId;})){
+    h+=tdSubHead('اختر المدرب');
+    h+='<div class="ce2-grid">';
+    list.forEach(function(co){
+      var done=ceHasResp(cy.id,co.id,src,ceMyRespId());
+      h+='<div class="ce2-card'+(done?' done':'')+'" onclick="cePick(\''+co.id+'\')">';
+      h+=ceAvatar(co,54);
+      h+='<div class="ce2-cn">'+esc(co.name)+'</div>';
+      h+='<div class="ce2-cb">'+ic('pin',10)+' '+esc(coachBranchLabel(co))+'</div>';
+      h+='<span class="ce2-st" style="background:'+(done?'#16a34a1f;color:#16a34a':'var(--amber)1f;color:var(--amber)')+'">'
+        +(done?'قيّمته':'لم تقيّمه بعد')+'</span>';
+      h+='</div>';
+    });
+    h+='</div>';
+    el.innerHTML=h;hydrateIcons(el);return;
+  }
+  var co2=tdCoach(CEEVAL.coachId);
+  h+='<button class="btn btn-g btn-sm" onclick="CEEVAL.coachId=\'\';CEEVAL.ans={};rCEEval()" style="margin-bottom:1rem">'
+    +ic('swap',12)+' اختيار مدرب آخر</button>';
+  h+=ceFormHTML(cy,co2,src,false);
+  el.innerHTML=h;hydrateIcons(el);
+}
+function cePick(id){CEEVAL.coachId=id;CEEVAL.ans={};CEEVAL.note='';CEEVAL.open='';rCEEval();}
+function ceFormHTML(cy,co,src,isPlayer){
+  var done=ceHasResp(cy.id,co.id,src,ceMyRespId());
+  var h='';
+  h+='<div class="ce2-fhero">'+ceAvatar(co,64)
+    +'<div><div class="ce2-fn">'+esc(co.name)+'</div>'
+    +'<div class="ce2-fb">'+ic('pin',10)+' '+esc(coachBranchLabel(co))+'</div></div></div>';
+  if(done){
+    h+='<div class="ce2-note ok">'+ic('check',14)+'<div><b>سجّلنا تقييمك لهذه الدورة.</b><br>'
+      +'لا يمكن تقييم المدرب نفسه مرتين في الدورة الواحدة.</div></div>';
+    return h;
+  }
+  var qs=ceQs(src),sc=CESCALE[src];
+  h+='<div class="ce2-form">';
+  qs.forEach(function(q,i){
+    h+='<div class="ce2-q"><div class="ce2-qt"><span class="ce2-qn">'+ceN(i+1)+'</span>'+esc(q.text)+'</div>';
+    h+='<div class="ce2-opts">';
+    for(var v=1;v<=5;v++){
+      h+='<button type="button" class="ce2-opt'+(CEEVAL.ans[q.id]===v?' on':'')+'" data-q="'+q.id+'" data-v="'+v+'" '
+        +'onclick="ceSetAns(\''+q.id+'\','+v+',this)">'+sc[v-1]+'</button>';
+    }
+    h+='</div></div>';
+  });
+  if(isPlayer){
+    h+='<div class="fg"><label>هل تحب تضيف شيئاً؟ <small>(اختياري — لا يدخل في الدرجة)</small></label>'
+      +'<textarea id="ce-open" rows="3" placeholder="اكتب ما تحب أن تقوله عن التدريب">'+esc(CEEVAL.open||'')+'</textarea></div>';
+  }else{
+    h+='<div class="fg"><label>ملاحظات تدعم تقييمك</label>'
+      +'<textarea id="ce-note" rows="3" placeholder="'+(src==='sup'?'ملاحظات الزيارة الفنية':'ملاحظات الالتزام الإداري')+'">'+esc(CEEVAL.note||'')+'</textarea></div>';
+  }
+  h+='<button class="btn btn-r" style="width:100%;min-height:50px" onclick="ceSubmit(\''+cy.id+'\',\''+co.id+'\',\''+src+'\')">'
+    +ic('check',15)+' إرسال التقييم</button>';
+  h+='<div class="msg err" id="ce-ferr">أجب على كل الأسئلة قبل الإرسال</div>';
+  h+='<div class="msg ok" id="ce-fok">تم إرسال تقييمك</div>';
+  h+='</div>';
+  return h;
+}
+function ceSetAns(qid,v,btn){
+  CEEVAL.ans[qid]=v;
+  var wrap=btn.parentNode;
+  wrap.querySelectorAll('.ce2-opt').forEach(function(b){b.classList.toggle('on',+b.dataset.v===v);});
+}
+function ceSubmit(cycleId,coachId,src){
+  var cy=ceCycle(cycleId);
+  if(!cy||!ceCycleOpen(cy)){g('ce-ferr').textContent='دورة التقييم مغلقة';fl('ce-ferr');return;}
+  var qs=ceQs(src),miss=qs.filter(function(q){return !CEEVAL.ans[q.id];});
+  if(miss.length){g('ce-ferr').textContent='بقي '+ceN(miss.length)+' سؤال بلا إجابة';fl('ce-ferr');return;}
+  var by=ceMyRespId();
+  if(ceHasResp(cycleId,coachId,src,by)){g('ce-ferr').textContent='سبق أن قيّمت هذا المدرب في هذه الدورة';fl('ce-ferr');return;}
+  var noteEl=g('ce-note'),openEl=g('ce-open');
+  var rec={id:uid(),cycleId:cycleId,coachId:coachId,src:src,by:by,
+    byName:src==='pl'?'':(CU&&CU.name||''),
+    ans:JSON.parse(JSON.stringify(CEEVAL.ans)),
+    note:noteEl?noteEl.value.trim():'',open:openEl?openEl.value.trim():'',at:Date.now()};
+  var after=function(){
+    logA('تقييم مدرب ('+CESRC[src]+')','star','#0e7490');
+    CEEVAL={coachId:src==='pl'?coachId:'',ans:{},note:'',open:''};
+    rCEEval();
+    setTimeout(function(){var o=g('ce-fok');if(o)fl('ce-fok');},60);
+    addN('تم إرسال تقييمك','شكراً — وصل التقييم للإدارة','success');
+  };
+  /* اللاعب لا يملك صلاحية كتابة: إجابته تُلحق على الخادم، وإلا ضاعت بصمت */
+  if(src==='pl'&&FA.enabled){
+    var p=ceMyPlayerRec();
+    g('ce-ferr').textContent='جارٍ الإرسال…';fl('ce-ferr');
+    FA.ceSubmit(normNid(p&&p.nid||CU.nid||''),(p&&p.dob)||'',rec).then(function(res){
+      if(!res||!res.ok){
+        g('ce-ferr').textContent=(res&&res.err==='dup')?'سبق أن قيّمت هذا المدرب في هذه الدورة'
+          :'تعذّر إرسال التقييم — راجع إدارة الأكاديمية';
+        fl('ce-ferr');return;
+      }
+      CEX().resp.push(rec);   /* نسخة محلية ليظهر الأثر فوراً */
+      after();
+    }).catch(function(){
+      g('ce-ferr').textContent='تعذّر إرسال التقييم — تحقق من الإنترنت وحاول مجدداً';fl('ce-ferr');
+    });
+    return;
+  }
+  CEX().resp.push(rec);
+  sv();
+  after();
+}
+
+/* ==================== المراجعة والتعميد ==================== */
+function rCEReview(){
+  var el=g('cec-review');
+  if(ceRole()!=='admin'){el.innerHTML=emptyBox('shield','التعميد للإدارة الفنية فقط');return;}
+  var cy=ceCycle(CEFILT.cycle)||ceActiveCycle();
+  var h=ceHead('check','المراجعة والتعميد','لا يصدر قرار آلي بناءً على الدرجة — القرار قرارك');
+  if(!cy){h+=emptyBox('cal','لا توجد دورة تقييم');el.innerHTML=h;hydrateIcons(el);return;}
+  h+=ceCycleBar();
+  var list=ceCycleCoaches(cy).filter(function(co){return ceStatus(cy.id,co.id).k==='wait';});
+  h+=tdSubHead('بانتظار التعميد','<span class="pg-chip">'+ceN(list.length)+'</span>');
+  if(!list.length)h+=emptyBox('check','لا يوجد ما ينتظر التعميد','يظهر المدرب هنا عندما تكتمل جهاته الثلاث');
+  else list.forEach(function(co){
+    var s=ceScore(cy.id,co.id),gr=ceGrade(s.final);
+    h+='<div class="ce2-rev">';
+    h+='<div class="ce2-rvh">'+ceAvatar(co,44)
+      +'<div><div class="ce2-fn">'+esc(co.name)+'</div><div class="ce2-fb">'+esc(coachBranchLabel(co))+'</div></div>'
+      +'<div class="ce2-rvs" style="color:'+gr.c+'">'+cePct(s.final)+'<small>'+gr.l+'</small></div></div>';
+    h+='<div class="ce2-rvg">'
+      +'<span>اللاعبون <b>'+cePct(s.pl)+'</b> <small>('+ceN(s.plCount)+' مشاركة)</small></span>'
+      +'<span>المشرف <b>'+cePct(s.sup)+'</b></span>'
+      +'<span>المدير <b>'+cePct(s.mgr)+'</b></span></div>';
+    if(s.supNote)h+='<div class="ce2-note"><b>المشرف:</b> '+esc(s.supNote)+'</div>';
+    if(s.mgrNote)h+='<div class="ce2-note"><b>المدير:</b> '+esc(s.mgrNote)+'</div>';
+    h+='<div class="fg"><label>القرار *</label>'
+      +tdSel('cd-d-'+co.id,Object.keys(CEDEC).map(function(k){return [k,CEDEC[k]];}),'','اختر القرار')+'</div>';
+    h+='<div class="fg"><label>سبب القرار *</label><textarea id="cd-r-'+co.id+'" rows="2" placeholder="السبب إلزامي ويُحفظ في السجل"></textarea></div>';
+    h+='<div class="fg"><label>موعد إعادة التقييم <small>(إلزامي مع خطة التطوير أو المتابعة أو التأجيل)</small></label>'
+      +'<input type="date" id="cd-e-'+co.id+'" style="direction:ltr"></div>';
+    h+='<button class="btn btn-r" style="width:100%" onclick="ceDecide(\''+cy.id+'\',\''+co.id+'\')">'+ic('check',14)+' اعتماد القرار</button>';
+    h+='<div class="msg err" id="cd-err-'+co.id+'">أكمل القرار والسبب</div>';
+    h+='</div>';
+  });
+  /* المعتمدة */
+  var done=ceCycleCoaches(cy).filter(function(co){return ceLastDec(cy.id,co.id);});
+  if(done.length){
+    h+=tdSubHead('قرارات هذه الدورة','<span class="pg-chip">'+ceN(done.length)+'</span>');
+    h+='<div class="ce2-tw"><table class="ce2-tb"><thead><tr><th>المدرب</th><th>النتيجة</th><th>القرار</th><th>السبب</th><th>بواسطة</th></tr></thead><tbody>';
+    done.forEach(function(co){
+      var d=ceLastDec(cy.id,co.id),s2=ceScore(cy.id,co.id);
+      h+='<tr onclick="ceOpenCoach(\''+co.id+'\')" style="cursor:pointer"><td>'+esc(co.name)+'</td>'
+        +'<td>'+cePct(s2.final)+'</td>'
+        +'<td><span class="ce2-st" style="background:'+(CEDECC[d.d]||'#16a34a')+'1f;color:'+(CEDECC[d.d]||'#16a34a')+'">'+esc(CEDEC[d.d]||'')+'</span></td>'
+        +'<td style="max-width:260px">'+esc(d.reason||'')+'</td><td>'+esc(d.byName||'')+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  }
+  el.innerHTML=h;hydrateIcons(el);
+  var s1=g('ce-cyc');if(s1)s1.onchange=ceSetCycle;
+}
+function ceDecide(cycleId,coachId){
+  var d=gv('cd-d-'+coachId),reason=(g('cd-r-'+coachId)||{}).value||'',re=gv('cd-e-'+coachId);
+  var err=g('cd-err-'+coachId);
+  if(!d){err.textContent='اختر القرار';fl('cd-err-'+coachId);return;}
+  if(!reason.trim()){err.textContent='سبب القرار إلزامي';fl('cd-err-'+coachId);return;}
+  if(['okplan','watch','hold'].indexOf(d)>-1&&!re){
+    err.textContent='هذا القرار يستلزم تحديد موعد إعادة التقييم';fl('cd-err-'+coachId);return;
+  }
+  var prev=ceLastDec(cycleId,coachId);
+  CEX().dec.push({id:uid(),cycleId:cycleId,coachId:coachId,d:d,reason:reason.trim(),
+    by:CU.id,byName:CU.name,at:Date.now(),reEval:re||'',
+    prev:prev?(prev.prev||[]).concat([{d:prev.d,reason:prev.reason,by:prev.byName,at:prev.at}]):[]});
+  var co=tdCoach(coachId);
+  logA('تعميد تقييم المدرب: '+(co?co.name:'')+' — '+CEDEC[d],'check','#16a34a');
+  sv();rCEReview();
+  addN('تم حفظ القرار',(co?co.name:'')+' — '+CEDEC[d],'success');
+}
+
+/* ==================== خطط التطوير ==================== */
+var CEPF={showForm:false,edit:''};
+function cePlanCard(p,acts){
+  var co=tdCoach(p.coachId),today=new Date().toISOString().slice(0,10);
+  var late=p.st!=='done'&&p.due&&p.due<today;
+  var col=p.st==='done'?'#16a34a':(late?'var(--red)':'var(--amber)');
+  var h='<div class="ce2-plan" style="border-inline-start-color:'+col+'">';
+  h+='<div class="ce2-ph"><b>'+esc(p.area||'—')+'</b>'
+    +'<span class="ce2-st" style="background:'+col+'1f;color:'+col+'">'+(CEPST[p.st]||'—')+(late?' • متأخرة':'')+'</span></div>';
+  if(co)h+='<div class="ce2-fb">'+ic('whistle',10)+' '+esc(co.name)+'</div>';
+  if(p.goal)h+='<div class="ce2-pl"><b>الهدف:</b> '+esc(p.goal)+'</div>';
+  if(p.action)h+='<div class="ce2-pl"><b>الإجراء:</b> '+esc(p.action)+'</div>';
+  var meta=[];
+  if(p.owner)meta.push('المتابعة: '+esc(p.owner));
+  if(p.due)meta.push('الاستحقاق: '+ceN(p.due));
+  if(p.reEval)meta.push('إعادة التقييم: '+ceN(p.reEval));
+  if(meta.length)h+='<div class="ce2-dm">'+meta.join(' • ')+'</div>';
+  if(p.notes)h+='<div class="ce2-pl"><b>المتابعة:</b> '+esc(p.notes)+'</div>';
+  if(acts&&ceRole()==='admin'){
+    h+='<div class="ce2-pa">';
+    Object.keys(CEPST).forEach(function(k){
+      h+='<button class="btn btn-o btn-sm'+(p.st===k?' on':'')+'" onclick="cePlanSt(\''+p.id+'\',\''+k+'\')">'+CEPST[k]+'</button>';
+    });
+    h+='<button class="btn btn-o btn-sm" onclick="cePlanNote(\''+p.id+'\')">'+ic('edit',11)+' ملاحظة</button>';
+    h+='<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="cePlanDel(\''+p.id+'\')">'+ic('trash',11)+'</button>';
+    h+='</div>';
+  }
+  h+='</div>';
+  return h;
+}
+function rCEPlans(){
+  var el=g('cec-plans'),c=CEX();
+  var scope=ceScopeCoaches().map(function(x){return x.id;});
+  var pls=c.plans.filter(function(p){return scope.indexOf(p.coachId)>-1;})
+    .sort(function(a,b){return (a.due||'').localeCompare(b.due||'');});
+  var h=ceHead('doc','خطط التطوير','اكتمال الخطة لا يغيّر حالة الاعتماد تلقائياً',
+    ceRole()==='admin'?'<button class="btn btn-r btn-sm" onclick="CEPF.showForm=!CEPF.showForm;rCEPlans()">'
+      +ic(CEPF.showForm?'x':'plus',13)+' '+(CEPF.showForm?'إغلاق':'خطة جديدة')+'</button>':'');
+  if(CEPF.showForm&&ceRole()==='admin'){
+    var cs=(TDX().coaches||[]),cys=ceCyclesSorted();
+    h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem">';
+    h+='<div class="frow"><div class="fg req"><label>المدرب *</label>'
+      +tdSel('cp-co',cs.map(function(x){return [x.id,x.name];}),'','اختر المدرب')+'</div>';
+    h+='<div class="fg"><label>الدورة</label>'+tdSel('cp-cy',cys.map(function(x){return [x.id,x.name];}),CEFILT.cycle,'بلا دورة')+'</div></div>';
+    h+='<div class="fg req"><label>الجانب المطلوب تطويره *</label><input type="text" id="cp-area" placeholder="مثال: إدارة وقت الحصة"></div>';
+    h+='<div class="fg"><label>الهدف المطلوب تحقيقه</label><input type="text" id="cp-goal"></div>';
+    h+='<div class="fg"><label>الإجراء أو المهمة العملية</label><textarea id="cp-act" rows="2"></textarea></div>';
+    h+='<div class="frow"><div class="fg"><label>مسؤول المتابعة</label><input type="text" id="cp-own"></div>';
+    h+='<div class="fg"><label>تاريخ الاستحقاق</label><input type="date" id="cp-due" style="direction:ltr"></div></div>';
+    h+='<div class="fg"><label>موعد إعادة التقييم</label><input type="date" id="cp-re" style="direction:ltr"></div>';
+    h+='<button class="btn btn-r" style="width:100%" onclick="ceSavePlan()">'+ic('check',14)+' حفظ الخطة</button>';
+    h+='<div class="msg err" id="cp-err">أكمل: المدرب والجانب المطلوب تطويره</div>';
+    h+='<div class="msg ok" id="cp-ok">تم الحفظ</div>';
+    h+='</div>';
+  }
+  h+=tdSubHead('الخطط','<span class="pg-chip">'+ceN(pls.length)+'</span>');
+  if(!pls.length)h+=emptyBox('doc','لا توجد خطط تطوير');
+  else pls.forEach(function(p){h+=cePlanCard(p,true);});
+  el.innerHTML=h;hydrateIcons(el);
+}
+function ceSavePlan(){
+  var co=gv('cp-co'),area=gv('cp-area');
+  if(!co||!area){fl('cp-err');return;}
+  CEX().plans.push({id:uid(),coachId:co,cycleId:gv('cp-cy')||'',area:area,goal:gv('cp-goal'),
+    action:(g('cp-act')||{}).value||'',owner:gv('cp-own'),due:gv('cp-due'),reEval:gv('cp-re'),
+    st:'new',notes:'',at:Date.now()});
+  logA('إضافة خطة تطوير لمدرب','doc','#16a34a');
+  sv();CEPF.showForm=false;rCEPlans();
+}
+function cePlanSt(id,st){
+  var p=CEX().plans.find(function(x){return x.id===id;});if(!p)return;
+  p.st=st;sv();rCEPlans();
+}
+function cePlanNote(id){
+  var p=CEX().plans.find(function(x){return x.id===id;});if(!p)return;
+  var v=prompt('ملاحظة المتابعة:',p.notes||'');
+  if(v===null)return;
+  p.notes=v.trim();sv();rCEPlans();
+}
+function cePlanDel(id){
+  askConfirm('حذف خطة التطوير؟',function(){
+    var c=CEX();c.plans=c.plans.filter(function(x){return x.id!==id;});sv();rCEPlans();
+  });
+}
+
+/* ==================== الإعدادات ==================== */
+var CESET='cycles';
+function rCESettings(){
+  var el=g('cec-settings');
+  if(ceRole()!=='admin'){el.innerHTML=emptyBox('shield','الإعدادات لمدير النظام فقط');return;}
+  var tabs=[['cycles','دورات التقييم','cal'],['qs','الأسئلة','doc'],['w','الأوزان','chart'],
+            ['sups','المشرفون','shield'],['qr','باركود الفروع','card']];
+  var h=ceHead('gear','الإعدادات','الدورات والأسئلة والأوزان والمشرفون');
+  h+='<div class="ce2-tabs">'+tabs.map(function(t){
+    return '<button class="ce2-tab'+(CESET===t[0]?' on':'')+'" onclick="CESET=\''+t[0]+'\';rCESettings()">'+ic(t[2],13)+' '+t[1]+'</button>';
+  }).join('')+'</div>';
+  if(CESET==='cycles')h+=ceSetCycles();
+  else if(CESET==='qs')h+=ceSetQs();
+  else if(CESET==='w')h+=ceSetW();
+  else if(CESET==='sups')h+=ceSetSups();
+  else h+=ceSetQR();
+  el.innerHTML=h;hydrateIcons(el);
+  if(CESET==='qr')setTimeout(ceDrawQRs,80);
+}
+function ceSetCycles(){
+  var c=CEX(),h='';
+  h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem">';
+  h+=tdSubHead('دورة تقييم جديدة');
+  h+='<div class="fg req"><label>اسم الدورة *</label><input type="text" id="cc-nm" placeholder="مثال: تقييم شهر رجب"></div>';
+  h+='<div class="frow"><div class="fg req"><label>من *</label><input type="date" id="cc-f" style="direction:ltr"></div>';
+  h+='<div class="fg req"><label>إلى *</label><input type="date" id="cc-t" style="direction:ltr"></div></div>';
+  h+='<div class="fg"><label>الحد الأدنى لمشاركة اللاعبين</label><input type="number" id="cc-min" min="1" value="'+(c.settings.minPl)+'" style="direction:ltr"></div>';
+  h+='<div class="jnote">'+ic('info',12)+' إن تركت المدربين بلا تحديد، تشمل الدورة كل المدربين.</div>';
+  h+='<button class="btn btn-r" style="width:100%;margin-top:.8rem" onclick="ceAddCycle()">'+ic('plus',14)+' إنشاء الدورة</button>';
+  h+='<div class="msg err" id="cc-err">أكمل: الاسم وتاريخي البداية والنهاية</div>';
+  h+='</div>';
+  var cys=ceCyclesSorted();
+  h+=tdSubHead('الدورات','<span class="pg-chip">'+ceN(cys.length)+'</span>');
+  if(!cys.length)h+=emptyBox('cal','لا توجد دورات بعد');
+  else{
+    h+='<div class="ce2-tw"><table class="ce2-tb"><thead><tr><th>الدورة</th><th>الفترة</th><th>الحد الأدنى</th><th>الحالة</th><th></th></tr></thead><tbody>';
+    cys.forEach(function(x){
+      h+='<tr><td><b>'+esc(x.name)+'</b></td><td style="direction:ltr;text-align:start">'+ceN(x.from)+' ← '+ceN(x.to)+'</td>'
+        +'<td>'+ceN(x.minPl==null?c.settings.minPl:x.minPl)+'</td>'
+        +'<td><span class="ce2-st" style="background:'+(x.status==='open'?'#16a34a1f;color:#16a34a':'var(--gray)1f;color:var(--gray)')+'">'
+        +(x.status==='open'?'مفتوحة':'مغلقة')+'</span></td>'
+        +'<td><button class="btn btn-o btn-sm" onclick="ceToggleCycle(\''+x.id+'\')">'+(x.status==='open'?'إغلاق':'فتح')+'</button></td></tr>';
+    });
+    h+='</tbody></table></div>';
+    h+='<div class="jnote" style="margin-top:.8rem">'+ic('info',12)+' إغلاق الدورة يوقف استقبال التقييمات ولا يمسّ نتائجها.</div>';
+  }
+  return h;
+}
+function ceAddCycle(){
+  var nm=gv('cc-nm'),f=gv('cc-f'),t=gv('cc-t');
+  if(!nm||!f||!t){fl('cc-err');return;}
+  if(t<f){g('cc-err').textContent='تاريخ النهاية قبل البداية';fl('cc-err');return;}
+  var c=CEX();
+  c.cycles.push({id:uid(),name:nm,from:f,to:t,status:'open',
+    weights:JSON.parse(JSON.stringify(c.settings.weights)),
+    minPl:+gv('cc-min')||c.settings.minPl,coachIds:[],at:Date.now()});
+  logA('إنشاء دورة تقييم: '+nm,'cal','#16a34a');
+  sv();rCESettings();
+}
+function ceToggleCycle(id){
+  var x=ceCycle(id);if(!x)return;
+  x.status=x.status==='open'?'closed':'open';
+  sv();rCESettings();
+}
+function ceSetQs(){
+  var c=CEX(),h='';
+  h+='<div class="jnote" style="margin-bottom:1rem">'+ic('info',12)
+    +' تعديل الأسئلة يسري على الدورات الجديدة والإجابات القادمة. النتائج المحفوظة تبقى كما هي.</div>';
+  ['pl','sup','mgr'].forEach(function(k){
+    h+=tdSubHead('أسئلة '+CESRC[k],'<span class="pg-chip">'+ceN(ceQs(k).length)+' سؤال</span>');
+    h+='<div class="ce2-qs">';
+    (c.qs[k]||[]).forEach(function(q,i){
+      h+='<div class="ce2-qi'+(q.active===false?' off':'')+'">';
+      h+='<span class="ce2-qn">'+ceN(i+1)+'</span>';
+      h+='<input type="text" value="'+esc(q.text)+'" onchange="ceQText(\''+k+'\',\''+q.id+'\',this.value)">';
+      h+='<button class="btn btn-o btn-sm" onclick="ceQToggle(\''+k+'\',\''+q.id+'\')" title="'+(q.active===false?'تفعيل':'تعطيل')+'">'
+        +ic(q.active===false?'eye-off':'eye',12)+'</button>';
+      h+='<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="ceQDel(\''+k+'\',\''+q.id+'\')">'+ic('trash',12)+'</button>';
+      h+='</div>';
+    });
+    h+='</div>';
+    h+='<div class="ce2-qadd"><input type="text" id="cq-'+k+'" placeholder="نص سؤال جديد">'
+      +'<button class="btn btn-r btn-sm" onclick="ceQAdd(\''+k+'\')">'+ic('plus',12)+' إضافة</button></div>';
+    h+='<div class="ce2-scale">مقياس الإجابة: '+CESCALE[k].map(function(s,i){return ceN(i+1)+' '+s;}).join(' • ')+'</div>';
+  });
+  return h;
+}
+function ceQText(k,id,v){
+  var q=(CEX().qs[k]||[]).find(function(x){return x.id===id;});if(!q)return;
+  if(!String(v).trim())return;
+  q.text=String(v).trim();sv();
+}
+function ceQToggle(k,id){
+  var q=(CEX().qs[k]||[]).find(function(x){return x.id===id;});if(!q)return;
+  if(q.active!==false&&ceQs(k).length<=1){alert('لا يمكن تعطيل آخر سؤال فعّال');return;}
+  q.active=q.active===false;sv();rCESettings();
+}
+function ceQDel(k,id){
+  askConfirm('حذف السؤال؟ الإجابات السابقة تبقى محفوظة لكنها لن تُحتسب.',function(){
+    var c=CEX();
+    if(ceQs(k).length<=1){alert('لا يمكن حذف آخر سؤال');return;}
+    c.qs[k]=c.qs[k].filter(function(x){return x.id!==id;});
+    sv();rCESettings();
+  });
+}
+function ceQAdd(k){
+  var v=gv('cq-'+k);
+  if(!v||!v.trim())return;
+  CEX().qs[k].push({id:uid(),text:v.trim(),active:true});
+  sv();rCESettings();
+}
+function ceSetW(){
+  var c=CEX(),w=c.settings.weights,h='';
+  h+='<div class="rform" style="max-width:520px">';
+  h+=tdSubHead('أوزان الجهات');
+  h+='<div class="jnote" style="margin-bottom:1rem">'+ic('info',12)
+    +' الأوزان تسري على الدورات الجديدة فقط — نتائج الدورات السابقة لا تتغير. المجموع لازم يكون ١٠٠٪.</div>';
+  ['pl','sup','mgr'].forEach(function(k){
+    h+='<div class="fg"><label>'+CESRC[k]+' (٪)</label><input type="number" id="cw-'+k+'" min="0" max="100" value="'+(+w[k])+'" style="direction:ltr" oninput="ceWSum()"></div>';
+  });
+  h+='<div class="ce2-wsum" id="cw-sum">المجموع: '+ceN((+w.pl)+(+w.sup)+(+w.mgr))+'٪</div>';
+  h+='<div class="fg"><label>الحد الأدنى لمشاركة اللاعبين</label><input type="number" id="cw-min" min="1" value="'+ceN0(c.settings.minPl)+'" style="direction:ltr"></div>';
+  h+='<button class="btn btn-r" style="width:100%" onclick="ceSaveW()">'+ic('check',14)+' حفظ</button>';
+  h+='<div class="msg err" id="cw-err">مجموع الأوزان يجب أن يساوي ١٠٠٪</div>';
+  h+='<div class="msg ok" id="cw-ok">تم الحفظ</div>';
+  h+='</div>';
+  return h;
+}
+function ceN0(v){return v==null?'':v;}
+function ceWSum(){
+  var s=(+gv('cw-pl')||0)+(+gv('cw-sup')||0)+(+gv('cw-mgr')||0);
+  var el=g('cw-sum');if(!el)return;
+  el.textContent='المجموع: '+ceN(s)+'٪';
+  el.style.color=s===100?'#16a34a':'var(--red)';
+}
+function ceSaveW(){
+  var pl=+gv('cw-pl')||0,sup=+gv('cw-sup')||0,mgr=+gv('cw-mgr')||0;
+  if(pl+sup+mgr!==100){fl('cw-err');return;}
+  var c=CEX();
+  c.settings.weights={pl:pl,sup:sup,mgr:mgr};
+  c.settings.minPl=+gv('cw-min')||1;
+  logA('تعديل أوزان تقييم المدربين','chart','#1565c0');
+  sv();rCESettings();
+}
+function ceSetSups(){
+  var c=CEX(),h='';
+  var sups=(DB.users||[]).filter(function(u){return u.role==='supervisor';});
+  h+='<div class="jnote" style="margin-bottom:1rem">'+ic('info',12)
+    +' المشرف حساب فوق الفروع: أنشئ له حساباً من «الإدارة ← المستخدمون» بصلاحية «مشرف فني»، ثم حدّد فروعه هنا.</div>';
+  h+=tdSubHead('المشرفون الفنيون','<span class="pg-chip">'+ceN(sups.length)+'</span>');
+  if(!sups.length)h+=emptyBox('shield','لا يوجد مشرفون بعد','أنشئ حساباً بصلاحية «مشرف فني» أولاً');
+  else{
+    var brs=ceAllBranches();
+    sups.forEach(function(u){
+      var rec=c.sups.find(function(s){return s.userId===u.id;})||{branches:[]};
+      h+='<div class="rform" style="margin-bottom:1rem">';
+      h+='<div class="ce2-fn">'+esc(u.name)+' <small style="color:var(--gray);font-weight:500">'+esc(u.username||'')+'</small></div>';
+      h+='<div class="fg" style="margin-top:.6rem"><label>الفروع التي يشرف عليها</label>'
+        +'<div class="brpick" id="csb-'+u.id+'">'
+        +brs.map(function(b){
+            return '<button type="button" class="brchip'+((rec.branches||[]).indexOf(b)>-1?' on':'')+'" data-br="'+esc(b)+'" onclick="this.classList.toggle(\'on\')">'
+              +ic('pin',11)+' '+esc(b)+'</button>';}).join('')
+        +'</div></div>';
+      h+='<button class="btn btn-o btn-sm" onclick="ceSaveSup(\''+u.id+'\',\''+jq(u.name)+'\')">'+ic('check',12)+' حفظ فروعه</button>';
+      h+='</div>';
+    });
+  }
+  return h;
+}
+function ceSaveSup(uid2,name){
+  var brs=pickedBranches('csb-'+uid2);
+  var c=CEX(),rec=c.sups.find(function(s){return s.userId===uid2;});
+  if(!rec){rec={id:uid(),userId:uid2,name:name,branches:[]};c.sups.push(rec);}
+  rec.branches=brs;rec.name=name;
+  logA('تحديث فروع المشرف: '+name+' — '+(brs.join('، ')||'بلا فروع'),'shield','#1565c0');
+  sv();rCESettings();
+}
+function ceSetQR(){
+  var brs=(TDX().branches||[]),h='';
+  h+='<div class="jnote" style="margin-bottom:1rem">'+ic('info',12)
+    +' اطبع باركود كل فرع وعلّقه في الملعب. اللاعب يصوّره فيفتح نموذج تقييم مدربه مباشرة — وتمنعه هويته من التكرار.</div>';
+  if(!brs.length)return h+emptyBox('pin','لا توجد فروع بعد');
+  h+='<div class="ce2-qrs">';
+  brs.forEach(function(b){
+    h+='<div class="ce2-qr"><div class="ce2-qrn">'+esc(b.name)+'</div>'
+      +'<div id="qr-'+b.id+'" class="ce2-qrc"></div>'
+      +'<div class="ce2-qru" id="qru-'+b.id+'"></div></div>';
+  });
+  h+='</div>';
+  h+='<button class="btn btn-o" style="margin-top:1rem" onclick="window.print()">'+ic('card',13)+' طباعة</button>';
+  return h;
+}
+function ceBranchURL(bid){
+  return location.origin+location.pathname+'?ce='+encodeURIComponent(bid);
+}
+function ceDrawQRs(){
+  (TDX().branches||[]).forEach(function(b){
+    var u=ceBranchURL(b.id);
+    try{makeQR('qr-'+b.id,u,150);}catch(e){}
+    var t=g('qru-'+b.id);if(t)t.textContent=u;
+  });
+}
+
+/* ==================== دخول اللاعب بالباركود ==================== */
+var CEPUB={branch:'',pid:'',coachId:'',step:1};
+function ceCheckLink(){
+  var m=/[?&]ce=([^&]+)/.exec(location.search||'');
+  if(!m)return false;
+  var bid=decodeURIComponent(m[1]);
+  var b=(TDX().branches||[]).find(function(x){return x.id===bid;});
+  if(!b)return false;
+  CEPUB={branch:b.name,pid:'',coachId:'',step:1};
+  cePubOpen();
+  return true;
+}
+function cePubOpen(){
+  var m=g('cePub');if(!m)return;
+  m.classList.add('open');
+  cePubRender();
+}
+function cePubClose(){
+  var m=g('cePub');if(m)m.classList.remove('open');
+  try{history.replaceState({},'',location.pathname);}catch(e){}
+}
+function cePubRender(){
+  var body=g('cepub-body'),cy=ceActiveCycle();
+  var h='';
+  if(!cy||!ceCycleOpen(cy)){
+    h='<div class="ped-note warn">'+ic('info',14)+'<div><b>لا توجد دورة تقييم مفتوحة حالياً.</b><br>راجع مدربك أو إدارة الفرع.</div></div>';
+    h+='<button class="btn btn-g" style="width:100%" onclick="cePubClose()">إغلاق</button>';
+    body.innerHTML=h;hydrateIcons(body);return;
+  }
+  if(CEPUB.step===1){
+    h+='<div class="ped-note free">'+ic('pin',14)+'<div><b>فرع '+esc(CEPUB.branch)+'</b><br>'
+      +'أدخل رقم هويتك وتاريخ ميلادك للتأكد أنك أنت — رأيك يصل للإدارة بلا اسمك.</div></div>';
+    h+='<div class="fg"><label>رقم الهوية *</label><input type="tel" id="cpb-nid" inputmode="numeric" maxlength="10" style="direction:ltr;text-align:center;letter-spacing:2px" oninput="this.value=normNid(this.value)"></div>';
+    var dO='<option value="">اليوم</option>',mO='<option value="">الشهر</option>',yO='<option value="">السنة</option>';
+    for(var d=1;d<=31;d++)dO+='<option value="'+d+'">'+d+'</option>';
+    for(var mm=1;mm<=12;mm++)mO+='<option value="'+mm+'">'+MONTHS[mm-1]+'</option>';
+    var yN=new Date().getFullYear();
+    for(var y=yN;y>=yN-45;y--)yO+='<option value="'+y+'">'+y+'</option>';
+    h+='<div class="fg"><label>تاريخ الميلاد *</label><div style="display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:.45rem">'
+      +'<select id="cpb-d">'+dO+'</select><select id="cpb-m">'+mO+'</select><select id="cpb-y">'+yO+'</select></div></div>';
+    h+='<button class="btn btn-r" style="width:100%;min-height:46px" onclick="cePubVerify()">'+ic('check',14)+' متابعة</button>';
+    h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="cePubClose()">إلغاء</button>';
+    h+='<div class="msg err" id="cpb-err">تحقق من البيانات</div>';
+  }else if(CEPUB.step===2){
+    var list=ceCoachesOfBranch(CEPUB.branch);
+    h+='<div class="ped-note free">'+ic('whistle',14)+'<div><b>اختر مدربك</b><br>الذي يدرّبك في فرع '+esc(CEPUB.branch)+'.</div></div>';
+    if(!list.length)h+=emptyBox('whistle','لا يوجد مدربون مسجّلون في هذا الفرع');
+    else{
+      h+='<div class="ce2-pick">';
+      list.forEach(function(co){
+        h+='<button type="button" class="ce2-pk" onclick="cePubPick(\''+co.id+'\')">'+ceAvatar(co,48)
+          +'<span>'+esc(co.name)+'</span></button>';
+      });
+      h+='</div>';
+    }
+    h+='<button class="btn btn-g" style="width:100%;margin-top:.7rem" onclick="CEPUB.step=1;cePubRender()">رجوع</button>';
+  }else if(CEPUB.step===3){
+    var cyc=ceActiveCycle(),co2=tdCoach(CEPUB.coachId);
+    if(ceHasResp(cyc.id,CEPUB.coachId,'pl','pid:'+CEPUB.pid)){
+      h+='<div class="ped-note warn">'+ic('check',14)+'<div><b>سبق أن قيّمت هذا المدرب في هذه الدورة.</b><br>شكراً لك.</div></div>';
+      h+='<button class="btn btn-g" style="width:100%" onclick="cePubClose()">إغلاق</button>';
+    }else{
+      CEEVAL={coachId:CEPUB.coachId,ans:CEEVAL.ans||{},note:'',open:CEEVAL.open||''};
+      h+=ceFormHTML(cyc,co2,'pl',true).replace('ceSubmit(','cePubSubmit(');
+      h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="CEPUB.step=2;cePubRender()">رجوع</button>';
+    }
+  }else{
+    h+='<div class="ped-note free">'+ic('check',14)+'<div><b>وصل تقييمك.</b><br>شكراً لك — رأيك يساعد على تطوير التدريب.</div></div>';
+    h+='<button class="btn btn-r" style="width:100%" onclick="cePubClose()">إغلاق</button>';
+  }
+  body.innerHTML=h;hydrateIcons(body);
+}
+function cePubVerify(){
+  var nid=normNid(gv('cpb-nid')),d=gv('cpb-d'),m=gv('cpb-m'),y=gv('cpb-y');
+  var err=g('cpb-err');
+  if(!nidOK(nid)){err.textContent='أدخل رقم هوية صحيح (١٠ أرقام)';fl('cpb-err');return;}
+  if(!d||!m||!y){err.textContent='اختر تاريخ ميلادك كاملاً';fl('cpb-err');return;}
+  var p=findPlayerByNid(nid);
+  if(!p){err.textContent='رقم الهوية غير مسجّل — راجع إدارة الأكاديمية';fl('cpb-err');return;}
+  if(!p.dob){err.textContent='تاريخ ميلادك غير مسجّل لدى الأكاديمية — راجع الإدارة';fl('cpb-err');return;}
+  if(!sameDob(y+'-'+m+'-'+d,p.dob)){err.textContent='تاريخ الميلاد غير مطابق';fl('cpb-err');return;}
+  CEPUB.pid=p.id;
+  var myCo=cePlayerCoach(p);
+  if(myCo){CEPUB.coachId=myCo.id;CEPUB.step=3;}
+  else CEPUB.step=2;
+  CEEVAL={coachId:CEPUB.coachId,ans:{},note:'',open:''};
+  cePubRender();
+}
+function cePubPick(id){CEPUB.coachId=id;CEPUB.step=3;CEEVAL={coachId:id,ans:{},note:'',open:''};cePubRender();}
+function cePubSubmit(cycleId,coachId,src){
+  var qs=ceQs('pl'),miss=qs.filter(function(q){return !CEEVAL.ans[q.id];});
+  if(miss.length){g('ce-ferr').textContent='بقي '+ceN(miss.length)+' سؤال بلا إجابة';fl('ce-ferr');return;}
+  var by='pid:'+CEPUB.pid;
+  if(ceHasResp(cycleId,coachId,'pl',by)){g('ce-ferr').textContent='سبق أن قيّمت هذا المدرب';fl('ce-ferr');return;}
+  var openEl=g('ce-open'),p=anyPlayer(CEPUB.pid);
+  var rec={id:uid(),cycleId:cycleId,coachId:coachId,src:'pl',by:by,byName:'',
+    ans:JSON.parse(JSON.stringify(CEEVAL.ans)),note:'',open:openEl?openEl.value.trim():'',at:Date.now()};
+  var done=function(){CEX().resp.push(rec);CEPUB.step=4;CEEVAL={coachId:'',ans:{},note:'',open:''};cePubRender();};
+  if(FA.enabled){
+    g('ce-ferr').textContent='جارٍ الإرسال…';fl('ce-ferr');
+    FA.ceSubmit(normNid(p&&p.nid||''),(p&&p.dob)||'',rec).then(function(res){
+      if(!res||!res.ok){
+        g('ce-ferr').textContent=(res&&res.err==='dup')?'سبق أن قيّمت هذا المدرب في هذه الدورة'
+          :'تعذّر إرسال التقييم — راجع إدارة الأكاديمية';
+        fl('ce-ferr');return;
+      }
+      done();
+    }).catch(function(){
+      g('ce-ferr').textContent='تعذّر إرسال التقييم — تحقق من الإنترنت وحاول مجدداً';fl('ce-ferr');
+    });
+    return;
+  }
+  done();
+}
+
+
 /* ================= INIT ================= */
 /* ================= الصفحة الترحيبية ================= */
 function welStats(){
@@ -15759,6 +17054,8 @@ function faBoot(){
         console.warn('[FA] القراءة قبل الدخول مرفوضة (طبيعي)');
       }
     }).then(function(){
+      /* باركود تقييم المدرب: يفتح النموذج مباشرة بلا حساب */
+      try{if(ceCheckLink())return;}catch(e){}
       /* استئناف الجلسة إن كانت سارية — قبل عرض شاشة الدخول */
       if(sessRestore())return;
       var wel=g('WEL');
@@ -15767,6 +17064,7 @@ function faBoot(){
     });
   }else{
     setTimeout(function(){
+      try{if(ceCheckLink())return;}catch(e){}
       if(sessRestore())return;
       var wel=g('WEL');if(wel&&wel.classList.contains('on'))return;
       var e=g('l-name');if(e)e.focus();
@@ -15777,9 +17075,10 @@ function faBoot(){
 (function ensureLogin(){
   try{
     var ls=g('LS');if(!ls)return;
-    var app=g('APP'),ts=g('TS'),td=g('TD'),nt=g('NT');
+    var app=g('APP'),ts=g('TS'),td=g('TD'),nt=g('NT'),ce=g('CE');
     var inside=(app&&app.style.display==='flex')||(ts&&ts.style.display==='block')
-      ||(td&&td.style.display==='block')||(nt&&nt.style.display==='block');
+      ||(td&&td.style.display==='block')||(nt&&nt.style.display==='block')
+      ||(ce&&ce.style.display==='block');
     var wel=g('WEL'),onWel=wel&&wel.classList.contains('on');
     /* جلسة سارية على وشك الاستعادة — لا تفرض شاشة الدخول فتومض */
     var pend=false;
@@ -15804,7 +17103,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-playerlogin</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-coacheval</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
