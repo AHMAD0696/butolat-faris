@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.15-branches">
+<meta name="build" content="2026.09.15-fix1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2627,7 +2627,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-branches</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-fix1</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -6895,10 +6895,7 @@ function setLang(l){
   trWatch();
   /* إعادة بناء الصفحة الحالية ليُعاد تنسيق التواريخ والأرقام بلغة الواجهة */
   try{
-    var app=g('APP'),td=g('TD'),nt=g('NT');
-    if(td&&td.style.display==='block'&&typeof tdP==='function')tdP(TDPAGE);
-    else if(nt&&nt.style.display==='block'&&typeof ntP==='function')ntP(NTPAGE);
-    else if(app&&app.style.display!=='none'&&typeof rAllSoft==='function')rAllSoft();
+    if(typeof rAllSoft==='function')rAllSoft();
   }catch(e){}
   translateTree(document.body);
   document.querySelectorAll('.lng').forEach(function(b){
@@ -7087,7 +7084,10 @@ function buildNav(){
 }
 function gP(id,btn){
   if(typeof closeAllDrawers==='function')closeAllDrawers();
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
+  /* 🔒 النطاق: صفحات «بطولات فارس» وحدها. المحدد المطلق '.page' كان
+     يشمل صفحات الإدارة الفنية والمنتخب وتقييم المدربين والإدارة والمتابعة،
+     فيُلغي ظهورها ويختفي محتواها فجأة عند أي إعادة رسم. */
+  document.querySelectorAll('#APP .page').forEach(function(p){p.classList.remove('on');});
   document.querySelectorAll('#nav-links .nl,#sbar-links .sb-l').forEach(function(b){b.classList.toggle('on',b.dataset.pg===id);});
   var el=g('page-'+id);if(el)el.classList.add('on');
   window.scrollTo({top:0,behavior:'smooth'});
@@ -7103,7 +7103,25 @@ function gP(id,btn){
   if(id==='admin')rAdmin();
   hydrateIcons();
 }
-function rAllSoft(){var on=document.querySelector('.page.on');if(on)gP(on.id.replace('page-',''));}
+/* إعادة رسم ناعمة للنظام المفتوح فعلاً.
+   قبل الإصلاح كانت تُنادي gP دائماً مهما كان النظام المفتوح، فتُخفي
+   صفحات الأنظمة الأخرى — وهذا سبب اختفاء المحتوى بعد دقيقة من فتحه. */
+function rAllSoft(){
+  try{
+    var ad=g('AD');
+    if(ad&&ad.style.display==='block'){if(typeof adP==='function')adP(ADPAGE);return;}
+    var ce=g('CE');
+    if(ce&&ce.style.display==='block'){if(typeof ceP==='function')ceP(CEPAGE);return;}
+    var nt=g('NT');
+    if(nt&&nt.style.display==='block'){if(typeof ntP==='function')ntP(NTPAGE);return;}
+    var td=g('TD');
+    if(td&&td.style.display==='block'){if(typeof tdP==='function')tdP(TDPAGE);return;}
+    var app=g('APP');
+    if(!app||app.style.display==='none')return;      /* لا نظام مفتوح — لا شيء نرسمه */
+    var on=document.querySelector('#APP .page.on');
+    if(on)gP(on.id.replace('page-',''));
+  }catch(e){console.warn('rAllSoft',e&&e.message);}
+}
 
 /* ================= CATEGORIES + STANDINGS (per category) ================= */
 function catList(){
@@ -7458,7 +7476,7 @@ function showTP(tname,keepCat){
     });
   }
   g('tp-c').innerHTML=h;hydrateIcons(g('tp-c'));
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('#APP .page').forEach(function(p){p.classList.remove('on');});
   g('page-team-profile').classList.add('on');window.scrollTo({top:0});
 }
 function tpCat(tname,c){TPCAT=c;showTP(tname,true);}
@@ -7474,7 +7492,7 @@ function showPC(tname,pid){
   h+='<div class="id-grid"><div class="id-it"><div class="lb">رقم القميص</div><div class="vl">'+(p.number||'—')+'</div></div><div class="id-it"><div class="lb">الجنسية</div><div class="vl">'+esc(p.nat||'—')+'</div></div><div class="id-it"><div class="lb">الميلاد</div><div class="vl">'+esc(p.dob||'—')+'</div></div><div class="id-it"><div class="lb">المركز</div><div class="vl">'+esc(p.pos||'—')+'</div></div><div class="id-it"><div class="lb">الأهداف</div><div class="vl">'+(p.goals||0)+'</div></div><div class="id-it"><div class="lb">المباريات</div><div class="vl">'+(p.matches||0)+'</div></div></div>';
   h+='<div class="id-qr"><div class="qrbox" id="pc-qr"></div><small>بطاقة لاعب رقمية — أكاديمية فارس</small></div></div></div>';
   g('pc-c').innerHTML=h;hydrateIcons(g('pc-c'));
-  document.querySelectorAll('.page').forEach(function(pg){pg.classList.remove('on');});
+  document.querySelectorAll('#APP .page').forEach(function(pg){pg.classList.remove('on');});
   g('page-player-card').classList.add('on');window.scrollTo({top:0});
   makeQR('pc-qr','faris-player:'+p.id+':'+t.name,132);
 }
@@ -18633,7 +18651,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-branches</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-fix1</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
