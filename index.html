@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.15-reg">
+<meta name="build" content="2026.09.15-ce2">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2404,6 +2404,36 @@ body.nt-pick #NT .mnav-btn{display:none!important}
 .ce2-qadd{display:flex;gap:.4rem;margin-bottom:.6rem}
 .ce2-qadd input{flex:1;margin:0}
 .ce2-scale{font-size:10.5px;color:var(--gray);margin-bottom:1.4rem}
+/* --- اختيار نوع التقييم (دورة / مستمر) --- */
+.ce2-kind{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem}
+.ce2-kbtn{text-align:start;background:var(--sur);border:1.5px solid var(--brd);border-radius:12px;padding:.7rem .8rem;cursor:pointer;color:inherit;font-family:inherit;transition:.15s}
+.ce2-kbtn:hover{border-color:var(--red)}
+.ce2-kbtn.on{border-color:var(--red);background:rgba(221,29,69,.07)}
+.ce2-kh{display:flex;align-items:center;gap:.4rem;font-weight:800;font-size:13px;margin-bottom:.25rem}
+.ce2-kd{font-size:11px;color:var(--gray);line-height:1.5}
+/* --- بطاقات نماذج الأسئلة --- */
+.ce2-fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.8rem}
+.ce2-fcard{text-align:start;background:var(--sur);border:1px solid var(--brd);border-radius:14px;padding:1rem;cursor:pointer;color:inherit;font-family:inherit;transition:.15s}
+.ce2-fcard:hover{border-color:var(--red);transform:translateY(-2px)}
+.ce2-fic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(221,29,69,.1);color:var(--red);margin-bottom:.6rem}
+.ce2-ft{font-weight:800;font-size:14px}
+.ce2-fs{font-size:11px;color:var(--gray);margin-top:.15rem}
+.ce2-fm{display:flex;flex-wrap:wrap;gap:.35rem;margin:.7rem 0 .5rem}
+.ce2-fm span{font-size:10.5px;background:var(--bg2,rgba(255,255,255,.05));border:1px solid var(--brd);border-radius:999px;padding:.12rem .5rem}
+.ce2-fgo{display:flex;align-items:center;gap:.3rem;font-size:11.5px;color:var(--red);font-weight:700}
+/* --- محرّر الأسئلة --- */
+.ce2-qlist{display:flex;flex-direction:column;gap:.55rem;max-width:860px}
+.ce2-qrow{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:.6rem .7rem}
+.ce2-qrow.off{opacity:.5}
+.ce2-qtop{display:flex;align-items:center;gap:.45rem}
+.ce2-qin{flex:1;min-width:80px;background:var(--bg2,rgba(255,255,255,.04));border:1px solid var(--brd);border-radius:8px;padding:.45rem .6rem;color:inherit;font-family:inherit;font-size:12.5px}
+.ce2-qacts{display:flex;gap:.25rem;flex-shrink:0}
+.ce2-qbot{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;padding-top:.5rem;border-top:1px dashed var(--brd)}
+.ce2-qlb{font-size:10.5px;color:var(--gray)}
+.ce2-qsel{background:var(--bg2,rgba(255,255,255,.04));border:1px solid var(--brd);border-radius:8px;padding:.3rem .5rem;color:inherit;font-family:inherit;font-size:11.5px}
+.ce2-qhint{font-size:10.5px;color:var(--gray);flex:1;min-width:120px}
+.ce2-sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.5rem}
+.ce2-ta{width:100%;background:var(--bg2,rgba(255,255,255,.04));border:1px solid var(--brd);border-radius:10px;padding:.6rem .7rem;color:inherit;font-family:inherit;font-size:12.5px;resize:vertical}
 .ce2-wsum{font-size:12.5px;font-weight:800;margin-bottom:.8rem}
 .ce2-qrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem}
 .ce2-qr{background:#fff;border-radius:14px;padding:1rem .7rem;text-align:center;color:#181946}
@@ -2627,7 +2657,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-reg</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-ce2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3398,6 +3428,8 @@ var IC={
  'chev-r':'<polyline points="15 18 9 12 15 6"/>',
  'chev-d':'<polyline points="6 9 12 15 18 9"/>',
  chevron:'<polyline points="6 9 12 15 18 9"/>',
+ 'chevron-up':'<polyline points="18 15 12 9 6 15"/>',
+ refresh:'<path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-8.5-6"/><path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 8.5 6"/><polyline points="21 3 20.5 9 14.5 8.5"/><polyline points="3 21 3.5 15 9.5 15.5"/>',
  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
  moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.8 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.8-3.8-9S9.5 5.7 12 3z"/>',
@@ -15835,9 +15867,15 @@ function ceCycle(id){return CEX().cycles.find(function(x){return x.id===id;});}
 function ceCyclesSorted(){
   return CEX().cycles.slice().sort(function(a,b){return String(b.from||'').localeCompare(String(a.from||''));});
 }
+/* التقييم الجاري: الدورة المحددة المفتوحة لها الأولوية (لأنها حدث بمدة)،
+   وإلا فالبرنامج المستمر، وإلا آخر ما أُنشئ. */
 function ceActiveCycle(){
-  var open=ceCyclesSorted().filter(function(c){return c.status==='open';});
-  return open[0]||ceCyclesSorted()[0]||null;
+  var all=ceCyclesSorted();
+  var dated=all.filter(function(c){return c.status==='open'&&!ceIsCont(c)&&ceCycleOpen(c);});
+  if(dated.length)return dated[0];
+  var cont=all.filter(function(c){return c.status==='open'&&ceIsCont(c);});
+  if(cont.length)return cont[0];
+  return all.filter(function(c){return c.status==='open';})[0]||all[0]||null;
 }
 function ceCycleCoaches(cy){
   if(!cy)return [];
@@ -15850,30 +15888,71 @@ function ceInCycle(cy,coachId){
   if(!cy.coachIds||!cy.coachIds.length)return true;
   return cy.coachIds.indexOf(coachId)>-1;
 }
+/* نوعا التقييم:
+   'cycle' = دورة لها بداية ونهاية، كل مقيّم يقيّم مرة واحدة فيها.
+   'cont'  = برنامج مستمر بلا نهاية، والتكرار يُضبط بفترة دورية
+             (شهرياً افتراضاً) وإلا لصار التقييم مرة واحدة للأبد. */
+var CEKIND={cycle:'دورة محددة',cont:'تقييم مستمر'};
+var CEEVERY={month:'كل شهر',quarter:'كل ٣ أشهر',year:'كل سنة',once:'مرة واحدة'};
+function ceIsCont(cy){return !!(cy&&cy.kind==='cont');}
+/* مفتاح الفترة الحالية داخل البرنامج المستمر */
+function cePeriodKey(cy,at){
+  if(!ceIsCont(cy))return '';
+  var d=at?new Date(at):new Date();
+  var y=d.getFullYear(),m=d.getMonth();
+  switch(cy.every||'month'){
+    case 'once':return 'all';
+    case 'year':return String(y);
+    case 'quarter':return y+'-Q'+(Math.floor(m/3)+1);
+    default:return y+'-'+String(m+1).padStart(2,'0');
+  }
+}
+function cePeriodLabel(cy){
+  if(!ceIsCont(cy))return '';
+  var k=cePeriodKey(cy);
+  return k==='all'?'بلا تكرار':k;
+}
 function ceCycleOpen(cy){
   if(!cy||cy.status!=='open')return false;
+  if(ceIsCont(cy))return true;              /* المستمر مفتوح ما دام مفعّلاً */
   var t=new Date().toISOString().slice(0,10);
   if(cy.from&&t<cy.from)return false;
   if(cy.to&&t>cy.to)return false;
   return true;
 }
 
-/* ---------- الأسئلة ---------- */
+/* ---------- الأسئلة ----------
+   نوع السؤال: 'scale' مقياس من ١ إلى ٥ (يدخل في الدرجة)،
+   أو 'text' إجابة نصية حرة (تُعرض في المراجعة ولا تدخل في الدرجة). */
 function ceQs(src){return (CEX().qs[src]||[]).filter(function(q){return q.active!==false;});}
+function ceQType(q){return (q&&q.type==='text')?'text':'scale';}
+function ceScaleQs(src){return ceQs(src).filter(function(q){return ceQType(q)==='scale';});}
+/* مقياس الإجابة — قابل للتعديل من الإعدادات، وإلا فالمقياس الافتراضي */
+function ceScaleOf(src){
+  var st=CEX().settings||{},sc=(st.scales||{})[src];
+  if(sc&&sc.length===5&&sc.every(function(x){return String(x||'').trim();}))return sc;
+  return CESCALE[src];
+}
 
 /* ---------- الاحتساب ---------- */
 function ceRespScore(r){
   if(!r)return null;
-  var qs=ceQs(r.src),tot=0,n=0;
+  var qs=ceScaleQs(r.src),tot=0,n=0;
   qs.forEach(function(q){var v=+((r.ans||{})[q.id]);if(v>=1&&v<=5){tot+=v;n++;}});
   if(!n)return null;
   return tot/(n*5)*100;
 }
-function ceScore(cycleId,coachId){
+function ceScore(cycleId,coachId,per){
   var c=CEX(),cy=ceCycle(cycleId);
   var w=(cy&&cy.weights)||c.settings.weights;
   var minPl=(cy&&cy.minPl!=null)?cy.minPl:c.settings.minPl;
-  var rs=c.resp.filter(function(r){return r.cycleId===cycleId&&r.coachId===coachId;});
+  /* البرنامج المستمر يُحتسب لكل فترة على حدة، وإلا اختلطت شهوره ببعض */
+  if(per===undefined)per=cePeriodKey(cy);
+  var rs=c.resp.filter(function(r){
+    if(!(r.cycleId===cycleId&&r.coachId===coachId))return false;
+    if(!per||per==='all')return true;
+    return String(r.per||cePeriodKey(cy,r.at))===per;
+  });
   var out={pl:null,sup:null,mgr:null,plCount:0,final:null,complete:false,missing:[],minPl:minPl,w:w,
            supNote:'',mgrNote:'',supBy:'',mgrBy:'',openTexts:[]};
   var pls=rs.filter(function(r){return r.src==='pl';});
@@ -15883,13 +15962,15 @@ function ceScore(cycleId,coachId){
     pls.forEach(function(r){
       var v=ceRespScore(r);if(v!=null){s+=v;n++;}
       if(r.open&&String(r.open).trim())out.openTexts.push(String(r.open).trim());
+      ceTextAns(r).forEach(function(x){out.openTexts.push(x);});
     });
     if(n)out.pl=s/n;
   }
   ['sup','mgr'].forEach(function(k){
     var r=rs.filter(function(x){return x.src===k;}).slice(-1)[0];
     if(r){out[k]=ceRespScore(r);out[k+'Note']=r.note||'';
-          out[k+'By']=(r.byName||'')+(r.onBehalf?' (نيابة)':'');}
+          out[k+'By']=(r.byName||'')+(r.onBehalf?' (نيابة)':'');
+          out[k+'Texts']=ceTextAns(r);}
   });
   if(out.pl==null)out.missing.push('تقييم اللاعبين');
   else if(out.plCount<minPl)out.missing.push('مشاركات اللاعبين أقل من الحد الأدنى ('+ceN(out.plCount)+' من '+ceN(minPl)+')');
@@ -15901,8 +15982,25 @@ function ceScore(cycleId,coachId){
   }
   return out;
 }
-function ceLastDec(cycleId,coachId){
-  return CEX().dec.filter(function(d){return d.cycleId===cycleId&&d.coachId===coachId;}).slice(-1)[0]||null;
+/* الإجابات النصية داخل استجابة واحدة، بنص السؤال */
+function ceTextAns(r){
+  if(!r)return [];
+  var out=[];
+  (CEX().qs[r.src]||[]).forEach(function(q){
+    if(ceQType(q)!=='text')return;
+    var v=(r.ans||{})[q.id];
+    if(v&&String(v).trim())out.push(q.text+': '+String(v).trim());
+  });
+  return out;
+}
+function ceLastDec(cycleId,coachId,per){
+  var cy=ceCycle(cycleId);
+  if(per===undefined)per=cePeriodKey(cy);
+  return CEX().dec.filter(function(d){
+    if(!(d.cycleId===cycleId&&d.coachId===coachId))return false;
+    if(!per||per==='all')return true;
+    return String(d.per||cePeriodKey(cy,d.at))===per;
+  }).slice(-1)[0]||null;
 }
 function ceStatus(cycleId,coachId){
   var d=ceLastDec(cycleId,coachId);
@@ -15923,8 +16021,12 @@ function cePct(v){return v==null?'—':ceN(Math.round(v))+'٪';}
 
 /* منع التكرار: نفس المقيّم لنفس المدرب في نفس الدورة مرة واحدة */
 function ceHasResp(cycleId,coachId,src,by){
+  var cy=ceCycle(cycleId),per=cePeriodKey(cy);
   return CEX().resp.some(function(r){
-    return r.cycleId===cycleId&&r.coachId===coachId&&r.src===src&&String(r.by)===String(by);
+    if(!(r.cycleId===cycleId&&r.coachId===coachId&&r.src===src&&String(r.by)===String(by)))return false;
+    if(!per)return true;                     /* دورة محددة: مرة واحدة فيها */
+    if(per==='all')return true;
+    return String(r.per||cePeriodKey(cy,r.at))===per;
   });
 }
 function ceMyRespId(){
@@ -16168,11 +16270,14 @@ function rCECoach(){
     h+='<div class="ce2-note warn">'+ic('info',13)+'<div><b>غير مكتمل.</b> ينقص: '+s.missing.map(esc).join('، ')
       +'<br><small>الجهة الناقصة لا تُحتسب بصفر — تبقى النتيجة معلّقة حتى تكتمل.</small></div></div>';
 
-  /* الملاحظات */
-  if(s.supNote||s.mgrNote){
+  /* الملاحظات + الإجابات النصية داخل النموذج */
+  var sT=(s.supTexts||[]),mT=(s.mgrTexts||[]);
+  if(s.supNote||s.mgrNote||sT.length||mT.length){
     h+=tdSubHead('الملاحظات');
     if(s.supNote)h+='<div class="ce2-note"><b>مشرف الفرع'+(s.supBy?' — '+esc(s.supBy):'')+':</b> '+esc(s.supNote)+'</div>';
+    sT.forEach(function(x){h+='<div class="ce2-note"><b>مشرف الفرع:</b> '+esc(x)+'</div>';});
     if(s.mgrNote)h+='<div class="ce2-note"><b>مدير الفرع'+(s.mgrBy?' — '+esc(s.mgrBy):'')+':</b> '+esc(s.mgrNote)+'</div>';
+    mT.forEach(function(x){h+='<div class="ce2-note"><b>مدير الفرع:</b> '+esc(x)+'</div>';});
   }
   /* ملاحظات اللاعبين المفتوحة — للإدارة فقط، ومجمّعة */
   if(ceRole()==='admin'&&s.openTexts.length&&s.plCount>=s.minPl){
@@ -16224,7 +16329,7 @@ function rCEEval(){
   if(ceRole()==='admin'&&!src){
     var h0=ceHead('star','التقييم نيابةً','تملأ نموذج جهة بدلاً عنها — يُسجَّل باسمك موسوماً بأنه نيابة');
     if(!cy||!ceCycleOpen(cy)){
-      el.innerHTML=h0+emptyBox('cal','لا توجد دورة تقييم مفتوحة حالياً','افتح دورة من الإعدادات');
+      el.innerHTML=h0+emptyBox('cal','لا يوجد تقييم مفتوح حالياً','افتح دورة أو شغّل التقييم المستمر من الإعدادات');
       hydrateIcons(el);return;
     }
     h0+=tdSubHead('عن أي جهة تنوب؟');
@@ -16246,7 +16351,7 @@ function rCEEval(){
     hydrateIcons(el);return;
   }
   if(!cy||!ceCycleOpen(cy)){
-    el.innerHTML=ceHead('star','التقييم','')+emptyBox('cal','لا توجد دورة تقييم مفتوحة حالياً',
+    el.innerHTML=ceHead('star','التقييم','')+emptyBox('cal','لا يوجد تقييم مفتوح حالياً',
       'ستصلك الدورة عند فتحها من الإدارة الفنية');
     hydrateIcons(el);return;
   }
@@ -16306,20 +16411,29 @@ function ceFormHTML(cy,co,src,isPlayer){
     +'<div><div class="ce2-fn">'+esc(co.name)+'</div>'
     +'<div class="ce2-fb">'+ic('pin',10)+' '+esc(coachBranchLabel(co))+'</div></div></div>';
   if(done){
-    h+='<div class="ce2-note ok">'+ic('check',14)+'<div><b>سجّلنا تقييمك لهذه الدورة.</b><br>'
-      +'لا يمكن تقييم المدرب نفسه مرتين في الدورة الواحدة.</div></div>';
+    var cont=ceIsCont(cy);
+    h+='<div class="ce2-note ok">'+ic('check',14)+'<div><b>سجّلنا تقييمك'+(cont?' لهذه الفترة':' لهذه الدورة')+'.</b><br>'
+      +(cont?('يفتح التقييم التالي '+(CEEVERY[cy.every||'month']||'كل شهر')+'.')
+            :'لا يمكن تقييم المدرب نفسه مرتين في الدورة الواحدة.')+'</div></div>';
     return h;
   }
-  var qs=ceQs(src),sc=CESCALE[src];
+  var qs=ceQs(src),sc=ceScaleOf(src);
   h+='<div class="ce2-form">';
   qs.forEach(function(q,i){
-    h+='<div class="ce2-q"><div class="ce2-qt"><span class="ce2-qn">'+ceN(i+1)+'</span>'+esc(q.text)+'</div>';
-    h+='<div class="ce2-opts">';
-    for(var v=1;v<=5;v++){
-      h+='<button type="button" class="ce2-opt'+(CEEVAL.ans[q.id]===v?' on':'')+'" data-q="'+q.id+'" data-v="'+v+'" '
-        +'onclick="ceSetAns(\''+q.id+'\','+v+',this)">'+sc[v-1]+'</button>';
+    h+='<div class="ce2-q"><div class="ce2-qt"><span class="ce2-qn">'+ceN(i+1)+'</span>'+esc(q.text)
+      +(ceQType(q)==='text'?' <small style="color:var(--gray);font-weight:500">(اختياري)</small>':'')+'</div>';
+    if(ceQType(q)==='text'){
+      h+='<textarea class="ce2-ta" rows="3" placeholder="اكتب إجابتك" oninput="CEEVAL.ans[\''+q.id+'\']=this.value">'
+        +esc(CEEVAL.ans[q.id]||'')+'</textarea>';
+    }else{
+      h+='<div class="ce2-opts">';
+      for(var v=1;v<=5;v++){
+        h+='<button type="button" class="ce2-opt'+(CEEVAL.ans[q.id]===v?' on':'')+'" data-q="'+q.id+'" data-v="'+v+'" '
+          +'onclick="ceSetAns(\''+q.id+'\','+v+',this)">'+esc(sc[v-1])+'</button>';
+      }
+      h+='</div>';
     }
-    h+='</div></div>';
+    h+='</div>';
   });
   if(isPlayer){
     h+='<div class="fg"><label>هل تحب تضيف شيئاً؟ <small>(اختياري — لا يدخل في الدرجة)</small></label>'
@@ -16343,13 +16457,13 @@ function ceSetAns(qid,v,btn){
 function ceSubmit(cycleId,coachId,src){
   var cy=ceCycle(cycleId);
   if(!cy||!ceCycleOpen(cy)){g('ce-ferr').textContent='دورة التقييم مغلقة';fl('ce-ferr');return;}
-  var qs=ceQs(src),miss=qs.filter(function(q){return !CEEVAL.ans[q.id];});
+  var qs=ceScaleQs(src),miss=qs.filter(function(q){return !CEEVAL.ans[q.id];});
   if(miss.length){g('ce-ferr').textContent='بقي '+ceN(miss.length)+' سؤال بلا إجابة';fl('ce-ferr');return;}
   var by=ceMyRespId();
   if(ceHasResp(cycleId,coachId,src,by)){g('ce-ferr').textContent='سبق أن قيّمت هذا المدرب في هذه الدورة';fl('ce-ferr');return;}
   var noteEl=g('ce-note'),openEl=g('ce-open');
   var onBehalf=(ceRole()==='admin'&&src!=='pl');
-  var rec={id:uid(),cycleId:cycleId,coachId:coachId,src:src,by:by,
+  var rec={id:uid(),cycleId:cycleId,coachId:coachId,src:src,by:by,per:cePeriodKey(cy),
     byName:src==='pl'?'':(CU&&CU.name||''),onBehalf:onBehalf,
     ans:JSON.parse(JSON.stringify(CEEVAL.ans)),
     note:noteEl?noteEl.value.trim():'',open:openEl?openEl.value.trim():'',at:Date.now()};
@@ -16441,6 +16555,7 @@ function ceDecide(cycleId,coachId){
   }
   var prev=ceLastDec(cycleId,coachId);
   CEX().dec.push({id:uid(),cycleId:cycleId,coachId:coachId,d:d,reason:reason.trim(),
+    per:cePeriodKey(ceCycle(cycleId)),
     by:CU.id,byName:CU.name,at:Date.now(),reEval:re||'',
     prev:prev?(prev.prev||[]).concat([{d:prev.d,reason:prev.reason,by:prev.byName,at:prev.at}]):[]});
   var co=tdCoach(coachId);
@@ -16553,44 +16668,71 @@ function rCESettings(){
   el.innerHTML=h;hydrateIcons(el);
   if(CESET==='qr')setTimeout(ceDrawQRs,80);
 }
+var CCKIND='cycle';
+function ceSetKind(k){CCKIND=k;rCESettings();}
 function ceSetCycles(){
   var c=CEX(),h='';
   h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem">';
-  h+=tdSubHead('دورة تقييم جديدة');
-  h+='<div class="fg req"><label>اسم الدورة *</label><input type="text" id="cc-nm" placeholder="مثال: تقييم شهر رجب"></div>';
-  h+='<div class="frow"><div class="fg req"><label>من *</label><input type="date" id="cc-f" style="direction:ltr"></div>';
-  h+='<div class="fg req"><label>إلى *</label><input type="date" id="cc-t" style="direction:ltr"></div></div>';
+  h+=tdSubHead('تقييم جديد');
+  /* نوع التقييم */
+  h+='<div class="fg"><label>نوع التقييم</label><div class="ce2-kind">';
+  [['cycle','cal','دورة محددة','لها بداية ونهاية — كل مقيّم يقيّم مرة واحدة خلالها'],
+   ['cont','refresh','تقييم مستمر','مفتوح دائماً ويتكرر تلقائياً كل فترة — للمتابعة الدورية']]
+   .forEach(function(x){
+     h+='<button type="button" class="ce2-kbtn'+(CCKIND===x[0]?' on':'')+'" onclick="ceSetKind(\''+x[0]+'\')">'
+       +'<div class="ce2-kh">'+ic(x[1],14)+' '+x[2]+'</div><div class="ce2-kd">'+x[3]+'</div></button>';
+   });
+  h+='</div></div>';
+  h+='<div class="fg req"><label>الاسم *</label><input type="text" id="cc-nm" placeholder="'+(CCKIND==='cont'?'مثال: المتابعة المستمرة للمدربين':'مثال: تقييم شهر رجب')+'"></div>';
+  if(CCKIND==='cycle'){
+    h+='<div class="frow"><div class="fg req"><label>من *</label><input type="date" id="cc-f" style="direction:ltr"></div>';
+    h+='<div class="fg req"><label>إلى *</label><input type="date" id="cc-t" style="direction:ltr"></div></div>';
+  }else{
+    h+='<div class="fg"><label>يتكرر التقييم</label><select id="cc-every">'
+      +Object.keys(CEEVERY).map(function(k){return '<option value="'+k+'"'+(k==='month'?' selected':'')+'>'+CEEVERY[k]+'</option>';}).join('')
+      +'</select></div>';
+    h+='<div class="jnote">'+ic('info',12)+' في التقييم المستمر تُحتسب النتيجة لكل فترة على حدة، ويستطيع كل مقيّم تقييم المدرب مرة واحدة في كل فترة.</div>';
+  }
   h+='<div class="fg"><label>الحد الأدنى لمشاركة اللاعبين</label><input type="number" id="cc-min" min="1" value="'+(c.settings.minPl)+'" style="direction:ltr"></div>';
-  h+='<div class="jnote">'+ic('info',12)+' إن تركت المدربين بلا تحديد، تشمل الدورة كل المدربين.</div>';
-  h+='<button class="btn btn-r" style="width:100%;margin-top:.8rem" onclick="ceAddCycle()">'+ic('plus',14)+' إنشاء الدورة</button>';
-  h+='<div class="msg err" id="cc-err">أكمل: الاسم وتاريخي البداية والنهاية</div>';
+  h+='<div class="jnote">'+ic('info',12)+' إن تركت المدربين بلا تحديد، يشمل التقييم كل المدربين.</div>';
+  h+='<button class="btn btn-r" style="width:100%;margin-top:.8rem" onclick="ceAddCycle()">'+ic('plus',14)+' إنشاء</button>';
+  h+='<div class="msg err" id="cc-err">أكمل البيانات المطلوبة</div>';
   h+='</div>';
   var cys=ceCyclesSorted();
-  h+=tdSubHead('الدورات','<span class="pg-chip">'+ceN(cys.length)+'</span>');
-  if(!cys.length)h+=emptyBox('cal','لا توجد دورات بعد');
+  h+=tdSubHead('التقييمات','<span class="pg-chip">'+ceN(cys.length)+'</span>');
+  if(!cys.length)h+=emptyBox('cal','لا توجد تقييمات بعد');
   else{
-    h+='<div class="ce2-tw"><table class="ce2-tb"><thead><tr><th>الدورة</th><th>الفترة</th><th>الحد الأدنى</th><th>الحالة</th><th></th></tr></thead><tbody>';
+    h+='<div class="ce2-tw"><table class="ce2-tb"><thead><tr><th>الاسم</th><th>النوع</th><th>الفترة</th><th>الحد الأدنى</th><th>الحالة</th><th></th></tr></thead><tbody>';
     cys.forEach(function(x){
-      h+='<tr><td><b>'+esc(x.name)+'</b></td><td style="direction:ltr;text-align:start">'+ceN(x.from)+' ← '+ceN(x.to)+'</td>'
+      var cont=ceIsCont(x);
+      h+='<tr><td><b>'+esc(x.name)+'</b></td>'
+        +'<td><span class="ce2-st" style="background:'+(cont?'#0e74901f;color:#0e7490':'#1565c01f;color:#1565c0')+'">'+CEKIND[cont?'cont':'cycle']+'</span></td>'
+        +'<td style="direction:ltr;text-align:start">'+(cont?(CEEVERY[x.every||'month']+' • '+cePeriodLabel(x)):(ceN(x.from)+' ← '+ceN(x.to)))+'</td>'
         +'<td>'+ceN(x.minPl==null?c.settings.minPl:x.minPl)+'</td>'
         +'<td><span class="ce2-st" style="background:'+(x.status==='open'?'#16a34a1f;color:#16a34a':'var(--gray)1f;color:var(--gray)')+'">'
-        +(x.status==='open'?'مفتوحة':'مغلقة')+'</span></td>'
-        +'<td><button class="btn btn-o btn-sm" onclick="ceToggleCycle(\''+x.id+'\')">'+(x.status==='open'?'إغلاق':'فتح')+'</button></td></tr>';
+        +(x.status==='open'?(cont?'يعمل':'مفتوحة'):'موقوفة')+'</span></td>'
+        +'<td><button class="btn btn-o btn-sm" onclick="ceToggleCycle(\''+x.id+'\')">'+(x.status==='open'?'إيقاف':'تشغيل')+'</button></td></tr>';
     });
     h+='</tbody></table></div>';
-    h+='<div class="jnote" style="margin-top:.8rem">'+ic('info',12)+' إغلاق الدورة يوقف استقبال التقييمات ولا يمسّ نتائجها.</div>';
+    h+='<div class="jnote" style="margin-top:.8rem">'+ic('info',12)+' الإيقاف يمنع استقبال تقييمات جديدة ولا يمسّ النتائج المحفوظة.</div>';
   }
   return h;
 }
 function ceAddCycle(){
-  var nm=gv('cc-nm'),f=gv('cc-f'),t=gv('cc-t');
-  if(!nm||!f||!t){fl('cc-err');return;}
-  if(t<f){g('cc-err').textContent='تاريخ النهاية قبل البداية';fl('cc-err');return;}
-  var c=CEX();
-  c.cycles.push({id:uid(),name:nm,from:f,to:t,status:'open',
+  var nm=gv('cc-nm'),c=CEX();
+  var cont=(CCKIND==='cont');
+  if(!nm){g('cc-err').textContent='اكتب اسم التقييم';fl('cc-err');return;}
+  var f='',t='';
+  if(!cont){
+    f=gv('cc-f');t=gv('cc-t');
+    if(!f||!t){g('cc-err').textContent='أكمل تاريخي البداية والنهاية';fl('cc-err');return;}
+    if(t<f){g('cc-err').textContent='تاريخ النهاية قبل البداية';fl('cc-err');return;}
+  }else f=new Date().toISOString().slice(0,10);
+  c.cycles.push({id:uid(),name:nm,kind:cont?'cont':'cycle',every:cont?(gv('cc-every')||'month'):'',
+    from:f,to:cont?'':t,status:'open',
     weights:JSON.parse(JSON.stringify(c.settings.weights)),
     minPl:+gv('cc-min')||c.settings.minPl,coachIds:[],at:Date.now()});
-  logA('إنشاء دورة تقييم: '+nm,'cal','#16a34a');
+  logA('إنشاء '+(cont?'تقييم مستمر':'دورة تقييم')+': '+nm,'cal','#16a34a');
   sv();rCESettings();
 }
 function ceToggleCycle(id){
@@ -16598,27 +16740,88 @@ function ceToggleCycle(id){
   x.status=x.status==='open'?'closed':'open';
   sv();rCESettings();
 }
+var CEQF='';
+function ceQForm(k){CEQF=k;rCESettings();}
 function ceSetQs(){
   var c=CEX(),h='';
-  h+='<div class="jnote" style="margin-bottom:1rem">'+ic('info',12)
-    +' تعديل الأسئلة يسري على الدورات الجديدة والإجابات القادمة. النتائج المحفوظة تبقى كما هي.</div>';
-  ['pl','sup','mgr'].forEach(function(k){
-    h+=tdSubHead('أسئلة '+CESRC[k],'<span class="pg-chip">'+ceN(ceQs(k).length)+' سؤال</span>');
-    h+='<div class="ce2-qs">';
-    (c.qs[k]||[]).forEach(function(q,i){
-      h+='<div class="ce2-qi'+(q.active===false?' off':'')+'">';
-      h+='<span class="ce2-qn">'+ceN(i+1)+'</span>';
-      h+='<input type="text" value="'+esc(q.text)+'" onchange="ceQText(\''+k+'\',\''+q.id+'\',this.value)">';
-      h+='<button class="btn btn-o btn-sm" onclick="ceQToggle(\''+k+'\',\''+q.id+'\')" title="'+(q.active===false?'تفعيل':'تعطيل')+'">'
-        +ic(q.active===false?'eye-off':'eye',12)+'</button>';
-      h+='<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="ceQDel(\''+k+'\',\''+q.id+'\')">'+ic('trash',12)+'</button>';
-      h+='</div>';
+  /* الصفحة الأولى: اختيار النموذج. كل جهة نموذجها المستقل بأسئلته
+     ومقياسه، فعرضها الثلاثة دفعة واحدة كان يخلط الأمور. */
+  if(!CEQF){
+    h+='<div class="jnote" style="margin-bottom:1.2rem">'+ic('info',12)
+      +' اختر النموذج الذي تريد تعديله. التعديل يسري على الإجابات القادمة، والنتائج المحفوظة تبقى كما هي.</div>';
+    h+='<div class="ce2-fgrid">';
+    [['pl','user','اللاعبون','يملؤه اللاعب عن مدربه'],
+     ['sup','shield','مشرف الفرع','الزيارة الفنية للحصة'],
+     ['mgr','crown','مدير الفرع','الالتزام الإداري']].forEach(function(x){
+      var qs=(c.qs[x[0]]||[]),on=qs.filter(function(q){return q.active!==false;}).length;
+      var tx=qs.filter(function(q){return q.active!==false&&ceQType(q)==='text';}).length;
+      h+='<button type="button" class="ce2-fcard" onclick="ceQForm(\''+x[0]+'\')">';
+      h+='<div class="ce2-fic">'+ic(x[1],20)+'</div>';
+      h+='<div class="ce2-ft">نموذج '+x[2]+'</div>';
+      h+='<div class="ce2-fs">'+x[3]+'</div>';
+      h+='<div class="ce2-fm"><span>'+ceN(on-tx)+' سؤال بمقياس</span>'+(tx?'<span>'+ceN(tx)+' سؤال نصي</span>':'')
+        +'<span style="opacity:.7">وزنه '+ceN(c.settings.weights[x[0]])+'٪</span></div>';
+      h+='<div class="ce2-fgo">'+ic('chevron',13)+' تعديل النموذج</div>';
+      h+='</button>';
     });
     h+='</div>';
-    h+='<div class="ce2-qadd"><input type="text" id="cq-'+k+'" placeholder="نص سؤال جديد">'
-      +'<button class="btn btn-r btn-sm" onclick="ceQAdd(\''+k+'\')">'+ic('plus',12)+' إضافة</button></div>';
-    h+='<div class="ce2-scale">مقياس الإجابة: '+CESCALE[k].map(function(s,i){return ceN(i+1)+' '+s;}).join(' • ')+'</div>';
+    return h;
+  }
+
+  var k=CEQF,sc=ceScaleOf(k),list=(c.qs[k]||[]);
+  h+='<button class="btn btn-g btn-sm" onclick="ceQForm(\'\')" style="margin-bottom:1rem">'+ic('swap',12)+' كل النماذج</button>';
+  h+=tdSubHead('نموذج '+CESRC[k],'<span class="pg-chip">'+ceN(ceQs(k).length)+' سؤال فعّال</span>');
+
+  /* الأسئلة */
+  h+='<div class="ce2-qlist">';
+  list.forEach(function(q,i){
+    var t=ceQType(q),off=(q.active===false);
+    h+='<div class="ce2-qrow'+(off?' off':'')+'">';
+    h+='<div class="ce2-qtop"><span class="ce2-qn">'+ceN(i+1)+'</span>'
+      +'<input type="text" class="ce2-qin" value="'+esc(q.text)+'" onchange="ceQText(\''+k+'\',\''+q.id+'\',this.value)" placeholder="نص السؤال">'
+      +'<div class="ce2-qacts">'
+      +'<button class="ab" title="أعلى" onclick="ceQMove(\''+k+'\',\''+q.id+'\',-1)"'+(i===0?' disabled style="opacity:.3"':'')+'>'+ic('chevron-up',11)+'</button>'
+      +'<button class="ab" title="أسفل" onclick="ceQMove(\''+k+'\',\''+q.id+'\',1)"'+(i===list.length-1?' disabled style="opacity:.3"':'')+'>'+ic('chevron',11)+'</button>'
+      +'<button class="ab" title="'+(off?'تفعيل':'تعطيل')+'" onclick="ceQToggle(\''+k+'\',\''+q.id+'\')">'+ic(off?'eye-off':'eye',11)+'</button>'
+      +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" title="حذف" onclick="ceQDel(\''+k+'\',\''+q.id+'\')">'+ic('trash',11)+'</button>'
+      +'</div></div>';
+    h+='<div class="ce2-qbot">';
+    h+='<span class="ce2-qlb">نوع الإجابة</span>';
+    h+='<select class="ce2-qsel" onchange="ceQSetType(\''+k+'\',\''+q.id+'\',this.value)">'
+      +'<option value="scale"'+(t==='scale'?' selected':'')+'>مقياس من ١ إلى ٥ (يدخل في الدرجة)</option>'
+      +'<option value="text"'+(t==='text'?' selected':'')+'>إجابة نصية حرة (لا تدخل في الدرجة)</option></select>';
+    if(t==='scale')h+='<span class="ce2-qhint">'+esc(sc.join(' • '))+'</span>';
+    else h+='<span class="ce2-qhint">تُعرض في المراجعة كملاحظة</span>';
+    h+='</div></div>';
   });
+  h+='</div>';
+
+  /* إضافة سؤال */
+  h+='<div class="rform" style="margin-top:1rem;max-width:860px">';
+  h+='<div class="cw-t" style="margin-bottom:.6rem">'+ic('plus',13)+' سؤال جديد</div>';
+  h+='<div class="frow" style="grid-template-columns:2fr 1fr"><div class="fg" style="margin-bottom:0"><label>نص السؤال</label>'
+    +'<input type="text" id="cq-'+k+'" placeholder="اكتب السؤال" onkeydown="if(event.key===\'Enter\')ceQAdd(\''+k+'\')"></div>';
+  h+='<div class="fg" style="margin-bottom:0"><label>نوع الإجابة</label><select id="cqt-'+k+'">'
+    +'<option value="scale">مقياس من ١ إلى ٥</option><option value="text">إجابة نصية حرة</option></select></div></div>';
+  h+='<button class="btn btn-r btn-sm" style="width:100%;margin-top:.7rem" onclick="ceQAdd(\''+k+'\')">'+ic('plus',12)+' إضافة السؤال</button>';
+  h+='</div>';
+
+  /* تعديل الإجابات (المقياس) */
+  h+='<div class="rform" style="margin-top:1rem;max-width:860px">';
+  h+='<div class="cw-t" style="margin-bottom:.4rem">'+ic('list',13)+' إجابات المقياس</div>';
+  h+='<div style="font-size:11.5px;color:var(--gray);margin-bottom:.8rem">نص كل خيار من ١ إلى ٥ — يظهر للمقيّم كما تكتبه هنا. الدرجة تبقى ١…٥ مهما غيّرت النص.</div>';
+  h+='<div class="ce2-sgrid">';
+  sc.forEach(function(x,i){
+    h+='<div class="fg" style="margin-bottom:0"><label>'+ceN(i+1)+'</label>'
+      +'<input type="text" id="csc-'+k+'-'+i+'" value="'+esc(x)+'"></div>';
+  });
+  h+='</div>';
+  h+='<div style="display:flex;gap:.5rem;margin-top:.8rem">';
+  h+='<button class="btn btn-r btn-sm" style="flex:1" onclick="ceSaveScale(\''+k+'\')">'+ic('check',12)+' حفظ الإجابات</button>';
+  h+='<button class="btn btn-o btn-sm" onclick="ceResetScale(\''+k+'\')">استعادة الافتراضي</button></div>';
+  h+='<div class="msg err" id="csc-err-'+k+'">أكمل نص الخيارات الخمسة</div>';
+  h+='<div class="msg ok" id="csc-ok-'+k+'">تم الحفظ</div>';
+  h+='</div>';
   return h;
 }
 function ceQText(k,id,v){
@@ -16626,15 +16829,33 @@ function ceQText(k,id,v){
   if(!String(v).trim())return;
   q.text=String(v).trim();sv();
 }
+function ceQSetType(k,id,v){
+  var q=(CEX().qs[k]||[]).find(function(x){return x.id===id;});if(!q)return;
+  if(v!=='text'&&v!=='scale')return;
+  if(v==='text'&&ceScaleQs(k).length<=1&&ceQType(q)==='scale'){
+    alert('لا بد من سؤال واحد بمقياس على الأقل — عليه تُبنى الدرجة');rCESettings();return;
+  }
+  q.type=v;sv();rCESettings();
+}
+function ceQMove(k,id,dir){
+  var list=CEX().qs[k]||[];
+  var i=list.findIndex(function(x){return x.id===id;});
+  var j=i+dir;
+  if(i<0||j<0||j>=list.length)return;
+  var tmp=list[i];list[i]=list[j];list[j]=tmp;
+  sv();rCESettings();
+}
 function ceQToggle(k,id){
   var q=(CEX().qs[k]||[]).find(function(x){return x.id===id;});if(!q)return;
-  if(q.active!==false&&ceQs(k).length<=1){alert('لا يمكن تعطيل آخر سؤال فعّال');return;}
+  if(q.active!==false&&ceQType(q)==='scale'&&ceScaleQs(k).length<=1){
+    alert('لا يمكن تعطيل آخر سؤال بمقياس — عليه تُبنى الدرجة');return;}
   q.active=q.active===false;sv();rCESettings();
 }
 function ceQDel(k,id){
+  var q=(CEX().qs[k]||[]).find(function(x){return x.id===id;});
+  if(q&&ceQType(q)==='scale'&&ceScaleQs(k).length<=1){alert('لا يمكن حذف آخر سؤال بمقياس');return;}
   askConfirm('حذف السؤال؟ الإجابات السابقة تبقى محفوظة لكنها لن تُحتسب.',function(){
     var c=CEX();
-    if(ceQs(k).length<=1){alert('لا يمكن حذف آخر سؤال');return;}
     c.qs[k]=c.qs[k].filter(function(x){return x.id!==id;});
     sv();rCESettings();
   });
@@ -16642,7 +16863,23 @@ function ceQDel(k,id){
 function ceQAdd(k){
   var v=gv('cq-'+k);
   if(!v||!v.trim())return;
-  CEX().qs[k].push({id:uid(),text:v.trim(),active:true});
+  CEX().qs[k].push({id:uid(),text:v.trim(),type:(gv('cqt-'+k)==='text'?'text':'scale'),active:true});
+  sv();rCESettings();
+}
+function ceSaveScale(k){
+  var out=[],ok=true;
+  for(var i=0;i<5;i++){var v=gv('csc-'+k+'-'+i);if(!v)ok=false;out.push(v);}
+  if(!ok){fl('csc-err-'+k);return;}
+  var c=CEX();
+  c.settings.scales=c.settings.scales||{};
+  c.settings.scales[k]=out;
+  logA('تعديل إجابات نموذج '+CESRC[k],'edit','#1565c0');
+  sv();rCESettings();
+  setTimeout(function(){fl('csc-ok-'+k);},40);
+}
+function ceResetScale(k){
+  var c=CEX();
+  if(c.settings.scales)delete c.settings.scales[k];
   sv();rCESettings();
 }
 function ceSetW(){
@@ -16762,7 +16999,7 @@ function cePubRender(){
   var body=g('cepub-body'),cy=ceActiveCycle();
   var h='';
   if(!cy||!ceCycleOpen(cy)){
-    h='<div class="ped-note warn">'+ic('info',14)+'<div><b>لا توجد دورة تقييم مفتوحة حالياً.</b><br>راجع مدربك أو إدارة الفرع.</div></div>';
+    h='<div class="ped-note warn">'+ic('info',14)+'<div><b>لا يوجد تقييم مفتوح حالياً.</b><br>راجع مدربك أو إدارة الفرع.</div></div>';
     h+='<button class="btn btn-g" style="width:100%" onclick="cePubClose()">إغلاق</button>';
     body.innerHTML=h;hydrateIcons(body);return;
   }
@@ -17924,15 +18161,9 @@ function rADBranches(){
   if(ADBR.sel&&!(t.branches||[]).some(function(b){return b.name===ADBR.sel;}))ADBR.sel='';
   if(ADBR.sel)return adbDetail(el);
   var h=adHead('pin','الفروع','كل فرع وما تحته من موظفين وملاعب وفترات وفئات',
-    '<span class="pg-chip">'+ceN((t.branches||[]).length)+' فرع</span>');
-  h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem">';
-  h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic('pin',13)+' فرع جديد</div>';
-  h+='<div class="frow"><div class="fg req"><label>اسم الفرع *</label><input type="text" id="adb-new" placeholder="مثال: فارس القيروان" onkeydown="if(event.key===\'Enter\')adbAddBranch()"></div>';
-  h+='<div class="fg req"><label>المدينة *</label><select id="adb-new-city">'+opts(CITIES,'اختر')+'</select></div></div>';
-  h+='<div class="fg"><label>شعار الفرع</label>'+adbImgField('adbn','')+'</div>';
-  h+='<button class="btn btn-r btn-sm" style="width:100%" onclick="adbAddBranch()">'+ic('plus',13)+' إضافة الفرع</button>';
-  h+='<div class="msg err" id="adb-err">أكمل اسم الفرع والمدينة</div></div>';
-  if(!(t.branches||[]).length)h+=emptyBox('pin','لا توجد فروع بعد','أضف أول فرع من الحقل أعلاه');
+    '<span class="pg-chip">'+ceN((t.branches||[]).length)+' فرع</span>'
+    +'<button class="btn btn-r btn-sm" onclick="adbNewOpen()">'+ic('plus',13)+' إضافة فرع</button>');
+  if(!(t.branches||[]).length)h+=emptyBox('pin','لا توجد فروع بعد','اضغط «إضافة فرع» في أعلى الصفحة');
   else{
     h+='<div class="adb-grid">';
     (t.branches||[]).forEach(function(b){
@@ -17959,6 +18190,18 @@ function rADBranches(){
   }
   el.innerHTML=h;hydrateIcons(el);
 }
+function adbNewOpen(){
+  var h='';
+  h+='<div class="frow"><div class="fg req"><label>اسم الفرع *</label><input type="text" id="adb-new" placeholder="مثال: فارس القيروان" onkeydown="if(event.key===\'Enter\')adbAddBranch()"></div>';
+  h+='<div class="fg req"><label>المدينة *</label><select id="adb-new-city">'+opts(CITIES,'اختر')+'</select></div></div>';
+  h+='<div class="fg"><label>شعار الفرع</label>'+adbImgField('adbn','')+'</div>';
+  h+='<button class="btn btn-r" style="width:100%" onclick="adbAddBranch()">'+ic('plus',14)+' إضافة الفرع</button>';
+  h+='<div class="msg err" id="adb-err">أكمل اسم الفرع والمدينة</div>';
+  g('adbn-body').innerHTML=h;hydrateIcons(g('adbn-body'));
+  g('adbnMod').classList.add('open');
+  setTimeout(function(){var e=g('adb-new');if(e)e.focus();},60);
+}
+function adbNewClose(){g('adbnMod').classList.remove('open');}
 function adbAddBranch(){
   var v=gv('adb-new'),city=gv('adb-new-city');
   if(!v||!city){fl('adb-err');return;}
@@ -17971,6 +18214,7 @@ function adbAddBranch(){
   /* نفتح صفحة الفرع فوراً — الفرع بلا ملاعب ولا فترات لا يفيد،
      فالمطلوب إكمال بياناته في نفس اللحظة لا البحث عنه بعدين. */
   ADBR.sel=v;ADBR.tab='info';ADBR.edit='';
+  adbNewClose();
   sv();rADBranches();
   addN('تم إضافة الفرع',v+' — أكمل بياناته الآن','success');
 }
@@ -19008,6 +19252,17 @@ setTimeout(function(){if(typeof tdMergeGroups==='function'&&DB.td){tdMergeGroups
 initSbarPref();
 faBoot();
 </script>
+<div class="modal" id="adbnMod" onclick="if(event.target===this)adbNewClose()">
+  <div class="mbox">
+    <div class="mhdr">
+      <button class="mclose" onclick="adbNewClose()" data-ic="x"></button>
+      <div style="font-size:15px;font-weight:700">فرع جديد</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">الاسم والمدينة والشعار — ثم تُكمل بياناته</div>
+    </div>
+    <div class="mbody" id="adbn-body"></div>
+  </div>
+</div>
+
 <!-- مودالات عامة: كانت داخل #APP فتُحجب كلما فُتح نظام آخر -->
 
 <div class="modal" id="profMod" onclick="if(event.target===this)this.classList.remove('open')">
@@ -19132,7 +19387,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-reg</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-ce2</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
