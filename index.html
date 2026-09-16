@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.15-ce2">
+<meta name="build" content="2026.09.15-qr2">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -977,6 +977,31 @@ html[data-theme="dark"] .wtab.on{background:var(--red);border-color:var(--red);c
 .uclear{background:none;border:none;color:var(--gray);cursor:pointer;padding:6px;border-radius:50%;display:flex;min-width:30px;min-height:30px;align-items:center;justify-content:center}
 .uclear:hover{background:rgba(221,29,69,.1);color:var(--red)}
 .uchips{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem}
+.urow1{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem}
+.urow1 .usearch{flex:1;min-width:200px;margin-bottom:0}
+.usel{background:var(--sur);border:1px solid var(--brd);border-radius:10px;padding:.55rem .7rem;color:inherit;font-family:inherit;font-size:12px;min-width:170px}
+.uvw{display:flex;gap:.3rem;margin-inline-start:auto}
+.uvb{display:flex;align-items:center;gap:.3rem;background:var(--sur);border:1px solid var(--brd);border-radius:9px;padding:.35rem .6rem;font-size:11px;font-family:inherit;color:var(--gray);cursor:pointer}
+.uvb.on{background:rgba(221,29,69,.1);border-color:var(--red);color:var(--red);font-weight:700}
+table.ut td{vertical-align:middle}
+table.ut tbody tr:hover{background:rgba(255,255,255,.03)}
+.unm{display:flex;align-items:center;gap:.45rem;min-width:0}
+.unm b{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+.uav3{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.urole{display:inline-flex;align-items:center;gap:.3rem;font-size:11px;white-space:nowrap}
+.urole .udot{background:var(--rc)}
+.upag{display:flex;align-items:center;justify-content:center;gap:.7rem;margin-top:1rem;font-size:11.5px;color:var(--gray);flex-wrap:wrap}
+@media(max-width:760px){
+  /* الجوال واسم الدخول يُخفَيان على الشاشات الصغيرة — يظهران في بطاقة التعديل */
+  table.ut th:nth-child(4),table.ut td:nth-child(4),
+  table.ut th:nth-child(5),table.ut td:nth-child(5){display:none}
+  .unm b{max-width:150px;font-size:12px}
+  .unm .uav3{display:none}
+  table.ut td:nth-child(3){max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .uvw{width:100%;margin:.5rem 0 0}
+  .usel{flex:1;min-width:0}
+  .sec-t{flex-wrap:wrap}
+}
 .uchip{display:inline-flex;align-items:center;gap:6px;background:var(--sur);border:1.5px solid var(--brd);border-radius:99px;
   padding:7px 14px;font-family:inherit;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;transition:.15s;min-height:36px}
 .uchip:hover{border-color:var(--navy);color:var(--txt)}
@@ -2657,7 +2682,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-ce2</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.15-qr2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3429,6 +3454,9 @@ var IC={
  'chev-d':'<polyline points="6 9 12 15 18 9"/>',
  chevron:'<polyline points="6 9 12 15 18 9"/>',
  'chevron-up':'<polyline points="18 15 12 9 6 15"/>',
+ 'chevron-left':'<polyline points="15 18 9 12 15 6"/>',
+ 'chevron-right':'<polyline points="9 18 15 12 9 6"/>',
+ grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
  refresh:'<path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-8.5-6"/><path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 8.5 6"/><polyline points="21 3 20.5 9 14.5 8.5"/><polyline points="3 21 3.5 15 9.5 15.5"/>',
  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
  moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
@@ -9702,45 +9730,67 @@ function autoSplit(cat){
   logA('توزيع تلقائي لمجموعات '+cat,'swap','#1565c0');
   rAdminGroups();
 }
-function admUsersHTML(){
-  var h=resetReqsHTML();
-  if(CU.role==='admin')h+='<div style="margin-top:1.4rem"></div>'+profReqsHTML()+'<div style="margin-top:1.4rem"></div>';
-  h+='<div class="sec-t" style="margin-bottom:.8rem"><div class="bar"></div><h2 style="font-size:14px">إضافة مستخدم</h2></div>';
-  h+='<div class="frow"><div class="fg"><label>الاسم الكامل *</label><input type="text" id="nu-name" placeholder="الاسم"></div><div class="fg"><label>الرمز السري (4 أرقام) *</label><input type="text" id="nu-pass" maxlength="4" placeholder="0000" style="direction:ltr"></div></div>';
-  h+='<div class="frow"><div class="fg"><label>الصلاحية *</label><select id="nu-role">'+USER_ROLES.map(function(r){return '<option value="'+r+'">'+RL[r]+'</option>';}).join('')+'</select></div><div class="fg"><label>الفريق</label><select id="nu-team">'+opts((T().teams||[]).map(function(t){return t.name;}),'— بدون —')+'</select></div></div>';
-  h+='<button class="btn btn-r" onclick="addUser()">إضافة المستخدم</button><div class="msg ok" id="nu-ok">تمت الإضافة</div><div class="msg err" id="nu-err">يرجى تعبئة الحقول</div>';
+var UVIEW=(function(){try{return localStorage.getItem('fa_uview')||'table';}catch(e){return 'table';}})();
+var UPAGE=0,UPER=30,UNEW=false;
+function uSetView(v){UVIEW=v;try{localStorage.setItem('fa_uview',v);}catch(e){}renderATab();}
+function uPage(d){UPAGE=Math.max(0,UPAGE+d);renderATab();window.scrollTo({top:0,behavior:'smooth'});}
+function uToggleNew(){UNEW=!UNEW;renderATab();}
+function admUsersHTML(skipReqs){
+  /* الطلبات لها تبويبها الخاص في «الإدارة والمتابعة» — عرضها فوق
+     قائمة فيها عشرات الحسابات كان يدفع القائمة لأسفل الصفحة. */
+  var h=skipReqs?'':resetReqsHTML();
+  if(!skipReqs&&CU.role==='admin')h+='<div style="margin-top:1.4rem"></div>'+profReqsHTML()+'<div style="margin-top:1.4rem"></div>';
+
+  /* نموذج الإضافة مطوي — القائمة هي الأهم في صفحة فيها عشرات الحسابات */
   /* ---- الفرز والبحث ---- */
   var list=uFiltered();
   var brs=(TDX().branches||[]).map(function(b){return b.name;});
   var counts={};DB.users.forEach(function(u){counts[u.role]=(counts[u.role]||0)+1;});
 
-  h+='<div style="margin-top:1.6rem" class="sec-t"><div class="bar"></div><h2 style="font-size:14px">المستخدمون ('+list.length
-    +(list.length!==DB.users.length?' <span style="color:var(--gray);font-weight:400">من '+DB.users.length+'</span>':'')+')</h2></div>';
+  h+='<div style="margin-top:1.6rem" class="sec-t"><div class="bar"></div><h2 style="font-size:14px">المستخدمون ('+ceN(list.length)
+    +(list.length!==DB.users.length?' <span style="color:var(--gray);font-weight:400">من '+ceN(DB.users.length)+'</span>':'')+')</h2>'
+    +'<div class="uvw">'
+    +'<button class="uvb'+(UVIEW==='table'?' on':'')+'" onclick="uSetView(\'table\')" title="جدول">'+ic('table',13)+' جدول</button>'
+    +'<button class="uvb'+(UVIEW==='cards'?' on':'')+'" onclick="uSetView(\'cards\')" title="بطاقات">'+ic('grid',13)+' بطاقات</button>'
+    +'<button class="btn btn-r btn-sm" style="margin-inline-start:.4rem" onclick="uToggleNew()">'
+    +ic(UNEW?'x':'plus',12)+' '+(UNEW?'إخفاء':'مستخدم جديد')+'</button>'
+    +'</div></div>';
 
+  if(UNEW){
+    h+='<div class="rform" style="max-width:640px;margin:.8rem 0 1rem">';
+    h+='<div class="cw-t" style="margin-bottom:.6rem">'+ic('user-plus',13)+' مستخدم جديد</div>';
+    h+='<div class="frow"><div class="fg"><label>الاسم الكامل *</label><input type="text" id="nu-name" placeholder="الاسم"></div><div class="fg"><label>الرمز السري (4 أرقام) *</label><input type="text" id="nu-pass" maxlength="4" placeholder="0000" style="direction:ltr"></div></div>';
+    h+='<div class="frow"><div class="fg"><label>الصلاحية *</label><select id="nu-role">'+USER_ROLES.map(function(r){return '<option value="'+r+'">'+RL[r]+'</option>';}).join('')+'</select></div><div class="fg"><label>الفريق</label><select id="nu-team">'+opts((T().teams||[]).map(function(t){return t.name;}),'— بدون —')+'</select></div></div>';
+    h+='<button class="btn btn-r" style="width:100%" onclick="addUser()">إضافة المستخدم</button><div class="msg ok" id="nu-ok">تمت الإضافة</div><div class="msg err" id="nu-err">يرجى تعبئة الحقول</div>';
+    h+='</div>';
+  }
   h+='<div class="ufilt">';
+  h+='<div class="urow1">';
   h+='<div class="usearch">'+ic('filter',14)+'<input type="text" id="u-q" placeholder="ابحث بالاسم أو اسم المستخدم أو الجوال…" value="'+esc(UF.q)+'" oninput="uSetQ(this.value)">'
     +(UF.q?'<button class="uclear" onclick="uSetQ(\'\')" title="مسح">'+ic('x',13)+'</button>':'')+'</div>';
+  /* الفروع في قائمة منسدلة — سبعة عشر فرعاً كأزرار كانت تملأ الشاشة */
+  if(brs.length){
+    var nob=DB.users.filter(function(u){return !userBranches(u).length;}).length;
+    h+='<select class="usel" onchange="uSet2(\'branch\',this.value)">';
+    h+='<option value=""'+(UF.branch===''?' selected':'')+'>كل الفروع ('+ceN(DB.users.length)+')</option>';
+    brs.forEach(function(b){
+      var c=DB.users.filter(function(u){return userInBranch(u,b);}).length;
+      h+='<option value="'+esc(b)+'"'+(UF.branch===b?' selected':'')+'>'+esc(b)+' ('+ceN(c)+')</option>';
+    });
+    if(nob)h+='<option value="__none"'+(UF.branch==='__none'?' selected':'')+'>بلا فرع ('+ceN(nob)+')</option>';
+    h+='</select>';
+  }
+  if(UF.q||UF.role||UF.branch)h+='<button class="btn btn-g btn-sm" onclick="uReset()">'+ic('swap',12)+' مسح الفرز</button>';
+  h+='</div>';
 
   h+='<div class="uchips">';
-  h+='<button class="uchip'+(UF.role===''?' on':'')+'" onclick="uSet(\'role\',\'\')">الكل <b>'+DB.users.length+'</b></button>';
+  h+='<button class="uchip'+(UF.role===''?' on':'')+'" onclick="uSet(\'role\',\'\')">الكل <b>'+ceN(DB.users.length)+'</b></button>';
   USER_ROLES.forEach(function(r){
     if(!counts[r])return;
     h+='<button class="uchip'+(UF.role===r?' on':'')+'" onclick="uSet(\'role\',\''+r+'\')" style="--rc:'+(RC[r]||'#8b92b0')+'">'
-      +'<i class="udot"></i>'+RL[r]+' <b>'+counts[r]+'</b></button>';
+      +'<i class="udot"></i>'+RL[r]+' <b>'+ceN(counts[r])+'</b></button>';
   });
   h+='</div>';
-
-  if(brs.length){
-    h+='<div class="uchips">';
-    h+='<button class="uchip sm'+(UF.branch===''?' on':'')+'" onclick="uSet(\'branch\',\'\')">كل الفروع</button>';
-    brs.forEach(function(b){
-      var c=DB.users.filter(function(u){return userInBranch(u,b);}).length;
-      h+='<button class="uchip sm'+(UF.branch===b?' on':'')+'" onclick="uSet(\'branch\',\''+esc(b).replace(/'/g,"\\'")+'\')">'+esc(b)+' <b>'+c+'</b></button>';
-    });
-    var nob=DB.users.filter(function(u){return !userBranches(u).length;}).length;
-    if(nob)h+='<button class="uchip sm'+(UF.branch==='__none'?' on':'')+'" onclick="uSet(\'branch\',\'__none\')">بلا فرع <b>'+nob+'</b></button>';
-    h+='</div>';
-  }
   h+='</div>';
 
   if(!list.length){
@@ -9748,17 +9798,57 @@ function admUsersHTML(){
     if(UF.q||UF.role||UF.branch)h+='<button class="btn btn-g btn-sm" style="margin:0 auto;display:block" onclick="uReset()">'+ic('swap',12)+' مسح كل عوامل الفرز</button>';
     return h;
   }
-  h+='<div class="ug">';
-  h+=list.map(function(u){
-    var acts='<div class="uacts">';
-    if(CU.role==='admin')acts+='<button class="udel uedit" title="تعديل" onclick="uedOpen(\''+u.id+'\')">'+ic('edit',14)+'</button>';
-    if(u.id!=='u1')acts+='<button class="udel" title="حذف" onclick="delU(\''+u.id+'\')">'+ic('trash',14)+'</button>';
-    acts+='</div>';
-    return '<div class="ucard"'+(CU.role==='admin'?' style="cursor:pointer" onclick="if(!event.target.closest(\'.uacts\'))uedOpen(\''+u.id+'\')"':'')
-      +'><div class="uav2" style="background:'+(RC[u.role]||'#181946')+'">'+esc(ti(u.name))+'</div>'
-      +'<div><div class="un">'+esc(u.name)+warnBadge(issuesUser(u),u.name)+'</div><div class="ur">'+RL[u.role]+(function(){var bs=userBranches(u);return bs.length?' • '+esc(bs.join('، ')):(u.team?' • '+esc(u.team):'');})()+'</div></div>'+acts+'</div>';
-  }).join('');
-  return h+'</div>';
+
+  /* ---- ترقيم الصفحات: ٦٤ بطاقة دفعة واحدة تُثقل الصفحة وتُتعب العين ---- */
+  var pages=Math.ceil(list.length/UPER);
+  if(UPAGE>=pages)UPAGE=0;
+  var slice=list.slice(UPAGE*UPER,UPAGE*UPER+UPER);
+
+  if(UVIEW==='cards'){
+    h+='<div class="ug">';
+    h+=slice.map(function(u){return uCardHTML(u);}).join('');
+    h+='</div>';
+  }else{
+    h+='<div class="at-wrap"><table class="at ut"><thead><tr>'
+      +'<th>الاسم</th><th>الصلاحية</th><th>الفروع</th><th>الجوال</th><th>اسم الدخول</th><th style="width:74px"></th>'
+      +'</tr></thead><tbody>';
+    slice.forEach(function(u){
+      var bs=userBranches(u);
+      h+='<tr'+(CU.role==='admin'?' style="cursor:pointer" onclick="if(!event.target.closest(\'.uacts\'))uedOpen(\''+u.id+'\')"':'')+'>';
+      h+='<td><div class="unm"><span class="uav3" style="background:'+(RC[u.role]||'#181946')+'">'+esc(ti(u.name))+'</span>'
+        +'<b>'+esc(u.name)+'</b>'+warnBadge(issuesUser(u),u.name)+'</div></td>';
+      h+='<td><span class="urole" style="--rc:'+(RC[u.role]||'#8b92b0')+'"><i class="udot"></i>'+RL[u.role]+'</span></td>';
+      h+='<td style="font-size:11px">'+(bs.length?esc(bs.join('، ')):(u.team?esc(u.team):'<span style="color:var(--gray)">—</span>'))+'</td>';
+      h+='<td style="direction:ltr;text-align:start;font-size:11px">'+(u.phone?esc(phoneDisp(u.phone)):'—')+'</td>';
+      h+='<td style="font-size:11px">'+esc(u.username||'—')+'</td>';
+      h+='<td><div class="uacts">'
+        +(CU.role==='admin'?'<button class="udel uedit" title="تعديل" onclick="uedOpen(\''+u.id+'\')">'+ic('edit',13)+'</button>':'')
+        +(u.id!=='u1'?'<button class="udel" title="حذف" onclick="delU(\''+u.id+'\')">'+ic('trash',13)+'</button>':'')
+        +'</div></td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table></div>';
+  }
+
+  if(pages>1){
+    h+='<div class="upag">';
+    h+='<button class="btn btn-o btn-sm" onclick="uPage(-1)"'+(UPAGE===0?' disabled style="opacity:.4"':'')+'>'+ic('chevron-right',12)+' السابق</button>';
+    h+='<span>صفحة '+ceN(UPAGE+1)+' من '+ceN(pages)+' • '+ceN(list.length)+' مستخدم</span>';
+    h+='<button class="btn btn-o btn-sm" onclick="uPage(1)"'+(UPAGE>=pages-1?' disabled style="opacity:.4"':'')+'>التالي '+ic('chevron-left',12)+'</button>';
+    h+='</div>';
+  }
+  return h;
+}
+function uCardHTML(u){
+  var acts='<div class="uacts">';
+  if(CU.role==='admin')acts+='<button class="udel uedit" title="تعديل" onclick="uedOpen(\''+u.id+'\')">'+ic('edit',14)+'</button>';
+  if(u.id!=='u1')acts+='<button class="udel" title="حذف" onclick="delU(\''+u.id+'\')">'+ic('trash',14)+'</button>';
+  acts+='</div>';
+  var bs=userBranches(u);
+  return '<div class="ucard"'+(CU.role==='admin'?' style="cursor:pointer" onclick="if(!event.target.closest(\'.uacts\'))uedOpen(\''+u.id+'\')"':'')
+    +'><div class="uav2" style="background:'+(RC[u.role]||'#181946')+'">'+esc(ti(u.name))+'</div>'
+    +'<div style="min-width:0"><div class="un">'+esc(u.name)+warnBadge(issuesUser(u),u.name)+'</div>'
+    +'<div class="ur">'+RL[u.role]+(bs.length?' • '+esc(bs.join('، ')):(u.team?' • '+esc(u.team):''))+'</div></div>'+acts+'</div>';
 }
 function faSync(p){if(p&&p.catch)p.catch(function(e){console.warn('FA sync',e);});}
 
@@ -9817,11 +9907,12 @@ function uFiltered(){
         || normName(u.team||'').indexOf(q)>-1;
   });
 }
-function uSet(k,v){UF[k]=(UF[k]===v?'':v);renderATab();}
-function uReset(){UF={q:'',role:'',branch:''};renderATab();}
+function uSet(k,v){UF[k]=(UF[k]===v?'':v);UPAGE=0;renderATab();}
+function uSet2(k,v){UF[k]=v;UPAGE=0;renderATab();}
+function uReset(){UF={q:'',role:'',branch:''};UPAGE=0;renderATab();}
 /* البحث يعيد الرسم مع الحفاظ على التركيز وموضع المؤشر في خانة البحث */
 function uSetQ(v){
-  UF.q=v;
+  UF.q=v;UPAGE=0;
   renderATab();
   var e=g('u-q');
   if(e){e.focus();try{e.setSelectionRange(e.value.length,e.value.length);}catch(x){}}
@@ -17005,15 +17096,18 @@ function cePubRender(){
   }
   if(CEPUB.step===1){
     h+='<div class="ped-note free">'+ic('pin',14)+'<div><b>فرع '+esc(CEPUB.branch)+'</b><br>'
-      +'أدخل رقم هويتك وتاريخ ميلادك للتأكد أنك أنت — رأيك يصل للإدارة بلا اسمك.</div></div>';
-    h+='<div class="fg"><label>رقم الهوية *</label><input type="tel" id="cpb-nid" inputmode="numeric" maxlength="10" style="direction:ltr;text-align:center;letter-spacing:2px" oninput="this.value=normNid(this.value)"></div>';
-    var dO='<option value="">اليوم</option>',mO='<option value="">الشهر</option>',yO='<option value="">السنة</option>';
-    for(var d=1;d<=31;d++)dO+='<option value="'+d+'">'+d+'</option>';
-    for(var mm=1;mm<=12;mm++)mO+='<option value="'+mm+'">'+MONTHS[mm-1]+'</option>';
+      +'أدخل بياناتك للتأكد أنك لاعب في الفرع — رأيك يصل للإدارة بلا اسمك.</div></div>';
+    h+='<div class="frow" style="grid-template-columns:1fr 1fr 1fr;gap:.45rem">';
+    h+='<div class="fg req" style="margin-bottom:0"><label>اسم اللاعب *</label><input type="text" id="cpb-fn" placeholder="محمد"></div>';
+    h+='<div class="fg req" style="margin-bottom:0"><label>اسم الأب *</label><input type="text" id="cpb-mn" placeholder="عبدالله"></div>';
+    h+='<div class="fg req" style="margin-bottom:0"><label>اسم العائلة *</label><input type="text" id="cpb-ln" placeholder="الأحمد"></div></div>';
+    h+='<div style="height:.9rem"></div>';
+    h+='<div class="fg"><label>رقم الجوال *</label>'+phoneField('cpb-phone','')
+      +'<div style="font-size:10.5px;color:var(--gray);margin-top:.25rem">جوالك أو جوال ولي أمرك</div></div>';
+    var yO='<option value="">اختر السنة</option>';
     var yN=new Date().getFullYear();
     for(var y=yN;y>=yN-45;y--)yO+='<option value="'+y+'">'+y+'</option>';
-    h+='<div class="fg"><label>تاريخ الميلاد *</label><div style="display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:.45rem">'
-      +'<select id="cpb-d">'+dO+'</select><select id="cpb-m">'+mO+'</select><select id="cpb-y">'+yO+'</select></div></div>';
+    h+='<div class="fg"><label>سنة الميلاد *</label><select id="cpb-y">'+yO+'</select></div>';
     h+='<button class="btn btn-r" style="width:100%;min-height:46px" onclick="cePubVerify()">'+ic('check',14)+' متابعة</button>';
     h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="cePubClose()">إلغاء</button>';
     h+='<div class="msg err" id="cpb-err">تحقق من البيانات</div>';
@@ -17033,7 +17127,7 @@ function cePubRender(){
   }else if(CEPUB.step===3){
     var cyc=ceActiveCycle(),co2=tdCoach(CEPUB.coachId);
     if(ceHasResp(cyc.id,CEPUB.coachId,'pl','pid:'+CEPUB.pid)){
-      h+='<div class="ped-note warn">'+ic('check',14)+'<div><b>سبق أن قيّمت هذا المدرب في هذه الدورة.</b><br>شكراً لك.</div></div>';
+      h+='<div class="ped-note warn">'+ic('check',14)+'<div><b>سبق أن قيّمت هذا المدرب'+(ceIsCont(cyc)?' في هذه الفترة':' في هذه الدورة')+'.</b><br>شكراً لك.</div></div>';
       h+='<button class="btn btn-g" style="width:100%" onclick="cePubClose()">إغلاق</button>';
     }else{
       CEEVAL={coachId:CEPUB.coachId,ans:CEEVAL.ans||{},note:'',open:CEEVAL.open||''};
@@ -17046,15 +17140,64 @@ function cePubRender(){
   }
   body.innerHTML=h;hydrateIcons(body);
 }
+/* سنة الميلاد من تاريخ مسجّل بأي صيغة */
+function dobYear(v){
+  var m=/(\d{4})/.exec(String(v||''));
+  return m?+m[1]:0;
+}
+/* مطابقة اللاعب من الاسم وسنة الميلاد والجوال داخل فرع الباركود.
+   الباركود مطبوع في الملعب، والمطابقة تمنع أن يقيّم من ليس لاعباً.
+   نطابق على الاسم الأول واسم العائلة، واسم الأب يُضيّق عند التشابه —
+   فالأسماء المسجّلة قد تكون ثنائية أو رباعية، وإلزام التطابق الحرفي
+   للثلاثة كان سيرفض لاعبين مسجّلين فعلاً. */
+function ceNameParts(n){
+  var a=String(n||'').trim().split(/\s+/).filter(Boolean);
+  if(!a.length)return {first:'',mids:[],last:''};
+  if(a.length===1)return {first:a[0],mids:[],last:a[0]};
+  return {first:a[0],mids:a.slice(1,-1),last:a[a.length-1]};
+}
+function cePubFind(fn,mn,ln,phone,year){
+  var ps=(TDX().players||[]);
+  var inBr=ps.filter(function(p){return p.branch===CEPUB.branch;});
+  var pool=inBr.length?inBr:ps;
+  var kf=coachKey(fn),km=coachKey(mn),kl=coachKey(ln),ph=normPhone(phone);
+  var byName=pool.filter(function(p){
+    var q=ceNameParts(p.name);
+    return coachKey(q.first)===kf&&coachKey(q.last)===kl;
+  });
+  if(!byName.length)return {err:'name'};
+  if(byName.length>1&&km){
+    var byMid=byName.filter(function(p){
+      return ceNameParts(p.name).mids.some(function(x){return coachKey(x)===km;});
+    });
+    if(byMid.length)byName=byMid;
+  }
+  /* السنة تُضيّق، والجوال يحسم عند التشابه */
+  var byYear=byName.filter(function(p){return dobYear(p.dob)===+year;});
+  var cand=byYear.length?byYear:byName;
+  if(cand.length>1&&ph){
+    /* اللاعبون صغار، وغالب المسجّل جوال ولي الأمر — نقبل الاثنين */
+    var byPh=cand.filter(function(p){return normPhone(p.phone)===ph||normPhone(p.guard)===ph;});
+    if(byPh.length===1)return {p:byPh[0]};
+    if(byPh.length)cand=byPh;
+  }
+  if(cand.length>1)return {err:'many'};
+  if(!byYear.length)return {err:'year'};
+  return {p:cand[0]};
+}
 function cePubVerify(){
-  var nid=normNid(gv('cpb-nid')),d=gv('cpb-d'),m=gv('cpb-m'),y=gv('cpb-y');
+  var fn=gv('cpb-fn'),mn=gv('cpb-mn'),ln=gv('cpb-ln');
+  var phone=phoneVal('cpb-phone'),y=gv('cpb-y');
   var err=g('cpb-err');
-  if(!nidOK(nid)){err.textContent='أدخل رقم هوية صحيح (١٠ أرقام)';fl('cpb-err');return;}
-  if(!d||!m||!y){err.textContent='اختر تاريخ ميلادك كاملاً';fl('cpb-err');return;}
-  var p=findPlayerByNid(nid);
-  if(!p){err.textContent='رقم الهوية غير مسجّل — راجع إدارة الأكاديمية';fl('cpb-err');return;}
-  if(!p.dob){err.textContent='تاريخ ميلادك غير مسجّل لدى الأكاديمية — راجع الإدارة';fl('cpb-err');return;}
-  if(!sameDob(y+'-'+m+'-'+d,p.dob)){err.textContent='تاريخ الميلاد غير مطابق';fl('cpb-err');return;}
+  if(!fn||!mn||!ln){err.textContent='أكمل اسمك ثلاثياً: اسمك واسم أبيك واسم عائلتك';fl('cpb-err');return;}
+  if(!phone||normPhone(phone).length<10){err.textContent='أدخل رقم جوال صحيح';fl('cpb-err');return;}
+  if(!y){err.textContent='اختر سنة ميلادك';fl('cpb-err');return;}
+  var r=cePubFind(fn,mn,ln,phone,y);
+  if(r.err==='name'){err.textContent='اسمك غير مسجّل في فرع '+CEPUB.branch+' — راجع إدارة الفرع';fl('cpb-err');return;}
+  if(r.err==='year'){err.textContent='سنة الميلاد لا تطابق المسجّل باسمك — راجع إدارة الفرع';fl('cpb-err');return;}
+  if(r.err==='many'){err.textContent='أكثر من لاعب بنفس الاسم — راجع إدارة الفرع لتأكيد بياناتك';fl('cpb-err');return;}
+  var p=r.p;
+  if(!p.nid||!p.dob){err.textContent='بياناتك غير مكتملة لدى الأكاديمية — راجع إدارة الفرع';fl('cpb-err');return;}
   CEPUB.pid=p.id;
   var myCo=cePlayerCoach(p);
   if(myCo){CEPUB.coachId=myCo.id;CEPUB.step=3;}
@@ -17064,12 +17207,12 @@ function cePubVerify(){
 }
 function cePubPick(id){CEPUB.coachId=id;CEPUB.step=3;CEEVAL={coachId:id,ans:{},note:'',open:''};cePubRender();}
 function cePubSubmit(cycleId,coachId,src){
-  var qs=ceQs('pl'),miss=qs.filter(function(q){return !CEEVAL.ans[q.id];});
+  var qs=ceScaleQs('pl'),miss=qs.filter(function(q){return !CEEVAL.ans[q.id];});
   if(miss.length){g('ce-ferr').textContent='بقي '+ceN(miss.length)+' سؤال بلا إجابة';fl('ce-ferr');return;}
   var by='pid:'+CEPUB.pid;
   if(ceHasResp(cycleId,coachId,'pl',by)){g('ce-ferr').textContent='سبق أن قيّمت هذا المدرب';fl('ce-ferr');return;}
   var openEl=g('ce-open'),p=anyPlayer(CEPUB.pid);
-  var rec={id:uid(),cycleId:cycleId,coachId:coachId,src:'pl',by:by,byName:'',
+  var rec={id:uid(),cycleId:cycleId,coachId:coachId,src:'pl',by:by,byName:'',per:cePeriodKey(ceCycle(cycleId)),
     ans:JSON.parse(JSON.stringify(CEEVAL.ans)),note:'',open:openEl?openEl.value.trim():'',at:Date.now()};
   var done=function(){CEX().resp.push(rec);CEPUB.step=4;CEEVAL={coachId:'',ans:{},note:'',open:''};cePubRender();};
   if(FA.enabled){
@@ -17148,111 +17291,218 @@ function adHead(icn,title,sub,actions){
 }
 
 /* ================= المستخدمون والصلاحيات ================= */
+var ADU='list';
+function adUTab(k){ADU=k;rADUsers();}
 function rADUsers(){
   var el=g('adc-users');
-  var h=adHead('users','المستخدمون والصلاحيات','كل الحسابات ونطاق كل واحد منها');
-  h+=adDupHTML();
-  h+=adLinkHTML();
-  h+='<div style="height:1.6rem"></div>';
-  h+='<div class="ad-wrap">'+admUsersHTML()+'</div>';
-  /* فروع المشرفين — الصلاحية الوحيدة التي لا تُضبط من بطاقة المستخدم */
+  var dupN=adDupScan().length;
+  var sc=adLinkScan();
+  var linkN=sc.ready.length+sc.creatable.length+sc.ambiguous.length+sc.orphan.length;
+  var reqN=resetReqs().filter(function(r){return r.status==='open';}).length
+          +profReqs().filter(function(r){return r.status==='open';}).length;
   var sups=(DB.users||[]).filter(function(u){return u.role==='supervisor';});
-  h+='<div style="height:1.6rem"></div>';
-  h+=tdSubHead('نطاق المشرفين الفنيين','<span class="pg-chip">'+ceN(sups.length)+'</span>');
-  if(!sups.length)h+=emptyBox('shield','لا يوجد مشرفون بعد','أضف مستخدماً بصلاحية «مشرف فني» من النموذج أعلاه');
-  else{
-    var brs=ceAllBranches();
-    if(!brs.length)h+=emptyBox('pin','لا توجد فروع بعد','أضف الفروع من الإدارة الفنية ← الإعدادات');
-    else sups.forEach(function(u){
-      var rec=CEX().sups.find(function(s){return s.userId===u.id;})||{branches:[]};
-      h+='<div class="rform" style="margin-bottom:.9rem">';
-      h+='<div class="ce2-fn">'+esc(u.name)+' <small style="color:var(--gray);font-weight:500">'+esc(u.username||'')+'</small></div>';
-      h+='<div class="fg" style="margin-top:.6rem"><label>الفروع التي يشرف عليها</label><div class="brpick" id="adsb-'+u.id+'">'
-        +brs.map(function(b){
-          return '<button type="button" class="brchip'+((rec.branches||[]).indexOf(b)>-1?' on':'')+'" data-br="'+esc(b)+'" onclick="this.classList.toggle(\'on\')">'
-            +ic('pin',11)+' '+esc(b)+'</button>';}).join('')+'</div></div>';
-      h+='<button class="btn btn-o btn-sm" onclick="adSaveSup(\''+u.id+'\',\''+jq(u.name)+'\')">'+ic('check',12)+' حفظ فروعه</button>';
-      h+='</div>';
-    });
+
+  var h=adHead('users','المستخدمون والصلاحيات','كل الحسابات ونطاق كل واحد منها');
+  var tabs=[['list','الحسابات','users',DB.users.length],
+            ['dup','المكرّرون','swap',dupN],
+            ['link','الربط بالإدارة الفنية','shield',linkN],
+            ['sups','نطاق المشرفين','crown',sups.length],
+            ['reqs','الطلبات','clock',reqN]];
+  h+='<div class="ce2-tabs">'+tabs.map(function(t){
+    var warn=(t[0]==='dup'&&t[3])||(t[0]==='reqs'&&t[3]);
+    return '<button class="ce2-tab'+(ADU===t[0]?' on':'')+'" onclick="adUTab(\''+t[0]+'\')">'
+      +ic(t[2],13)+' '+t[1]+' <b style="opacity:.75'+(warn?';color:var(--amber)':'')+'">'+ceN(t[3])+'</b></button>';
+  }).join('')+'</div>';
+
+  if(ADU==='dup'){
+    h+=dupN?adDupHTML():('<div class="ce2-note ok">'+ic('check',13)+'<div>لا يوجد شخص مكرّر — كل واحد له سجل واحد بكل فروعه.</div></div>');
+  }else if(ADU==='link'){
+    h+=adLinkHTML();
+  }else if(ADU==='reqs'){
+    h+=resetReqsHTML();
+    if(CU.role==='admin')h+='<div style="margin-top:1.6rem"></div>'+profReqsHTML();
+  }else if(ADU==='sups'){
+    h+=adSupsHTML(sups);
+  }else{
+    h+='<div class="ad-wrap">'+admUsersHTML(true)+'</div>';
   }
   el.innerHTML=h;hydrateIcons(el);
 }
-/* ===== الحسابات المكرّرة لنفس الشخص =====
-   نشأت لأن حقل الفرع كان مفرداً، فمن يدير فرعين اضطر لفتح «فلان 2».
-   الفروع صارت متعددة الآن، فنعرض المكرر ونعرض دمجه بلا فقد بيانات:
-   الفروع تُوحَّد، والتقييمات والقرارات تُنقل للحساب المُبقى. */
-function dupKey(n){
-  return normName(String(n||'').replace(/[\s\u0660-\u0669\d]+$/,''));
-}
-function adDupScan(){
-  var map={};
-  (DB.users||[]).forEach(function(u){
-    if(u.role==='player')return;
-    var k=dupKey(u.name);if(!k)return;
-    (map[k]=map[k]||[]).push(u);
-  });
-  return Object.keys(map).map(function(k){return map[k];}).filter(function(a){return a.length>1;});
-}
-function adDupHTML(){
-  var groups=adDupScan();
-  if(!groups.length)return '';
-  var h=tdSubHead('حسابات مكرّرة لنفس الشخص','<span class="pg-chip">'+ceN(groups.length)+'</span>');
-  h+='<div class="ce2-note warn">'+ic('info',13)
-    +'<div>لم يعد هناك داعٍ لحساب ثانٍ لمن يدير أكثر من فرع — افتح بطاقة الحساب واختر له فرعين. الدمج هنا يوحّد الفروع وينقل التقييمات والقرارات للحساب الذي تختاره، ثم يحذف الحساب الزائد.</div></div>';
-  groups.forEach(function(gr,i){
-    h+='<div class="rform" style="margin-bottom:.9rem">';
-    h+='<b style="font-size:13px">'+esc(gr[0].name)+'</b>';
-    h+='<div class="ce2-tw" style="margin-top:.6rem"><table class="ce2-tb"><thead><tr><th style="width:70px">يُبقى</th><th>الحساب</th><th>الصلاحية</th><th>الفروع</th></tr></thead><tbody>';
-    gr.forEach(function(u,j){
-      h+='<tr><td><input type="radio" name="addup'+i+'" value="'+u.id+'"'+(j===0?' checked':'')+'></td>'
-        +'<td><b>'+esc(u.name)+'</b><br><small style="color:var(--gray)">'+esc(u.username||'—')+'</small></td>'
-        +'<td>'+RL[u.role]+'</td><td>'+esc(userBranches(u).join('، ')||'—')+'</td></tr>';
-    });
-    h+='</tbody></table></div>';
-    h+='<button class="btn btn-o btn-sm" style="margin-top:.7rem" onclick="adMergeDup('+i+')">'+ic('swap',12)+' دمج هذه الحسابات</button>';
+function adSupsHTML(sups){
+  var h=tdSubHead('نطاق المشرفين الفنيين','<span class="pg-chip">'+ceN(sups.length)+'</span>');
+  if(!sups.length)return h+emptyBox('shield','لا يوجد مشرفون بعد','أضف مستخدماً بصلاحية «مشرف فني» من تبويب الحسابات');
+  var brs=ceAllBranches();
+  if(!brs.length)return h+emptyBox('pin','لا توجد فروع بعد','أضف الفروع من الإدارة والمتابعة ← الفروع');
+  sups.forEach(function(u){
+    var rec=CEX().sups.find(function(s){return s.userId===u.id;})||{branches:[]};
+    h+='<div class="rform" style="margin-bottom:.9rem;max-width:760px">';
+    h+='<div class="ce2-fn">'+esc(u.name)+' <small style="color:var(--gray);font-weight:500">'+esc(u.username||'')+'</small></div>';
+    h+='<div class="fg" style="margin-top:.6rem"><label>الفروع التي يشرف عليها</label><div class="brpick" id="adsb-'+u.id+'">'
+      +brs.map(function(b){
+        return '<button type="button" class="brchip'+((rec.branches||[]).indexOf(b)>-1?' on':'')+'" data-br="'+esc(b)+'" onclick="this.classList.toggle(\'on\')">'
+          +ic('pin',11)+' '+esc(b)+'</button>';}).join('')+'</div></div>';
+    h+='<button class="btn btn-o btn-sm" onclick="adSaveSup(\''+u.id+'\',\''+jq(u.name)+'\')">'+ic('check',12)+' حفظ فروعه</button>';
     h+='</div>';
   });
   return h;
 }
-function adMergeDup(i){
-  var gr=adDupScan()[i];if(!gr)return;
-  var sel=document.querySelector('input[name="addup'+i+'"]:checked');
-  var keepId=sel?sel.value:gr[0].id;
-  var keep=gr.find(function(u){return u.id===keepId;});if(!keep)return;
-  var drop=gr.filter(function(u){return u.id!==keepId;});
-  askConfirm('دمج '+ceN(drop.length)+' حساب في «'+keep.name+'»؟\nالفروع ستُوحَّد والتقييمات ستُنقل، ثم يُحذف الحساب الزائد.',function(){
-    var brs=userBranches(keep).slice();
-    drop.forEach(function(d){
+/* ===== المكرّرات: نفس الشخص بأكثر من حساب أو سجل =====
+   مصدرها أن الفرع كان حقلاً مفرداً، فمن يعمل في فرعين صار له سجلان
+   (وأحياناً حسابان). الدمج يوحّد الفروع وينقل كل ما يشير للسجل القديم
+   — حصص وفئات ومهام وتقييمات وقرارات وخطط — للسجل المُبقى، بلا فقد. */
+function personKey(n){
+  return coachKey(String(n||'').replace(/[\s\u0660-\u0669\d]+$/,''));
+}
+/* إعادة توجيه المعرّفات في كل أنحاء البيانات — أي حقل coachId/staffId */
+function faRemapIds(map,keys){
+  var seen=new Set(),n=0;
+  (function walk(o){
+    if(!o||typeof o!=='object'||seen.has(o))return;
+    seen.add(o);
+    if(Array.isArray(o)){o.forEach(walk);return;}
+    Object.keys(o).forEach(function(k){
+      var v=o[k];
+      if(keys.indexOf(k)>-1&&typeof v==='string'&&map[v]){o[k]=map[v];n++;return;}
+      if(v&&typeof v==='object')walk(v);
+    });
+  })(DB);
+  return n;
+}
+function adDupScan(){
+  var map={};
+  var add=function(kind,rec){
+    var k=personKey(rec&&rec.name);if(!k)return;
+    if(!map[k])map[k]={key:k,name:rec.name,users:[],coaches:[],staff:[]};
+    map[k][kind].push(rec);
+  };
+  (DB.users||[]).forEach(function(u){if(u.role!=='player')add('users',u);});
+  (TDX().coaches||[]).forEach(function(c){add('coaches',c);});
+  (TDX().staff||[]).forEach(function(x){add('staff',x);});
+  return Object.keys(map).map(function(k){return map[k];})
+    .filter(function(gr){return gr.users.length>1||gr.coaches.length>1||gr.staff.length>1;})
+    .sort(function(a,b){return (a.name||'').localeCompare(b.name||'','ar');});
+}
+function adDupBranches(gr){
+  var out=[];
+  var add=function(b){if(b&&out.indexOf(b)<0)out.push(b);};
+  gr.coaches.forEach(function(c){coachBranches(c).forEach(add);});
+  gr.staff.forEach(function(x){coachBranches(x).forEach(add);});
+  gr.users.forEach(function(u){userBranches(u).forEach(add);});
+  return out;
+}
+function adDupHTML(){
+  var groups=adDupScan();
+  if(!groups.length)return '';
+  var h=tdSubHead('أشخاص مكرّرون','<span class="pg-chip">'+ceN(groups.length)+'</span>');
+  h+='<div class="ce2-note warn">'+ic('info',13)
+    +'<div>نفس الشخص مسجّل أكثر من مرة — غالباً سجل لكل فرع. الدمج يُبقي سجلاً واحداً بكل فروعه، وينقل إليه حصصه وفئاته وتقييماته وخططه، ثم يحذف الزائد. لا تُفقد أي بيانات.</div></div>';
+  h+='<div class="at-wrap"><table class="at"><thead><tr><th style="width:38px"><input type="checkbox" id="addup-all" checked onchange="adDupAll(this.checked)"></th>'
+    +'<th>الاسم</th><th>حسابات</th><th>سجلات مدرب</th><th>سجلات موظف</th><th>الفروع بعد الدمج</th></tr></thead><tbody>';
+  groups.forEach(function(gr,i){
+    var brs=adDupBranches(gr);
+    h+='<tr><td><input type="checkbox" class="addup-cb" id="addup-'+i+'" value="'+esc(gr.key)+'" checked></td>'
+      +'<td><b>'+esc(gr.name)+'</b></td>'
+      +'<td>'+(gr.users.length>1?'<span style="color:var(--amber)">'+ceN(gr.users.length)+'</span>':ceN(gr.users.length))+'</td>'
+      +'<td>'+(gr.coaches.length>1?'<span style="color:var(--amber)">'+ceN(gr.coaches.length)+'</span>':ceN(gr.coaches.length))+'</td>'
+      +'<td>'+(gr.staff.length>1?'<span style="color:var(--amber)">'+ceN(gr.staff.length)+'</span>':ceN(gr.staff.length))+'</td>'
+      +'<td style="font-size:10.5px">'+esc(brs.join('، ')||'—')+'</td></tr>';
+  });
+  h+='</tbody></table></div>';
+  h+='<button class="btn btn-r" style="width:100%;margin-top:.8rem" onclick="adMergeSel()">'+ic('swap',14)+' دمج المحدَّد</button>';
+  h+='<div style="height:1.6rem"></div>';
+  return h;
+}
+function adDupAll(on){
+  document.querySelectorAll('.addup-cb').forEach(function(cb){cb.checked=!!on;});
+}
+/* أفضل سجل يُبقى: الأكثر فروعاً ثم الأقدم ثم الأكثر حقولاً */
+function adBestRec(list){
+  return list.slice().sort(function(a,b){
+    var d=coachBranches(b).length-coachBranches(a).length;if(d)return d;
+    var e=(a.at||0)-(b.at||0);if(e)return e;
+    return Object.keys(b).length-Object.keys(a).length;
+  })[0];
+}
+function adMergeSel(){
+  var keys=[];
+  document.querySelectorAll('.addup-cb').forEach(function(cb){if(cb.checked)keys.push(cb.value);});
+  if(!keys.length){alert('لم تحدّد أحداً');return;}
+  var groups=adDupScan().filter(function(gr){return keys.indexOf(gr.key)>-1;});
+  askConfirm('دمج '+ceN(groups.length)+' شخصاً؟\nلكل واحد يبقى سجل وحساب واحد بكل فروعه، وتُنقل إليه بياناته كلها.',function(){
+    var n=0;
+    groups.forEach(function(gr){if(adMergeGroup(gr))n++;});
+    logA('دمج '+n+' شخصاً مكرّراً','swap','#d97706');
+    sv();rADUsers();
+    addN('تم الدمج',ceN(n)+' شخص صار له سجل واحد','success');
+  });
+}
+function adMergeGroup(gr){
+  var t=TDX(),map={},changed=false;
+  /* ١) سجلات المدرب */
+  if(gr.coaches.length>1){
+    var kc=adBestRec(gr.coaches),all=[];
+    gr.coaches.forEach(function(c){coachBranches(c).forEach(function(b){if(all.indexOf(b)<0)all.push(b);});});
+    gr.coaches.forEach(function(c){
+      if(c===kc)return;
+      map[c.id]=kc.id;
+      /* الحقول الناقصة تُكمَّل من السجل الزائد قبل حذفه */
+      ['phone','nid','nat','dob','user','img','exp','certs','joined'].forEach(function(f){if(!kc[f]&&c[f])kc[f]=c[f];});
+    });
+    kc.branches=all;kc.branch=all[0]||kc.branch;
+    t.coaches=t.coaches.filter(function(c){return c===kc||!map[c.id];});
+    changed=true;
+  }
+  /* ٢) سجلات الموظف */
+  if(gr.staff.length>1){
+    var ks=adBestRec(gr.staff),alls=[];
+    gr.staff.forEach(function(x){coachBranches(x).forEach(function(b){if(alls.indexOf(b)<0)alls.push(b);});});
+    gr.staff.forEach(function(x){
+      if(x===ks)return;
+      map[x.id]=ks.id;
+      ['phone','nid','nat','dob','user','title','joined'].forEach(function(f){if(!ks[f]&&x[f])ks[f]=x[f];});
+    });
+    ks.branches=alls;ks.branch=alls[0]||ks.branch;
+    t.staff=t.staff.filter(function(x){return x===ks||!map[x.id];});
+    changed=true;
+  }
+  /* ٣) نقل كل ما يشير للسجلات المحذوفة */
+  if(Object.keys(map).length)faRemapIds(map,['coachId','staffId']);
+  /* ٤) الحسابات */
+  if(gr.users.length>1){
+    /* نُبقي الحساب ذا الاسم النظيف (بلا «٢» في آخره) ثم الأكثر اكتمالاً */
+    var clean=function(u){return /[\s\u0660-\u0669\d]$/.test(String(u.name||'').trim())?0:1;};
+    var ku=gr.users.slice().sort(function(a,b){
+      var d=clean(b)-clean(a);if(d)return d;
+      var s=function(u){return (u.coachId||u.staffId?4:0)+(u.password?2:0)+(u.phone?1:0);};
+      return s(b)-s(a);
+    })[0];
+    ku.name=gr.name&&clean({name:gr.name})?gr.name:ku.name;
+    var brs=userBranches(ku).slice();
+    var umap={};
+    gr.users.forEach(function(d){
+      if(d===ku)return;
       userBranches(d).forEach(function(b){if(brs.indexOf(b)<0)brs.push(b);});
-      if(!keep.phone&&d.phone)keep.phone=d.phone;
-      if(!keep.team&&d.team)keep.team=d.team;
-      var c=CEX();
-      (c.resp||[]).forEach(function(r){if(r.by===d.id)r.by=keep.id;});
-      (c.dec||[]).forEach(function(r){if(r.by===d.id){r.by=keep.id;r.byName=keep.name;}});
-      (c.sups||[]).forEach(function(x){if(x.userId===d.id){x.userId=keep.id;x.name=keep.name;}});
-      if(!keep.coachId&&d.coachId)keep.coachId=d.coachId;
-      if(!keep.staffId&&d.staffId)keep.staffId=d.staffId;
+      ['phone','team','coachId','staffId'].forEach(function(f){if(!ku[f]&&d[f])ku[f]=d[f];});
+      umap[d.id]=ku.id;
       DB.users=DB.users.filter(function(x){return x.id!==d.id;});
       if(FA.enabled)faSync(FA.deleteUser(d.id));
     });
-    /* سجلات الإدارة الفنية المكرّرة لنفس الشخص تُوحَّد فروعها أيضاً */
-    var t=TDX();
-    [['coaches','coachId'],['staff','staffId']].forEach(function(p){
-      var list=t[p[0]]||[];
-      var mine=list.filter(function(x){return dupKey(x.name)===dupKey(keep.name);});
-      if(mine.length>1){
-        var m0=mine[0],all=[];
-        mine.forEach(function(x){coachBranches(x).forEach(function(b){if(all.indexOf(b)<0)all.push(b);});});
-        m0.branches=all;m0.branch=all[0]||m0.branch;
-        t[p[0]]=list.filter(function(x){return x===m0||mine.indexOf(x)<0;});
-        keep[p[1]]=m0.id;
-      }
+    /* التقييمات والقرارات وفروع المشرف كانت مربوطة بالحساب المحذوف */
+    var c=CEX();
+    (c.resp||[]).forEach(function(r){
+      Object.keys(umap).forEach(function(id){
+        if(r.by===id||r.by==='uid:'+id)r.by='uid:'+ku.id;
+      });
     });
-    uedApplyBranches(keep,brs);
-    logA('دمج حسابات مكرّرة: '+keep.name+' — الفروع: '+(brs.join('، ')||'—'),'swap','#d97706');
-    sv();rADUsers();
-    addN('تم الدمج',keep.name+' — '+(brs.join('، ')||'بلا فروع'),'success');
-  });
+    (c.dec||[]).forEach(function(r){if(umap[r.by]){r.by=ku.id;r.byName=ku.name;}});
+    (c.sups||[]).forEach(function(x){if(umap[x.userId]){x.userId=ku.id;x.name=ku.name;}});
+    uedApplyBranches(ku,brs);
+    changed=true;
+  }else if(gr.users.length===1&&Object.keys(map).length){
+    /* حساب واحد لكنه كان مربوطاً بسجل حُذف — الربط أُصلح بالنقل أعلاه */
+    uedApplyBranches(gr.users[0],adDupBranches(gr));
+  }
+  return changed;
 }
 
 /* ===== ربط الحسابات بسجلات الإدارة الفنية =====
@@ -19387,7 +19637,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-ce2</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.15-qr2</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
