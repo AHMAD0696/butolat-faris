@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.18-staff2">
+<meta name="build" content="2026.09.18-hub">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2579,6 +2579,22 @@ body.nt-pick #NT .mnav-btn{display:none!important}
 .ntpd-img.none small{font-size:10px}
 @media(max-width:760px){.ntpd-g{grid-template-columns:1fr}}
 a.btn{text-decoration:none}
+
+/* ===== الإعدادات: الإدارة العليا + أيقونات الفروع ===== */
+.tdst-gl{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.7rem;margin-bottom:1.4rem}
+.tdst-gc{background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:.9rem 1rem;cursor:pointer;text-align:start;font-family:inherit;color:inherit;display:flex;flex-direction:column;gap:.3rem;transition:.15s;position:relative}
+.tdst-gc:hover{border-color:var(--red);box-shadow:var(--sh)}
+.tdst-gc.warn{border-color:rgba(217,119,6,.5)}
+.tdst-gi{width:40px;height:40px;border-radius:12px;background:linear-gradient(145deg,#20226a,var(--navy));color:#fff;display:grid;place-items:center;margin-bottom:.3rem}
+.tdst-gt{font-weight:800;font-size:13px}
+.tdst-gs{font-size:10.5px;color:var(--gray);line-height:1.5}
+.tdst-gc .badge{align-self:flex-start;margin-top:.2rem}
+.adb-icons{display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--brd)}
+.adb-ib{background:var(--bg);border:1px solid transparent;border-radius:11px;padding:.45rem .2rem;cursor:pointer;font-family:inherit;color:var(--txt);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;transition:.15s}
+.adb-ib:hover{border-color:var(--red);color:var(--red);background:rgba(221,29,69,.06)}
+.adb-ibi{display:inline-flex;align-items:center;gap:4px;color:var(--accent)}
+.adb-ibi b{font-size:10.5px;color:var(--txt)}
+.adb-ib:hover .adb-ibi,.adb-ib:hover .adb-ibi b{color:var(--red)}
 /* ============ CALENDAR ============ */
 .seg{display:inline-flex;background:var(--bg);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
 .seg button{border:none;background:none;padding:6px 12px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--gray);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:.15s}
@@ -2941,7 +2957,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-staff2</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-hub</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -12856,7 +12872,7 @@ function rTDCats(){
     h+='<div style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:.7rem">';
     h+='<div class="aic" style="width:38px;height:38px;border-radius:11px;background:rgba(217,119,6,.12);color:var(--amber);display:flex;align-items:center;justify-content:center">'+ic('list',16)+'</div>';
     h+='<div style="flex:1;min-width:150px"><div style="font-weight:700;font-size:13.5px">'+esc(tdCatFull(c))+'</div><div style="font-size:10.5px;color:var(--gray)">'+ic('pin',10)+' '+esc(c.branch)+' • مواليد '+tdCatYearsLabel(c)+' • '+ceN(cg.length)+' فترة • '+ceN(cp.length)+' لاعب</div></div>';
-    if(isAdmin)h+='<div style="display:flex;gap:.3rem"><button class="ab" style="background:var(--bg);color:var(--accent)" onclick="TDST.editC=\''+c.id+'\';tdP(\'settings\')">'+ic('edit',11)+'</button><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelCat(\''+c.id+'\')">'+ic('trash',11)+'</button></div>';
+    if(isAdmin)h+='<div style="display:flex;gap:.3rem"><button class="ab" style="background:var(--bg);color:var(--accent)" onclick="tdEditCatGo(\''+c.id+'\')">'+ic('edit',11)+'</button><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelCat(\''+c.id+'\')">'+ic('trash',11)+'</button></div>';
     h+='</div>';
     if(!cg.length)h+='<div style="font-size:11.5px;color:var(--gray)">لا توجد فترات في هذه الفئة</div>';
     else{
@@ -12869,7 +12885,7 @@ function rTDCats(){
           +'<td>'+(gg.t1?tdTimeLabel(gg):'<span style="color:var(--amber)">ناقص</span>')+'</td>'
           +'<td style="font-size:10.5px">'+(gg.pitchId?esc(tdPitchLabel(gg.branch,gg.pitchId)):'<span style="color:var(--amber)">ناقص</span>')+'</td>'
           +'<td>'+esc(gg.coachId?(tdCoach(gg.coachId)||{}).name||'—':'—')+'</td><td>'+ceN(pn)+'</td>';
-        if(isAdmin)h+='<td style="white-space:nowrap"><button class="ab" style="background:var(--bg);color:var(--accent)" onclick="TDST.editG=\''+gg.id+'\';tdP(\'settings\')">'+ic('edit',11)+'</button><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelGroup(\''+gg.id+'\')">'+ic('trash',11)+'</button></td>';
+        if(isAdmin)h+='<td style="white-space:nowrap"><button class="ab" style="background:var(--bg);color:var(--accent)" onclick="tdEditGroupGo(\''+gg.id+'\')">'+ic('edit',11)+'</button><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelGroup(\''+gg.id+'\')">'+ic('trash',11)+'</button></td>';
         h+='</tr>';
       });
       h+='</tbody></table></div>';
@@ -13013,7 +13029,7 @@ function tdHeroHTML(){
   var list=tdActiveStories();
   if(!list.length){
     if(tdRole()!=='admin')return '';
-    return '<div class="td-hero td-hero-empty" onclick="tdP(\'settings\');setTimeout(function(){var e=g(\'tdst-story\');if(e)e.scrollIntoView({behavior:\'smooth\',block:\'center\'});},120)">'
+    return '<div class="td-hero td-hero-empty" onclick="TDST.gpage=\'stories\';TDST.addStory=true;tdP(\'settings\')">'
       +'<div class="tdh-in"><div class="tdh-ttl">'+ic('image',20)+' لا توجد ستوريات بعد</div>'
       +'<div class="tdh-sub">أضف صورًا بعنوان ورابط لتظهر كخلفية متحركة هنا — اضغط للإضافة</div></div></div>';
   }
@@ -13093,7 +13109,7 @@ function tdAddStory(){
   var br=gv('tdstry-branch');
   t.stories.push({id:uid(),img:img,title:gv('tdstry-title'),url:gv('tdstry-url'),expires:expMs&&!isNaN(expMs)?expMs:0,branches:br?[br]:[],by:CU.name,at:Date.now()});
   logA('إضافة ستوري (إدارة فنية)','image','#DD1D45');
-  sv();rTDSettings();fl('tdstry-ok');
+  sv();TDST.addStory=false;if(FPG.open)fpgHide();rTDSettings();addN('أُضيف الستوري','','success');
 }
 function tdDelStory(id){
   askConfirm('حذف هذا الستوري؟',function(){
@@ -13318,7 +13334,7 @@ function rTDBranches(){
   if(TDBR.view){rTDBranchOne(TDBR.view);return;}
   var t=TDX(),m=tdMonthKey();
   var h=tdHead('pin','الفروع','إدارة فروع الأكاديمية ومتابعة أدائها الفني',
-    (tdRole()==='admin'?'<button class="btn btn-r btn-sm" onclick="tdP(\'settings\')">'+ic('plus',13)+' إضافة فرع</button>':'')
+    (tdRole()==='admin'?'<button class="btn btn-r btn-sm" onclick="tdP(\'settings\');setTimeout(adbNewOpen,60)">'+ic('plus',13)+' إضافة فرع</button>':'')
     +'<span class="pg-chip">'+brs.length+' فرع</span>');
   if(!brs.length){
     h+=emptyBox('pin','لا توجد فروع بعد',tdRole()==='admin'?'أضف الفروع من صفحة الإعدادات':'');
@@ -14127,7 +14143,44 @@ function tdDelEval(id,src){
 }
 
 /* ================= الخطط التدريبية ================= */
-var TDPL={showForm:false,view:'cal',period:'month',ref:new Date().toISOString(),branch:'',coach:'',group:''};
+
+/* فلتر متدرّج: الفرع ← المواليد ← المجموعة ← المدرب — يُستخدم في التمارين والوديات */
+function tdCascadeFilter(st,pfx,extraHTML){
+  var t=TDX(),brs=tdScopeBranchNames(),gs=tdScopeGroups(),r=tdRole();
+  var cats=t.cats.filter(function(c){return (!st.branch||c.branch===st.branch)&&gs.some(function(x){return x.catId===c.id;});})
+    .sort(function(a,b){return String(b.year||'').localeCompare(String(a.year||''));});
+  var gl=gs.filter(function(x){return (!st.branch||x.branch===st.branch)&&(!st.cat||x.catId===st.cat)&&(!st.coach||x.coachId===st.coach);});
+  var cs=tdScopeCoaches().filter(function(c){return coachInBranch(c,st.branch);});
+  var h='<div class="rform" style="padding:.9rem 1rem;margin-bottom:1rem;max-width:none"><div style="display:flex;gap:.7rem;flex-wrap:wrap;align-items:end">';
+  h+='<div style="font-size:11.5px;font-weight:700;color:var(--gray);display:flex;align-items:center;gap:5px;padding-bottom:9px">'+ic('filter',12)+' فرز</div>';
+  if(r!=='player'&&(brs.length>1||r!=='coach'))h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>١ · الفرع</label>'+tdSel(pfx+'-branch',brs,st.branch,'كل الفروع')+'</div>';
+  h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>٢ · المواليد</label>'+tdSel(pfx+'-cat',cats.map(function(c){return [c.id,tdCatFull(c)+(st.branch?'':' — '+c.branch)];}),st.cat,st.branch?'كل المواليد':'اختر الفرع أولاً')+'</div>';
+  h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>٣ · المجموعة</label>'+tdSel(pfx+'-group',gl.map(function(x){return [x.id,x.name];}),st.group,'كل المجموعات')+'</div>';
+  if(r!=='coach'&&r!=='player')h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>المدرب</label>'+tdSel(pfx+'-coach',cs.map(function(c){return [c.id,c.name];}),st.coach,'كل المدربين')+'</div>';
+  h+=extraHTML||'';
+  if(st.branch||st.cat||st.group||st.coach||st.status)h+='<button class="btn btn-g btn-sm" onclick="'+pfx+'Clear()">'+ic('x',12)+' مسح الفرز</button>';
+  h+='</div>';
+  /* شريط المسار المختار */
+  if(st.branch||st.cat||st.group){
+    var c0=st.cat?tdCat(st.cat):null,g0=st.group?tdGroup(st.group):null;
+    h+='<div style="margin-top:.6rem;display:flex;gap:.3rem;flex-wrap:wrap;align-items:center;font-size:11px">'
+      +(st.branch?'<span class="badge" style="background:rgba(21,101,192,.12);color:#1565c0">'+ic('pin',10)+' '+esc(st.branch)+'</span>':'')
+      +(c0?'<span class="ntw-sep">'+ic('chev-l',10)+'</span><span class="badge" style="background:rgba(217,119,6,.13);color:var(--amber)">'+ic('users',10)+' '+esc(tdCatFull(c0))+'</span>':'')
+      +(g0?'<span class="ntw-sep">'+ic('chev-l',10)+'</span><span class="badge" style="background:'+tdGroupColor(g0.id)+'1f;color:'+tdGroupColor(g0.id)+'">'+esc(g0.name)+'</span>':'')
+      +'<span style="color:var(--gray);margin-inline-start:auto">'+ceN(gl.length)+' مجموعة</span></div>';
+  }
+  h+='</div>';
+  return {html:h,groups:gl};
+}
+function tdCascadeBind(st,pfx,re){
+  var fb=g(pfx+'-branch');if(fb)fb.onchange=function(){st.branch=this.value;st.cat='';st.coach='';st.group='';re();};
+  var fc=g(pfx+'-cat');if(fc)fc.onchange=function(){st.cat=this.value;st.group='';re();};
+  var fco=g(pfx+'-coach');if(fco)fco.onchange=function(){st.coach=this.value;st.group='';re();};
+  var fg=g(pfx+'-group');if(fg)fg.onchange=function(){st.group=this.value;re();};
+}
+function tdplfClear(){TDPL.branch='';TDPL.cat='';TDPL.coach='';TDPL.group='';rTDPlans();}
+function tdfrfClear(){TDFR.branch='';TDFR.cat='';TDFR.coach='';TDFR.group='';TDFR.status='';rTDFriendly();}
+var TDPL={showForm:false,view:'cal',period:'month',ref:new Date().toISOString(),branch:'',cat:'',coach:'',group:''};
 function tdPlSet(k,v){TDPL[k]=v;rTDPlans();}
 function tdPlNav(dir){TDPL.ref=calShift(TDPL.period,calD(TDPL.ref)||new Date(),dir).toISOString();rTDPlans();}
 function tdPlToday(){TDPL.ref=new Date().toISOString();rTDPlans();}
@@ -14140,6 +14193,7 @@ function tdPlList(){
     if(gids.indexOf(pl.groupId)<0)return false;
     var gg=tdGroup(pl.groupId);
     if(TDPL.branch&&(!gg||gg.branch!==TDPL.branch))return false;
+    if(TDPL.cat&&(!gg||gg.catId!==TDPL.cat))return false;
     if(TDPL.coach&&(!gg||gg.coachId!==TDPL.coach))return false;
     if(TDPL.group&&pl.groupId!==TDPL.group)return false;
     if(!calInRange(tdPlanDate(pl)+'T12:00',TDPL.period,calD(TDPL.ref)||new Date()))return false;
@@ -14168,31 +14222,20 @@ function rTDPlans(){
     h+='<div class="msg ok" id="tdpl-ok">تم الحفظ</div><div class="msg err" id="tdpl-err">أكمل: المجموعة، تاريخ الحصة، العنوان، والشرح</div>';
     h+='</div>';
   }
-  /* ===== الفلاتر ===== */
-  var brs=tdScopeBranchNames();
-  h+='<div class="rform" style="padding:.9rem 1rem;margin-bottom:1rem"><div style="display:flex;gap:.7rem;flex-wrap:wrap;align-items:end">';
-  h+='<div style="font-size:11.5px;font-weight:700;color:var(--gray);display:flex;align-items:center;gap:5px;padding-bottom:9px">'+ic('filter',12)+' فرز</div>';
-  var cs=tdScopeCoaches().filter(function(c){return coachInBranch(c,TDPL.branch);});
-  if(tdRole()!=='player'&&(brs.length>1||tdRole()!=='coach'))h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>الفرع</label>'+tdSel('tdplf-branch',brs,TDPL.branch,'كل الفروع')+'</div>';
-  if(tdRole()!=='coach'&&tdRole()!=='player')h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>المدرب</label>'+tdSel('tdplf-coach',cs.map(function(c){return [c.id,c.name];}),TDPL.coach,'كل المدربين')+'</div>';
-  h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>المجموعة</label>'+tdSel('tdplf-group',gs.filter(function(x){return (!TDPL.branch||x.branch===TDPL.branch)&&(!TDPL.coach||x.coachId===TDPL.coach);}).map(function(x){return [x.id,x.name+(x.cat?' — '+x.cat:'')];}),TDPL.group,'كل المجموعات')+'</div>';
-  if(TDPL.branch||TDPL.group||TDPL.coach)h+='<button class="btn btn-g btn-sm" onclick="TDPL.branch=\'\';TDPL.coach=\'\';TDPL.group=\'\';rTDPlans()">'+ic('x',12)+' مسح الفرز</button>';
-  h+='</div></div>';
+  /* ===== الفلاتر: الفرع ← المواليد ← المجموعة ===== */
+  var cf=tdCascadeFilter(TDPL,'tdplf');
+  h+=cf.html;
   h+=calBar(TDPL,'tdPl');
   var plans=tdPlList();
-  /* مفتاح ألوان المجموعات */
-  var legend=gs.filter(function(x){
-    if(TDPL.branch&&x.branch!==TDPL.branch)return false;
-    if(TDPL.coach&&x.coachId!==TDPL.coach)return false;
-    return true;
-  });
+  /* مفتاح ألوان المجموعات — بعد اختيار الفرع فقط كي لا يزدحم */
+  var legend=(TDPL.branch||cf.groups.length<=8)?cf.groups:[];
   if(legend.length>1){
     h+='<div class="gleg">'+legend.map(function(x){
       var cn=tdGroupCoachName(x.id);
       var n=TDX().plans.filter(function(pl){return pl.groupId===x.id&&calInRange(tdPlanDate(pl)+'T12:00',TDPL.period,calD(TDPL.ref)||new Date());}).length;
       return '<button class="gleg-i'+(TDPL.group===x.id?' on':'')+'" onclick="tdPlSet(\'group\',\''+(TDPL.group===x.id?'':x.id)+'\')"><span class="gleg-d" style="background:'+tdGroupColor(x.id)+'"></span>'+esc(x.name)+(cn?'<small>'+esc(cn)+'</small>':'')+'<b>'+n+'</b></button>';
     }).join('')+'</div>';
-  }
+  }else if(!TDPL.branch&&cf.groups.length>8)h+='<div class="xhint">'+ic('info',11)+' اختر الفرع ثم المواليد لعرض مجموعاتها بألوانها.</div>';
   if(TDPL.view==='cal'){
     h+=calHTML(TDPL,plans.map(function(pl){
       var gg=tdGroup(pl.groupId);
@@ -14222,9 +14265,7 @@ function rTDPlans(){
     h+='</div>';
   }
   g('tdc-plans').innerHTML=h;
-  var fb=g('tdplf-branch');if(fb)fb.onchange=function(){TDPL.branch=this.value;TDPL.coach='';TDPL.group='';rTDPlans();};
-  var fc2=g('tdplf-coach');if(fc2)fc2.onchange=function(){TDPL.coach=this.value;TDPL.group='';rTDPlans();};
-  var fg2=g('tdplf-group');if(fg2)fg2.onchange=function(){TDPL.group=this.value;rTDPlans();};
+  tdCascadeBind(TDPL,'tdplf',rTDPlans);
   var sg=g('tdpl-g');if(sg)sg.onchange=tdPlDayHint;
   hydrateIcons(g('tdc-plans'));
   /* النموذج يُنقل لصفحة مستقلة */
@@ -14661,7 +14702,7 @@ function tdSaveCoachEval(id){tdOpenCoachEval(id);}
 
 
 /* ================= المباريات الودية ================= */
-var TDFR={showForm:false,edit:'',res:'',det:'',view:'cal',period:'month',ref:new Date().toISOString(),branch:'',coach:'',group:'',status:''};
+var TDFR={showForm:false,edit:'',res:'',det:'',view:'cal',period:'month',ref:new Date().toISOString(),branch:'',cat:'',coach:'',group:'',status:''};
 function tdFrSet(k,v){TDFR[k]=v;rTDFriendly();}
 function tdFrNav(dir){TDFR.ref=calShift(TDFR.period,calD(TDFR.ref)||new Date(),dir).toISOString();rTDFriendly();}
 function tdFrToday(){TDFR.ref=new Date().toISOString();rTDFriendly();}
@@ -14673,6 +14714,7 @@ function tdFrList(){
     if(gids.indexOf(f.groupId)<0)return false;
     var gg=tdGroup(f.groupId);
     if(TDFR.branch&&(!gg||gg.branch!==TDFR.branch))return false;
+    if(TDFR.cat&&(!gg||gg.catId!==TDFR.cat))return false;
     if(TDFR.coach&&(!gg||gg.coachId!==TDFR.coach))return false;
     if(TDFR.group&&f.groupId!==TDFR.group)return false;
     if(TDFR.status&&f.status!==TDFR.status)return false;
@@ -14702,32 +14744,19 @@ function rTDFriendly(){
     h+='<div class="msg ok" id="tdfr-ok">تم الحفظ</div><div class="msg err" id="tdfr-err">أكمل: المجموعة، النوع، المنافس، والتاريخ</div>';
     h+='</div>';
   }
-  /* ===== الفلاتر ===== */
-  var brs=tdScopeBranchNames();
-  h+='<div class="rform" style="padding:.9rem 1rem;margin-bottom:1rem"><div style="display:flex;gap:.7rem;flex-wrap:wrap;align-items:end">';
-  h+='<div style="font-size:11.5px;font-weight:700;color:var(--gray);display:flex;align-items:center;gap:5px;padding-bottom:9px">'+ic('filter',12)+' فرز</div>';
-  var csF=tdScopeCoaches().filter(function(c){return coachInBranch(c,TDFR.branch);});
-  if(brs.length>1||tdRole()!=='coach')h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>الفرع</label>'+tdSel('tdfrf-branch',brs,TDFR.branch,'كل الفروع')+'</div>';
-  if(tdRole()!=='coach')h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>المدرب</label>'+tdSel('tdfrf-coach',csF.map(function(c){return [c.id,c.name];}),TDFR.coach,'كل المدربين')+'</div>';
-  h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>المجموعة</label>'+tdSel('tdfrf-group',gs.filter(function(x){return (!TDFR.branch||x.branch===TDFR.branch)&&(!TDFR.coach||x.coachId===TDFR.coach);}).map(function(x){return [x.id,x.name+(x.cat?' — '+x.cat:'')];}),TDFR.group,'كل المجموعات')+'</div>';
-  h+='<div class="fg" style="margin-bottom:0;min-width:140px"><label>الحالة</label>'+tdSel('tdfrf-status',Object.keys(TDFR_ST).map(function(k){return [k,TDFR_ST[k]];}),TDFR.status,'كل الحالات')+'</div>';
-  if(TDFR.branch||TDFR.group||TDFR.status||TDFR.coach)h+='<button class="btn btn-g btn-sm" onclick="TDFR.branch=\'\';TDFR.coach=\'\';TDFR.group=\'\';TDFR.status=\'\';rTDFriendly()">'+ic('x',12)+' مسح الفرز</button>';
-  h+='</div></div>';
-  /* ===== شريط التقويم ===== */
-  var legF=gs.filter(function(x){
-    if(TDFR.branch&&x.branch!==TDFR.branch)return false;
-    if(TDFR.coach&&x.coachId!==TDFR.coach)return false;
-    return true;
-  });
+  /* ===== الفلاتر: الفرع ← المواليد ← المجموعة ===== */
+  var cf=tdCascadeFilter(TDFR,'tdfrf','<div class="fg" style="margin-bottom:0;min-width:140px"><label>الحالة</label>'+tdSel('tdfrf-status',Object.keys(TDFR_ST).map(function(k){return [k,TDFR_ST[k]];}),TDFR.status,'كل الحالات')+'</div>');
+  h+=cf.html;
   h+=calBar(TDFR,'tdFr');
   var frs=tdFrList();
+  var legF=(TDFR.branch||cf.groups.length<=8)?cf.groups:[];
   if(legF.length>1){
     h+='<div class="gleg">'+legF.map(function(x){
       var cn=tdGroupCoachName(x.id);
       var n=TDX().friendlies.filter(function(f){return f.groupId===x.id&&calInRange(f.dt,TDFR.period,calD(TDFR.ref)||new Date());}).length;
       return '<button class="gleg-i'+(TDFR.group===x.id?' on':'')+'" onclick="tdFrSet(\'group\',\''+(TDFR.group===x.id?'':x.id)+'\')"><span class="gleg-d" style="background:'+tdGroupColor(x.id)+'"></span>'+esc(x.name)+(cn?'<small>'+esc(cn)+'</small>':'')+'<b>'+n+'</b></button>';
     }).join('')+'</div>';
-  }
+  }else if(!TDFR.branch&&cf.groups.length>8)h+='<div class="xhint">'+ic('info',11)+' اختر الفرع ثم المواليد لعرض مجموعاتها بألوانها.</div>';
   if(TDFR.view==='cal'){
     h+=calHTML(TDFR,frs.map(function(f){
       var gg=tdGroup(f.groupId);
@@ -14826,9 +14855,7 @@ function rTDFriendly(){
     h+='</div>';
   }
   g('tdc-friendly').innerHTML=h;
-  var fb=g('tdfrf-branch');if(fb)fb.onchange=function(){TDFR.branch=this.value;TDFR.coach='';TDFR.group='';rTDFriendly();};
-  var fcc=g('tdfrf-coach');if(fcc)fcc.onchange=function(){TDFR.coach=this.value;TDFR.group='';rTDFriendly();};
-  var fg2=g('tdfrf-group');if(fg2)fg2.onchange=function(){TDFR.group=this.value;rTDFriendly();};
+  tdCascadeBind(TDFR,'tdfrf',rTDFriendly);
   var fs=g('tdfrf-status');if(fs)fs.onchange=function(){TDFR.status=this.value;rTDFriendly();};
   hydrateIcons(g('tdc-friendly'));
   /* النموذج يُنقل لصفحة مستقلة */
@@ -14996,7 +15023,7 @@ function tdDelTask(id){
 }
 
 /* ================= الإعدادات (مدير النظام) ================= */
-var TDST={editG:'',editC:''};
+var TDST={editG:'',editC:'',gpage:'',addStory:false};
 var NT_EB={home:'منتخب فارس',squad:'منتخب فارس',camps:'منتخب فارس',matches:'منتخب فارس',evals:'منتخب فارس',reports:'منتخب فارس',settings:'منتخب فارس',follow:'الجهاز الفني',requests:'الجهاز الفني',tplan:'العمل الفني',drills:'العمل الفني'};
 var TD_EB={home:'الإدارة الفنية',branches:'البيانات الأساسية',cats:'البيانات الأساسية',players:'البيانات الأساسية',coaches:'البيانات الأساسية',evals:'العمل الفني',plans:'العمل الفني',tplan:'العمل الفني',friendly:'العمل الفني',follow:'المتابعة',requests:'المتابعة',reports:'التقارير',settings:'إعداد النظام',player:'ملف لاعب',coacheval:'تقييم المدربين',fix:'إكمال البيانات'};
 function tdHead(icn,title,sub,actions){
@@ -15169,185 +15196,120 @@ function tdImpPrev(){
   else h+='<button class="btn btn-r" onclick="tdImpRun(\''+jq(tid)+'\')">'+ic('swap',13)+' استيراد الآن</button>';
   el.innerHTML=h;hydrateIcons(el);
 }
+var TDST_GL=[
+  ['eval','دورية التقييم','clock','كل كم شهر يُقيَّم اللاعبون'],
+  ['stories','الستوريات','image','صور شاشة العرض في الرئيسية'],
+  ['struct','مراجعة البنية','list','الحصص الناقصة: مدرب، أيام، وقت، ملعب'],
+  ['audit','تدقيق الصلاحيات','shield','من يرى ماذا — المدربون والمشرفون'],
+  ['links','ربط الفروع والفرق','swap','الفرع فريق في البطولات إلا الخارجية'],
+  ['import','الاستيراد والمزامنة','refresh','من بطولات فارس إلى الإدارة الفنية']
+];
+function tdStGo(k){TDST.gpage=k;ADBR.sel='';ADBR.add=false;ADBR.edit='';TDST.addStory=false;rTDSettings();window.scrollTo({top:0});}
+function tdStHome(){TDST.gpage='';TDST.addStory=false;if(FPG.open)fpgHide();rTDSettings();}
+/* تعديل فئة/حصة من أي صفحة → صفحة الفرع في الإعدادات */
+function tdEditCatGo(id){var c=tdCat(id);if(!c)return;ADBR.sel=c.branch;ADBR.tab='cats';ADBR.edit='cat:'+id;ADBR.add=false;TDST.gpage='';tdP('settings');}
+function tdEditGroupGo(id){var gg=tdGroup(id);if(!gg)return;ADBR.sel=gg.branch;ADBR.tab='slots';ADBR.edit='slot:'+id;ADBR.add=false;TDST.gpage='';tdP('settings');}
 function rTDSettings(){
-  if(tdRole()!=='admin'){g('tdc-settings').innerHTML=emptyBox('shield','الإعدادات متاحة لمدير النظام فقط');return;}
+  var el=g('tdc-settings');
+  if(tdRole()!=='admin'){el.innerHTML=emptyBox('shield','الإعدادات متاحة لمدير النظام فقط');return;}
   var t=TDX();
-  var brs=t.branches.map(function(b){return b.name;});
-  var edC=TDST.editC?tdCat(TDST.editC):null;
-  var edG=TDST.editG?tdGroup(TDST.editG):null;
-  var h=tdHead('gear','الإعدادات','بناء الهيكل الإداري للأكاديمية بالترتيب','<span class="pg-chip">اتبع الخطوات من ١ إلى ٤</span>');
-  h+='<div class="td-flow">'+[['فرع','pin'],['إداري','shield'],['مدرب','whistle'],['فئة','list']].map(function(s,i){
-    return '<span class="td-flow-i">'+ic(s[1],12)+' '+s[0]+'</span>'+(i<3?'<span class="td-flow-a">'+ic('chev-l',11)+'</span>':'');
+  if(ADBR.sel&&!(t.branches||[]).some(function(b){return b.name===ADBR.sel;}))ADBR.sel='';
+  /* صفحة فرع */
+  if(ADBR.sel){adbDetail(el);return;}
+  /* صفحة من الإدارة العليا */
+  if(TDST.gpage){
+    var gl=TDST_GL.find(function(x){return x[0]===TDST.gpage;})||TDST_GL[0];
+    var h='<button class="btn btn-g btn-sm" onclick="tdStHome()" style="margin-bottom:1rem">'+ic('chev-r',12)+' الإعدادات</button>';
+    h+=tdHead(gl[2],gl[1],gl[3]);
+    if(TDST.gpage==='eval'){
+      h+='<div class="rform" style="max-width:640px">';
+      h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end"><div class="fg" style="margin-bottom:0"><label>الدورية <small>(شهري، كل شهرين، ربع سنوي...)</small></label><input type="text" id="tdst-period" value="'+esc(t.settings.evalPeriod||'شهري')+'"></div><button class="btn btn-n btn-sm" onclick="tdSavePeriod()">حفظ</button></div>';
+      h+='<div class="msg ok" id="tdst-ok">تم الحفظ</div></div>';
+    }
+    else if(TDST.gpage==='stories'){
+      h+='<div class="xbar"><div class="xhint" style="margin:0;flex:1">'+ic('image',12)+' تظهر كخلفية متحركة أعلى الرئيسية</div><button class="btn btn-r btn-sm" onclick="TDST.addStory=true;rTDSettings()">'+ic('plus',12)+' إضافة ستوري</button></div>';
+      h+=tdStoriesSettingsHTML();
+    }
+    else if(TDST.gpage==='struct')h+=tdStructHTML();
+    else if(TDST.gpage==='audit')h+=tdAuditHTML();
+    else if(TDST.gpage==='links')h+=btPanelHTML();
+    else if(TDST.gpage==='import')h+=tdImpHTML();
+    el.innerHTML=h;hydrateIcons(el);
+    if(TDST.gpage==='stories'){
+      var f=el.querySelector('#tdst-story');
+      if(f){
+        if(TDST.addStory){f.setAttribute('data-fpg','ستوري جديد');f.setAttribute('data-fpg-ic','image');f.setAttribute('data-fpg-sub','صورة بجودة عالية مع عنوان ورابط اختياريين');
+          var grid=f.querySelector('.tg');if(grid)grid.remove();
+          fpgAdopt(el,function(){TDST.addStory=false;rTDSettings();});}
+        else{
+          /* نبقي المعرض ونزيل النموذج */
+          var grid2=f.querySelector('.tg');
+          if(grid2){f.parentNode.insertBefore(grid2,f);grid2.style.marginTop='0';}
+          f.remove();if(FPG.open)fpgHide();
+          if(!grid2)el.insertAdjacentHTML('beforeend',emptyBox('image','لا توجد ستوريات بعد','أضف ستوري من الزر أعلاه'));
+        }
+      }
+    }else if(FPG.open)fpgHide();
+    return;
+  }
+  /* ===== الرئيسية: الفروع + الإدارة العليا ===== */
+  var brs=t.branches||[];
+  var h='';
+  h+=tdHead('gear','الإعدادات','كل فرع وما تحته: الموظفون والمدربون والملاعب والفترات والفئات والحصص — وإعدادات الإدارة العليا',
+    '<div class="pg-acts"><span class="pg-chip">'+ceN(brs.length)+' فرع</span><button class="btn btn-r btn-sm" onclick="adbNewOpen()">'+ic('plus',13)+' إضافة فرع</button></div>');
+  /* الإدارة العليا */
+  var gaps=tdStructGaps().length,aud=ACL.audit().filter(function(r){var idle=r.auth.filter(function(b){return r.active.indexOf(b)<0;});return (r.link!=='مرتبط')||!r.auth.length||idle.length>0||(r.orphan&&r.orphan.length>0);}).length;
+  var badges={eval:t.settings.evalPeriod||'شهري',stories:ceN((t.stories||[]).length),struct:gaps?ceN(gaps)+' ناقصة':'مكتملة',audit:aud?ceN(aud)+' تنبيه':'سليم',links:ceN(brs.length),import:tdAutoOn()?'مزامنة تلقائية':'يدوي'};
+  h+=tdSubHead('الإدارة العليا');
+  h+='<div class="tdst-gl">'+TDST_GL.map(function(x){
+    var warn=(x[0]==='struct'&&gaps)||(x[0]==='audit'&&aud);
+    return '<button class="tdst-gc'+(warn?' warn':'')+'" onclick="tdStGo(\''+x[0]+'\')"><span class="tdst-gi">'+ic(x[2],18)+'</span><span class="tdst-gt">'+x[1]+'</span><span class="tdst-gs">'+x[3]+'</span><span class="badge '+(warn?'pending':'')+'" style="'+(warn?'':'background:var(--bg);color:var(--txt)')+'">'+esc(badges[x[0]])+'</span></button>';
   }).join('')+'</div>';
-
-  /* ===== 1) الفروع ===== */
-  h+=tdStepBox(1,'pin','إضافة فرع',t.branches.length,true);
-  h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end"><div class="fg" style="margin-bottom:0"><label>اسم الفرع *</label><input type="text" id="tdst-br" placeholder="مثال: فارس النرجس"></div><button class="btn btn-r btn-sm" onclick="tdAddBranch()">'+ic('plus',12)+' إضافة</button></div>';
-  if(t.branches.length){
-    h+='<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.8rem">';
-    t.branches.forEach(function(b){
-      var used=t.groups.filter(function(x){return x.branch===b.name;}).length+t.players.filter(function(x){return x.branch===b.name;}).length;
-      h+='<span class="badge" style="background:var(--sur2);color:var(--txt);gap:7px;border:1px solid var(--brd)">'+ic('pin',10)+' '+esc(b.name)+(used?'<small style="color:var(--gray)">'+used+'</small>':'')+'<button style="background:none;border:none;color:var(--red);cursor:pointer;display:flex" onclick="tdDelBranch(\''+b.id+'\')">'+ic('x',11)+'</button></span>';
+  /* الفروع */
+  h+=tdSubHead('الفروع','<span class="pg-chip">'+ceN(brs.length)+'</span>');
+  if(!brs.length)h+=emptyBox('pin','لا توجد فروع بعد','اضغط «إضافة فرع» في أعلى الصفحة');
+  else{
+    h+='<div class="adb-grid">';
+    brs.forEach(function(b){
+      var s=adbStats(b.name);
+      h+='<div class="adb-card" onclick="adbOpen(\''+jq(b.name)+'\',\'info\')">';
+      h+='<div class="adb-hd">'+(b.img?'<div class="adb-ic" style="overflow:hidden;padding:0"><img src="'+esc(b.img)+'" style="width:100%;height:100%;object-fit:cover"></div>':'<div class="adb-ic">'+ic('pin',17)+'</div>')
+        +'<div class="adb-nm">'+esc(b.name)+(b.city?'<div style="font-size:10.5px;font-weight:500;color:var(--gray)">'+esc(b.city)+'</div>':'')+'</div>'
+        +'<span class="pg-chip" style="margin-inline-start:auto">'+ceN(s.players)+' لاعب</span></div>';
+      var gp=[];if(!b.city)gp.push('مدينة');if(!s.pitches)gp.push('ملاعب');if(!s.periods)gp.push('فترات');if(!s.coaches)gp.push('مدربين');
+      if(gp.length)h+='<div class="adb-warn">'+ic('info',11)+' بلا '+gp.join(' و')+'</div>';
+      h+=adbCardIcons(b.name,s);
+      h+='</div>';
     });
     h+='</div>';
   }
-  h+='<div class="msg err" id="tdst-br-err">لا يمكن حذف فرع مرتبط بفئات أو لاعبين أو مدربين</div></div>';
-
-  /* ===== 2) الإداريون ===== */
-  h+=tdStepBox(2,'shield','إضافة إداري فرع',t.staff.length,!!brs.length,'أضف فرعاً أولاً');
-  if(!brs.length)h+='<div style="font-size:11.5px;color:var(--gray)">'+ic('info',11)+' أضف فرعاً في الخطوة ١ ليمكنك تعيين إداري له.</div>';
+  el.innerHTML=h;hydrateIcons(el);
+  if(FPG.open&&!ADBR.add&&!ADBR.edit)fpgHide();
+}
+/* تدقيق الصلاحيات — من يرى ماذا */
+function tdAuditHTML(){
+  var h='<div class="rform" style="max-width:none">';
+  h+='<div style="font-size:11.5px;color:var(--gray);margin-bottom:.8rem">النطاق = الفروع المصرّح بها ∩ الإسناد الفعلي. الصف الأحمر يعني خللاً: حساب غير مرتبط، أو فرع مصرّح بلا إسناد (لن يرى فيه شيئاً).</div>';
+  var aud=ACL.audit();
+  if(!aud.length)h+='<div style="font-size:12px;color:var(--gray)">لا يوجد مدربون أو مشرفون بعد.</div>';
   else{
-    h+='<div class="frow"><div class="fg"><label>اسم الإداري *</label><input type="text" id="tdst-sname"></div>';
-    h+='<div class="fg"><label>اسم المستخدم <small>(لربط حسابه)</small></label><input type="text" id="tdst-suser"></div></div>';
-    h+='<div class="fg"><label>الفروع * <small>(يمكن أن يشرف على أكثر من فرع)</small></label>'
-      +'<div class="brpick" id="tdst-sbrs">'
-      +brs.map(function(b){return '<button type="button" class="brchip" data-br="'+esc(b)+'" onclick="this.classList.toggle(\'on\')">'+ic('pin',11)+' '+esc(b)+'</button>';}).join('')
-      +'</div></div>';
-    h+='<button class="btn btn-r btn-sm" onclick="tdAddStaff()">'+ic('plus',12)+' إضافة</button>';
-    h+='<div class="msg ok" id="tdst-s-ok">تمت الإضافة</div><div class="msg err" id="tdst-s-err">أكمل: الاسم والفرع</div>';
-    if(t.staff.length){
-      h+='<div class="at-wrap" style="margin-top:1rem"><table class="at"><thead><tr><th>الإداري</th><th>اسم المستخدم</th><th>الفرع</th><th></th></tr></thead><tbody>';
-      t.staff.forEach(function(s){
-        h+='<tr><td style="font-weight:700">'+esc(s.name)+'</td><td>'+esc(s.user||'—')+'</td><td>'+esc(ACL.authBranches(s).join('، ')||'—')+'</td><td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelStaff(\''+s.id+'\')">'+ic('trash',11)+'</button></td></tr>';
-      });
-      h+='</tbody></table></div>';
-    }
+    h+='<div class="at-wrap"><table class="at"><thead><tr><th>الاسم</th><th>الدور</th><th>الحساب</th><th>فروع مصرّحة</th><th>فروع فعّالة</th><th>فئات</th><th>مجموعات</th><th>لاعبون</th></tr></thead><tbody>';
+    aud.forEach(function(r){
+      var idle=r.auth.filter(function(b){return r.active.indexOf(b)<0;});
+      var warn=(r.link!=='مرتبط')||!r.auth.length||idle.length>0||(r.orphan&&r.orphan.length>0);
+      h+='<tr'+(warn?' style="background:rgba(221,29,69,.06)"':'')+'>'
+        +'<td style="font-weight:700">'+esc(r.name)+'</td>'
+        +'<td>'+r.role+'</td>'
+        +'<td>'+(r.link==='مرتبط'?'<span style="color:#16a34a">مرتبط</span>':'<span style="color:var(--red)">غير مرتبط</span>')+'</td>'
+        +'<td>'+esc(r.auth.join('، ')||'—')+'</td>'
+        +'<td>'+esc(r.active.join('، ')||'—')
+          +(idle.length?'<div style="font-size:10px;color:var(--red)">فرع بلا إسناد: '+esc(idle.join('، '))+'</div>':'')
+          +((r.orphan&&r.orphan.length)?'<div style="font-size:10px;color:#d97706">إسناد خارج التصريح: '+esc(r.orphan.join('، '))+'</div>':'')+'</td>'
+        +'<td>'+r.cats+'</td><td>'+r.groups+'</td><td>'+r.players+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
   }
-  h+='</div>';
-
-  /* ===== 3) المدربون ===== */
-  h+=tdStepBox(3,'whistle','إضافة مدرب',t.coaches.length,!!brs.length,'أضف فرعاً أولاً');
-  if(!brs.length)h+='<div style="font-size:11.5px;color:var(--gray)">'+ic('info',11)+' أضف فرعاً في الخطوة ١ ليمكنك تعيين مدرب له.</div>';
-  else{
-    h+='<div class="frow"><div class="fg"><label>اسم المدرب *</label><input type="text" id="tdstc-name"></div>';
-    h+='<div class="fg"><label>الفرع *</label>'+tdSel('tdstc-branch',brs,'','اختر الفرع')+'</div></div>';
-    h+='<div class="frow" style="grid-template-columns:1fr 1fr auto;align-items:end"><div class="fg" style="margin-bottom:0"><label>رقم الجوال</label><input type="tel" id="tdstc-phone" style="direction:ltr"></div><div class="fg" style="margin-bottom:0"><label>اسم المستخدم <small>(لربط حسابه)</small></label><input type="text" id="tdstc-user"></div><button class="btn btn-r btn-sm" onclick="tdAddCoachST()">'+ic('plus',12)+' إضافة</button></div>';
-    h+='<div class="msg ok" id="tdstc-ok">تمت الإضافة</div><div class="msg err" id="tdstc-err">أكمل: الاسم والفرع</div>';
-    if(t.coaches.length){
-      h+='<div class="at-wrap" style="margin-top:1rem"><table class="at"><thead><tr><th>المدرب</th><th>الفرع</th><th>الجوال</th><th>المجموعات</th><th></th></tr></thead><tbody>';
-      t.coaches.forEach(function(c){
-        var gs2=t.groups.filter(function(x){return x.coachId===c.id;});
-        h+='<tr><td style="font-weight:700">'+esc(c.name)+'</td><td>'+esc(c.branch)+'</td><td style="direction:ltr">'+esc(c.phone?phoneDisp(c.phone):'—')+'</td><td>'+(gs2.length?gs2.map(function(x){return esc(x.name);}).join('، '):'—')+'</td><td><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelCoach(\''+c.id+'\')">'+ic('trash',11)+'</button></td></tr>';
-      });
-      h+='</tbody></table></div>';
-    }
-  }
-  h+='</div>';
-
-  /* ===== 4) الفئات ===== */
-  h+=tdStepBox(4,'list','إضافة فئة'+(edC?' — تعديل «'+esc(edC.name)+'»':''),t.cats.length,!!brs.length,'أضف فرعاً أولاً');
-  if(!brs.length)h+='<div style="font-size:11.5px;color:var(--gray)">'+ic('info',11)+' الفئة تُضاف داخل فرع (مثال: مواليد ٢٠١٣).</div>';
-  else{
-    var _yopts=birthYearList().map(String).reverse();
-    h+='<div class="frow"><div class="fg"><label>الفرع *</label>'+tdSel('tdst-cbranch',brs,edC?edC.branch:'','اختر الفرع')+'</div>';
-    h+='<div class="fg"><label>سنة المواليد * <small>(تُضاف السنة التي بعدها تلقائياً)</small></label>'+tdSel('tdst-cyear',_yopts,edC?String(edC.year||''):'','اختر السنة')+'</div></div>';
-    h+='<div class="frow"><div class="fg"><label>تصنيف الفئة</label>'+tdSel('tdst-cgrade',TDGRADE,edC?(edC.grade||''):'','بلا تصنيف')+'</div>';
-    h+='<div class="fg"><label>المواليد المشمولة</label><input type="text" id="tdst-cyrs" readonly value="'+esc(edC?tdCatYearsLabel(edC):'—')+'" style="opacity:.75"></div></div>';
-    h+='<div class="frow"><div class="fg"><label>اسم الفئة <small>(اختياري)</small></label><input type="text" id="tdst-clabel" placeholder="مثال: براعم" value="'+esc(edC?(edC.label||''):'')+'"></div>';
-    h+='<div class="fg"><label>المدرب المسؤول <small>(اختياري)</small></label>'+tdSel('tdst-ccoach',t.coaches.filter(function(x){return !edC||x.branch===edC.branch||!edC.branch;}).map(function(x){return [x.id,x.name];}),edC?(edC.coachId||''):'','بدون مدرب')+'</div></div>';
-    h+='<div class="fg"><label>أيام التدريب <small>(اختياري)</small></label>'+tdSel('tdst-cdays',[['smw',TDDAYS.smw],['stt',TDDAYS.stt]],edC?(edC.days||''):'','اختر الأيام')+'</div>';
-    h+='<div style="display:flex;gap:.5rem"><button class="btn btn-r" style="flex:1" onclick="tdSaveCat()">'+(edC?'حفظ التعديلات':ic('plus',12)+' إضافة الفئة')+'</button>'+(edC?'<button class="btn btn-g" onclick="TDST.editC=\'\';rTDSettings()">إلغاء</button>':'')+'</div>';
-    h+='<div class="msg ok" id="tdst-c-ok">تم الحفظ</div><div class="msg err" id="tdst-c-err">أكمل: الفرع وسنة المواليد</div>';
-    if(t.cats.length){
-      h+='<div class="at-wrap" style="margin-top:1rem"><table class="at"><thead><tr><th>الفئة</th><th>الفرع</th><th>المدرب</th><th>اللاعبون</th><th></th></tr></thead><tbody>';
-      t.cats.forEach(function(c){
-        var cg=t.groups.filter(function(x){return x.catId===c.id;});
-        var cp=t.players.filter(function(p){return cg.some(function(x){return x.id===p.groupId;});}).length;
-        h+='<tr><td style="font-weight:700">'+esc(tdCatLabel(c))+'</td><td>'+esc(c.branch)+'</td><td>'+esc((c.coachId&&tdCoach(c.coachId)?tdCoach(c.coachId).name:'—'))+'</td><td>'+cp+'</td>';
-        h+='<td style="white-space:nowrap"><button class="ab" style="background:var(--bg);color:var(--accent)" onclick="TDST.editC=\''+c.id+'\';rTDSettings();window.scrollTo({top:0})">'+ic('edit',11)+'</button><button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelCat(\''+c.id+'\')">'+ic('trash',11)+'</button></td></tr>';
-      });
-      h+='</tbody></table></div>';
-    }
-    h+='<div class="msg err" id="tdst-c-del2">لا يمكن حذف فئة تحتوي فترات — احذف فتراتها أولاً</div>';
-  }
-  h+='</div>';
-
-  /* ===== 5) الفترات ===== */
-  h+=tdStepBox(5,'clock','إضافة حصة'+(edG?' — تعديل «'+esc(edG.name)+'»':''),t.groups.length,!!t.cats.length,'أضف فئة أولاً');
-  if(!t.cats.length)h+='<div style="font-size:11.5px;color:var(--gray)">'+ic('info',11)+' الحصة = فئة داخل فترة على ملعب، بمدرب وسعة تشغيلية.</div>';
-  else{
-    var _gbr=edG?edG.branch:'';
-    h+='<div class="frow"><div class="fg"><label>الفئة *</label>'
-      +tdSel('tdst-gcat',t.cats.map(function(c){return [c.id,c.branch+' \u203a '+tdCatFull(c)];}),edG?edG.catId:'','اختر الفئة')+'</div>';
-    h+='<div class="fg"><label>اسم الحصة *</label><input type="text" id="tdst-gname" placeholder="مثال: براعم — ملعب ١" value="'+esc(edG?edG.name:'')+'"></div></div>';
-    h+='<div class="frow" style="grid-template-columns:1fr 1fr 1fr">';
-    h+='<div class="fg"><label>الفترة *</label>'
-      +tdSel('tdst-gperiod',_gbr?tdPeriods(_gbr).map(function(pr){return [pr.id,tdPeriodName(pr)+' — '+tdPeriodTime(pr)];}):[],edG?(edG.periodId||''):'',_gbr?(tdPeriods(_gbr).length?'اختر الفترة':'لا فترات في هذا الفرع'):'اختر الفئة أولاً')+'</div>';
-    h+='<div class="fg"><label>الملعب *</label>'
-      +tdSel('tdst-gpitch',_gbr?tdPitchOpts(_gbr):[],edG?(edG.pitchId||''):'',_gbr?(tdPitchOpts(_gbr).length?'اختر الملعب':'لا ملاعب في هذا الفرع'):'اختر الفئة أولاً')+'</div>';
-    h+='<div class="fg"><label>السعة التشغيلية <small>(اتركها فارغة لسعة الملعب)</small></label><input type="number" id="tdst-gcap" min="1" style="direction:ltr" value="'+esc(edG&&edG.opCap?edG.opCap:'')+'"></div>';
-    h+='</div>';
-    h+='<div class="fg"><label>المدرب</label>'
-      +tdSel('tdst-gcoach',t.coaches.map(function(x){return [x.id,x.name+' — '+coachBranchLabel(x)];}),edG?(edG.coachId||''):'','بدون مدرب')+'</div>';
-    h+='<div class="jnote" style="margin-bottom:.7rem">'+ic('info',12)+' الأيام والوقت يأتيان من الفترة — لا تُكتب هنا مرة ثانية.</div>';
-    h+='<div style="display:flex;gap:.5rem"><button class="btn btn-r" style="flex:1" onclick="tdSaveGroup()">'+(edG?'حفظ التعديلات':ic('plus',12)+' إضافة الحصة')+'</button>'+(edG?'<button class="btn btn-g" onclick="TDST.editG=\'\';rTDSettings()">إلغاء</button>':'')+'</div>';
-    h+='<div class="msg ok" id="tdst-g-ok">تم الحفظ</div><div class="msg err" id="tdst-g-err">أكمل: الفئة واسم الحصة والفترة والملعب</div>';
-    if(t.groups.length){
-      h+='<div class="at-wrap" style="margin-top:1rem"><table class="at"><thead><tr><th>الفترة</th><th>الفئة</th><th>الأيام</th><th>الوقت</th><th>الملعب</th><th>المدرب</th><th>اللاعبون</th><th></th></tr></thead><tbody>';
-      t.groups.forEach(function(gg){
-        var c2=tdCat(gg.catId);
-        var pn2=t.players.filter(function(p){return p.groupId===gg.id;}).length;
-        h+='<tr><td style="font-weight:700">'+esc(gg.name)+'</td>'
-          +'<td>'+esc(c2?tdCatFull(c2):'—')+'</td>'
-          +'<td style="font-size:10.5px">'+(TDDAYS[gg.days]||'<span style="color:var(--amber)">ناقص</span>')+'</td>'
-          +'<td>'+(gg.t1?tdTimeLabel(gg):'<span style="color:var(--amber)">ناقص</span>')+'</td>'
-          +'<td>'+(gg.pitchId?esc(tdPitchLabel(gg.branch,gg.pitchId)):'<span style="color:var(--amber)">ناقص</span>')+'</td>'
-          +'<td>'+esc(gg.coachId&&tdCoach(gg.coachId)?tdCoach(gg.coachId).name:'—')+'</td>'
-          +'<td>'+ceN(pn2)+'</td>'
-          +'<td style="white-space:nowrap"><button class="ab" style="background:var(--bg);color:var(--accent)" onclick="TDST.editG=\''+gg.id+'\';rTDSettings();window.scrollTo({top:0})">'+ic('edit',11)+'</button>'
-          +'<button class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="tdDelGroup(\''+gg.id+'\')">'+ic('trash',11)+'</button></td></tr>';
-      });
-      h+='</tbody></table></div>';
-    }
-  }
-  h+='</div>';
-
-  /* ===== الفترات ===== */
-  h+='<div style="margin-top:1.4rem"></div>'+tdPeriodsHTML();
-
-  /* ===== الملاعب ===== */
-  h+='<div style="margin-top:1.4rem"></div>'+tdPitchesHTML();
-
-  /* ===== مراجعة البنية ===== */
-  h+='<div style="margin-top:1.4rem"></div>'+tdStructHTML();
-
-  /* ===== دورية التقييم ===== */
-  h+='<div class="rform" style="max-width:700px;margin-bottom:1.1rem">';
-  h+='<div class="cw-t" style="margin-bottom:.6rem">'+ic('clock',13)+' دورية تقييم اللاعبين</div>';
-  h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end"><div class="fg" style="margin-bottom:0"><label>الدورية <small>(شهري، كل شهرين، ربع سنوي...)</small></label><input type="text" id="tdst-period" value="'+esc(t.settings.evalPeriod||'شهري')+'"></div><button class="btn btn-n btn-sm" onclick="tdSavePeriod()">حفظ</button></div>';
-  h+='<div class="msg ok" id="tdst-ok">تم الحفظ</div>';
-  h+='</div>';
-  h+=tdStoriesSettingsHTML();
-
-  /* ===== لوحة تدقيق الصلاحيات: من يرى ماذا ===== */
-  if(tdRole()==='admin'){
-    h+='<div class="rform" style="margin-top:1.4rem">';
-    h+='<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem">'+ic('shield',15)+'<b style="font-size:13.5px">تدقيق الصلاحيات — من يرى ماذا</b></div>';
-    h+='<div style="font-size:11.5px;color:var(--gray);margin-bottom:.8rem">النطاق = الفروع المصرّح بها ∩ الإسناد الفعلي. الصف الأحمر يعني خللاً: حساب غير مرتبط، أو فرع مصرّح بلا إسناد (لن يرى فيه شيئاً).</div>';
-    var aud=ACL.audit();
-    if(!aud.length)h+='<div style="font-size:12px;color:var(--gray)">لا يوجد مدربون أو مشرفون بعد.</div>';
-    else{
-      h+='<div class="at-wrap"><table class="at"><thead><tr><th>الاسم</th><th>الدور</th><th>الحساب</th><th>فروع مصرّحة</th><th>فروع فعّالة</th><th>فئات</th><th>مجموعات</th><th>لاعبون</th></tr></thead><tbody>';
-      aud.forEach(function(r){
-        var idle=r.auth.filter(function(b){return r.active.indexOf(b)<0;});
-        var warn=(r.link!=='مرتبط')||!r.auth.length||idle.length>0||(r.orphan&&r.orphan.length>0);
-        h+='<tr'+(warn?' style="background:rgba(221,29,69,.06)"':'')+'>'
-          +'<td style="font-weight:700">'+esc(r.name)+'</td>'
-          +'<td>'+r.role+'</td>'
-          +'<td>'+(r.link==='مرتبط'?'<span style="color:#16a34a">مرتبط</span>':'<span style="color:var(--red)">غير مرتبط</span>')+'</td>'
-          +'<td>'+esc(r.auth.join('، ')||'—')+'</td>'
-          +'<td>'+esc(r.active.join('، ')||'—')
-            +(idle.length?'<div style="font-size:10px;color:var(--red)">فرع بلا إسناد: '+esc(idle.join('، '))+'</div>':'')
-            +((r.orphan&&r.orphan.length)?'<div style="font-size:10px;color:#d97706">إسناد خارج التصريح: '+esc(r.orphan.join('، '))+'</div>':'')+'</td>'
-          +'<td>'+r.cats+'</td><td>'+r.groups+'</td><td>'+r.players+'</td></tr>';
-      });
-      h+='</tbody></table></div>';
-    }
-    h+='</div>';
-  }
-  h+='<div style="height:1.6rem"></div>'+tdImpHTML();
-  g('tdc-settings').innerHTML=h;
-  hydrateIcons(g('tdc-settings'));
+  return h+'</div>';
 }
 function tdAddCoachST(){
   var name=gv('tdstc-name'),branch=gv('tdstc-branch');
@@ -19790,12 +19752,13 @@ function tdAddPitch(bid){
       }
       Object.assign(p0,data);
       logA('تعديل ملعب: '+nm+' — '+b.name,'edit','#1565c0');
-      sv();if(typeof ADBR!=='undefined')ADBR.edit='';tdRefresh();return;
+      sv();if(typeof ADBR!=='undefined'){ADBR.edit='';ADBR.add=false;}tdRefresh();return;
     }
   }
   if(b.pitches.some(function(p){return normName(p.name)===normName(nm);})){alert('يوجد ملعب بنفس الاسم في هذا الفرع');return;}
   b.pitches.push(Object.assign({id:uid(),active:true},data));
   logA('إضافة ملعب: '+nm+' — '+b.name,'pin','#16a34a');
+  if(typeof ADBR!=='undefined')ADBR.add=false;
   sv();tdRefresh();
 }
 function tdDelPitch(bid,pid){
@@ -19948,8 +19911,8 @@ function tdStructHTML(){
       +'<td style="font-weight:700">'+esc(x.gg.name)+'</td>'
       +'<td><span style="color:var(--amber);font-size:11px">'+esc(x.miss.join('، '))+'</span></td>'
       +'<td style="white-space:nowrap">'
-      +'<button class="ab" style="background:var(--bg);color:var(--accent)" onclick="TDST.editG=\''+x.gg.id+'\';tdP(\'settings\')">'+ic('edit',11)+'</button>'
-      +(x.cat?'<button class="ab" style="background:var(--bg);color:var(--amber)" onclick="TDST.editC=\''+x.cat.id+'\';tdP(\'settings\')">'+ic('list',11)+'</button>':'')
+      +'<button class="ab" style="background:var(--bg);color:var(--accent)" onclick="tdEditGroupGo(\''+x.gg.id+'\')">'+ic('edit',11)+'</button>'
+      +(x.cat?'<button class="ab" style="background:var(--bg);color:var(--amber)" onclick="tdEditCatGo(\''+x.cat.id+'\')">'+ic('list',11)+'</button>':'')
       +'</td></tr>';
   });
   h+='</tbody></table></div>';
@@ -20050,6 +20013,7 @@ function tdAddPeriod(){
   }
   t.periods.push({id:uid(),branch:br,name:nm,days:dy,t1:t1||'',t2:t2||'',active:true,at:Date.now()});
   logA('إضافة فترة: '+nm+' — '+br,'clock','#16a34a');
+  if(typeof ADBR!=='undefined')ADBR.add=false;
   sv();tdRefresh();
 }
 function tdDelPeriod(id){
@@ -20218,7 +20182,14 @@ function tdSlotInfoLine(gg){
    مركز واحد لكل فرع: الموظفون والمدربون والملاعب والفترات والفئات والحصص
    والمشاركات في البطولات. كل جدول له زر تعديل يفتح نموذجه معبّأً.
    ========================================================================== */
-var ADBR={sel:'',tab:'staff',edit:''};
+var ADBR={sel:'',tab:'staff',edit:'',add:false};
+/* الحاوية النشطة: صفحة الفروع في الإدارة والمتابعة، أو الإعدادات في الإدارة الفنية */
+function adbInTD(){var ad=g('AD');return !(ad&&ad.style.display==='block');}
+function adbEl(){return adbInTD()?g('tdc-settings'):g('adc-branches');}
+function adbRender(){if(adbInTD()){if(typeof rTDSettings==='function')rTDSettings();}else rADBranches();}
+function adbAdd(){ADBR.add=true;ADBR.edit='';adbRender();}
+function adbDone(){ADBR.add=false;ADBR.edit='';adbRender();}
+var ADB_ADD={staff:['إضافة موظف','shield','موظف جديد في الفرع — مدير أو إداري'],coaches:['إضافة مدرب','whistle','مدرب جديد في الفرع'],pitches:['إضافة ملعب','pin','ملعب جديد بحجمه وسعته'],periods:['إضافة فترة','clock','فترة زمنية على مستوى الفرع'],cats:['إضافة فئة','list','فئة مواليد داخل الفرع'],slots:['إضافة حصة','cal','فئة داخل فترة على ملعب بمدرب']};
 var ADBR_TABS=[['info','معلومات الفرع','pin'],['staff','الموظفون','shield'],['coaches','المدربون','whistle'],
                ['pitches','الملاعب','pin'],['periods','الفترات','clock'],
                ['cats','الفئات','list'],['slots','الحصص','cal'],
@@ -20228,22 +20199,23 @@ var ADBR_TABS=[['info','معلومات الفرع','pin'],['staff','الموظف
 function tdRefresh(){
   var ad=g('AD');
   if(ad&&ad.style.display==='block'){
-    if(typeof ADPAGE!=='undefined'&&ADPAGE==='branches'&&typeof rADBranches==='function')rADBranches();
+    if(typeof ADPAGE!=='undefined'&&ADPAGE==='branches'&&typeof rADBranches==='function')adbRender();
     return;
   }
+  if(typeof TDPAGE!=='undefined'&&TDPAGE==='settings'&&typeof rTDSettings==='function'){rTDSettings();return;}
   if(typeof TDPAGE!=='undefined'&&TDPAGE==='sched'&&typeof rTDSched==='function')rTDSched();
   else if(typeof rTDSettings==='function')rTDSettings();
 }
 function adbEditBtn(kind,id){
   return '<button class="ab" style="background:var(--bg);color:var(--accent)" title="تعديل" onclick="adbSetEdit(\''+kind+':'+id+'\')">'+ic('edit',11)+'</button>';
 }
-function adbSetEdit(k){ADBR.edit=(ADBR.edit===k?'':k);rADBranches();window.scrollTo({top:0,behavior:'smooth'});}
+function adbSetEdit(k){ADBR.edit=(ADBR.edit===k?'':k);ADBR.add=false;adbRender();}
 function adbEditing(kind){
   if(!ADBR.edit)return '';
   var p=ADBR.edit.split(':');
   return p[0]===kind?p[1]:'';
 }
-function adbCancel(){ADBR.edit='';rADBranches();}
+function adbCancel(){ADBR.edit='';ADBR.add=false;adbRender();}
 function adbCancelBtn(){
   return ADBR.edit?'<button class="btn btn-g btn-sm" onclick="adbCancel()">إلغاء التعديل</button>':'';
 }
@@ -20285,7 +20257,7 @@ function adbTours(bn){
 }
 
 function rADBranches(){
-  var el=g('adc-branches'),t=TDX();
+  var el=adbEl(),t=TDX();
   if(ADBR.sel&&!(t.branches||[]).some(function(b){return b.name===ADBR.sel;}))ADBR.sel='';
   if(ADBR.sel)return adbDetail(el);
   var h=adHead('pin','الفروع','كل فرع وما تحته من موظفين وملاعب وفترات وفئات',
@@ -20313,11 +20285,19 @@ function rADBranches(){
       if(!s.periods)gaps.push('فترات');
       if(!s.coaches)gaps.push('مدربين');
       if(gaps.length)h+='<div class="adb-warn">'+ic('info',11)+' بلا '+gaps.join(' و')+'</div>';
-      h+='<div class="adb-go">'+ic('chevron',13)+' فتح الفرع</div></div>';
+      h+=adbCardIcons(b.name,s);
+      h+='</div>';
     });
     h+='</div>';
   }
   el.innerHTML=h;hydrateIcons(el);
+}
+/* أيقونات أقسام الفرع داخل بطاقته — كل أيقونة تفتح صفحتها */
+function adbCardIcons(bn,s){
+  var items=[['info','البيانات','pin',null],['staff','الموظفون','shield',s.staff],['coaches','المدربون','whistle',s.coaches],['pitches','الملاعب','grid',s.pitches],['periods','الفترات','clock',s.periods],['cats','الفئات','list',s.cats],['slots','الحصص','cal',s.slots],['tours','المشاركات','trophy',s.tours]];
+  return '<div class="adb-icons">'+items.map(function(x){
+    return '<button class="adb-ib" title="'+x[1]+'" onclick="event.stopPropagation();adbOpen(\''+jq(bn)+'\',\''+x[0]+'\')"><span class="adb-ibi">'+ic(x[2],14)+(x[3]!=null?'<b>'+ceN(x[3])+'</b>':'')+'</span><span>'+x[1]+'</span></button>';
+  }).join('')+'</div>';
 }
 /* لوحة ترابط الفروع والفرق */
 function btPanelHTML(){
@@ -20332,7 +20312,7 @@ function btPanelHTML(){
       h+='<tr><td style="font-weight:700">'+esc(t.name)+'</td><td>'+esc(t.branch||'—')+'</td><td>'+ceN((t.players||[]).length)+'</td>'
         +'<td style="white-space:nowrap">'
         +'<button class="btn btn-r btn-sm" onclick="btMakeBranch(\''+jq(t.name)+'\')">'+ic('pin',11)+' اجعله فرعاً</button> '
-        +'<button class="btn btn-o btn-sm" onclick="btSetExt(\''+jq(t.name)+'\',true);rADBranches()">فريق خارجي</button>'
+        +'<button class="btn btn-o btn-sm" onclick="btSetExt(\''+jq(t.name)+'\',true);adbRender()">فريق خارجي</button>'
         +'</td></tr>';
     });
     h+='</tbody></table></div>';
@@ -20354,18 +20334,18 @@ function btMakeBranch(n){
   if(!t)return;
   t.ext=false;btEnsureBranch(t);
   logA('تحويل فريق إلى فرع: '+t.name,'pin','#16a34a');
-  sv();rADBranches();addN('صار فرعاً',t.name,'success');
+  sv();adbRender();addN('صار فرعاً',t.name,'success');
 }
 function btMakeTeam(n){
   var b=btBranch(n);if(!b)return;
   btEnsureTeam(b);
   logA('تسجيل فرع كفريق: '+b.name,'trophy','#16a34a');
-  sv();rADBranches();addN('سُجّل فريقاً',b.name,'success');
+  sv();adbRender();addN('سُجّل فريقاً',b.name,'success');
 }
 function btFixNow(){
   askConfirm('ربط كل الفروع والفرق؟\nكل فرع بلا فريق يُسجَّل فريقاً، وكل فريق غير خارجي بلا فرع يصير فرعاً.',function(){
     var n=btFixAll();
-    sv();rADBranches();
+    sv();adbRender();
     addN('تم الربط',ceN(n)+' سجلاً','success');
   });
 }
@@ -20395,18 +20375,18 @@ function adbAddBranch(){
      فالمطلوب إكمال بياناته في نفس اللحظة لا البحث عنه بعدين. */
   ADBR.sel=v;ADBR.tab='info';ADBR.edit='';
   adbNewClose();
-  sv();rADBranches();
+  sv();adbRender();
   addN('تم إضافة الفرع',v+' — أكمل بياناته الآن','success');
 }
-function adbOpen(bn){ADBR.sel=bn;ADBR.tab='info';ADBR.edit='';rADBranches();}
-function adbTab(k){ADBR.tab=k;ADBR.edit='';rADBranches();}
+function adbOpen(bn,tab){ADBR.sel=bn;ADBR.tab=tab||'info';ADBR.edit='';ADBR.add=false;adbRender();window.scrollTo({top:0});}
+function adbTab(k){ADBR.tab=k;ADBR.edit='';ADBR.add=false;adbRender();}
 
 function adbDetail(el){
   var t=TDX(),bn=ADBR.sel;
   var b=(t.branches||[]).find(function(x){return x.name===bn;});
   var s=adbStats(bn);
-  var h='<button class="btn btn-g btn-sm" onclick="ADBR.sel=\'\';ADBR.edit=\'\';rADBranches()" style="margin-bottom:1rem">'
-    +ic('swap',12)+' كل الفروع</button>';
+  var h='<button class="btn btn-g btn-sm" onclick="ADBR.sel=\'\';ADBR.edit=\'\';ADBR.add=false;adbRender()" style="margin-bottom:1rem">'
+    +ic('chev-r',12)+' كل الفروع</button>';
   h+='<div class="adb-hero">'
     +(b&&b.img?'<div class="adb-ic" style="width:48px;height:48px;overflow:hidden;padding:0"><img src="'+esc(b.img)+'" style="width:100%;height:100%;object-fit:cover"></div>'
               :'<div class="adb-ic" style="width:48px;height:48px">'+ic('pin',22)+'</div>')
@@ -20419,9 +20399,29 @@ function adbDetail(el){
     return '<button class="ce2-tab'+(ADBR.tab===x[0]?' on':'')+'" onclick="adbTab(\''+x[0]+'\')">'
       +ic(x[2],13)+' '+x[1]+(n==null?'':' <b style="opacity:.75">'+ceN(n)+'</b>')+'</button>';
   }).join('')+'</div>';
-  h+={info:adbInfo,staff:adbStaff,coaches:adbCoaches,pitches:adbPitches,periods:adbPeriods,
-      cats:adbCats,slots:adbSlots,tours:adbToursTab}[ADBR.tab](bn,b);
+  var addCfg=ADB_ADD[ADBR.tab];
+  var tabLbl=(ADBR_TABS.find(function(x){return x[0]===ADBR.tab;})||[])[1]||'';
+  if(addCfg){
+    h+='<div class="xbar" style="margin:.2rem 0 .9rem"><div class="xhint" style="margin:0;flex:1">'+ic(addCfg[1],12)+' '+esc(tabLbl)+' — '+esc(bn)+'</div><button class="btn btn-r btn-sm" onclick="adbAdd()">'+ic('plus',12)+' '+addCfg[0]+'</button></div>';
+  }
+  h+='<div id="adb-body">'+{info:adbInfo,staff:adbStaff,coaches:adbCoaches,pitches:adbPitches,periods:adbPeriods,
+      cats:adbCats,slots:adbSlots,tours:adbToursTab}[ADBR.tab](bn,b)+'</div>';
   el.innerHTML=h;hydrateIcons(el);
+  /* نموذج الإضافة/التعديل يفتح في صفحة مستقلة، ولا يظهر مدمجاً */
+  if(addCfg){
+    var f=el.querySelector('#adb-body > .rform');
+    if(f){
+      if(ADBR.add||ADBR.edit){
+        f.setAttribute('data-fpg',ADBR.edit?'تعديل — '+tabLbl:addCfg[0]);
+        f.setAttribute('data-fpg-ic',addCfg[1]);
+        f.setAttribute('data-fpg-sub',bn+' — '+addCfg[2]);
+        var cb=f.querySelector('.btn.btn-r');if(cb){cb.classList.remove('btn-sm');cb.style.flex='1';}
+        var cancel=f.querySelector('button[onclick="adbCancel()"]');
+        if(!cancel&&cb&&cb.parentNode){var x=document.createElement('button');x.className='btn btn-g';x.textContent='إلغاء';x.setAttribute('onclick','adbCancel()');cb.parentNode.appendChild(x);}
+        fpgAdopt(el,function(){ADBR.add=false;ADBR.edit='';adbRender();});
+      }else{f.remove();if(FPG.open)fpgHide();}
+    }else if(FPG.open&&!ADBR.add&&!ADBR.edit)fpgHide();
+  }else if(FPG.open)fpgHide();
 }
 function adbDelBranch(bid){
   var t=TDX(),b=(t.branches||[]).find(function(x){return x.id===bid;});
@@ -20435,7 +20435,7 @@ function adbDelBranch(bid){
     t.branches=t.branches.filter(function(x){return x.id!==bid;});
     t.periods=(t.periods||[]).filter(function(p){return p.branch!==b.name;});
     logA('حذف فرع: '+b.name,'trash','#DD1D45');
-    sv();ADBR.sel='';rADBranches();
+    sv();ADBR.sel='';adbRender();
   });
 }
 
@@ -20505,7 +20505,7 @@ function adbSaveInfo(bid){
     ADBR.sel=n;
     logA('تعديل اسم فرع: '+old+' ← '+n,'edit','#1565c0');
   }else logA('تعديل بيانات الفرع: '+n,'edit','#1565c0');
-  sv();rADBranches();
+  sv();adbRender();
   addN('تم الحفظ',n,'success');
 }
 function adbSaveTours(bid){
@@ -20513,7 +20513,7 @@ function adbSaveTours(bid){
   if(!b)return;
   b.tours=pickedBranches('adbi-tours');
   logA('تحديث بطولات الفرع: '+b.name,'trophy','#1565c0');
-  sv();rADBranches();addN('تم الحفظ',b.name,'success');
+  sv();adbRender();addN('تم الحفظ',b.name,'success');
 }
 
 /* ---------- حقول الشخص: نفس ما يُطلب عند تسجيل فريق ---------- */
@@ -20642,11 +20642,11 @@ function adbSaveStaff(bn){
     g('adb-s-err').textContent=err;fl('adb-s-err');return;
   }
   logA((ed?'تعديل موظف: ':'إضافة موظف: ')+rec.name+(ed?'':' — '+bn),ed?'edit':'shield',ed?'#1565c0':'#16a34a');
-  sv();ADBR.edit='';rADBranches();
+  sv();ADBR.edit='';ADBR.add=false;adbRender();
 }
 function adbDelStaff(id){
   askConfirm('حذف الموظف؟',function(){
-    var t=TDX();t.staff=t.staff.filter(function(x){return x.id!==id;});sv();rADBranches();
+    var t=TDX();t.staff=t.staff.filter(function(x){return x.id!==id;});sv();adbRender();
   });
 }
 
@@ -20700,7 +20700,7 @@ function adbSaveCoach(bn){
       var e2=adbSyncAccount(ex,'coach',bn,pin,un);
       if(e2){g('adb-c-err').textContent=e2;fl('adb-c-err');return;}
       logA('إضافة فرع للمدرب: '+ex.name+' — '+bn,'pin','#1565c0');
-      sv();ADBR.edit='';rADBranches();return;
+      sv();ADBR.edit='';ADBR.add=false;adbRender();return;
     }
     if(ex){g('adb-c-err').textContent='المدرب مضاف مسبقاً في هذا الفرع';fl('adb-c-err');return;}
     rec=Object.assign({id:uid(),branch:bn,branches:[bn],note:'',at:Date.now()},d,extra);
@@ -20712,7 +20712,7 @@ function adbSaveCoach(bn){
     g('adb-c-err').textContent=err;fl('adb-c-err');return;
   }
   logA((ed?'تعديل مدرب: ':'إضافة مدرب: ')+rec.name+(ed?'':' — '+bn),ed?'edit':'whistle',ed?'#1565c0':'#16a34a');
-  sv();ADBR.edit='';rADBranches();
+  sv();ADBR.edit='';ADBR.add=false;adbRender();
 }
 
 /* ---------- الملاعب ---------- */
@@ -20792,7 +20792,7 @@ function adbSavePeriod(bn){
     t.periods.push({id:uid(),branch:bn,name:nm,days:dy,t1:gv('adb-p1')||'',t2:gv('adb-p2')||'',active:true,at:Date.now()});
     logA('إضافة فترة: '+nm+' — '+bn,'clock','#16a34a');
   }
-  sv();ADBR.edit='';rADBranches();
+  sv();ADBR.edit='';ADBR.add=false;adbRender();
 }
 
 /* ---------- الفئات ---------- */
@@ -20850,7 +20850,7 @@ function adbSaveCat(bn){
       color:tdPickColor(bn,''),at:Date.now()});
     logA('إضافة فئة: '+name+' — '+bn,'list','#16a34a');
   }
-  sv();ADBR.edit='';rADBranches();
+  sv();ADBR.edit='';ADBR.add=false;adbRender();
 }
 
 /* ---------- الحصص ---------- */
@@ -20918,7 +20918,7 @@ function adbSaveSlot(bn){
     t.groups.push(Object.assign({id:uid(),color:tdPickColor(bn,''),at:Date.now()},data));
     logA('إضافة حصة: '+nm+' — '+bn,'cal','#16a34a');
   }
-  sv();ADBR.edit='';rADBranches();
+  sv();ADBR.edit='';ADBR.add=false;adbRender();
 }
 
 /* ---------- المشاركات والبطولات ---------- */
@@ -22578,7 +22578,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-staff2</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-hub</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
