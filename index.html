@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.18-pages">
+<meta name="build" content="2026.09.18-unify">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2769,7 +2769,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-pages</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-unify</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -2899,8 +2899,13 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       <div style="font-size:11px;color:rgba(255,255,255,.5)">مع حساب الإداري وحسابات المدربين</div>
     </div>
     <div class="mbody" style="text-align:right">
+      <div class="fg"><label>نوع الفريق</label>
+        <label class="ntsw" style="cursor:pointer"><input type="checkbox" id="ct-ext" onchange="this.closest('.ntsw').classList.toggle('on',this.checked)">
+          <span class="ntsw-dot"></span>
+          <span class="ntsw-tx"><b>فريق خارجي</b><small>أكاديمية أخرى تشارك في البطولة. اتركه فارغاً إن كان فرعاً من فروع أكاديمية فارس — فيُنشأ له فرع تلقائياً.</small></span></label>
+      </div>
       <div class="fg"><label>البطولات المشارِك فيها <small>(اختر واحدة أو أكثر — اختياري)</small></label><div id="ct-tours" class="tpick"></div></div>
-      <div class="frow"><div class="fg"><label>اسم الأكاديمية *</label><input type="text" id="ct-name" placeholder="اسم الأكاديمية"></div><div class="fg"><label>المدينة *</label><select id="ct-city"></select></div></div>
+      <div class="frow"><div class="fg"><label>اسم الأكاديمية / الفرع *</label><input type="text" id="ct-name" placeholder="اسم الأكاديمية أو الفرع"></div><div class="fg"><label>المدينة *</label><select id="ct-city"></select></div></div>
       <div class="fg"><label>شعار الأكاديمية *</label><div class="img-pick"><div class="img-prev" id="ct-prev" data-ic="shield"></div><div><label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,'ct')"></label><button class="img-rm" id="ct-rm" onclick="rmImg('ct','shield')">إزالة</button></div><input type="hidden" id="ct-img"></div></div>
       <div class="cat-wrap"><div class="cw-t"><span data-ic="shield"></span> حساب الإداري</div>
         <div class="frow"><div class="fg"><label>اسم الإداري *</label><input type="text" id="ct-aname" placeholder="الاسم الكامل"></div><div class="fg"><label>جواله *</label><input type="tel" id="ct-aphone" maxlength="10" style="direction:ltr" placeholder="05XXXXXXXX"></div></div>
@@ -4530,6 +4535,111 @@ function logA(txt,icn,color){
 function normName(s){return String(s==null?'':s).trim().replace(/\s+/g,' ');}
 
 /* ==========================================================================
+   الفرع والفريق كيان واحد
+   --------------------------------------------------------------------------
+   كل فريق في النظام هو فرع من فروع الأكاديمية، إلا الفرق الخارجية
+   (أكاديميات أخرى تشارك في بطولات فارس). فإضافة فرع تُنشئ فريقه،
+   وإضافة فريق داخلي تُنشئ فرعه، والاسم والمدينة والشعار تتزامن.
+   ========================================================================== */
+function btIsExt(t){return !!(t&&t.ext);}
+function btBranch(name){
+  var k=normName(name||'');
+  return ((TDX().branches)||[]).find(function(b){return normName(b.name)===k;})||null;
+}
+function btTeam(name){
+  var k=normName(name||'');
+  return ((DB.teams)||[]).find(function(t){return normName(t.name)===k;})||null;
+}
+/* كل الفرق في كل البطولات وفي المخزن العام */
+function btAllTeams(){
+  var out=[],seen={};
+  var add=function(t){
+    if(!t||!t.name)return;
+    var k=normName(t.name);if(seen[k])return;
+    seen[k]=1;out.push(t);
+  };
+  ((DB.teams)||[]).forEach(add);
+  ((DB.tournaments)||[]).forEach(function(tr){((tr.teams)||[]).forEach(add);});
+  return out;
+}
+/* فرع بلا فريق ← يُنشأ فريقه */
+function btEnsureTeam(b){
+  if(!b||!b.name)return null;
+  var t=btTeam(b.name);
+  if(t){
+    t.ext=false;t.branchId=b.id;
+    if(b.city&&!t.branch)t.branch=b.city;
+    if(b.img&&!t.img)t.img=b.img;
+    b.teamId=t.id||b.teamId;
+    return t;
+  }
+  t={id:uid(),name:b.name,branch:b.city||'',admin:'',phone:'',ext:false,branchId:b.id,
+     color:COLS[((DB.teams||[]).length)%COLS.length],img:b.img||'',coaches:[],categories:[],players:[]};
+  DB.teams=DB.teams||[];DB.teams.push(t);
+  b.teamId=t.id;
+  return t;
+}
+/* فريق داخلي بلا فرع ← يُنشأ فرعه */
+function btEnsureBranch(t){
+  if(!t||!t.name||btIsExt(t))return null;
+  var b=btBranch(t.name);
+  if(b){
+    b.teamId=t.id||b.teamId;t.branchId=b.id;
+    if(t.branch&&!b.city)b.city=t.branch;
+    if(t.img&&!b.img)b.img=t.img;
+    return b;
+  }
+  var x=TDX();
+  b={id:uid(),name:t.name,city:t.branch||'',img:t.img||'',tours:[],pitches:[],teamId:t.id||''};
+  x.branches=x.branches||[];x.branches.push(b);
+  t.branchId=b.id;
+  return b;
+}
+/* فحص الترابط: ما الذي ينقصه ربط؟ */
+function btScan(){
+  var out={noTeam:[],noBranch:[],ext:[],linked:0};
+  ((TDX().branches)||[]).forEach(function(b){
+    if(btTeam(b.name))out.linked++;else out.noTeam.push(b);
+  });
+  btAllTeams().forEach(function(t){
+    if(btIsExt(t)){out.ext.push(t);return;}
+    if(!btBranch(t.name))out.noBranch.push(t);
+  });
+  return out;
+}
+function btFixAll(){
+  var n=0;
+  ((TDX().branches)||[]).slice().forEach(function(b){if(!btTeam(b.name)){btEnsureTeam(b);n++;}});
+  btAllTeams().slice().forEach(function(t){if(!btIsExt(t)&&!btBranch(t.name)){btEnsureBranch(t);n++;}});
+  if(n)logA('مزامنة الفروع والفرق: '+n+' سجلاً','swap','#1565c0');
+  return n;
+}
+function btSetExt(name,ext){
+  var t=btTeam(name)||btAllTeams().find(function(x){return normName(x.name)===normName(name);});
+  if(!t)return;
+  t.ext=!!ext;
+  ((DB.tournaments)||[]).forEach(function(tr){
+    ((tr.teams)||[]).forEach(function(x){if(normName(x.name)===normName(name))x.ext=!!ext;});
+  });
+  if(!ext)btEnsureBranch(t);
+  logA((ext?'تحديد فريق خارجي: ':'تحويل فريق إلى فرع: ')+t.name,'swap','#d97706');
+  sv();
+}
+/* تغيير اسم الفرع يسري على فريقه */
+function btRename(oldName,newName){
+  if(normName(oldName)===normName(newName))return;
+  ((DB.teams)||[]).forEach(function(t){if(normName(t.name)===normName(oldName))t.name=newName;});
+  ((DB.tournaments)||[]).forEach(function(tr){
+    ((tr.teams)||[]).forEach(function(t){if(normName(t.name)===normName(oldName))t.name=newName;});
+    ((tr.matches)||[]).forEach(function(m){
+      if(normName(m.t1||'')===normName(oldName))m.t1=newName;
+      if(normName(m.t2||'')===normName(oldName))m.t2=newName;
+    });
+  });
+  ((DB.users)||[]).forEach(function(u){if(normName(u.team||'')===normName(oldName))u.team=newName;});
+}
+
+/* ==========================================================================
    التكليفات — صلاحية أساسية واحدة تصف الشخص، وتكليفات تحدد أين يعمل
    --------------------------------------------------------------------------
    كان الحساب يحمل دوراً واحداً ونطاقاً واحداً، فمن يدير فرعين أو يعمل في
@@ -5864,7 +5974,7 @@ function renderTM(){
   if(!TMVIEW){
     if(!list.length){el.innerHTML=emptyBox('trophy','لا توجد فرق بعد','أنشئ فريقاً من زر «إنشاء فريق»');return;}
     el.innerHTML='<div class="tg">'+list.map(function(x){var t=x.team;
-      return '<div class="tcard" style="--tc:'+(t.color||'#181946')+';position:relative" onclick="tmOpen(\''+esc(t.name)+'\')"><button onclick="event.stopPropagation();deleteTeamCompletely(\''+esc(t.name)+'\')" title="حذف الفريق نهائياً" style="position:absolute;top:8px;left:8px;z-index:2;background:rgba(221,29,69,.1);color:var(--red);border:none;width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center">'+ic('trash',14)+'</button>'+tlogo(t,58)+'<div class="tn">'+esc(t.name)+'</div><div class="tb">'+esc(t.branch||'—')+'</div><div class="tstats"><div><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div><div class="n">'+((t.coaches||[]).length)+'</div><div class="l">مدرب</div></div><div><div class="n">'+x.tours.length+'</div><div class="l">بطولة</div></div></div></div>';
+      return '<div class="tcard" style="--tc:'+(t.color||'#181946')+';position:relative" onclick="tmOpen(\''+esc(t.name)+'\')"><button onclick="event.stopPropagation();deleteTeamCompletely(\''+esc(t.name)+'\')" title="حذف الفريق نهائياً" style="position:absolute;top:8px;left:8px;z-index:2;background:rgba(221,29,69,.1);color:var(--red);border:none;width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center">'+ic('trash',14)+'</button>'+tlogo(t,58)+'<div class="tn">'+esc(t.name)+'</div><div class="tb">'+esc(t.branch||'—')+(btIsExt(t)?' <i style="font-style:normal;color:var(--gray)">• خارجي</i>':' <i style="font-style:normal;color:#1565c0">• فرع</i>')+'</div><div class="tstats"><div><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div><div class="n">'+((t.coaches||[]).length)+'</div><div class="l">مدرب</div></div><div><div class="n">'+x.tours.length+'</div><div class="l">بطولة</div></div></div></div>';
     }).join('')+'</div>';
     return;
   }
@@ -5986,8 +6096,11 @@ function createTeam(){
   if(bad==='dup'){g('ct-err').textContent='اسم مدرب مستخدم في حساب آخر';fl('ct-err');return;}
   if(bad){g('ct-err').textContent='أكمل جوال ورمز (4 أرقام) لكل مدرب';fl('ct-err');return;}
   /* create team in global store first */
-  var newTeam={id:uid(),name:name,branch:city,admin:an,phone:ap,color:COLS[(DB.teams||[]).length%COLS.length],img:gv('ct-img'),coaches:coaches,categories:[],players:[]};
+  var isExt=!!(g('ct-ext')&&g('ct-ext').checked);
+  var newTeam={id:uid(),name:name,branch:city,admin:an,phone:ap,ext:isExt,color:COLS[(DB.teams||[]).length%COLS.length],img:gv('ct-img'),coaches:coaches,categories:[],players:[]};
   upsertGlobalTeam(newTeam);
+  /* الفريق في النظام فرع، إلا الفرق الخارجية */
+  if(!isExt)btEnsureBranch(gTeam(name)||newTeam);
   /* add to each selected tournament */
   tours.forEach(function(tn){addTeamToTournament(name,tn);});
   /* admin account */
@@ -10165,7 +10278,7 @@ function uNewPage(){
   h+='<div class="fg req"><label>الرمز السري (٤ أرقام) *</label><input type="tel" inputmode="numeric" id="nu-pass" maxlength="4" placeholder="1234" style="direction:ltr;letter-spacing:6px;text-align:center"></div></div>';
   h+='<div class="frow"><div class="fg req"><label>الصلاحية الأساسية * <small>(وصف الحساب)</small></label><select id="nu-role">'
     +USER_ROLES.map(function(r){return '<option value="'+r+'">'+RL[r]+'</option>';}).join('')+'</select></div>';
-  h+='<div class="fg"><label>الفريق</label><select id="nu-team">'+opts((T().teams||[]).map(function(t){return t.name;}),'— بدون —')+'</select></div></div>';
+  h+='<div class="fg"><label>الفريق / الفرع</label><select id="nu-team">'+opts(acTeamOpts(),'— بدون —')+'</select></div></div>';
   h+='<div class="ce2-note">'+ic('info',13)+'<div>بعد الإضافة تُفتح بطاقة الحساب لتحديد <b>أنواع الصلاحيات (التكليفات)</b> — الحساب بلا تكليف لا يفتح أي نظام.</div></div>';
   h+='<button class="btn btn-r" style="width:100%;min-height:48px;margin-top:1rem" onclick="addUser()">'+ic('check',15)+' إضافة المستخدم</button>';
   h+='<div class="msg ok" id="nu-ok">تمت الإضافة</div><div class="msg err" id="nu-err">يرجى تعبئة الحقول</div>';
@@ -10274,8 +10387,9 @@ function rUED(){
   h+='<div class="frow"><div class="fg"><label>الصلاحية الأساسية * <small>(وصف الحساب)</small></label><select id="ued-role-i">'
     +USER_ROLES.map(function(r){return '<option value="'+r+'"'+(u.role===r?' selected':'')+'>'+RL[r]+'</option>';}).join('')
     +'</select></div>';
-  h+='<div class="fg"><label>الفريق</label><select id="ued-team-i"><option value="">— بدون —</option>'
-    +teams.map(function(t){return '<option value="'+esc(t)+'"'+(u.team===t?' selected':'')+'>'+esc(t)+'</option>';}).join('')
+  h+='<div class="fg"><label>الفريق / الفرع</label><select id="ued-team-i"><option value="">— بدون —</option>'
+    +acTeamOpts().map(function(t){return '<option value="'+esc(t)+'"'+(u.team===t?' selected':'')+'>'+esc(t)+'</option>';}).join('')
+    +(u.team&&acTeamOpts().every(function(t){return normName(t)!==normName(u.team);})?'<option value="'+esc(u.team)+'" selected>'+esc(u.team)+'</option>':'')
     +'</select></div></div>';
   h+='<div class="fg"><label>رقم الجوال</label>'+phoneField('ued-phone-i',u.phone||'')+'</div>';
 
@@ -10321,6 +10435,20 @@ function uedSave(){
   if(u.id===CU.id)CU=Object.assign({},u);
   logA('تعديل مستخدم: '+n+(before!==RL[r]?' — الصلاحية: '+before+' ← '+RL[r]:''),'edit','#1565c0');
   sv();rUED();renderATab();fl('ued-ok');
+}
+/* الفرق والفروع معاً — كان الحقل يعرض فرق البطولات وحدها، فتغيب
+   الفروع التي لم تُسجَّل فريقاً بعد ويظن المستخدم أن القائمة ناقصة. */
+function acTeamOpts(){
+  var out=[],seen={};
+  var add=function(nm){
+    nm=String(nm||'').trim();if(!nm)return;
+    var k=normName(nm);if(seen[k])return;
+    seen[k]=1;out.push(nm);
+  };
+  ((DB.teams)||[]).forEach(function(t){add(t.name);});
+  ((DB.tournaments)||[]).forEach(function(tr){((tr.teams)||[]).forEach(function(t){add(t.name);});});
+  ((TDX().branches)||[]).forEach(function(b){add(b.name);});
+  return out.sort(function(a,b){return a.localeCompare(b,'ar');});
 }
 /* ---------- تكليفات الحساب في بطاقة المستخدم ---------- */
 var UEDA=[];
@@ -19507,6 +19635,7 @@ function rADBranches(){
   var h=adHead('pin','الفروع','كل فرع وما تحته من موظفين وملاعب وفترات وفئات',
     '<span class="pg-chip">'+ceN((t.branches||[]).length)+' فرع</span>'
     +'<button class="btn btn-r btn-sm" onclick="adbNewOpen()">'+ic('plus',13)+' إضافة فرع</button>');
+  h+=btPanelHTML();
   if(!(t.branches||[]).length)h+=emptyBox('pin','لا توجد فروع بعد','اضغط «إضافة فرع» في أعلى الصفحة');
   else{
     h+='<div class="adb-grid">';
@@ -19534,6 +19663,56 @@ function rADBranches(){
   }
   el.innerHTML=h;hydrateIcons(el);
 }
+/* لوحة ترابط الفروع والفرق */
+function btPanelHTML(){
+  var sc=btScan();
+  if(!sc.noTeam.length&&!sc.noBranch.length)return '';
+  var h='<div class="ce2-note warn" style="margin-bottom:1rem">'+ic('info',13)
+    +'<div>كل فريق في النظام هو فرع، إلا الفرق الخارجية. هذه سجلات غير مترابطة:</div></div>';
+  if(sc.noBranch.length){
+    h+=tdSubHead('فرق بلا فرع','<span class="pg-chip" style="color:var(--amber)">'+ceN(sc.noBranch.length)+'</span>');
+    h+='<div class="at-wrap" style="margin-bottom:1rem"><table class="at"><thead><tr><th>الفريق</th><th>المدينة</th><th>لاعبون</th><th></th></tr></thead><tbody>';
+    sc.noBranch.forEach(function(t){
+      h+='<tr><td style="font-weight:700">'+esc(t.name)+'</td><td>'+esc(t.branch||'—')+'</td><td>'+ceN((t.players||[]).length)+'</td>'
+        +'<td style="white-space:nowrap">'
+        +'<button class="btn btn-r btn-sm" onclick="btMakeBranch(\''+jq(t.name)+'\')">'+ic('pin',11)+' اجعله فرعاً</button> '
+        +'<button class="btn btn-o btn-sm" onclick="btSetExt(\''+jq(t.name)+'\',true);rADBranches()">فريق خارجي</button>'
+        +'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  }
+  if(sc.noTeam.length){
+    h+=tdSubHead('فروع غير مسجّلة كفرق','<span class="pg-chip" style="color:var(--amber)">'+ceN(sc.noTeam.length)+'</span>');
+    h+='<div class="at-wrap" style="margin-bottom:1rem"><table class="at"><thead><tr><th>الفرع</th><th>المدينة</th><th></th></tr></thead><tbody>';
+    sc.noTeam.forEach(function(b){
+      h+='<tr><td style="font-weight:700">'+esc(b.name)+'</td><td>'+esc(b.city||'—')+'</td>'
+        +'<td><button class="btn btn-r btn-sm" onclick="btMakeTeam(\''+jq(b.name)+'\')">'+ic('trophy',11)+' سجّله فريقاً</button></td></tr>';
+    });
+    h+='</tbody></table></div>';
+  }
+  h+='<button class="btn btn-r" style="width:100%;margin-bottom:1.4rem" onclick="btFixNow()">'+ic('swap',14)+' ربط الكل تلقائياً</button>';
+  return h;
+}
+function btMakeBranch(n){
+  var t=btAllTeams().find(function(x){return normName(x.name)===normName(n);});
+  if(!t)return;
+  t.ext=false;btEnsureBranch(t);
+  logA('تحويل فريق إلى فرع: '+t.name,'pin','#16a34a');
+  sv();rADBranches();addN('صار فرعاً',t.name,'success');
+}
+function btMakeTeam(n){
+  var b=btBranch(n);if(!b)return;
+  btEnsureTeam(b);
+  logA('تسجيل فرع كفريق: '+b.name,'trophy','#16a34a');
+  sv();rADBranches();addN('سُجّل فريقاً',b.name,'success');
+}
+function btFixNow(){
+  askConfirm('ربط كل الفروع والفرق؟\nكل فرع بلا فريق يُسجَّل فريقاً، وكل فريق غير خارجي بلا فرع يصير فرعاً.',function(){
+    var n=btFixAll();
+    sv();rADBranches();
+    addN('تم الربط',ceN(n)+' سجلاً','success');
+  });
+}
 function adbNewOpen(){
   var h='';
   h+='<div class="frow"><div class="fg req"><label>اسم الفرع *</label><input type="text" id="adb-new" placeholder="مثال: فارس القيروان" onkeydown="if(event.key===\'Enter\')adbAddBranch()"></div>';
@@ -19552,7 +19731,9 @@ function adbAddBranch(){
   if((t.branches||[]).some(function(b){return normName(b.name)===normName(v);})){
     g('adb-err').textContent='يوجد فرع بنفس الاسم';fl('adb-err');return;
   }
-  t.branches.push({id:uid(),name:v,city:city,img:gv('adbn-img')||'',tours:[],pitches:[]});
+  var nb={id:uid(),name:v,city:city,img:gv('adbn-img')||'',tours:[],pitches:[]};
+  t.branches.push(nb);
+  btEnsureTeam(nb);                 /* الفرع فريق أيضاً في البطولات */
   logA('إضافة فرع: '+v,'pin','#16a34a');
   /* نفتح صفحة الفرع فوراً — الفرع بلا ملاعب ولا فترات لا يفيد،
      فالمطلوب إكمال بياناته في نفس اللحظة لا البحث عنه بعدين. */
@@ -19643,6 +19824,8 @@ function adbSaveInfo(bid){
   }
   var old=b.name;
   b.city=city;b.img=gv('adbi-img')||'';
+  var bt=btTeam(b.name);
+  if(bt){bt.branch=b.city;if(b.img)bt.img=b.img;}
   if(normName(old)!==normName(n)||old!==n){
     /* تغيير الاسم يسري على كل ما يشير للفرع بالاسم لا بالمعرّف */
     b.name=n;
@@ -19662,6 +19845,7 @@ function adbSaveInfo(bid){
       if(u.branch===old)u.branch=n;
       if(u.branches)u.branches=u.branches.map(function(y){return y===old?n:y;});
     });
+    btRename(old,n);                /* الفريق يتبع الفرع في الاسم */
     ADBR.sel=n;
     logA('تعديل اسم فرع: '+old+' ← '+n,'edit','#1565c0');
   }else logA('تعديل بيانات الفرع: '+n,'edit','#1565c0');
@@ -20740,7 +20924,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-pages</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-unify</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
