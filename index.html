@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.18-acl">
+<meta name="build" content="2026.09.18-pages">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -991,6 +991,33 @@ table.ut tbody tr:hover{background:rgba(255,255,255,.03)}
 .urole{display:inline-flex;align-items:center;gap:.3rem;font-size:11px;white-space:nowrap}
 .urole .udot{background:var(--rc)}
 .upag{display:flex;align-items:center;justify-content:center;gap:.7rem;margin-top:1rem;font-size:11.5px;color:var(--gray);flex-wrap:wrap}
+/* ===== صفحة النموذج ===== */
+.fpg{position:fixed;inset:0;z-index:700;background:var(--bg);display:none;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.fpg.open{display:block}
+body.fpg-on{overflow:hidden}
+.fpg-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:.8rem;
+  padding:calc(.8rem + env(safe-area-inset-top,0px)) 1rem .8rem;background:var(--sur);
+  border-bottom:1px solid var(--brd);box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.fpg-back{display:flex;align-items:center;gap:.3rem;background:var(--bg2,rgba(255,255,255,.05));
+  border:1px solid var(--brd);border-radius:10px;padding:.45rem .75rem;color:inherit;font-family:inherit;
+  font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0}
+.fpg-back:hover{border-color:var(--red);color:var(--red)}
+.fpg-tx{flex:1;min-width:0}
+.fpg-t{font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fpg-s{font-size:11px;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fpg-ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+  background:rgba(221,29,69,.1);color:var(--red);flex-shrink:0}
+.fpg .fpg-body{padding:1.4rem 1.2rem calc(2.6rem + env(safe-area-inset-bottom,0px));max-width:760px;margin:0 auto}
+.fpg-body>[data-fpg]{margin:0!important;max-width:100%!important;background:transparent;border:0;padding:0;box-shadow:none}
+@media(max-width:600px){.fpg-t{font-size:14px}.fpg .fpg-body{padding-inline:.9rem}}
+/* شريط أدوات القائمة */
+.lst-bar{display:flex;align-items:center;gap:.5rem;margin-inline-start:auto;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--sur);border:1px solid var(--brd);border-radius:10px;overflow:hidden}
+.seg button{display:flex;align-items:center;gap:.3rem;background:transparent;border:0;padding:.4rem .7rem;
+  font-size:11.5px;font-family:inherit;color:var(--gray);cursor:pointer}
+.seg button+button{border-inline-start:1px solid var(--brd)}
+.seg button.on{background:rgba(221,29,69,.12);color:var(--red);font-weight:700}
+@media(max-width:600px){.lst-bar{width:100%;margin:.5rem 0 0}.lst-bar .seg{flex:1}.seg button{flex:1;justify-content:center}}
 /* ===== تكليفات الحساب ===== */
 .asg-row{background:var(--bg2,rgba(255,255,255,.04));border:1px solid var(--brd);border-radius:11px;padding:.55rem .6rem;margin-bottom:.45rem}
 .asg-top{display:flex;gap:.4rem;align-items:center}
@@ -2742,7 +2769,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-acl</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-pages</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4661,6 +4688,56 @@ function acMigrate(db){
 function myAC(){return CU||null;}
 function iCan(sys,role){return acHas(myAC(),sys,role);}
 function myScope(sys,role){return acScope(myAC(),sys,role);}
+
+/* ==========================================================================
+   صفحة النموذج — «إضافة/جديد/تقييم جديد» تفتح صفحة مستقلة
+   --------------------------------------------------------------------------
+   كان النموذج يتمدد داخل القائمة فيدفعها لأسفل ويختلط بها. الآن يُنقل
+   العنصر نفسه (بمعرّفاته كما هي) إلى صفحة مستقلة برأس وزر رجوع، فتعمل
+   كل دوال الحفظ القائمة بلا تغيير.
+   ========================================================================== */
+var FPG={open:false,close:null};
+function fpgShell(){return g('FPG');}
+function fpgSetHead(t,sub,icn){
+  var a=g('fpg-t');if(a)a.textContent=t||'نموذج';
+  var b=g('fpg-s');if(b)b.textContent=sub||'';
+  var c=g('fpg-ic');if(c){c.innerHTML=ic(icn||'plus',19);}
+}
+function fpgShow(){
+  var m=fpgShell();if(!m)return;
+  m.classList.add('open');document.body.classList.add('fpg-on');
+  FPG.open=true;m.scrollTop=0;
+}
+function fpgHide(){
+  var m=fpgShell();if(!m)return;
+  m.classList.remove('open');document.body.classList.remove('fpg-on');
+  var b=g('fpg-body');if(b)b.innerHTML='';
+  FPG.open=false;FPG.close=null;
+}
+function fpgBack(){
+  var f=FPG.close;
+  fpgHide();
+  if(typeof f==='function')f();
+}
+/* ينقل النموذج المعلَّم بـ data-fpg من القائمة إلى الصفحة */
+function fpgAdopt(host,close){
+  var f=host&&host.querySelector('[data-fpg]');
+  if(!f){if(FPG.open)fpgHide();return false;}
+  fpgSetHead(f.getAttribute('data-fpg'),f.getAttribute('data-fpg-sub'),f.getAttribute('data-fpg-ic'));
+  var b=g('fpg-body');if(!b)return false;
+  b.innerHTML='';b.appendChild(f);
+  FPG.close=close||null;
+  fpgShow();hydrateIcons(b);
+  return true;
+}
+/* يفتح صفحة بنموذج جاهز */
+function fpgHTML(t,icn,sub,html,close){
+  var b=g('fpg-body');if(!b)return;
+  fpgSetHead(t,sub,icn);
+  b.innerHTML='<div data-fpg>'+html+'</div>';
+  FPG.close=close||null;
+  fpgShow();hydrateIcons(b);
+}
 
 /* ================= ACCOUNT SAFETY ================= */
 function normPhone(s){
@@ -7305,6 +7382,8 @@ function gP(id,btn){
    قبل الإصلاح كانت تُنادي gP دائماً مهما كان النظام المفتوح، فتُخفي
    صفحات الأنظمة الأخرى — وهذا سبب اختفاء المحتوى بعد دقيقة من فتحه. */
 function rAllSoft(){
+  /* لا نعيد الرسم ونموذج مفتوح — المزامنة كل دقيقة كانت تمسح ما يكتبه */
+  if(typeof FPG!=='undefined'&&FPG.open)return;
   try{
     var ad=g('AD');
     if(ad&&ad.style.display==='block'){if(typeof adP==='function')adP(ADPAGE);return;}
@@ -9978,10 +10057,9 @@ function autoSplit(cat){
   rAdminGroups();
 }
 var UVIEW=(function(){try{return localStorage.getItem('fa_uview')||'table';}catch(e){return 'table';}})();
-var UPAGE=0,UPER=30,UNEW=false;
+var UPAGE=0,UPER=30;
 function uSetView(v){UVIEW=v;try{localStorage.setItem('fa_uview',v);}catch(e){}renderATab();}
 function uPage(d){UPAGE=Math.max(0,UPAGE+d);renderATab();window.scrollTo({top:0,behavior:'smooth'});}
-function uToggleNew(){UNEW=!UNEW;renderATab();}
 function admUsersHTML(skipReqs){
   /* الطلبات لها تبويبها الخاص في «الإدارة والمتابعة» — عرضها فوق
      قائمة فيها عشرات الحسابات كان يدفع القائمة لأسفل الصفحة. */
@@ -9996,21 +10074,14 @@ function admUsersHTML(skipReqs){
 
   h+='<div style="margin-top:1.6rem" class="sec-t"><div class="bar"></div><h2 style="font-size:14px">المستخدمون ('+ceN(list.length)
     +(list.length!==DB.users.length?' <span style="color:var(--gray);font-weight:400">من '+ceN(DB.users.length)+'</span>':'')+')</h2>'
-    +'<div class="uvw">'
-    +'<button class="uvb'+(UVIEW==='table'?' on':'')+'" onclick="uSetView(\'table\')" title="جدول">'+ic('table',13)+' جدول</button>'
-    +'<button class="uvb'+(UVIEW==='cards'?' on':'')+'" onclick="uSetView(\'cards\')" title="بطاقات">'+ic('grid',13)+' بطاقات</button>'
-    +'<button class="btn btn-r btn-sm" style="margin-inline-start:.4rem" onclick="uToggleNew()">'
-    +ic(UNEW?'x':'plus',12)+' '+(UNEW?'إخفاء':'مستخدم جديد')+'</button>'
+    +'<div class="lst-bar">'
+    +'<div class="seg">'
+    +'<button class="'+(UVIEW==='table'?'on':'')+'" onclick="uSetView(\'table\')">'+ic('table',13)+' جدول</button>'
+    +'<button class="'+(UVIEW==='cards'?'on':'')+'" onclick="uSetView(\'cards\')">'+ic('grid',13)+' بطاقات</button>'
+    +'</div>'
+    +'<button class="btn btn-r btn-sm" onclick="uNewPage()">'+ic('user-plus',13)+' مستخدم جديد</button>'
     +'</div></div>';
 
-  if(UNEW){
-    h+='<div class="rform" style="max-width:640px;margin:.8rem 0 1rem">';
-    h+='<div class="cw-t" style="margin-bottom:.6rem">'+ic('user-plus',13)+' مستخدم جديد</div>';
-    h+='<div class="frow"><div class="fg"><label>الاسم الكامل *</label><input type="text" id="nu-name" placeholder="الاسم"></div><div class="fg"><label>الرمز السري (4 أرقام) *</label><input type="text" id="nu-pass" maxlength="4" placeholder="0000" style="direction:ltr"></div></div>';
-    h+='<div class="frow"><div class="fg"><label>الصلاحية *</label><select id="nu-role">'+USER_ROLES.map(function(r){return '<option value="'+r+'">'+RL[r]+'</option>';}).join('')+'</select></div><div class="fg"><label>الفريق</label><select id="nu-team">'+opts((T().teams||[]).map(function(t){return t.name;}),'— بدون —')+'</select></div></div>';
-    h+='<button class="btn btn-r" style="width:100%" onclick="addUser()">إضافة المستخدم</button><div class="msg ok" id="nu-ok">تمت الإضافة</div><div class="msg err" id="nu-err">يرجى تعبئة الحقول</div>';
-    h+='</div>';
-  }
   h+='<div class="ufilt">';
   h+='<div class="urow1">';
   h+='<div class="usearch">'+ic('filter',14)+'<input type="text" id="u-q" placeholder="ابحث بالاسم أو اسم المستخدم أو الجوال…" value="'+esc(UF.q)+'" oninput="uSetQ(this.value)">'
@@ -10086,6 +10157,19 @@ function admUsersHTML(skipReqs){
     h+='</div>';
   }
   return h;
+}
+/* صفحة تسجيل مستخدم جديد */
+function uNewPage(){
+  var h='';
+  h+='<div class="frow"><div class="fg req"><label>الاسم الكامل *</label><input type="text" id="nu-name" placeholder="الاسم الثلاثي"></div>';
+  h+='<div class="fg req"><label>الرمز السري (٤ أرقام) *</label><input type="tel" inputmode="numeric" id="nu-pass" maxlength="4" placeholder="1234" style="direction:ltr;letter-spacing:6px;text-align:center"></div></div>';
+  h+='<div class="frow"><div class="fg req"><label>الصلاحية الأساسية * <small>(وصف الحساب)</small></label><select id="nu-role">'
+    +USER_ROLES.map(function(r){return '<option value="'+r+'">'+RL[r]+'</option>';}).join('')+'</select></div>';
+  h+='<div class="fg"><label>الفريق</label><select id="nu-team">'+opts((T().teams||[]).map(function(t){return t.name;}),'— بدون —')+'</select></div></div>';
+  h+='<div class="ce2-note">'+ic('info',13)+'<div>بعد الإضافة تُفتح بطاقة الحساب لتحديد <b>أنواع الصلاحيات (التكليفات)</b> — الحساب بلا تكليف لا يفتح أي نظام.</div></div>';
+  h+='<button class="btn btn-r" style="width:100%;min-height:48px;margin-top:1rem" onclick="addUser()">'+ic('check',15)+' إضافة المستخدم</button>';
+  h+='<div class="msg ok" id="nu-ok">تمت الإضافة</div><div class="msg err" id="nu-err">يرجى تعبئة الحقول</div>';
+  fpgHTML('مستخدم جديد','user-plus','الاسم والرمز والصلاحية الأساسية',h,null);
 }
 function uCardHTML(u){
   var acts='<div class="uacts">';
@@ -10358,9 +10442,9 @@ function addUser(){
   DB.users.push(nu);
   if(FA.enabled)faSync(FA.upsertUser(nu,p));
   logA('إضافة مستخدم: '+n+' ('+RL[r]+')','user-plus','#16a34a');
-  sv();fl('nu-ok');renderATab();
-  /* الحساب بلا تكليف لا يفتح شيئاً — نفتح بطاقته ليُكمل تكليفاته فوراً */
-  setTimeout(function(){uedOpen(nu.id);},350);
+  sv();fl('nu-ok');
+  /* الحساب بلا تكليف لا يفتح شيئاً — نغلق صفحة التسجيل ونفتح بطاقته فوراً */
+  setTimeout(function(){fpgHide();renderATab();uedOpen(nu.id);},450);
 }
 function delU(id){
   askConfirm('حذف هذا المستخدم؟',function(){
@@ -13192,8 +13276,7 @@ function rTDPlayers(){
   if(TDPF.showForm&&tdCanManage()){
     var ed=TDPF.edit?tdPlayer(TDPF.edit):null;
     var fgs=TDPF.edit&&ed?gs:gs;
-    h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem">';
-    h+='<div class="sub-head" style="margin-bottom:.7rem"><span class="sh-line"></span><h2>'+(ed?'تعديل لاعب':'إضافة لاعب جديد')+'</h2></div>';
+    h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem" data-fpg="'+(ed?'تعديل لاعب':'لاعب جديد')+'" data-fpg-ic="user-plus" data-fpg-sub="بيانات اللاعب وتسجيله في الفئة">';
     var edG0=ed?tdGroup(ed.groupId):null;
     var edCat=edG0?edG0.catId:'';
     var _n=splitName(ed);
@@ -13313,6 +13396,8 @@ function rTDPlayers(){
   var fc=g('tdpf-cat');if(fc)fc.onchange=function(){TDPF.cat=this.value;TDPF.group='';rTDPlayers();};
   var fg2=g('tdpf-group');if(fg2)fg2.onchange=function(){TDPF.group=this.value;rTDPlayers();};
   hydrateIcons(g('tdc-players'));
+  /* النموذج يُنقل لصفحة مستقلة */
+  fpgAdopt(g('tdc-players'),function(){TDPF.showForm=false;TDPF.edit='';rTDPlayers();});
 }
 /* حقول الهوية والتواصل الموحّدة — تُقرأ من النموذج وتُطبَّق على الإضافة والتعديل معاً */
 function tdPlayerIdent(){
@@ -13509,7 +13594,7 @@ function rTDEvals(){
     +'<span class="pg-chip">'+ic('clock',12)+' '+esc(t.settings.evalPeriod||'شهري')+'</span>');
 
   if(TDEV.showForm&&canAdd){
-    h+='<div class="ev-card">';
+    h+='<div class="ev-card" data-fpg="تقييم جديد" data-fpg-ic="star" data-fpg-sub="عشرة معايير — خمسة فنية وخمسة شخصية">';
     /* ترويسة */
     h+='<div class="ev-hd"><div class="ev-hd-ic">'+ic('star',20)+'</div>'
       +'<div><div class="ev-hd-t">نموذج تقييم لاعب</div><div class="ev-hd-s">عشرة معايير — خمسة فنية وخمسة شخصية، كل معيار من 1 إلى 5</div></div></div>';
@@ -13593,6 +13678,8 @@ function rTDEvals(){
     tdEvPaintSum();
   }
   hydrateIcons(g('tdc-evals'));
+  /* النموذج يُنقل لصفحة مستقلة */
+  fpgAdopt(g('tdc-evals'),function(){TDEV.showForm=false;rTDEvals();});
 }
 function tdSaveEval(){
   var gid=gv('tdev-g'),pid=gv('tdev-p'),period=gv('tdev-period');
@@ -13641,7 +13728,7 @@ function rTDPlans(){
   var h=tdHead('doc','الخطط التدريبية','خطة لكل حصة بيومها — عنوان التمرين وصورته وشرحه وأهدافه، ولكل مجموعة لون في التقويم',
     (canAdd?'<button class="btn btn-r btn-sm" onclick="TDPL.showForm=!TDPL.showForm;rTDPlans()">'+ic(TDPL.showForm?'x':'plus',13)+' '+(TDPL.showForm?'إغلاق النموذج':'رفع خطة')+'</button>':''));
   if(TDPL.showForm&&canAdd){
-    h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem">';
+    h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem" data-fpg="خطة تدريبية جديدة" data-fpg-ic="doc">';
     h+='<div class="frow"><div class="fg"><label>المجموعة *</label>'+tdSel('tdpl-g',tdCatOpts(),'','اختر الفئة')+'</div>';
     h+='<div class="fg"><label>تاريخ الحصة *</label><input type="date" id="tdpl-d" value="'+calISO(calD(TDPL.ref)||new Date())+'" style="direction:ltr" onchange="tdPlDayHint()"></div></div>';
     h+='<div id="tdpl-hint" style="font-size:11px;color:var(--gray);margin:-.5rem 0 .85rem;display:flex;align-items:center;gap:5px"></div>';
@@ -13723,6 +13810,8 @@ function rTDPlans(){
   var fg2=g('tdplf-group');if(fg2)fg2.onchange=function(){TDPL.group=this.value;rTDPlans();};
   var sg=g('tdpl-g');if(sg)sg.onchange=tdPlDayHint;
   hydrateIcons(g('tdc-plans'));
+  /* النموذج يُنقل لصفحة مستقلة */
+  fpgAdopt(g('tdc-plans'),function(){TDPL.showForm=false;rTDPlans();});
   tdPlDayHint();
 }
 function tdPlDayHint(){
@@ -13819,7 +13908,7 @@ function rTDCoaches(){
     +(tdRole()==='admin'&&tdHasDupCoaches()?'<button class="btn btn-o btn-sm" onclick="tdMergeDupCoaches()">'+ic('whistle',12)+' دمج المدربين المكررين</button>':'')
     +'<span class="pg-chip">'+cs.length+' مدرب</span>');
   if(TDCO.showForm&&tdCanManage()){
-    h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem">';
+    h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem" data-fpg="مدرب جديد" data-fpg-ic="whistle">';
     h+='<div class="fg"><label>اسم المدرب *</label><input type="text" id="tdco-name"></div>';
     h+='<div class="fg"><label>الفروع * <small>(اختر فرعاً أو أكثر — المدرب قد يعمل في عدة فروع)</small></label>'
       +'<div class="brpick" id="tdco-brs">'
@@ -13871,6 +13960,8 @@ function rTDCoaches(){
   });
   g('tdc-coaches').innerHTML=h;
   hydrateIcons(g('tdc-coaches'));
+  /* النموذج يُنقل لصفحة مستقلة */
+  fpgAdopt(g('tdc-coaches'),function(){TDCO.showForm=false;rTDCoaches();});
 }
 function pickedBranches(wrapId){
   var w=g(wrapId);if(!w)return [];
@@ -14181,8 +14272,7 @@ function rTDFriendly(){
   var h=tdHead('ball','المباريات الودية','أنشئ المباراة، ثم سجّل نتيجتها من بطاقتها بعد انتهائها لتعتمدها الإدارة',
     (canAdd?'<button class="btn btn-r btn-sm" onclick="TDFR.showForm=!TDFR.showForm;TDFR.edit=\'\';rTDFriendly()">'+ic(TDFR.showForm?'x':'cal-plus',13)+' '+(TDFR.showForm?'إغلاق النموذج':'إضافة مباراة')+'</button>':''));
   if((TDFR.showForm||ed)&&canAdd){
-    h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem">';
-    h+='<div class="sub-head" style="margin-bottom:.7rem"><span class="sh-line"></span><h2>'+(ed?'تعديل بيانات المباراة':'مباراة ودية جديدة')+'</h2><span style="font-size:11px;color:var(--gray);margin-inline-start:auto">الخطوة ١: بيانات المباراة</span></div>';
+    h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem" data-fpg="'+(ed?'تعديل بيانات المباراة':'مباراة ودية جديدة')+'" data-fpg-ic="ball" data-fpg-sub="الخطوة ١: بيانات المباراة">';
     h+='<div class="frow"><div class="fg"><label>المجموعة *</label>'+tdSel('tdfr-g',tdCatOpts(),ed?ed.groupId:'','اختر الفئة')+'</div>';
     h+='<div class="fg"><label>نوع المباراة *</label>'+tdSel('tdfr-type',[['in','داخلية'],['out','خارجية']],ed?ed.type:'','اختر النوع')+'</div></div>';
     h+='<div class="frow"><div class="fg"><label>المواليد</label><input type="text" id="tdfr-birth" placeholder="مثال: 2013" value="'+esc(ed?ed.birth||'':'')+'"></div>';
@@ -14324,6 +14414,8 @@ function rTDFriendly(){
   var fg2=g('tdfrf-group');if(fg2)fg2.onchange=function(){TDFR.group=this.value;rTDFriendly();};
   var fs=g('tdfrf-status');if(fs)fs.onchange=function(){TDFR.status=this.value;rTDFriendly();};
   hydrateIcons(g('tdc-friendly'));
+  /* النموذج يُنقل لصفحة مستقلة */
+  fpgAdopt(g('tdc-friendly'),function(){TDFR.showForm=false;TDFR.edit='';rTDFriendly();});
 }
 function tdFrRes(id){TDFR.res=TDFR.res===id?'':id;TDFR.det='';rTDFriendly();setTimeout(function(){var el=g('frc-'+id);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},60);}
 function tdFrAllPlayers(){document.querySelectorAll('.frr-p-cb').forEach(function(cb){cb.checked=true;});}
@@ -15623,7 +15715,7 @@ function rNTCamps(){
   var h=tdHead('cal','التجمعات والتدريبات','تجمعات المنتخب وحصصها وحضور اللاعبين',
     ((ntCanManage()||ntRole()==='coach'||ntRole()==='sadmin')?'<button class="btn btn-r btn-sm" onclick="NTCP.showForm=!NTCP.showForm;rNTCamps()">'+ic(NTCP.showForm?'x':'plus',13)+' '+(NTCP.showForm?'إغلاق النموذج':'تجمّع جديد')+'</button>':''));
   if(NTCP.showForm){
-    h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem">';
+    h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem" data-fpg="تجمّع جديد" data-fpg-ic="cal" data-fpg-sub="تجمعات المنتخب وحصصها">';
     h+='<div class="frow"><div class="fg"><label>الفئة *</label>'+tdSel('ntcp-sq',sq.map(function(s){return [s.id,s.name];}),'','اختر الفئة')+'</div>';
     h+='<div class="fg"><label>عنوان التجمّع *</label><input type="text" id="ntcp-title" placeholder="مثال: تجمّع الإعداد الأول"></div></div>';
     h+='<div class="frow"><div class="fg"><label>من تاريخ *</label><input type="date" id="ntcp-from" style="direction:ltr"></div>';
@@ -15707,6 +15799,8 @@ function rNTCamps(){
   });
   g('ntc-camps').innerHTML=h;
   hydrateIcons(g('ntc-camps'));
+  /* النموذج يُنقل لصفحة مستقلة */
+  fpgAdopt(g('ntc-camps'),function(){NTCP.showForm=false;rNTCamps();});
 }
 function ntSaveCamp(){
   var sid=gv('ntcp-sq'),title=gv('ntcp-title'),from=gv('ntcp-from');
@@ -15788,8 +15882,7 @@ function rNTMatches(){
   var h=tdHead('ball','المباريات والبطولات','وديات المنتخب وبطولاته الخارجية وإنجازاته',
     (canAdd?'<button class="btn btn-r btn-sm" onclick="NTMT.showForm=!NTMT.showForm;NTMT.edit=\'\';rNTMatches()">'+ic(NTMT.showForm?'x':'cal-plus',13)+' '+(NTMT.showForm?'إغلاق النموذج':'إضافة مباراة')+'</button>':''));
   if((NTMT.showForm||ed)&&canAdd){
-    h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem">';
-    h+='<div class="sub-head" style="margin-bottom:.7rem"><span class="sh-line"></span><h2>'+(ed?'تعديل المباراة':'مباراة جديدة')+'</h2></div>';
+    h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem" data-fpg="'+(ed?'تعديل المباراة':'مباراة جديدة')+'" data-fpg-ic="ball" data-fpg-sub="وديات المنتخب وبطولاته">';
     h+='<div class="frow"><div class="fg"><label>الفئة *</label>'+tdSel('ntmt-sq',sq.map(function(s){return [s.id,s.name];}),ed?ed.squadId:'','اختر الفئة')+'</div>';
     h+='<div class="fg"><label>نوع المشاركة *</label>'+tdSel('ntmt-kind',[['fr','مباراة ودية'],['tour','بطولة خارجية']],ed?ed.kind:'','اختر النوع')+'</div></div>';
     h+='<div class="frow"><div class="fg"><label>اسم البطولة <small>(للبطولات الخارجية)</small></label><input type="text" id="ntmt-tour" value="'+esc(ed?ed.tournament||'':'')+'"></div>';
@@ -15906,6 +15999,8 @@ function rNTMatches(){
     if(ss.value)fillP();
   }
   hydrateIcons(g('ntc-matches'));
+  /* النموذج يُنقل لصفحة مستقلة */
+  fpgAdopt(g('ntc-matches'),function(){NTMT.showForm=false;NTMT.edit='';rNTMatches();});
 }
 /* مسجلو الأهداف من الإحصاءات المهيكلة */
 function ntScorersOf(m){
@@ -16009,7 +16104,7 @@ function rNTEvals(){
     var pct=Math.round(tot*100/((TDTECH.length+TDPERS.length)*EVMAX));
     var gr=tdEvGrade(pct);
 
-    h+='<div class="rform" style="margin-bottom:1.4rem">';
+    h+='<div class="rform" style="margin-bottom:1.4rem" data-fpg="تقييم لاعب منتخب" data-fpg-ic="star" data-fpg-sub="نفس معايير الإدارة الفنية">';
     /* من يُقيَّم */
     h+='<div class="ev-hd"><div class="ev-hd-ic">'+ic('star',20)+'</div>'
       +'<div><div class="ev-hd-t">نموذج تقييم لاعب</div>'
@@ -16069,6 +16164,8 @@ function rNTEvals(){
   }
   if(NTEV.showForm)ntEvPaint();
   hydrateIcons(g('ntc-evals'));
+  /* النموذج يُنقل لصفحة مستقلة */
+  fpgAdopt(g('ntc-evals'),function(){NTEV.showForm=false;rNTEvals();});
 }
 function ntSaveEval(){
   var sid=gv('ntev-sq'),mid=gv('ntev-m'),period=gv('ntev-period');
@@ -17643,7 +17740,7 @@ function rCEPlans(){
       +ic(CEPF.showForm?'x':'plus',13)+' '+(CEPF.showForm?'إغلاق':'خطة جديدة')+'</button>':'');
   if(CEPF.showForm&&ceRole()==='admin'){
     var cs=(TDX().coaches||[]),cys=ceCyclesSorted();
-    h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem">';
+    h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem" data-fpg="خطة تطوير جديدة" data-fpg-ic="doc" data-fpg-sub="خطة مرتبطة بمدرب ودورة">';
     h+='<div class="frow"><div class="fg req"><label>المدرب *</label>'
       +tdSel('cp-co',cs.map(function(x){return [x.id,x.name];}),'','اختر المدرب')+'</div>';
     h+='<div class="fg"><label>الدورة</label>'+tdSel('cp-cy',cys.map(function(x){return [x.id,x.name];}),CEFILT.cycle,'بلا دورة')+'</div></div>';
@@ -17662,6 +17759,8 @@ function rCEPlans(){
   if(!pls.length)h+=emptyBox('doc','لا توجد خطط تطوير');
   else pls.forEach(function(p){h+=cePlanCard(p,true);});
   el.innerHTML=h;hydrateIcons(el);
+  /* النموذج يُنقل لصفحة مستقلة */
+  fpgAdopt(el,function(){CEPF.showForm=false;rCEPlans();});
 }
 function ceSavePlan(){
   var co=gv('cp-co'),area=gv('cp-area');
@@ -19440,13 +19539,12 @@ function adbNewOpen(){
   h+='<div class="frow"><div class="fg req"><label>اسم الفرع *</label><input type="text" id="adb-new" placeholder="مثال: فارس القيروان" onkeydown="if(event.key===\'Enter\')adbAddBranch()"></div>';
   h+='<div class="fg req"><label>المدينة *</label><select id="adb-new-city">'+opts(CITIES,'اختر')+'</select></div></div>';
   h+='<div class="fg"><label>شعار الفرع</label>'+adbImgField('adbn','')+'</div>';
-  h+='<button class="btn btn-r" style="width:100%" onclick="adbAddBranch()">'+ic('plus',14)+' إضافة الفرع</button>';
+  h+='<button class="btn btn-r" style="width:100%;min-height:48px;margin-top:.6rem" onclick="adbAddBranch()">'+ic('check',15)+' إضافة الفرع</button>';
   h+='<div class="msg err" id="adb-err">أكمل اسم الفرع والمدينة</div>';
-  g('adbn-body').innerHTML=h;hydrateIcons(g('adbn-body'));
-  g('adbnMod').classList.add('open');
-  setTimeout(function(){var e=g('adb-new');if(e)e.focus();},60);
+  fpgHTML('فرع جديد','pin','الاسم والمدينة والشعار — ثم تُكمل بياناته',h,null);
+  setTimeout(function(){var e=g('adb-new');if(e)e.focus();},80);
 }
-function adbNewClose(){g('adbnMod').classList.remove('open');}
+function adbNewClose(){fpgHide();}
 function adbAddBranch(){
   var v=gv('adb-new'),city=gv('adb-new-city');
   if(!v||!city){fl('adb-err');return;}
@@ -20497,17 +20595,6 @@ setTimeout(function(){if(typeof tdMergeGroups==='function'&&DB.td){tdMergeGroups
 initSbarPref();
 faBoot();
 </script>
-<div class="modal" id="adbnMod" onclick="if(event.target===this)adbNewClose()">
-  <div class="mbox">
-    <div class="mhdr">
-      <button class="mclose" onclick="adbNewClose()" data-ic="x"></button>
-      <div style="font-size:15px;font-weight:700">فرع جديد</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">الاسم والمدينة والشعار — ثم تُكمل بياناته</div>
-    </div>
-    <div class="mbody" id="adbn-body"></div>
-  </div>
-</div>
-
 <div class="modal" id="ntmemMod" onclick="if(event.target===this)ntMemClose()">
   <div class="mbox">
     <div class="mhdr">
@@ -20517,6 +20604,16 @@ faBoot();
     </div>
     <div class="mbody" id="ntmem-body"></div>
   </div>
+</div>
+
+<!-- صفحة النموذج: كل «إضافة/جديد» يفتح صفحة مستقلة لا نموذجاً يتمدد داخل القائمة -->
+<div id="FPG" class="fpg">
+  <div class="fpg-bar">
+    <button class="fpg-back" onclick="fpgBack()"><span data-ic="chevron-right"></span> رجوع</button>
+    <div class="fpg-tx"><div class="fpg-t" id="fpg-t">نموذج</div><div class="fpg-s" id="fpg-s"></div></div>
+    <div class="fpg-ic" id="fpg-ic"></div>
+  </div>
+  <div class="fpg-body sec" id="fpg-body"></div>
 </div>
 
 <!-- مودالات عامة: كانت داخل #APP فتُحجب كلما فُتح نظام آخر -->
@@ -20643,7 +20740,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-acl</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-pages</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
