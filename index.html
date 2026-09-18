@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.18-staff">
+<meta name="build" content="2026.09.18-staff2">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2567,6 +2567,18 @@ body.nt-pick #NT .mnav-btn{display:none!important}
 .fpg .fpg-wrap{max-width:820px;margin:0 auto;padding:1.2rem 1.2rem calc(3rem + env(safe-area-inset-bottom,0px))}
 .fpg .fpg-body{max-width:none;padding:0;margin:0}
 @media(max-width:600px){.fpg .fpg-wrap{padding-inline:.9rem}}
+
+.ntpd-g{display:grid;grid-template-columns:1fr 1fr 220px;gap:1rem}
+.ntpd-r{display:flex;justify-content:space-between;gap:.6rem;padding:.42rem 0;border-bottom:1px dashed var(--brd);font-size:12px}
+.ntpd-r span{color:var(--gray)}.ntpd-r b{font-weight:700;overflow:hidden;text-overflow:ellipsis}
+.ntpd-c .ntpd-r:last-child{border-bottom:0}
+.ntpd-img{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--brd);background:var(--sur);cursor:zoom-in;aspect-ratio:3/2;display:flex;align-items:center;justify-content:center}
+.ntpd-img img{width:100%;height:100%;object-fit:cover}
+.ntpd-img span{position:absolute;bottom:6px;inset-inline-end:6px;background:rgba(0,0,0,.6);color:#fff;font-size:10.5px;padding:3px 8px;border-radius:99px;display:inline-flex;gap:4px;align-items:center}
+.ntpd-img.none{cursor:default;flex-direction:column;gap:.3rem;color:var(--gray);font-size:11.5px;text-align:center;padding:.6rem}
+.ntpd-img.none small{font-size:10px}
+@media(max-width:760px){.ntpd-g{grid-template-columns:1fr}}
+a.btn{text-decoration:none}
 /* ============ CALENDAR ============ */
 .seg{display:inline-flex;background:var(--bg);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
 .seg button{border:none;background:none;padding:6px 12px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--gray);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:.15s}
@@ -2929,7 +2941,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-staff</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-staff2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -15661,7 +15673,12 @@ function ntCanEditSquad(sid){
 }
 function ntBirthYear(p){
   if(!p)return '';
-  if(p.dob&&p.dob.length>=4)return p.dob.slice(0,4);
+  if(p.dob){
+    var d=parseDob(p.dob);
+    if(d&&d.y)return String(d.y);
+    var m0=String(p.dob).match(/(20\d\d|19\d\d)/);
+    if(m0)return m0[1];
+  }
   var m=String(p.cat||'').match(/(20\d\d|19\d\d)/);
   return m?m[1]:'';
 }
@@ -17164,6 +17181,27 @@ function ntMemAvailable(mid){
   var t=new Date().toISOString().slice(0,10);
   return !ntInjuriesOf(mid).some(function(x){return x.from<=t&&(!x.to||x.to>=t);});
 }
+
+/* بطاقة بيانات اللاعب الرسمية (الهوية، الميلاد، الجوال، ولي الأمر، صورة الهوية) */
+function ntCanSeePlayerData(){var r=ntRole();return r==='admin'||r==='director'||r==='tadmin'||r==='sadmin';}
+function ntPlayerDataHTML(m,p){
+  if(!ntCanSeePlayerData())return '';
+  var sn=splitName(p);
+  var dob=p.dob?(function(){var d=parseDob(p.dob);return d?ceN(d.d)+' / '+ceN(d.m)+' / '+ceN(d.y):p.dob;})():'—';
+  var gp=p.guardPhone||p.guard||'';
+  var row=function(l,v,ltr){return '<div class="ntpd-r"><span>'+l+'</span><b'+(ltr?' style="direction:ltr;text-align:start"':'')+'>'+(v?esc(v):'<i style="color:var(--gray);font-style:normal">—</i>')+'</b></div>';};
+  var h='<div class="xsec ntpd" style="margin-bottom:1.2rem"><div class="xsec-t" style="justify-content:space-between"><span>'+ic('card',13)+' بيانات اللاعب</span><span style="font-size:10px;color:var(--gray);font-weight:500">تظهر للإدارة فقط</span></div>';
+  h+='<div class="ntpd-g"><div class="ntpd-c">';
+  h+=row('اسم اللاعب',sn.first)+row('اسم الأب',sn.mid)+row('اسم العائلة',sn.last)+row('رقم الهوية',p.nid,true)+row('تاريخ الميلاد',dob,true)+row('الجنسية',p.nat);
+  h+='</div><div class="ntpd-c">';
+  h+=row('جوال اللاعب',p.phone,true)+row('ولي الأمر',p.guardName||sn.mid)+row('جوال ولي الأمر',gp,true)+row('الفرع',p.branch)+row('المجموعة',p.groupId?tdGName(p.groupId):(p.club||''))+row('الحالة في الإدارة الفنية',TDPST[p.status]||(p.status==='ntp'?'لاعب منتخب فارس':p.status));
+  h+='</div><div class="ntpd-id">';
+  if(p.idImg)h+='<div class="ntpd-img" onclick="lbxOpen(\''+esc(driveImg(p.idImg)).replace(/'/g,'%27')+'\',\'صورة هوية '+esc(p.name||'').replace(/'/g,'')+'\')"><img src="'+esc(driveImg(p.idImg))+'" alt="صورة الهوية"><span>'+ic('eye',11)+' عرض صورة الهوية</span></div>';
+  else h+='<div class="ntpd-img none">'+ic('card',26)+'<div>لا توجد صورة هوية</div>'+(p.src==='nt'?'':'<small>تُرفع من الإدارة الفنية أو من تسجيل البطولات</small>')+'</div>';
+  if(gp)h+='<div style="display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap"><a class="btn btn-g btn-sm" href="tel:'+esc(normPhone(gp))+'">'+ic('phone',12)+' اتصال بولي الأمر</a><a class="btn btn-g btn-sm" href="https://wa.me/'+esc(normPhone(gp))+'" target="_blank" rel="noopener">'+ic('whatsapp',12)+' واتساب</a></div>';
+  h+='</div></div></div>';
+  return h;
+}
 function rNTMe(){
   var el=g('ntc-me'),n=NTX();
   var isPlayer=(ntRole()==='player');
@@ -17190,6 +17228,9 @@ function rNTMe(){
   h+='<div class="ntp-badge" style="--bc:'+(ntMemAvailable(m.id)?'#16a34a':'var(--red)')+'">'
     +ic(ntMemAvailable(m.id)?'check':'info',12)+' '+(ntMemAvailable(m.id)?'جاهز':'مصاب')+'</div>';
   h+='</div>';
+
+  /* بيانات اللاعب وصورة الهوية — لمدير النظام ومدير المنتخب والإداري الفني وإداري المنتخب */
+  h+=ntPlayerDataHTML(m,p);
 
   /* الأرقام */
   h+='<div class="astats" style="margin-bottom:1.4rem">'
@@ -17323,10 +17364,11 @@ function ntDelInjury(id){
    بصلاحية nt-* المقابلة لدوره. قبل ذلك كان النموذج يَعِد بأنه «يسجّل
    دخوله بجواله» ولا يُنشئ شيئاً، فلا يستطيع الدخول أبداً.
    ========================================================================== */
-var NTST2={mode:'new',edit:''};
-function ntStMode(m){NTST2.mode=m;NTST2.edit='';rNTStaff();}
-function ntStEdit(id){NTST2.edit=id;NTST2.mode='new';rNTStaff();window.scrollTo({top:0,behavior:'smooth'});}
-function ntStCancel(){NTST2.edit='';rNTStaff();}
+var NTST2={mode:'new',edit:'',showForm:false};
+function ntStMode(m){NTST2.mode=m;NTST2.edit='';NTST2.showForm=true;rNTStaff();}
+function ntStOpen(){NTST2.showForm=true;NTST2.edit='';NTST2.mode='new';rNTStaff();}
+function ntStEdit(id){NTST2.edit=id;NTST2.mode='new';NTST2.showForm=true;rNTStaff();}
+function ntStCancel(){NTST2.edit='';NTST2.showForm=false;if(FPG.open)fpgHide();rNTStaff();}
 function ntStaffRec(id){return NTX().staff.find(function(x){return x.id===id;});}
 /* حساب الدخول المرتبط بعضو الطاقم */
 function ntStaffAcc(s){
@@ -17377,7 +17419,7 @@ function rNTStaff(){
   var can=ntCanStaff();
   var ed=NTST2.edit?ntStaffRec(NTST2.edit):null;
   var h=tdHead('shield','الطاقم','أعضاء '+esc(ntTeamName())+' وصلاحياتهم وحسابات دخولهم',
-    '<span class="pg-chip">'+ceN(list.length)+' عضو</span>');
+    '<div class="pg-acts"><span class="pg-chip">'+ceN(list.length)+' عضو</span>'+(can?'<button class="btn btn-r btn-sm" onclick="ntStOpen()">'+ic('user-plus',13)+' إضافة موظف</button>':'')+'</div>');
 
   /* شرح الصلاحيات */
   h+='<div class="nt-roles">';
@@ -17396,9 +17438,9 @@ function rNTStaff(){
     el.innerHTML=h;hydrateIcons(el);return;
   }
 
-  /* نموذج الإضافة/التعديل */
-  h+='<div class="rform" style="max-width:720px;margin-bottom:1.2rem">';
-  h+='<div class="cw-t" style="margin-bottom:.7rem">'+ic(ed?'edit':'plus',13)+' '+(ed?'تعديل «'+esc(ed.name)+'»':'عضو جديد')+'</div>';
+  /* نموذج الإضافة/التعديل — في صفحة مستقلة */
+  if(NTST2.showForm||ed){
+  h+='<div class="rform" style="max-width:720px;margin-bottom:1.2rem" data-fpg="'+(ed?'تعديل عضو الطاقم':'إضافة موظف')+'" data-fpg-ic="user-plus" data-fpg-sub="'+(ed?esc(ed.name):'عضو جديد في طاقم '+esc(ntTeamName())+' — أو إسناد دور لشخص موجود في النظام')+'">';
   if(!ed){
     h+='<div class="pm-switch" style="margin-bottom:.9rem">'
       +'<button type="button" class="pm-opt'+(NTST2.mode==='exist'?'':' on')+'" onclick="ntStMode(\'new\')">'+ic('user',14)+' عضو جديد</button>'
@@ -17433,12 +17475,13 @@ function rNTStaff(){
     h+='<div class="frow"><div class="fg"><label>اسم المستخدم</label><input type="text" id="ntst-user" value="'+esc((acc&&acc.username)||(ed&&ed.user)||'')+'" placeholder="يُقترح من الاسم"></div>';
     h+='<div class="fg"><label>الرمز السري (٤ أرقام)</label><input type="tel" inputmode="numeric" id="ntst-pin" maxlength="4" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="'+(acc?'إبقاء الرمز الحالي':'1234')+'"></div></div>';
     h+='</div>';
-    h+='<div style="display:flex;gap:.5rem"><button class="btn btn-r" style="flex:1" onclick="ntSaveStaff()">'
+    h+='<div class="xacts"><button class="btn btn-r" onclick="ntSaveStaff()">'
       +ic(ed?'check':'plus',13)+' '+(ed?'حفظ التعديلات':'إضافة العضو وإنشاء حسابه')+'</button>'
-      +(ed?'<button class="btn btn-g" onclick="ntStCancel()">إلغاء</button>':'')+'</div>';
+      +'<button class="btn btn-g" onclick="ntStCancel()">إلغاء</button></div>';
   }
   h+='<div class="msg ok" id="ntst-s-ok">تم الحفظ</div><div class="msg err" id="ntst-s-err">أكمل البيانات المطلوبة</div>';
   h+='</div>';
+  }
 
   h+=ntStaffTable(list,true);
   el.innerHTML=h;hydrateIcons(el);
@@ -17448,6 +17491,7 @@ function rNTStaff(){
     if(u&&!u.dataset.touched)u.value=ntSuggestUser(this.value);
   };
   var uu=g('ntst-user');if(uu)uu.oninput=function(){this.dataset.touched='1';};
+  fpgAdopt(el,function(){NTST2.showForm=false;NTST2.edit='';rNTStaff();});
 }
 function ntStaffTable(list,can){
   var n=NTX();
@@ -17509,7 +17553,7 @@ function ntSaveStaff(){
   n.squads.forEach(function(x){if(x.teamId===NTTEAM&&x.coachId===rec.id&&x.id!==sq)x.coachId='';});
   if(sq&&role==='coach'){var s2=ntSquad(sq);if(s2)s2.coachId=rec.id;}
   logA((ed?'تعديل':'إضافة')+' عضو طاقم '+ntTeamName()+': '+name+' — '+NTROLES[role],'shield','#d97706');
-  sv();NTST2.edit='';rNTStaff();fl('ntst-s-ok');
+  sv();NTST2.edit='';NTST2.showForm=false;if(FPG.open)fpgHide();rNTStaff();addN('تم الحفظ','طاقم '+ntTeamName(),'success');
 }
 function ntDelStaff(id){
   var s=ntStaffRec(id);if(!s)return;
@@ -17579,7 +17623,7 @@ function ntAddStaffExisting(){
     if(FA.enabled)faSync(FA.upsertUser(acc,acc.password||null));
   }
   logA('إسناد دور في '+ntTeamName()+': '+x.name+' — '+NTROLES[role],'shield','#d97706');
-  sv();rNTStaff();fl('ntst-s-ok');
+  sv();NTST2.showForm=false;if(FPG.open)fpgHide();rNTStaff();addN('تم إسناد الدور','طاقم '+ntTeamName(),'success');
 }
 
 /* ==========================================================================
@@ -22534,7 +22578,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-staff</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-staff2</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
