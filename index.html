@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.18-unify">
+<meta name="build" content="2026.09.18-sync22">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2769,7 +2769,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-unify</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-sync2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3644,11 +3644,25 @@ function faMergeStates(remote,local){
   }
   try{return mergeObj(remote,local,0);}catch(e){console.warn('merge fallback',e);return local;}
 }
-function faConflict(){
-  if(_FA_CONFLICT)return;
-  _FA_CONFLICT=true;
-  alert('تعذّر دمج تعديلك مع تعديلات زملائك تلقائياً هذه المرة.\nسنجلب أحدث نسخة — أعد إدخال آخر تعديل فقط.');
-  location.reload();
+/* كان هنا alert ثم location.reload() — أي أن كل تصادم متكرر كان يوقف
+   المستخدم برسالة ويُعيد تحميل الصفحة فيضيع آخر ما كتبه. الآن: تعديلاته
+   تبقى في الذاكرة وعلى الجهاز، والمزامنة تُعاد تلقائياً بلا مقاطعة،
+   والسبب يُسجَّل في وحدة التحكم وفي صفحة صحة البيانات. */
+var FA_SYNC={lastErr:'',conflicts:0,at:0};
+function faConflict(reason){
+  FA_SYNC.conflicts++;FA_SYNC.at=Date.now();
+  FA_SYNC.lastErr=String(reason||'تصادم متكرر في رقم النسخة');
+  console.warn('[FA] مزامنة مؤجلة — '+FA_SYNC.lastErr);
+  try{cloudChip(true);}catch(e){}
+  try{
+    if(typeof CQ!=='undefined'){CQ.dirty=true;}
+    if(typeof cloudQueue==='function')cloudQueue(15000);   /* محاولة تالية بعد ١٥ ثانية */
+  }catch(e){}
+  if(!_FA_CONFLICT){
+    _FA_CONFLICT=true;
+    try{addN('المزامنة مؤجلة','تعديلاتك محفوظة على جهازك وسنعيد رفعها تلقائياً','warn');}catch(e){}
+    setTimeout(function(){_FA_CONFLICT=false;},60000);   /* لا نكرر التنبيه كل ثانية */
+  }
 }
 /* ================= SUPABASE ADAPTER (optional; falls back to localStorage) ================= */
 var FA={
@@ -3879,13 +3893,26 @@ var FA={
         }
         throw r.error;
       }
-      if(r.data===false){
-        /* زميل حفظ قبلنا: ندمج تلقائياً بدل إسقاط عمل أي طرف */
+      var d=r.data;
+      /* الصيغة الجديدة {ok,rev} أو القديمة true/false */
+      if(d===false||(d&&typeof d==='object'&&d.ok===false)){
+        if(d&&d.rev)self._rev=d.rev;          /* عرفنا الرقم الحقيقي بلا تحميل */
         return self._mergeAndRetry(state);
       }
-      self._rev=next;
+      self._rev=(d&&typeof d==='object'&&d.rev)?d.rev:next;
       return true;
     });
+  },
+  /* رقم النسخة وحده — قبل إعادة المحاولة بعد خطأ شبكة، حتى لا نحمل رقماً
+     قديماً لطلب نجح في الخادم ولم يصلنا جوابه */
+  refreshRev:function(){
+    var self=this;
+    if(!self.token)return Promise.resolve(null);
+    return self.sb.rpc('fa_state_rev',{p_token:self.token}).then(function(r){
+      if(r.error)return null;
+      if(r.data)self._rev=r.data;
+      return r.data||null;
+    }).catch(function(){return null;});
   },
   /* ===== الدمج التلقائي عند التصادم =====
      نجلب نسخة الزميل، ندمج مجموعاتنا معها (اتحاد حسب المعرّف: إضافاتنا
@@ -3895,11 +3922,20 @@ var FA={
   _mergeAndRetry:function(localState){
     var self=this;
     self._mergeTries++;
-    if(self._mergeTries>2){self._mergeTries=0;faConflict();return false;}
+    var sent=self._rev;
+    if(self._mergeTries>4){
+      var tries=self._mergeTries-1;self._mergeTries=0;
+      faConflict('الخادم رفض رقم النسخة '+tries+' مرات متتالية رغم جلب أحدث نسخة قبل كل محاولة (آخر رقم مُرسَل: '+sent+')');
+      return false;
+    }
     return self.sb.rpc('fa_load_state',{p_token:self.token}).then(function(r){
       if(r.error)throw r.error;
       var remote=r.data||null;
-      if(!remote){self._mergeTries=0;faConflict();return false;}
+      if(!remote){self._mergeTries=0;faConflict('الخادم أعاد حالة فارغة عند الدمج');return false;}
+      /* تشخيص: إن كان رقم الخادم هو نفسه الذي أرسلناه فالرفض ليس تصادماً
+         بل خلل في دالة fa_save_state نفسها — نسجّله ليُرى */
+      console.warn('[FA] تصادم #'+self._mergeTries+' — أُرسل: '+sent+' | في الخادم: '+remote._rev
+        +(String(sent)===String(remote._rev)?'  ⚠ متطابقان: الخادم لا يقارن _rev كما يجب':''));
       var merged=faMergeStates(remote,localState);
       merged._rev=remote._rev;
       self._rev=remote._rev;
@@ -3913,8 +3949,7 @@ var FA={
       });
     }).catch(function(e){
       self._mergeTries=0;
-      console.warn('[FA] تعذّر الدمج',e&&e.message);
-      faConflict();
+      faConflict('خطأ من الخادم أثناء الدمج: '+(e&&e.message||e));
       return false;
     });
   },
@@ -4162,6 +4197,8 @@ function cloudQueue(delay){
     }).catch(function(e){
       CQ.fails++;
       console.warn('[FA] مزامنة مؤجلة (محاولة '+CQ.fails+')',e&&e.message);
+      if(typeof FA_SYNC!=='undefined')FA_SYNC.lastErr='خطأ شبكة/خادم: '+(e&&e.message||e);
+      try{FA.refreshRev();}catch(x){}
       if(CQ.fails>=3)cloudChip(true);           /* لا نزعج إلا بعد فشل متكرر */
       cloudQueue(Math.min(60000,4000*CQ.fails)); /* 4ث، 8ث، 12ث… حتى دقيقة */
     });
@@ -18959,6 +18996,43 @@ function rADHealth(){
   var coNoBr=(t.coaches||[]).filter(function(c){return !coachBranches(c).length;}).length;
   var usrNoPhone=(DB.users||[]).filter(function(u){return !u.phone;}).length;
 
+  /* حالة المزامنة — يظهر هنا سبب أي تأجيل بدل رسالة تقطع العمل */
+  h+=tdSubHead('المزامنة مع السحابة');
+  var syncOk=!(typeof FA_SYNC!=='undefined'&&FA_SYNC.conflicts);
+  h+='<div class="ce2-note'+(syncOk?' ok':' warn')+'" style="margin-bottom:1.2rem">'+ic(syncOk?'check':'info',13)+'<div>'
+    +(FA.enabled?(syncOk?'<b>المزامنة سليمة</b> — لا تصادمات في هذه الجلسة.'
+        :'<b>'+ceN(FA_SYNC.conflicts)+' تصادم في هذه الجلسة.</b> آخر سبب: '+esc(FA_SYNC.lastErr)
+         +'<br><small style="color:var(--gray)">تعديلاتك لم تُفقد — تُعاد المحاولة تلقائياً. إن تكرر هذا بلا زملاء يعملون معك، فالخلل في دالة fa_save_state على الخادم.</small>')
+      :'نسخة غير متصلة بقاعدة البيانات.')
+    +'</div></div>';
+  /* حجم الحالة: كل حفظ يرسلها كاملة وكل تحميل يجلبها — أين الثقل؟ */
+  try{
+    var st=cloudState(DB),parts=[],total=JSON.stringify(st).length,b64=0;
+    var scan=function(o,d){if(d>7||!o||typeof o!=='object')return;
+      Object.keys(o).forEach(function(k){var v=o[k];
+        if(typeof v==='string'&&v.indexOf('data:image')===0)b64+=v.length;
+        else if(v&&typeof v==='object')scan(v,d+1);});};
+    Object.keys(st).forEach(function(k){
+      var n=JSON.stringify(st[k]).length;
+      if(n>2000)parts.push([k,n]);
+    });
+    scan(st,0);
+    parts.sort(function(a,b){return b[1]-a[1];});
+    var kb=function(n){return n>1048576?(Math.round(n/104857.6)/10)+' م.ب':Math.round(n/1024)+' ك.ب';};
+    var names={td:'الإدارة الفنية',tournaments:'البطولات',teams:'الفرق',users:'الحسابات',nt:'منتخب فارس',ce:'تقييم المدربين',actLog:'سجل النشاط',joinReqs:'طلبات الانضمام'};
+    h+=tdSubHead('حجم البيانات','<span class="pg-chip'+(total>1500000?'" style="color:var(--amber)':'')+'">'+kb(total)+'</span>');
+    h+='<div class="ce2-note'+(b64>300000?' warn':'')+'" style="margin-bottom:.8rem">'+ic('info',13)+'<div>'
+      +'كل حفظ يرسل الحالة كاملة وكل تحميل يجلبها. '
+      +(b64?'<b>'+kb(b64)+'</b> منها صور مخزّنة داخل البيانات نصاً (base64) — نقلها إلى مخزن الصور يخفّف الحمل ويُنهي انتهاء المهلة.':'لا توجد صور مخزّنة داخل البيانات.')
+      +'</div></div>';
+    h+='<div class="at-wrap" style="margin-bottom:1.4rem"><table class="at"><thead><tr><th>القسم</th><th>الحجم</th><th>النسبة</th></tr></thead><tbody>';
+    parts.slice(0,8).forEach(function(x){
+      var pc=Math.round(x[1]*100/total);
+      h+='<tr><td style="font-weight:700">'+esc(names[x[0]]||x[0])+'</td><td style="direction:ltr;text-align:start">'+kb(x[1])+'</td>'
+        +'<td><div style="display:flex;align-items:center;gap:.5rem"><div style="flex:1;height:6px;background:var(--brd);border-radius:3px;overflow:hidden"><i style="display:block;height:100%;width:'+pc+'%;background:'+(pc>50?'var(--red)':'#1565c0')+'"></i></div><span style="font-size:11px">'+ceN(pc)+'%</span></div></td></tr>';
+    });
+    h+='</tbody></table></div>';
+  }catch(e){}
   h+=tdSubHead('صحة البيانات');
   h+='<div class="ce2-kpis">';
   h+=ceKpi('users','لاعبون ببيانات حرجة ناقصة',ceN(crit),crit?'لن يستطيعوا الدخول':'كل الملفات مكتملة');
@@ -20924,7 +20998,7 @@ faBoot();
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-unify</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-sync2</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
