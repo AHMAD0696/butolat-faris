@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.19-asg">
+<meta name="build" content="2026.09.19-mob">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -1017,8 +1017,9 @@ body.fpg-on{overflow:hidden}
 @media(max-width:600px){.lst-bar{width:100%;margin:.5rem 0 0}.lst-bar .seg{flex:1}.seg button{flex:1;justify-content:center}}
 /* ===== تكليفات الحساب ===== */
 .asg-row{background:var(--bg2,rgba(255,255,255,.04));border:1px solid var(--brd);border-radius:11px;padding:.55rem .6rem;margin-bottom:.45rem}
-.asg-top{display:flex;gap:.4rem;align-items:center}
-.asg-top select{flex:1;min-width:0;background:var(--sur);border:1px solid var(--brd);border-radius:8px;padding:.35rem .5rem;color:inherit;font-family:inherit;font-size:11.5px}
+.asg-top{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(0,1fr) 30px;gap:.4rem;align-items:center}
+@media(max-width:480px){.asg-top{grid-template-columns:28px minmax(0,1fr) 30px}.asg-top .asg-ic{grid-column:1;grid-row:1}.asg-top select:nth-of-type(1){grid-column:2;grid-row:1}.asg-top .del2{grid-column:3;grid-row:1}.asg-top select:nth-of-type(2){grid-column:1/-1;grid-row:2}}
+.asg-top select{min-width:0;width:100%;background:var(--sur);border:1px solid var(--brd);border-radius:8px;padding:.35rem .5rem;color:inherit;font-family:inherit;font-size:11.5px}
 .asg-sc{font-size:10.5px;color:var(--gray);margin-top:.35rem}
 .asg-pick{margin-top:.4rem}
 .asg-pick .brchip{font-size:10.5px;padding:.2rem .5rem;min-height:28px}
@@ -1247,16 +1248,16 @@ input,select,textarea{font-variant-numeric:tabular-nums}
 .astat-go{cursor:pointer}
 .astat-go:hover{transform:translateY(-2px);box-shadow:var(--sh2);border-color:rgba(24,25,70,.2)}
 .lvl-card{background:var(--sur);border:1px solid rgba(24,25,70,.09);border-radius:var(--r);padding:1.1rem 1rem .9rem;box-shadow:var(--sh);margin-bottom:1.5rem}
-.lvl-chart{display:grid;grid-template-columns:repeat(5,1fr);gap:.7rem;align-items:end}
-.lvl-col{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0}
+.lvl-chart{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.7rem;align-items:end}
+.lvl-col{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;min-width:0}
 .lvl-n{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;line-height:1}
 .lvl-p{font-size:9.5px;color:var(--gray);font-weight:700}
 .lvl-bar-w{height:130px;width:100%;max-width:54px;background:var(--bg);border-radius:9px;display:flex;align-items:flex-end;overflow:hidden;margin-top:2px}
 .lvl-bar-w i{display:block;width:100%;border-radius:9px 9px 0 0}
 .lvl-col:hover .lvl-bar-w{box-shadow:inset 0 0 0 2px rgba(24,25,70,.12)}
-.lvl-l{font-size:10px;font-weight:700;color:var(--txt);text-align:center;line-height:1.45;min-height:28px;display:flex;align-items:flex-start;justify-content:center;gap:3px}
+.lvl-l{font-size:10px;font-weight:700;color:var(--txt);text-align:center;line-height:1.45;min-height:28px;display:flex;align-items:flex-start;justify-content:center;gap:3px;max-width:100%;overflow-wrap:anywhere}
 .lvl-note{font-size:10.5px;color:var(--gray);margin-top:.7rem;display:flex;gap:6px;align-items:center;justify-content:center;text-align:center}
-@media(max-width:640px){.lvl-bar-w{height:96px}.lvl-l{font-size:9px}.lvl-n{font-size:14px}}
+@media(max-width:640px){.lvl-chart{grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;row-gap:1rem}.lvl-bar-w{height:80px}.lvl-l{font-size:9px}.lvl-n{font-size:14px}}
 
 /* ============ SIDEBAR (all systems) ============ */
 .sbar{display:none}
@@ -2302,7 +2303,8 @@ body.nt-pick #NT .nav .hmb,body.nt-pick #NT .nav .sb-toggle{display:none!importa
 .ev-s:hover{transform:translateY(-1px)}
 .ev-val{width:30px;text-align:center;font-weight:800;font-size:14px}
 /* بطاقة تقييم في السجل */
-.evc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:1rem;box-shadow:var(--sh);display:flex;flex-direction:column;gap:.7rem;transition:transform .15s,box-shadow .15s}
+.evc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:1rem;box-shadow:var(--sh);display:flex;min-width:0;flex-direction:column;gap:.7rem;transition:transform .15s,box-shadow .15s}
+.tg>*{min-width:0}
 .evc:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
 .evc-top{display:flex;align-items:center;gap:.65rem}
 .evc-av{width:38px;height:38px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
@@ -2713,8 +2715,8 @@ a.btn{text-decoration:none}
 @keyframes wlBar{from{width:0!important}}
 .wl-float{position:absolute;display:inline-flex;align-items:center;gap:6px;background:rgba(18,19,47,.9);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:11.5px;font-weight:700;padding:8px 13px;border-radius:14px;box-shadow:0 14px 30px rgba(0,0,0,.4);backdrop-filter:blur(8px);animation:wlBob 3.4s ease-in-out infinite}
 .wl-float svg{color:#ffb457}
-.wl-f1{top:40%;inset-inline-end:-7%}
-.wl-f2{bottom:6%;inset-inline-start:-7%;animation-delay:1.2s}
+.wl-f1{top:calc(clamp(70px,8vw,92px) - 2.2rem - 14px);inset-inline-end:-22px}
+.wl-f2{bottom:-16px;inset-inline-start:6%;animation-delay:1.2s}
 .wl-f2 svg{color:#6aa8ff}
 .wl-stats2{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin:0 0 3rem}
 .wl-st2{display:flex;align-items:center;gap:.8rem;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:1rem 1.1rem;text-align:start}
@@ -2767,7 +2769,7 @@ a.btn{text-decoration:none}
   .wl-hero2{grid-template-columns:1fr;gap:1.6rem;min-height:auto;padding-top:1.6rem;text-align:center}
   .wl-hero2-tx{text-align:center}.wl-hero2 .wl-cta{justify-content:center}.wl-hero2 .wl-sub{margin-inline:auto}.wl-trust{justify-content:center}
   .wl-who{grid-template-columns:1fr}.wl-stats2{grid-template-columns:repeat(2,1fr)}.wl-foot2-g{grid-template-columns:1fr}
-  .wl-bar-nav{display:none}.wl-f1{inset-inline-start:0}.wl-f2{inset-inline-end:0}
+  .wl-bar-nav{display:none}.wl-f1{inset-inline-end:calc(50% - 218px)}.wl-f2{inset-inline-start:calc(50% - 212px)}
 }
 @media(max-width:640px){.wl-cta2{padding:1.6rem 1.2rem}.wl-mock{padding-top:2.4rem}.wl-float{display:none}.wl-hero2 .wl-h1{font-size:1.9rem}}
 
@@ -3164,7 +3166,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.19-asg</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.19-mob</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -23271,7 +23273,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.19-asg</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.19-mob</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
