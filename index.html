@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.19-teams">
+<meta name="build" content="2026.09.19-teams2">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2114,6 +2114,10 @@ html[dir="rtl"] .sb-foot .chip::after{transform:translateY(-50%) rotate(-135deg)
 
 /* ============ NT TEAM PICKER ============ */
 body.nt-pick #NT .mnav-btn{display:none!important}
+/* صفحة اختيار المنتخب: بلا شريط جانبي — الصفحة كاملة العرض */
+body.nt-pick #NT .sbar{display:none!important}
+body.nt-pick #NT{padding-inline-start:0!important}
+body.nt-pick #NT .nav .hmb,body.nt-pick #NT .nav .sb-toggle{display:none!important}
 .ntt-wrap{max-width:820px;margin:0 auto;padding:1.5rem 0 2rem;text-align:center}
 .ntt-hd{margin-bottom:2rem;color:var(--txt)}
 .ntt-hd svg{color:var(--red);margin-bottom:.5rem}
@@ -3009,7 +3013,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.19-teams</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.19-teams2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -22663,7 +22667,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.19-teams</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.19-teams2</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
