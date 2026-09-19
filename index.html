@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.19-fix">
+<meta name="build" content="2026.09.19-access2">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2651,6 +2651,113 @@ a.btn{text-decoration:none}
 .ntt2-card:hover .ntt2-go{padding-inline-end:24px}
 .ntt2-back{text-align:center;margin-top:1.6rem}
 @media(max-width:640px){.ntt2-hero{padding:1.5rem 1rem 1.2rem;border-radius:18px}.ntt2-hero h1{font-size:1.35rem}.ntt2-grid{grid-template-columns:1fr}.ntt2-tot span{min-width:70px}.ntt2-wdl{display:none}}
+
+/* ===== الصفحة الترحيبية — التصميم الجديد ===== */
+#WEL{scroll-behavior:smooth}
+.wl-in{max-width:1080px}
+.wl-bar-in{max-width:1080px}
+.wl-bar-nav{display:flex;gap:1.1rem;margin-inline-start:auto;margin-inline-end:.8rem}
+.wl-bar-nav a{color:rgba(255,255,255,.62);font-size:12.5px;font-weight:600;text-decoration:none;transition:.15s}
+.wl-bar-nav a:hover{color:#fff}
+.wl-hero2{display:grid;grid-template-columns:1.1fr .9fr;gap:2.4rem;align-items:center;min-height:calc(100dvh - 120px);padding:2.2rem 0 2.6rem}
+.wl-hero2-tx{text-align:start}
+.wl-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#ff8aa1;background:rgba(221,29,69,.12);border:1px solid rgba(221,29,69,.3);border-radius:99px;padding:5px 12px;margin-bottom:1rem;animation:wlIn .7s both}
+.wl-hero2 .wl-h1{font-size:clamp(2rem,4.6vw,3.1rem);line-height:1.15;margin-bottom:.8rem}
+.wl-hero2 .wl-h1 small{display:block;font-size:.5em;font-weight:700;color:rgba(255,255,255,.55);margin-top:.35rem;letter-spacing:0}
+.wl-hero2 .wl-sub{margin:0 0 1.5rem;max-width:56ch}
+.wl-hero2 .wl-cta{justify-content:flex-start}
+.wl-trust{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.2rem;font-size:11.5px;color:rgba(255,255,255,.55);animation:wlIn .7s .32s both}
+.wl-trust span{display:inline-flex;align-items:center;gap:5px}
+.wl-trust svg{color:#4ade80}
+.wl-hero2-vis{position:relative;display:flex;flex-direction:column;align-items:center;animation:wlIn .8s .2s both}
+.wl-hero2-vis .wl-lg{width:clamp(70px,8vw,92px);margin-bottom:-2.2rem;position:relative;z-index:2}
+.wl-mock{width:100%;max-width:400px;background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:2.6rem 1.2rem 1.2rem;backdrop-filter:blur(14px);box-shadow:0 30px 70px rgba(0,0,0,.45);position:relative}
+.wl-mock-h{display:flex;align-items:center;gap:6px;margin-bottom:1rem}
+.wl-mock-h b{margin-inline-start:auto;font-size:11.5px;color:rgba(255,255,255,.6);font-weight:700}
+.wl-dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.wl-mock-k{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.9rem}
+.wl-mock-k div{background:rgba(255,255,255,.06);border-radius:12px;padding:.6rem .4rem;text-align:center}
+.wl-mock-k b{display:block;font-size:1.25rem;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+.wl-mock-k span{font-size:10px;color:rgba(255,255,255,.55)}
+.wl-mock-r{display:flex;align-items:center;gap:.7rem;padding:.55rem .6rem;border-radius:12px;background:rgba(255,255,255,.04);margin-bottom:.45rem}
+.wl-mock-r>div{flex:1;min-width:0}
+.wl-mock-r small{display:block;font-size:10px;color:rgba(255,255,255,.5)}
+.wl-mock-r b{display:block;font-size:12px;color:#fff;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wl-mock-ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+.wl-mock-bar{height:7px;border-radius:99px;background:rgba(255,255,255,.1);margin-top:5px;overflow:hidden}
+.wl-mock-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#1565c0,#6aa8ff);animation:wlBar 1.6s .6s cubic-bezier(.2,.8,.3,1) both}
+@keyframes wlBar{from{width:0!important}}
+.wl-float{position:absolute;display:inline-flex;align-items:center;gap:6px;background:rgba(18,19,47,.9);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:11.5px;font-weight:700;padding:8px 13px;border-radius:14px;box-shadow:0 14px 30px rgba(0,0,0,.4);backdrop-filter:blur(8px);animation:wlBob 3.4s ease-in-out infinite}
+.wl-float svg{color:#ffb457}
+.wl-f1{top:40%;inset-inline-end:-7%}
+.wl-f2{bottom:6%;inset-inline-start:-7%;animation-delay:1.2s}
+.wl-f2 svg{color:#6aa8ff}
+.wl-stats2{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin:0 0 3rem}
+.wl-st2{display:flex;align-items:center;gap:.8rem;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:1rem 1.1rem;text-align:start}
+.wl-st2-i{width:40px;height:40px;border-radius:12px;background:rgba(221,29,69,.14);color:#ff6b8a;display:grid;place-items:center;flex-shrink:0}
+.wl-st2 .wl-st-n{font-size:1.5rem}
+.wl-section{margin-bottom:3rem}
+.wl-sec-t h2{font-size:1.25rem}
+.wl-who{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+.wl-wc{--cc:var(--red);background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:1.3rem 1.2rem;position:relative;overflow:hidden;transition:.2s}
+.wl-wc::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% -10%,var(--cc),transparent 70%);opacity:.18;pointer-events:none}
+.wl-wc:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.2)}
+.wl-wc-ic{width:44px;height:44px;border-radius:13px;background:var(--cc);color:#fff;display:grid;place-items:center;margin-bottom:.8rem;position:relative;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.wl-wc-t{font-size:14.5px;font-weight:800;color:#fff;margin-bottom:.4rem;position:relative}
+.wl-wc-d{font-size:12px;color:rgba(255,255,255,.62);line-height:1.8;position:relative}
+.wl-grid2{display:grid;grid-template-columns:repeat(5,1fr);gap:.7rem}
+@media(max-width:1000px){.wl-grid2{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.wl-grid2{grid-template-columns:1fr}}
+.wl-card2{--cc:var(--red);background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:1.1rem;transition:.2s;border-top:3px solid var(--cc)}
+.wl-card2:hover{background:rgba(255,255,255,.075);transform:translateY(-3px)}
+.wl-card2-h{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem}
+.wl-card2-h b{font-size:13.5px;font-weight:800;color:#fff}
+.wl-card2 .wl-card-ic{width:36px;height:36px;border-radius:11px}
+.wl-card2 ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.35rem}
+.wl-card2 li{font-size:11.5px;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:6px;line-height:1.5}
+.wl-card2 li svg{color:#4ade80;flex-shrink:0}
+.wl-brs2{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.55rem}
+.wl-br2{display:flex;align-items:center;gap:.6rem;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:.65rem .8rem;transition:.15s}
+.wl-br2:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+.wl-br2-i{width:30px;height:30px;border-radius:9px;background:rgba(221,29,69,.14);color:#ff6b8a;display:grid;place-items:center;flex-shrink:0}
+.wl-br2 b{display:block;font-size:12.5px;color:#fff;font-weight:700}
+.wl-br2 small{display:block;font-size:10.5px;color:rgba(255,255,255,.5)}
+.wl-nw{cursor:pointer}
+.wl-nw-d{display:flex;align-items:center;gap:4px}
+.wl-cta2{position:relative;overflow:hidden;border-radius:24px;padding:2.2rem 1.8rem;margin-bottom:3rem;background:linear-gradient(135deg,#2a1240,#1b1d5e)}
+.wl-cta2-bg{position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 90% 50%,rgba(221,29,69,.45),transparent 60%),repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 2px,transparent 2px 14px);pointer-events:none}
+.wl-cta2-in{position:relative;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+.wl-cta2 h3{margin:0 0 .3rem;font-size:1.35rem;font-weight:800;color:#fff}
+.wl-cta2 p{margin:0;font-size:12.5px;color:rgba(255,255,255,.65)}
+.wl-cta2 .wl-cta{width:auto}
+.wl-foot2{border-top:1px solid rgba(255,255,255,.08);padding-top:2rem}
+.wl-foot2-g{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.wl-foot2-lg{display:flex;align-items:center;gap:.5rem;color:#fff;font-weight:800;font-size:14px;margin-bottom:.5rem}
+.wl-foot2 p{font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.8;max-width:38ch;margin:0}
+.wl-foot2 h4{margin:0 0 .6rem;font-size:12.5px;color:#fff}
+.wl-foot2 a,.wl-foot2 span{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.6);text-decoration:none;margin-bottom:.45rem;transition:.15s}
+.wl-foot2 a:hover{color:#fff}
+.wl-foot2 svg{color:var(--red)}
+.wl-foot2 .wl-cp{border-top:1px solid rgba(255,255,255,.07);padding-top:1rem}
+@media(max-width:900px){
+  .wl-hero2{grid-template-columns:1fr;gap:1.6rem;min-height:auto;padding-top:1.6rem;text-align:center}
+  .wl-hero2-tx{text-align:center}.wl-hero2 .wl-cta{justify-content:center}.wl-hero2 .wl-sub{margin-inline:auto}.wl-trust{justify-content:center}
+  .wl-who{grid-template-columns:1fr}.wl-stats2{grid-template-columns:repeat(2,1fr)}.wl-foot2-g{grid-template-columns:1fr}
+  .wl-bar-nav{display:none}.wl-f1{inset-inline-start:0}.wl-f2{inset-inline-end:0}
+}
+@media(max-width:640px){.wl-cta2{padding:1.6rem 1.2rem}.wl-mock{padding-top:2.4rem}.wl-float{display:none}.wl-hero2 .wl-h1{font-size:1.9rem}}
+
+.adx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.8rem;margin-bottom:1rem}
+.adx-card{--tc:var(--navy);background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:1rem;border-top:4px solid var(--tc)}
+.adx-h{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem}
+.adx-h b{font-size:13.5px;font-weight:800}
+.adx-ic{width:36px;height:36px;border-radius:11px;background:var(--tc);color:#fff;display:grid;place-items:center}
+.adx-modes{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}
+@media(max-width:480px){.adx-modes{grid-template-columns:repeat(2,1fr)}}
+.adx-m{background:var(--bg);border:1.5px solid var(--brd);border-radius:12px;padding:.6rem .4rem;cursor:pointer;font-family:inherit;color:var(--txt);display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;transition:.15s}
+.adx-m b{font-size:12px}.adx-m small{font-size:9.5px;color:var(--gray);line-height:1.4}
+.adx-m:hover{border-color:var(--tc)}.adx-m.on{border-color:var(--tc);background:color-mix(in srgb,var(--tc) 12%,transparent)}
+.adx-testers{margin-top:.8rem;padding-top:.8rem;border-top:1px dashed var(--brd)}
 /* ============ CALENDAR ============ */
 .seg{display:inline-flex;background:var(--bg);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
 .seg button{border:none;background:none;padding:6px 12px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--gray);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:.15s}
@@ -2977,6 +3084,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="wl-bar-in">
       <div class="wl-bar-lg"></div>
       <div class="wl-bar-t">أكاديمية فارس</div>
+      <nav class="wl-bar-nav"><a href="#wl-sys">الأنظمة</a><a href="#wl-who">لكل دور</a><a href="#wl-br">الفروع</a><a href="#wl-news">الأخبار</a></nav>
       <button class="wl-bar-b" onclick="welGo()">تسجيل الدخول</button>
     </div>
   </div>
@@ -3015,7 +3123,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.19-fix</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.19-access2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3621,6 +3729,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 <div class="mob-menu" id="admm"></div>
 <div id="adpg-branches" class="page on"><div class="sec" id="adc-branches"></div></div>
 <div id="adpg-users" class="page"><div class="sec" id="adc-users"></div></div>
+<div id="adpg-audit" class="page"><div class="sec" id="adc-audit"></div></div>
 <div id="adpg-reports" class="page"><div class="sec" id="adc-reports"></div></div>
 <div id="adpg-health" class="page"><div class="sec" id="adc-health"></div></div>
 <div id="adpg-settings" class="page"><div class="sec" id="adc-settings"></div></div>
@@ -6053,24 +6162,249 @@ function showTS(){
   tsSys();
 }
 function sysVis(){DB.sysVis=DB.sysVis||{td:false,nt:false,ce:false};if(DB.sysVis.ce==null)DB.sysVis.ce=false;return DB.sysVis;}
-/* الوصول من التكليفات: من له تكليف في نظام يفتحه، ومدير النظام يرى الكل.
-   sysVis تبقى لإخفاء نظام عن الجميع مؤقتاً لا لمنح الصلاحية. */
-function sysAllowed(k){
-  if(!CU)return false;
-  if(CU.role==='admin')return true;
-  if(k==='app')return true;                         /* بطولات فارس نظام عام */
-  if(!sysVis()[k])return false;
-  if(acList(CU).length)return acCanSys(CU,k);
-  if(k==='nt'&&isNTRole(CU.role))return true;       /* توافق قبل الترحيل */
+
+/* ================= إتاحة الأنظمة: مخفي / تجريبي لمستخدمين محددين / مفتوح ================= */
+var SYS_MODES=[['off','مخفي','لا يراه أحد إلا مدير النظام — للتعديل عليه','eye-off','var(--gray)'],['test','تجريبي','مستخدمون محددون بالاسم','users','var(--amber)'],['group','خاص','فئات كاملة: أدوار وفروع تختارها','shield','#5b2d8f'],['on','مفتوح','يراه كل من له صلاحية فيه','eye','#16a34a']];
+/* الأدوار الداخلية لكل نظام كما يراها محلّله */
+var SYS_GROUP_ROLES={td:[['staff','الإداريون والمشرفون'],['coach','المدربون'],['player','اللاعبون وأولياء الأمور']],
+  nt:[['director','مدير منتخب'],['tadmin','إداري فني'],['sadmin','إداري منتخب'],['coach','مدرب منتخب'],['player','لاعب منتخب']],
+  ce:[['sup','المشرفون الفنيون'],['mgr','مديرو الفروع'],['coach','المدربون'],['player','اللاعبون']]};
+function sysGroup(k){var a=sysAccess()[k];a=a||{};a.group=a.group||{roles:[],scopes:[]};return a.group;}
+/* هل يقع هذا المستخدم ضمن المجموعة الخاصة؟ (يُستدعى وCU مضبوط على المستخدم) */
+function sysInGroup(k,role,scopes){
+  var gp=sysGroup(k);
+  if(!gp.roles.length&&!gp.scopes.length)return false;
+  if(gp.roles.length&&gp.roles.indexOf(role)<0)return false;
+  if(gp.scopes.length&&!(scopes||[]).some(function(s){return gp.scopes.indexOf(s)>-1;}))return false;
   return true;
 }
+function sysAccess(){DB.sysAccess=DB.sysAccess||{};return DB.sysAccess;}
+function sysMode(k){
+  var a=sysAccess()[k];
+  if(a&&a.mode)return a.mode;
+  return sysVis()[k]?'on':'off';           /* توافق مع الإعداد القديم */
+}
+function sysTesters(k){var a=sysAccess()[k];return (a&&a.users)||[];}
+function sysSetMode(k,mode){
+  var a=sysAccess();a[k]=a[k]||{users:[]};a[k].mode=mode;
+  sysVis()[k]=(mode==='on');               /* الإعداد القديم يتبع الجديد */
+  logA('إتاحة نظام '+(AC_SYS[k]||k)+': '+((SYS_MODES.find(function(m){return m[0]===mode;})||[])[1]||mode),'eye','#1565c0');
+  sv();
+}
+function sysModeLabel(k){var m=SYS_MODES.find(function(x){return x[0]===sysMode(k);});return m?m[1]:'';}
+/* هل يفتح هذا المستخدم هذا النظام؟ — يُستعمل للمستخدم الحالي وللتدقيق */
+function sysAllowedFor(u,k){
+  if(!u)return false;
+  if(u.role==='admin')return true;
+  if(k==='ad')return false;
+  if(k==='app')return true;                          /* بطولات فارس نظام عام */
+  var m=sysMode(k);
+  if(m==='off')return false;
+  if(m==='test'&&sysTesters(k).indexOf(u.id)<0)return false;
+  /* الصلاحية الفعلية من محلّل كل نظام (يراعي التكليفات والأدوار القديمة) */
+  var save=CU,ok=false;
+  try{CU=u;
+    var role=null,scopes=[];
+    if(k==='td'){role=ACL.role();if(role){scopes=ACL.branches();ok=true;}}
+    else if(k==='nt'){role=ntRole();var tms=role?ntMyTeams():[];scopes=tms.map(function(t){return t.id;});ok=!!role&&tms.length>0;}
+    else if(k==='ce'){role=ceRole();if(role){scopes=ceBranches();ok=true;}}
+    if(ok&&m==='group')ok=sysInGroup(k,role,scopes);
+  }catch(e){ok=false;}
+  CU=save;
+  return ok;
+}
+function sysAllowed(k){return sysAllowedFor(CU,k);}
 function sysVisToggle(k,ev){
   if(ev){ev.stopPropagation();ev.preventDefault();}
   if(!CU||CU.role!=='admin')return;
-  var v=sysVis();v[k]=!v[k];sv();
-  logA((v[k]?'إظهار':'إخفاء')+' نظام '+({td:'الإدارة الفنية',nt:'منتخب فارس',ce:'تقييم المدربين'}[k]||k)+(v[k]?' للمستخدمين':' عن المستخدمين'),'eye','#1565c0');
-  tsSys();
+  sysSetMode(k,sysMode(k)==='on'?'off':'on');
+  if(typeof tsSys==='function'&&g('TS')&&g('TS').style.display!=='none')tsSys();
 }
+/* ---------- واجهة الإتاحة في الإدارة والمتابعة ---------- */
+function adAccessHTML(){
+  var h=tdSubHead('إتاحة الأنظمة','<span class="pg-chip">'+ic('shield',11)+' مدير النظام يرى الكل دائماً</span>');
+  h+='<div class="ce2-note" style="margin-bottom:.9rem">'+ic('info',13)+'<div><b>مخفي</b>: لا يراه أحد غيرك. <b>تجريبي</b>: أشخاص محددون بالاسم. <b>خاص</b>: فئات كاملة تختارها (مثل: كل المدربين، أو فروع معينة). <b>مفتوح</b>: يراه كل من له صلاحية فيه.</div></div>';
+  h+='<div class="adx-grid">';
+  [['td','الإدارة الفنية','whistle','#1565c0'],['nt','منتخب فارس','crown','#d97706'],['ce','تقييم وتطوير المدربين','star','#0e7490']].forEach(function(x){
+    var k=x[0],m=sysMode(k),ts=sysTesters(k);
+    h+='<div class="adx-card" style="--tc:'+x[3]+'"><div class="adx-h"><span class="adx-ic">'+ic(x[2],18)+'</span><b>'+x[1]+'</b><span class="badge" style="margin-inline-start:auto;background:'+(m==='on'?'rgba(22,163,74,.12);color:#16a34a':(m==='test'?'rgba(217,119,6,.13);color:var(--amber)':'var(--bg);color:var(--gray)'))+'">'+sysModeLabel(k)+'</span></div>';
+    h+='<div class="adx-modes">'+SYS_MODES.map(function(md){return '<button class="adx-m'+(m===md[0]?' on':'')+'" onclick="adSetMode(\''+k+'\',\''+md[0]+'\')">'+ic(md[3],13)+'<b>'+md[1]+'</b><small>'+md[2]+'</small></button>';}).join('')+'</div>';
+    if(m==='group'){
+      var gp=sysGroup(k),kind=k==='nt'?'ntteam':'branch',opts=acScopeOpts(kind);
+      h+='<div class="adx-testers"><b style="font-size:12px;display:block;margin-bottom:.4rem">من يراه؟ — الأدوار</b><div class="xopts" style="margin-bottom:.6rem">'+(SYS_GROUP_ROLES[k]||[]).map(function(r){return '<button type="button" class="xopt'+(gp.roles.indexOf(r[0])>-1?' on':'')+'" onclick="adGroupTog(\''+k+'\',\'roles\',\''+r[0]+'\')">'+r[1]+'</button>';}).join('')+'</div>';
+      h+='<b style="font-size:12px;display:block;margin-bottom:.4rem">'+(k==='nt'?'المنتخبات':'الفروع')+' <small style="color:var(--gray);font-weight:500">(اتركها كلها بلا تحديد = كل '+(k==='nt'?'المنتخبات':'الفروع')+')</small></b><div class="xopts">'+opts.map(function(o){return '<button type="button" class="xopt'+(gp.scopes.indexOf(String(o[0]))>-1?' on':'')+'" onclick="adGroupTog(\''+k+'\',\'scopes\',\''+String(o[0]).replace(/'/g,'')+'\')">'+esc(o[1])+'</button>';}).join('')+'</div>';
+      var cnt=(DB.users||[]).filter(function(u){return u.role!=='admin'&&sysAllowedFor(u,k);}).length;
+      h+='<div style="font-size:11px;margin-top:.6rem;color:'+(gp.roles.length||gp.scopes.length?'var(--gray)':'var(--amber)')+'">'+ic('info',11)+' '+(gp.roles.length||gp.scopes.length?'يراه الآن <b>'+ceN(cnt)+'</b> مستخدماً':'اختر دوراً واحداً على الأقل — النظام حالياً مخفي عن الجميع عملياً')+'</div>';
+      h+='</div>';
+    }
+    if(m==='test'){
+      h+='<div class="adx-testers"><div style="display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.4rem"><b style="font-size:12px">المستخدمون التجريبيون ('+ceN(ts.length)+')</b><button class="btn btn-o btn-sm" onclick="adTestersOpen(\''+k+'\')">'+ic('user-plus',12)+' اختيار المستخدمين</button></div>';
+      if(!ts.length)h+='<div style="font-size:11px;color:var(--amber)">'+ic('info',11)+' لم تختر أحداً بعد — النظام حالياً مخفي عن الجميع عملياً.</div>';
+      else h+='<div style="display:flex;gap:.3rem;flex-wrap:wrap">'+ts.map(function(id){var u=(DB.users||[]).find(function(z){return z.id===id;});return '<span class="badge" style="background:var(--bg);color:var(--txt);gap:6px">'+esc(u?u.name:'؟')+'<button style="background:none;border:none;color:var(--red);cursor:pointer;display:flex" onclick="adTesterRm(\''+k+'\',\''+id+'\')">'+ic('x',10)+'</button></span>';}).join('')+'</div>';
+      h+='</div>';
+    }
+    h+='</div>';
+  });
+  h+='</div>';
+  return h;
+}
+function adSetMode(k,mode){sysSetMode(k,mode);rADSettings();addN('إتاحة '+(AC_SYS[k]||k),sysModeLabel(k),'info');}
+function adGroupTog(k,key,v){var gp=sysGroup(k),i=gp[key].indexOf(v);if(i>-1)gp[key].splice(i,1);else gp[key].push(v);logA('تحديث المجموعة الخاصة: '+(AC_SYS[k]||k),'shield','#5b2d8f');sv();rADSettings();}
+function adTesterRm(k,id){var a=sysAccess()[k];if(!a)return;a.users=(a.users||[]).filter(function(x){return x!==id;});sv();rADSettings();}
+var ADTS={k:'',q:''};
+function adTestersOpen(k){ADTS.k=k;ADTS.q='';adTestersRender();}
+function adTestersRender(){
+  var k=ADTS.k,ts=sysTesters(k);
+  var h='<div class="xhint">'+ic('info',11)+' اختر من يرى «'+esc(AC_SYS[k]||k)+'» في المرحلة التجريبية. يظهر لهم النظام فقط إن كانت لديهم صلاحية فيه أصلاً.</div>';
+  h+='<div class="fg"><input type="text" id="adts-q" placeholder="ابحث بالاسم أو اسم المستخدم…" value="'+esc(ADTS.q)+'" oninput="ADTS.q=this.value;adTestersList()"></div>';
+  h+='<div id="adts-list" class="ntw-list" style="max-height:52vh"></div>';
+  h+='<div class="xacts"><button class="btn btn-r" onclick="adTestersSave()">'+ic('check',13)+' حفظ ('+'<span id="adts-n">'+ceN(ts.length)+'</span>)</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div>';
+  fpgHTML('المستخدمون التجريبيون','users',AC_SYS[k]||k,h,function(){rADSettings();});
+  ADTS.sel=ts.slice();adTestersList();
+}
+function adTestersList(){
+  var box=g('adts-list');if(!box)return;
+  var q=ntNorm(ADTS.q||''),k=ADTS.k;
+  var list=(DB.users||[]).filter(function(u){return u.role!=='admin'&&(!q||ntNorm(u.name||'').indexOf(q)>-1||ntNorm(u.username||'').indexOf(q)>-1);});
+  /* من له صلاحية في النظام أولاً */
+  var can=function(u){var save=CU,ok=false;try{CU=u;ok=k==='td'?!!ACL.role():(k==='nt'?(!!ntRole()&&ntMyTeams().length>0):!!ceRole());}catch(e){}CU=save;return ok;};
+  list=list.map(function(u){return{u:u,ok:can(u)};}).sort(function(a,b){if(a.ok!==b.ok)return a.ok?-1:1;return (a.u.name||'').localeCompare(b.u.name||'','ar');}).slice(0,150);
+  box.innerHTML=list.length?list.map(function(x){var u=x.u,on=ADTS.sel.indexOf(u.id)>-1;
+    return '<label class="ntw-p" style="cursor:pointer"><input type="checkbox"'+(on?' checked':'')+' onchange="adTesterTog(\''+u.id+'\',this.checked)"><div class="ntw-nm"><b>'+esc(u.name)+'</b><small>'+esc(RL[u.role]||u.role)+(u.username?' • '+esc(u.username):'')+' • '+(x.ok?'<span style="color:#16a34a">له صلاحية</span>':'<span style="color:var(--red)">بلا صلاحية في هذا النظام</span>')+'</small></div></label>';}).join(''):emptyBox('users','لا نتائج');
+  hydrateIcons(box);
+}
+function adTesterTog(id,on){var i=ADTS.sel.indexOf(id);if(on&&i<0)ADTS.sel.push(id);if(!on&&i>-1)ADTS.sel.splice(i,1);var n=g('adts-n');if(n)n.textContent=ceN(ADTS.sel.length);}
+function adTestersSave(){var a=sysAccess();a[ADTS.k]=a[ADTS.k]||{mode:'test'};a[ADTS.k].users=ADTS.sel.slice();logA('تحديث المستخدمين التجريبيين: '+(AC_SYS[ADTS.k]||''),'users','#1565c0');sv();fpgHide();rADSettings();}
+
+/* ================= تدقيق الصلاحيات في كل الأنظمة ================= */
+function adAuditUser(u){
+  var t=TDX(),n=NTX(),issues=[],info={};
+  var save=CU;
+  try{
+    CU=u;
+    /* الإدارة الفنية */
+    var tr=null,tdMe=null,tdBr=[],tdG=0;
+    try{tr=ACL.role();if(tr){tdMe=ACL.me();tdBr=ACL.branches();tdG=ACL.groups().length;}}catch(e){}
+    info.td={role:tr,me:!!tdMe,branches:tdBr,groups:tdG};
+    /* المنتخب */
+    var nr=null,nteams=[];
+    try{nr=ntRole();nteams=ntMyTeams().map(function(x){return x.name;});}catch(e){}
+    info.nt={role:nr,teams:nteams};
+    /* تقييم المدربين */
+    var cr=null,cbr=[];
+    try{cr=ceRole();if(cr)cbr=ceBranches();}catch(e){}
+    info.ce={role:cr,branches:cbr};
+  }finally{CU=save;}
+  info.app={team:u.team||'',ok:['admin-team','coach','player'].indexOf(u.role)>-1||u.role==='viewer'&&!!u.team||u.role==='organizer'||u.role==='media'||u.role==='admin'};
+  var add=function(sev,sys,txt){issues.push({sev:sev,sys:sys,txt:txt});};
+  var asg=acList(u);
+  /* ١) تكليفات إلى نطاق غير موجود */
+  asg.forEach(function(a){
+    if(!AC_SYS[a.sys]){add('err',a.sys,'تكليف في نظام غير معروف «'+a.sys+'»');return;}
+    if(!(AC_ROLES[a.sys]||[]).some(function(r){return r[0]===a.role;}))add('err',a.sys,'دور غير معروف «'+a.role+'» في '+AC_SYS[a.sys]);
+    var kind=acScopeKind(a.sys,a.role),opts=acScopeOpts(kind).map(function(o){return String(o[0]);});
+    (a.scope||[]).forEach(function(s){if(kind!=='none'&&opts.indexOf(String(s))<0)add('err',a.sys,'نطاق غير موجود «'+acScopeName(kind,s)+'» في '+AC_SYS[a.sys]);});
+    if(a.sys==='ad'&&u.role!=='admin')add('warn','ad','تكليف «الإدارة والمتابعة» بلا صلاحية مدير نظام — لا أثر له');
+  });
+  /* ٢) الإدارة الفنية */
+  if(acOf(u,'td').length&&!info.td.role)add('err','td','له تكليف في الإدارة الفنية لكن النظام لا يتعرّف على دوره');
+  if(info.td.role==='coach'||info.td.role==='staff'){
+    if(!info.td.me)add('err','td','لا يوجد سجل '+(info.td.role==='coach'?'مدرب':'إداري')+' مرتبط بحسابه — لن يرى أي فرع');
+    else{
+      if(!info.td.branches.length)add('err','td','بلا فروع مصرّحة');
+      if(info.td.role==='coach'&&!info.td.groups)add('warn','td','مدرب بلا مجموعات مسندة — يرى صفحات فارغة');
+    }
+  }
+  if(isPlayerRole(u.role)&&u.pid&&!(t.players||[]).some(function(p){return p.id===u.pid;})&&!(DB.tournaments||[]).some(function(tr){return (tr.teams||[]).some(function(tm){return (tm.players||[]).some(function(p){return p.id===u.pid;});});}))add('err','app','حساب لاعب مرتبط بسجل لاعب غير موجود (pid)');
+  if(isPlayerRole(u.role)&&!u.pid)add('err','app','حساب لاعب بلا رقم لاعب مرتبط (pid)');
+  /* ٣) المنتخب */
+  var ntAsg=acOf(u,'nt').length||isNTRole(u.role);
+  if(ntAsg&&!info.nt.role)add('err','nt','له دور منتخب لكن النظام لا يتعرّف عليه');
+  if(info.nt.role&&info.nt.role!=='admin'&&!info.nt.teams.length)add('err','nt','دوره «'+(NTROLES[info.nt.role]||info.nt.role)+'» بلا أي منتخب — أضفه لطاقم منتخب أو حدّد النطاق');
+  if(info.nt.role==='coach'){var st=n.staff.find(function(s){return ntStaffLink(s,u);});if(st&&!n.squads.some(function(q){return q.coachId===st.id;}))add('warn','nt','مدرب منتخب بلا فئة مسندة');}
+  /* ٤) تقييم المدربين */
+  if(acOf(u,'ce').length&&!info.ce.role)add('err','ce','له تكليف في تقييم المدربين لكن النظام لا يتعرّف على دوره');
+  if((info.ce.role==='sup'||info.ce.role==='mgr')&&!info.ce.branches.length)add('warn','ce','مشرف/مدير في تقييم المدربين بلا فروع — لن يرى مدربين');
+  /* ٥) البطولات */
+  if((u.role==='admin-team'||u.role==='coach'||u.role==='player')&&u.team&&!(DB.teams||[]).some(function(x){return x.name===u.team})&&!(DB.tournaments||[]).some(function(tr){return (tr.teams||[]).some(function(x){return x.name===u.team;});}))add('warn','app','فريقه «'+u.team+'» غير موجود في البطولات');
+  /* ٦) الترحيل والحساب */
+  var legacy=['coach','admin-team','supervisor','nt-director','nt-tadmin','nt-admin','nt-coach'];
+  if(legacy.indexOf(u.role)>-1&&!u.assign)add('warn','all','لم يُرحَّل إلى نظام التكليفات — يعمل بالصلاحية القديمة فقط');
+  if(!asg.length&&['viewer','media','organizer'].indexOf(u.role)>-1&&!u.team&&u.role==='viewer')add('info','all','حساب متابع بلا فريق ولا تكليفات — لا يرى شيئاً');
+  if(!u.username&&!u.phone)add('warn','all','بلا اسم مستخدم ولا جوال — لا يستطيع الدخول');
+  /* ٧) الأنظمة التي يفتحها */
+  info.open=['app','td','nt','ce','ad'].filter(function(k){return sysAllowedFor(u,k);});
+  ['td','nt','ce'].forEach(function(k){
+    var m=sysMode(k),hasRole=k==='td'?!!info.td.role:(k==='nt'?(!!info.nt.role&&info.nt.teams.length>0):!!info.ce.role);
+    if(hasRole&&u.role!=='admin'){
+      if(m==='off')add('info',k,'له صلاحية في '+AC_SYS[k]+' لكن النظام مخفي حالياً');
+      if(m==='test'&&sysTesters(k).indexOf(u.id)<0)add('info',k,'له صلاحية في '+AC_SYS[k]+' لكنه ليس ضمن المستخدمين التجريبيين');
+      if(m==='group'&&!sysAllowedFor(u,k))add('info',k,'له صلاحية في '+AC_SYS[k]+' لكنه خارج المجموعة الخاصة');
+    }
+  });
+  return{u:u,info:info,issues:issues};
+}
+function adAuditAll(){
+  var rows=(DB.users||[]).map(adAuditUser);
+  /* تكرار اسم المستخدم / الجوال */
+  var byU={},byP={};
+  rows.forEach(function(r){var u=r.u;var k=normName(u.username||'');if(k)(byU[k]=byU[k]||[]).push(r);var p=normPhone(u.phone||'');if(p)(byP[p]=byP[p]||[]).push(r);});
+  Object.keys(byU).forEach(function(k){if(byU[k].length>1)byU[k].forEach(function(r){r.issues.push({sev:'err',sys:'all',txt:'اسم المستخدم مكرر عند '+ceN(byU[k].length)+' حسابات'});});});
+  Object.keys(byP).forEach(function(k){if(byP[k].length>1)byP[k].forEach(function(r){r.issues.push({sev:'warn',sys:'all',txt:'رقم الجوال مكرر عند '+ceN(byP[k].length)+' حسابات'});});});
+  return rows;
+}
+var ADAU={f:'',sys:'',q:''};
+function rADAudit(){
+  var el=g('adc-audit');
+  var rows=adAuditAll();
+  var err=rows.filter(function(r){return r.issues.some(function(i){return i.sev==='err';});}).length;
+  var warn=rows.filter(function(r){return !r.issues.some(function(i){return i.sev==='err';})&&r.issues.some(function(i){return i.sev==='warn';});}).length;
+  var clean=rows.filter(function(r){return !r.issues.some(function(i){return i.sev!=='info';});}).length;
+  var admins=rows.filter(function(r){return r.u.role==='admin';}).length;
+  var unm=rows.filter(function(r){return r.issues.some(function(i){return /لم يُرحَّل/.test(i.txt);});}).length;
+  var h=adHead('shield','تدقيق الصلاحيات','فحص كل حساب في كل الأنظمة: ما الذي يفتحه فعلاً، وأين الخلل، وكيف يُصلح',
+    '<div class="pg-acts">'+(unm?'<button class="btn btn-o btn-sm" onclick="adMigrateAll()">'+ic('refresh',12)+' ترحيل '+ceN(unm)+' حساباً قديماً</button>':'')+'<button class="btn btn-g btn-sm" onclick="rADAudit()">'+ic('refresh',12)+' إعادة الفحص</button></div>');
+  h+='<div class="xkpis"><div class="xkpi"><b>'+ceN(rows.length)+'</b><span>كل الحسابات</span></div><div class="xkpi" style="--c:#16a34a"><b>'+ceN(clean)+'</b><span>سليمة</span></div><div class="xkpi" style="--c:var(--red)"><b>'+ceN(err)+'</b><span>فيها خلل</span></div><div class="xkpi" style="--c:var(--amber)"><b>'+ceN(warn)+'</b><span>تحتاج مراجعة</span></div><div class="xkpi" style="--c:#5b2d8f"><b>'+ceN(admins)+'</b><span>مدير نظام</span></div></div>';
+  h+='<div class="xbar">'+xSeg([['','الكل'],['err','خلل'],['warn','مراجعة'],['ok','سليم']],ADAU.f,'adAuF').replace('margin-bottom:.9rem','margin-bottom:0');
+  h+='<div class="fg" style="margin:0"><select onchange="ADAU.sys=this.value;rADAudit()"><option value="">كل الأنظمة</option>'+Object.keys(AC_SYS).map(function(k){return '<option value="'+k+'"'+(ADAU.sys===k?' selected':'')+'>'+AC_SYS[k]+'</option>';}).join('')+'</select></div>';
+  h+='<div class="fg" style="margin:0;flex:1;min-width:180px"><input type="text" placeholder="بحث بالاسم…" value="'+esc(ADAU.q)+'" oninput="ADAU.q=this.value;rADAudit()"></div></div>';
+  var q=ntNorm(ADAU.q||'');
+  var list=rows.filter(function(r){
+    var sev=r.issues.some(function(i){return i.sev==='err';})?'err':(r.issues.some(function(i){return i.sev==='warn';})?'warn':'ok');
+    if(ADAU.f&&sev!==ADAU.f)return false;
+    if(ADAU.sys&&r.info.open.indexOf(ADAU.sys)<0&&!r.issues.some(function(i){return i.sys===ADAU.sys;}))return false;
+    if(q&&ntNorm(r.u.name||'').indexOf(q)<0&&ntNorm(r.u.username||'').indexOf(q)<0)return false;
+    return true;
+  }).sort(function(a,b){var o={err:0,warn:1,ok:2};var sa=a.issues.some(function(i){return i.sev==='err';})?'err':(a.issues.some(function(i){return i.sev==='warn';})?'warn':'ok');var sb=b.issues.some(function(i){return i.sev==='err';})?'err':(b.issues.some(function(i){return i.sev==='warn';})?'warn':'ok');return o[sa]-o[sb]||(a.u.name||'').localeCompare(b.u.name||'','ar');});
+  if(!list.length)h+=emptyBox('check-big','لا توجد حسابات مطابقة');
+  else{
+    h+='<div class="at-wrap"><table class="at"><thead><tr><th>الحساب</th><th>الصلاحية</th><th>الأنظمة التي يفتحها</th><th>الإدارة الفنية</th><th>المنتخب</th><th>تقييم المدربين</th><th>الملاحظات</th><th></th></tr></thead><tbody>';
+    list.forEach(function(r){
+      var u=r.u,i=r.info;
+      var sev=r.issues.some(function(x){return x.sev==='err';})?'err':(r.issues.some(function(x){return x.sev==='warn';})?'warn':'ok');
+      var col=sev==='err'?'var(--red)':(sev==='warn'?'var(--amber)':'#16a34a');
+      h+='<tr style="border-inline-start:3px solid '+col+'">';
+      h+='<td><b>'+esc(u.name)+'</b><div style="font-size:10px;color:var(--gray)">'+esc(u.username||u.phone||'—')+'</div></td>';
+      h+='<td><span class="badge" style="background:'+(RC[u.role]||'#8b92b0')+'1f;color:'+(RC[u.role]||'#8b92b0')+'">'+esc(RL[u.role]||u.role)+'</span>'+(acList(u).length?'<div style="font-size:10px;color:var(--gray);margin-top:3px">'+ceN(acList(u).length)+' تكليف</div>':'')+'</td>';
+      h+='<td><div style="display:flex;gap:3px;flex-wrap:wrap">'+['app','td','nt','ce','ad'].map(function(k){var on=i.open.indexOf(k)>-1;return '<span class="badge" title="'+AC_SYS[k]+'" style="padding:2px 7px;font-size:9.5px;background:'+(on?'rgba(22,163,74,.12);color:#16a34a':'var(--bg);color:var(--gray);opacity:.6')+'">'+ic(AC_SYS_IC[k],9)+'</span>';}).join('')+'</div></td>';
+      h+='<td style="font-size:11px">'+(i.td.role?'<b>'+({admin:'مدير',staff:'إداري',coach:'مدرب',player:'لاعب'}[i.td.role]||i.td.role)+'</b><div style="color:var(--gray);font-size:10px">'+(i.td.role==='admin'?'كل الفروع':esc(i.td.branches.slice(0,3).join('، ')+(i.td.branches.length>3?' +'+ceN(i.td.branches.length-3):''))||'—')+(i.td.role==='coach'?' • '+ceN(i.td.groups)+' مجموعة':'')+'</div>':'<span style="color:var(--gray)">—</span>')+'</td>';
+      h+='<td style="font-size:11px">'+(i.nt.role?'<b>'+(i.nt.role==='admin'?'مدير':(i.nt.role==='player'?'لاعب':(NTROLES[i.nt.role]||i.nt.role)))+'</b><div style="color:var(--gray);font-size:10px">'+esc(i.nt.role==='admin'?'كل المنتخبات':(i.nt.teams.join('، ')||'—'))+'</div>':'<span style="color:var(--gray)">—</span>')+'</td>';
+      h+='<td style="font-size:11px">'+(i.ce.role?'<b>'+({admin:'الإدارة الفنية',sup:'مشرف فني',mgr:'مدير فرع',coach:'مدرب',player:'لاعب'}[i.ce.role]||i.ce.role)+'</b><div style="color:var(--gray);font-size:10px">'+esc(i.ce.role==='admin'?'كل الفروع':(i.ce.branches.slice(0,3).join('، ')||'—'))+'</div>':'<span style="color:var(--gray)">—</span>')+'</td>';
+      h+='<td style="font-size:10.5px;max-width:280px">'+(r.issues.length?r.issues.map(function(x){var c=x.sev==='err'?'var(--red)':(x.sev==='warn'?'var(--amber)':'var(--gray)');return '<div style="color:'+c+';display:flex;gap:4px;align-items:flex-start;margin-bottom:2px">'+ic(x.sev==='err'?'x':(x.sev==='warn'?'info':'eye'),10)+'<span>'+esc(x.txt)+'</span></div>';}).join(''):'<span style="color:#16a34a">'+ic('check',10)+' سليم</span>')+'</td>';
+      h+='<td><button class="ab" style="background:var(--bg);color:var(--accent)" title="فتح الحساب" onclick="uedOpen(\''+u.id+'\')">'+ic('edit',11)+'</button></td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table></div>';
+  }
+  el.innerHTML=h;hydrateIcons(el);
+}
+function adAuF(v){ADAU.f=v;rADAudit();}
+function adMigrateAll(){
+  askConfirm('ترحيل الحسابات القديمة إلى نظام التكليفات؟\nيُبنى التكليف من صلاحية الحساب وسجله الحالي — لا يُحذف شيء.',function(){
+    var n=acMigrate(DB);sv();rADAudit();addN('تم الترحيل',ceN(n)+' حساباً','success');
+  });
+}
+
 /* صياغة عربية سليمة: مفرد ومثنى وجمع قلة وجمع كثرة */
 /* ================= دمج المجموعات في الفئات =================
    الفئة تصير الوحدة الوحيدة وتحمل المدرب وأيام التدريب.
@@ -6196,16 +6530,18 @@ function tsSys(){
   var cards='';
   cards+='<div class="ts-card" onclick="tsTours()"><div class="ts-poster" style="--pc:var(--red)">'+(sysImgs().tours?'<img src="'+sysImgs().tours+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('trophy',26)+'</div>')+'</div><div class="ts-cap"><div class="ts-name">بطولات فارس</div><div class="ts-sub">'+arCount(tours.length,'بطولة واحدة','بطولتان','بطولات','بطولة')+'</div></div></div>';
   var isAdm=CU&&CU.role==='admin',v=sysVis();
-  var visBtn=function(k){return isAdm?'<button class="ts-vis" onclick="sysVisToggle(\''+k+'\',event)" title="'+(v[k]?'إخفاء عن المستخدمين':'إظهار للمستخدمين')+'">'+ic(v[k]?'eye':'eye-off',14)+'</button>':'';};
-  var hidLbl='<span class="ts-hlbl">'+ic('eye-off',9)+' مخفي — تحت التعديل</span>';
-  if(sysAllowed('td')||isAdm)cards+='<div class="ts-card'+(!v.td?' hidden-t':'')+'" onclick="enterTD()">'+(!v.td?hidLbl:'')+'<div class="ts-poster" style="--pc:#1565c0">'+visBtn('td')+(sysImgs().td?'<img src="'+sysImgs().td+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('whistle',26)+'</div>')+'</div><div class="ts-cap"><div class="ts-name">الإدارة الفنية</div><div class="ts-sub">'+((t.branches||[]).length?arCount((t.branches||[]).length,'فرع واحد','فرعان','فروع','فرعاً'):'الفروع والتقييمات')+'</div></div></div>';
+  var visBtn=function(k){return isAdm?'<button class="ts-vis" onclick="sysVisToggle(\''+k+'\',event)" title="'+(sysMode(k)==='on'?'إخفاء عن المستخدمين':'إظهار للمستخدمين')+'">'+ic(sysMode(k)==='on'?'eye':'eye-off',14)+'</button>':'';};
+  var modeLbl=function(k){var m=sysMode(k);if(!isAdm||m==='on')return '';return '<span class="ts-hlbl">'+ic(m==='test'?'users':(m==='group'?'shield':'eye-off'),9)+' '+(m==='test'?'تجريبي — '+ceN(sysTesters(k).length)+' مستخدم':(m==='group'?'خاص — فئات محددة':'مخفي — تحت التعديل'))+'</span>';};
+  ['td','nt','ce'].forEach(function(k){v[k]=sysMode(k)==='on';});
+  var hidLbl='';
+  if(sysAllowed('td')||isAdm)cards+='<div class="ts-card'+(!v.td?' hidden-t':'')+'" onclick="enterTD()">'+modeLbl('td')+'<div class="ts-poster" style="--pc:#1565c0">'+visBtn('td')+(sysImgs().td?'<img src="'+sysImgs().td+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('whistle',26)+'</div>')+'</div><div class="ts-cap"><div class="ts-name">الإدارة الفنية</div><div class="ts-sub">'+((t.branches||[]).length?arCount((t.branches||[]).length,'فرع واحد','فرعان','فروع','فرعاً'):'الفروع والتقييمات')+'</div></div></div>';
   var n=NTX();
   var ntCand=(typeof ntCandidates==='function')?ntCandidates().length:0;
-  if(sysAllowed('nt')||isAdm)cards+='<div class="ts-card'+(!v.nt?' hidden-t':'')+'" onclick="enterNT()">'+(!v.nt?hidLbl:'')+'<div class="ts-poster" style="--pc:var(--amber)">'+visBtn('nt')+(sysImgs().nt?'<img src="'+sysImgs().nt+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('crown',26)+'</div>')+'</div><div class="ts-cap"><div class="ts-name">منتخب فارس</div><div class="ts-sub">'+arCount((n.teams||[]).length,'منتخب واحد','منتخبان','منتخبات','منتخباً')+'</div></div></div>';
+  if(sysAllowed('nt')||isAdm)cards+='<div class="ts-card'+(!v.nt?' hidden-t':'')+'" onclick="enterNT()">'+modeLbl('nt')+'<div class="ts-poster" style="--pc:var(--amber)">'+visBtn('nt')+(sysImgs().nt?'<img src="'+sysImgs().nt+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('crown',26)+'</div>')+'</div><div class="ts-cap"><div class="ts-name">منتخب فارس</div><div class="ts-sub">'+arCount((n.teams||[]).length,'منتخب واحد','منتخبان','منتخبات','منتخباً')+'</div></div></div>';
   if(sysAllowed('ce')||isAdm){
     var ceX=CEX(),ceCy=ceActiveCycle();
     var ceSub=ceCy?(ceCy.status==='open'?'دورة مفتوحة: '+ceCy.name:'آخر دورة: '+ceCy.name):'التقييم والتعميد والتطوير';
-    cards+='<div class="ts-card'+(!v.ce?' hidden-t':'')+'" onclick="enterCE()">'+(!v.ce?hidLbl:'')
+    cards+='<div class="ts-card'+(!v.ce?' hidden-t':'')+'" onclick="enterCE()">'+modeLbl('ce')
       +'<div class="ts-poster" style="--pc:#0e7490">'+visBtn('ce')
       +(sysImgs().ce?'<img src="'+sysImgs().ce+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('star',26)+'</div>')
       +'</div><div class="ts-cap"><div class="ts-name">تقييم وتطوير المدربين</div><div class="ts-sub">'+esc(ceSub)+'</div></div></div>';
@@ -19088,6 +19424,7 @@ function cePubSubmit(cycleId,coachId,src){
 var ADNAV=[
  ['branches','الفروع','pin'],
  ['users','المستخدمون والصلاحيات','users'],
+ ['audit','تدقيق الصلاحيات','shield'],
  ['reports','التقارير والتصدير','table'],
  ['health','سجل النشاط وصحة البيانات','shield'],
  ['settings','إعدادات الأنظمة','gear']
@@ -19125,7 +19462,7 @@ function adP(pg){
   var el=g('adpg-'+pg);if(el)el.classList.add('on');
   document.querySelectorAll('#ad-links .nl,#ad-sbar-links .sb-l').forEach(function(b){
     b.classList.toggle('on',b.dataset.adpg===pg);});
-  var fn={branches:rADBranches,users:rADUsers,reports:rADReports,health:rADHealth,settings:rADSettings}[pg];
+  var fn={branches:rADBranches,users:rADUsers,audit:rADAudit,reports:rADReports,health:rADHealth,settings:rADSettings}[pg];
   if(fn)fn();
   window.scrollTo({top:0});
 }
@@ -19734,27 +20071,7 @@ function rADSettings(){
   var el=g('adc-settings'),v=sysVis();
   var h=adHead('gear','إعدادات الأنظمة','ما الذي يراه المستخدمون، وصور القوالب، والإعدادات العامة');
 
-  h+=tdSubHead('الأنظمة الظاهرة للمستخدمين');
-  h+='<div class="ce2-note" style="margin-bottom:.9rem">'+ic('info',13)
-    +'<div>النظام المخفي يراه مدير النظام وحده. أخفِ أي نظام وأنت تعدّل عليه حتى لا يراه أحد ناقصاً.</div></div>';
-  h+='<div class="ad-toggles">';
-  [['tours','بطولات فارس','trophy','var(--red)',null],
-   ['td','الإدارة الفنية','whistle','#1565c0','td'],
-   ['nt','منتخب فارس','crown','var(--amber)','nt'],
-   ['ce','تقييم وتطوير المدربين','star','#0e7490','ce']].forEach(function(x){
-    var key=x[4],on=key?!!v[key]:true;
-    h+='<div class="ad-tg" style="--tc:'+x[3]+'">';
-    h+='<div class="ad-tgi">'+ic(x[2],17)+'</div>';
-    h+='<div class="ad-tgn">'+x[1]+'</div>';
-    if(!key)h+='<span class="ce2-st" style="background:#16a34a1f;color:#16a34a">ظاهر دائماً</span>';
-    else h+='<button class="btn btn-o btn-sm" onclick="sysVisToggle(\''+key+'\',event);rADSettings()">'
-      +ic(on?'eye':'eye-off',12)+' '+(on?'ظاهر':'مخفي')+'</button>';
-    h+='</div>';
-  });
-  h+='<div class="ad-tg" style="--tc:#5b2d8f"><div class="ad-tgi">'+ic('gear',17)+'</div>'
-    +'<div class="ad-tgn">الإدارة والمتابعة</div>'
-    +'<span class="ce2-st" style="background:var(--gray)1f;color:var(--gray)">لمدير النظام فقط</span></div>';
-  h+='</div>';
+  h+=adAccessHTML();
 
   /* صور القوالب */
   h+='<div style="height:1.5rem"></div>';
@@ -21090,81 +21407,130 @@ function welNews(){
   return out.filter(function(x){return x&&(x.title||x.img);})
             .sort(function(a,b){return (b.at||0)-(a.at||0);}).slice(0,4);
 }
+function welBranchInfo(){
+  var t=TDX(),out=[];
+  try{(t.branches||[]).forEach(function(b){out.push({name:b.name,city:b.city||'',n:(t.players||[]).filter(function(p){return p.branch===b.name;}).length});});}catch(e){}
+  return out;
+}
+function welNext(){
+  /* المباراة القادمة في البطولات — إن وُجدت */
+  try{
+    var now=Date.now(),best=null;
+    (DB.tournaments||[]).forEach(function(tr){(tr.matches||[]).forEach(function(m){
+      if(!m.dt&&!m.date)return;var d=new Date(m.dt||(m.date+'T'+(m.time||'17:00')));if(isNaN(d)||d.getTime()<now-36e5)return;
+      if(m.s1!==undefined&&m.s1!==''&&m.s1!==null&&m.done)return;
+      if(!best||d<best.d)best={d:d,a:m.a||m.t1||m.home||'',b:m.b||m.t2||m.away||'',tour:tr.name};
+    });});
+    return best;
+  }catch(e){return null;}
+}
 function rWel(){
-  var st=welStats(),news=welNews(),brs=[];
-  try{brs=(TDX().branches||[]).map(function(b){return b.name;});}catch(e){}
+  var st=welStats(),news=welNews(),brs=welBranchInfo(),nx=welNext();
   var h='';
-
-  h+='<div class="wl-hero">';
-  h+='<div class="wl-lg"></div>';
-  h+='<h1 class="wl-h1">أكاديمية <span>فارس</span></h1>';
-  h+='<p class="wl-sub">منظومة متكاملة لإدارة التدريب والبطولات — من متابعة اللاعب اليومية وتقييمه الفني، إلى جداول الدوري ونتائجه، وصولاً إلى منتخبات الأكاديمية.</p>';
-  h+='<div class="wl-cta">';
-  h+='<button class="wl-b pri" onclick="welGo()">'+ic('logout',16)+' تسجيل الدخول</button>';
-  h+='<button class="wl-b sec" onclick="welJoin()">'+ic('user',16)+' إنشاء حساب جديد</button>';
+  /* ===== الهيرو ===== */
+  h+='<section class="wl-hero2" id="wl-top">';
+  h+='<div class="wl-hero2-tx">';
+  h+='<div class="wl-eyebrow">'+ic('star',11)+' منصة أكاديمية فارس الرقمية</div>';
+  h+='<h1 class="wl-h1">أكاديمية <span>فارس</span><br><small>حيث يُصنع اللاعب</small></h1>';
+  h+='<p class="wl-sub">منظومة واحدة تجمع كل ما يخص اللاعب والمدرب والإدارة: البطولات والدوري، الإدارة الفنية والتقييم، منتخبات الأكاديمية، والتقارير — بيانات حيّة تُحدَّث لحظة بلحظة.</p>';
+  h+='<div class="wl-cta"><button class="wl-b pri" onclick="welGo()">'+ic('logout',16)+' تسجيل الدخول</button><button class="wl-b sec" onclick="welJoin()">'+ic('user-plus',16)+' إنشاء حساب جديد</button></div>';
+  h+='<div class="wl-trust"><span>'+ic('check',11)+' ٥ أنظمة متكاملة</span><span>'+ic('check',11)+' حساب لكل لاعب وولي أمر</span><span>'+ic('check',11)+' يعمل على الجوال</span></div>';
   h+='</div>';
-  h+='<div class="wl-scroll">'+ic('chevron',22)+'</div>';
+  /* معاينة لوحة — عناصر حقيقية من البيانات */
+  h+='<div class="wl-hero2-vis"><div class="wl-lg"></div>';
+  h+='<div class="wl-mock">';
+  h+='<div class="wl-mock-h"><span class="wl-dot" style="background:#ff5f57"></span><span class="wl-dot" style="background:#febc2e"></span><span class="wl-dot" style="background:#28c840"></span><b>لوحة الأكاديمية</b></div>';
+  h+='<div class="wl-mock-k"><div><b data-cnt="'+(st.players||0)+'">0</b><span>لاعب</span></div><div><b data-cnt="'+(st.coaches||0)+'">0</b><span>مدرب</span></div><div><b data-cnt="'+(st.branches||0)+'">0</b><span>فرع</span></div></div>';
+  h+='<div class="wl-mock-r"><span class="wl-mock-ic" style="background:rgba(221,29,69,.18);color:#ff6b8a">'+ic('ball',13)+'</span><div><small>المباراة القادمة</small><b>'+(nx?esc(nx.a)+' × '+esc(nx.b):'تُحدَّث من جدول البطولة')+'</b></div></div>';
+  h+='<div class="wl-mock-r"><span class="wl-mock-ic" style="background:rgba(21,101,192,.2);color:#6aa8ff">'+ic('star',13)+'</span><div><small>تقييم اللاعب الشهري</small><div class="wl-mock-bar"><i style="width:78%"></i></div></div></div>';
+  h+='<div class="wl-mock-r"><span class="wl-mock-ic" style="background:rgba(217,119,6,.2);color:#ffb457">'+ic('crown',13)+'</span><div><small>منتخب فارس</small><b>'+ceN(st.squads||0)+' فئة مواليد</b></div></div>';
   h+='</div>';
+  h+='<div class="wl-float wl-f1">'+ic('trophy',14)+' <b>'+ceN(st.tours||0)+'</b> بطولة</div>';
+  h+='<div class="wl-float wl-f2">'+ic('image',14)+' تمارين بالفيديو</div>';
+  h+='</div></section>';
 
-  /* أرقام حية من بيانات النظام */
-  var cards=[];
-  if(st.branches)cards.push([st.branches,'فرع']);
-  if(st.players)cards.push([st.players,'لاعب']);
-  if(st.coaches)cards.push([st.coaches,'مدرب']);
-  if(st.tours)cards.push([st.tours,'بطولة']);
+  /* ===== الأرقام ===== */
+  var cards=[[st.branches,'فرعاً','pin'],[st.players,'لاعباً','users'],[st.coaches,'مدرباً','whistle'],[st.tours,'بطولة','trophy']].filter(function(c){return c[0];});
   if(cards.length>=2){
-    h+='<div class="wl-stats">';
-    cards.slice(0,4).forEach(function(c){h+='<div class="wl-st"><div class="wl-st-n">'+c[0]+'</div><div class="wl-st-l">'+c[1]+'</div></div>';});
+    h+='<div class="wl-stats2">';
+    cards.forEach(function(c){h+='<div class="wl-st2"><span class="wl-st2-i">'+ic(c[2],16)+'</span><div><div class="wl-st-n" data-cnt="'+c[0]+'">0</div><div class="wl-st-l">'+c[1]+'</div></div></div>';});
     h+='</div>';
   }
 
-  /* الأنظمة */
-  h+='<div class="wl-sec-t"><i></i><h2>ماذا يقدّم النظام</h2></div>';
-  h+='<div class="wl-grid">';
-  [['trophy','البطولات والدوري','جداول المباريات، الترتيب، الأدوار الإقصائية، والنتائج لحظة بلحظة.','#DD1D45'],
-   ['target','الإدارة الفنية','فروع ومجموعات وخطط تدريبية، وتقييم فني وشخصي لكل لاعب بمقياس واضح.','#1565c0'],
-   ['crown','منتخب فارس','منتخبا الرياض والطائف: ترشيح اللاعبين، التجمعات، المباريات، والتقييم.','#d97706'],
-   ['chart','التقارير والمتابعة','تطور اللاعب عبر الأشهر، التزام المدربين، وتقارير جاهزة للتصدير.','#16a34a']
+  /* ===== لمن النظام ===== */
+  h+='<section class="wl-section" id="wl-who"><div class="wl-sec-t"><i></i><h2>لكل دور ما يحتاجه</h2></div>';
+  h+='<div class="wl-who">';
+  [['user','اللاعب وولي الأمر','دخول برقم الهوية بلا تعقيد: صفحة اللاعب، حضوره، تقييماته الشهرية، تمارين مجموعته بالصورة والفيديو، ومبارياته ونتائجها.','#1565c0'],
+   ['whistle','المدرب','مجموعاته ولاعبوه في مكان واحد: تمارين الحصص، الخطة الفنية الشهرية، التقييم، الوديات، ومهامه من الإدارة.','#16a34a'],
+   ['shield','الإدارة الفنية والفروع','رؤية كاملة: الفروع والفئات والملاعب والفترات، متابعة المدربين والزيارات الفنية، الطلبات والاعتمادات، والتقارير.','#d97706']
   ].forEach(function(c){
-    h+='<div class="wl-card"><div class="wl-card-ic" style="--cc:'+c[3]+'">'+ic(c[0],20)+'</div>'
-      +'<div><div class="wl-card-t">'+c[1]+'</div><div class="wl-card-d">'+c[2]+'</div></div></div>';
+    h+='<div class="wl-wc" style="--cc:'+c[3]+'"><div class="wl-wc-ic">'+ic(c[0],20)+'</div><div class="wl-wc-t">'+c[1]+'</div><div class="wl-wc-d">'+c[2]+'</div></div>';
   });
-  h+='</div>';
+  h+='</div></section>';
 
-  /* الفروع */
+  /* ===== الأنظمة ===== */
+  h+='<section class="wl-section" id="wl-sys"><div class="wl-sec-t"><i></i><h2>ماذا يقدّم النظام</h2><small>خمسة أنظمة بحساب واحد</small></div>';
+  h+='<div class="wl-grid2">';
+  [['trophy','بطولات فارس','#DD1D45',['جداول المباريات والترتيب','الأدوار الإقصائية والنتائج لحظياً','تسجيل الفرق واللاعبين بالباركود']],
+   ['target','الإدارة الفنية','#1565c0',['الفروع والفئات والحصص','تمارين بالصورة والفيديو','تقييم فني وشخصي لكل لاعب']],
+   ['crown','منتخب فارس','#d97706',['ترشيح اللاعبين من الفروع','التجمعات والاستدعاءات','المباريات والبطولات الخارجية']],
+   ['star','تقييم المدربين','#5b2d8f',['تقييم من اللاعب والمشرف والمدير','دورات محددة أو تقييم مستمر','خطط تطوير للمدرب']],
+   ['chart','الإدارة والمتابعة','#16a34a',['المستخدمون والصلاحيات','متابعة الجهاز الفني والطلبات','تقارير جاهزة للتصدير']]
+  ].forEach(function(c){
+    h+='<div class="wl-card2" style="--cc:'+c[2]+'"><div class="wl-card2-h"><span class="wl-card-ic" style="--cc:'+c[2]+'">'+ic(c[0],18)+'</span><b>'+c[1]+'</b></div><ul>'+c[3].map(function(x){return '<li>'+ic('check',10)+' '+x+'</li>';}).join('')+'</ul></div>';
+  });
+  h+='</div></section>';
+
+  /* ===== الفروع ===== */
   if(brs.length){
-    h+='<div class="wl-sec-t"><i></i><h2>فروعنا</h2><small>'+brs.length+' فرع</small></div>';
-    h+='<div class="wl-brs">';
-    brs.forEach(function(b){h+='<span class="wl-br">'+ic('pin',12)+esc(b)+'</span>';});
-    h+='</div>';
+    h+='<section class="wl-section" id="wl-br"><div class="wl-sec-t"><i></i><h2>فروعنا</h2><small>'+ceN(brs.length)+' فرعاً في المملكة</small></div>';
+    h+='<div class="wl-brs2">';
+    brs.forEach(function(b){h+='<div class="wl-br2"><span class="wl-br2-i">'+ic('pin',13)+'</span><div><b>'+esc(b.name)+'</b><small>'+esc(b.city||'')+(b.n?(b.city?' • ':'')+ceN(b.n)+' لاعب':'')+'</small></div></div>';});
+    h+='</div></section>';
   }
 
-  /* آخر الأخبار */
+  /* ===== الأخبار ===== */
   if(news.length){
-    h+='<div class="wl-sec-t"><i></i><h2>آخر الأخبار</h2></div>';
+    h+='<section class="wl-section" id="wl-news"><div class="wl-sec-t"><i></i><h2>آخر الأخبار</h2></div>';
     h+='<div class="wl-news">';
     news.forEach(function(x){
-      h+='<div class="wl-nw">';
+      var open=x.url?' onclick="window.open(\''+esc(x.url)+'\',\'_blank\')"':(x.img?' onclick="lbxOpen(\''+esc(x.img).replace(/'/g,'%27')+'\',\''+esc(x.title||'').replace(/'/g,'')+'\')"':'');
+      h+='<div class="wl-nw"'+open+'>';
       if(x.img)h+='<img class="wl-nw-img" src="'+esc(x.img)+'" alt="" loading="lazy">';
-      h+='<div class="wl-nw-b"><div class="wl-nw-t">'+esc(x.title||'—')+'</div>'
-        +(x.at?'<div class="wl-nw-d">'+esc(new Date(x.at).toLocaleDateString(locale(),{day:'numeric',month:'long'}))+'</div>':'')
+      h+='<div class="wl-nw-b"><div class="wl-nw-t">'+esc(x.title||'من أجواء الأكاديمية')+'</div>'
+        +(x.at?'<div class="wl-nw-d">'+ic('cal',10)+' '+esc(new Date(x.at).toLocaleDateString(locale(),{day:'numeric',month:'long'}))+'</div>':'')
         +'</div></div>';
     });
-    h+='</div>';
+    h+='</div></section>';
   }
 
-  /* التذييل */
-  h+='<div class="wl-foot">';
-  h+='<div class="wl-cont">';
-  h+='<a class="wl-ct" href="https://wa.me/966920031974" target="_blank" rel="noopener">'+ic('whatsapp',14)+' 920031974</a>';
-  h+='<a class="wl-ct" href="mailto:info@farisacademy.com">'+ic('mail',14)+' info@farisacademy.com</a>';
-  h+='<span class="wl-ct">'+ic('pin',14)+' الرياض، السعودية</span>';
-  h+='</div>';
-  h+='<div class="wl-cp">أكاديمية فارس © '+new Date().getFullYear()+'<br>جميع الحقوق محفوظة</div>';
-  h+='</div>';
+  /* ===== دعوة أخيرة ===== */
+  h+='<section class="wl-cta2"><div class="wl-cta2-bg"></div><div class="wl-cta2-in"><div><h3>جاهز للبدء؟</h3><p>ادخل بحسابك أو أنشئ حساباً جديداً — لاعب، مدرب، أو إداري.</p></div><div class="wl-cta"><button class="wl-b pri" onclick="welGo()">'+ic('logout',15)+' تسجيل الدخول</button><button class="wl-b sec" onclick="welJoin()">'+ic('user-plus',15)+' إنشاء حساب</button></div></div></section>';
+
+  /* ===== التذييل ===== */
+  h+='<footer class="wl-foot2"><div class="wl-foot2-g">';
+  h+='<div><div class="wl-foot2-lg"><span class="wl-bar-lg"></span><b>أكاديمية فارس</b></div><p>أكاديمية كرة قدم سعودية تعمل على صناعة اللاعب فنياً وسلوكياً عبر منظومة رقمية متكاملة.</p></div>';
+  h+='<div><h4>روابط</h4><a href="#wl-sys">الأنظمة</a><a href="#wl-who">لكل دور</a><a href="#wl-br">الفروع</a>'+(news.length?'<a href="#wl-news">الأخبار</a>':'')+'</div>';
+  h+='<div><h4>تواصل معنا</h4><a href="https://wa.me/966920031974" target="_blank" rel="noopener">'+ic('whatsapp',13)+' 920031974</a><a href="mailto:info@farisacademy.com">'+ic('mail',13)+' info@farisacademy.com</a><span>'+ic('pin',13)+' الرياض، السعودية</span></div>';
+  h+='</div><div class="wl-cp">أكاديمية فارس © '+new Date().getFullYear()+' — جميع الحقوق محفوظة</div></footer>';
 
   g('wel-body').innerHTML=h;
   hydrateIcons(g('WEL'));
+  welCount();
+}
+/* عدّادات متحركة عند الظهور */
+function welCount(){
+  var els=[].slice.call(document.querySelectorAll('#WEL [data-cnt]'));
+  if(!els.length)return;
+  var run=function(el){
+    if(el.dataset.done)return;el.dataset.done='1';
+    var to=+el.dataset.cnt||0,t0=performance.now(),dur=to>200?1400:900;
+    var step=function(t){var p=Math.min(1,(t-t0)/dur);p=1-Math.pow(1-p,3);el.textContent=ceN(Math.round(to*p));if(p<1)requestAnimationFrame(step);};
+    requestAnimationFrame(step);
+  };
+  if(!('IntersectionObserver' in window)){els.forEach(run);return;}
+  var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){run(e.target);io.unobserve(e.target);}});},{root:g('WEL'),threshold:.3});
+  els.forEach(function(el){io.observe(el);});
 }
 function welShow(){
   rWel();
@@ -22669,7 +23035,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.19-fix</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.19-access2</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
