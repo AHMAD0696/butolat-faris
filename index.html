@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.18-hub">
+<meta name="build" content="2026.09.19-teams">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2595,6 +2595,58 @@ a.btn{text-decoration:none}
 .adb-ibi{display:inline-flex;align-items:center;gap:4px;color:var(--accent)}
 .adb-ibi b{font-size:10.5px;color:var(--txt)}
 .adb-ib:hover .adb-ibi,.adb-ib:hover .adb-ibi b{color:var(--red)}
+
+/* ===== صفحة اختيار المنتخب ===== */
+.ntt2{max-width:980px;margin:0 auto;padding:.4rem 0 2rem}
+.ntt2-hero{position:relative;overflow:hidden;border-radius:24px;padding:2rem 1.6rem 1.6rem;margin-bottom:1.4rem;color:#fff;text-align:center;
+  background:linear-gradient(135deg,#1b1d5e 0%,#12133f 55%,#0d0e2c 100%);box-shadow:0 20px 50px rgba(0,0,0,.28)}
+.ntt2-hero-bg{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 70% at 85% 10%,rgba(221,29,69,.35),transparent 60%),radial-gradient(ellipse 50% 60% at 10% 90%,rgba(14,165,233,.22),transparent 60%),
+  repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 2px,transparent 2px 14px)}
+.ntt2-hero-in{position:relative}
+.ntt2-crown{width:62px;height:62px;border-radius:20px;margin:0 auto .8rem;display:grid;place-items:center;color:#fff;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(6px);box-shadow:0 10px 30px rgba(221,29,69,.25)}
+.ntt2-crown svg{color:#ff5c7a}
+.ntt2-greet{font-size:12.5px;color:rgba(255,255,255,.7);margin-bottom:.35rem}
+.ntt2-greet b{color:#fff}
+.ntt2-role{display:inline-block;margin-inline-start:6px;font-size:10px;padding:2px 9px;border-radius:99px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.ntt2-hero h1{margin:0;font-size:1.7rem;font-weight:800;letter-spacing:-.3px}
+.ntt2-hero p{margin:.35rem 0 0;font-size:12.5px;color:rgba(255,255,255,.62)}
+.ntt2-tot{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;margin-top:1.2rem}
+.ntt2-tot span{display:flex;flex-direction:column;align-items:center;min-width:86px;padding:.55rem .7rem;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);font-size:10.5px;color:rgba(255,255,255,.7)}
+.ntt2-tot b{font-size:1.15rem;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+.ntt2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1rem}
+.ntt2-card{--tc:var(--red);position:relative;overflow:hidden;background:var(--sur);border:1px solid var(--brd);border-radius:20px;padding:1.1rem 1.2rem 1rem;cursor:pointer;
+  box-shadow:var(--sh);transition:transform .2s,box-shadow .2s,border-color .2s;animation:ntt2in .4s ease both;text-align:start;display:flex;flex-direction:column;gap:.8rem}
+@keyframes ntt2in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.ntt2-card:hover,.ntt2-card:focus-visible{transform:translateY(-4px);border-color:var(--tc);box-shadow:0 18px 44px rgba(0,0,0,.22);outline:none}
+.ntt2-band{position:absolute;top:0;inset-inline:0;height:5px;background:linear-gradient(90deg,var(--tc),transparent)}
+.ntt2-top{display:flex;align-items:center;gap:.9rem}
+.ntt2-logo{width:60px;height:60px;border-radius:18px;background:var(--tc);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.15rem;flex-shrink:0;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+.ntt2-logo img{width:100%;height:100%;object-fit:cover}
+.ntt2-tx{flex:1;min-width:0}
+.ntt2-nm{font-size:1.05rem;font-weight:800;line-height:1.3}
+.ntt2-city{font-size:11px;color:var(--gray);display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:3px}
+.ntt2-wdl{display:flex;align-items:baseline;gap:3px;font-weight:800;font-size:14px;flex-shrink:0;position:relative;padding-top:.2rem}
+.ntt2-wdl i{color:var(--gray);font-style:normal;font-weight:400}
+.ntt2-wdl small{position:absolute;top:100%;inset-inline-start:0;white-space:nowrap;font-size:9px;color:var(--gray);font-weight:600}
+.ntt2-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;padding:.7rem 0;border-top:1px solid var(--bg);border-bottom:1px solid var(--bg)}
+.ntt2-stats>span{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:10.5px;color:var(--gray);font-weight:600;text-align:center}
+.ntt2-stats b{font-size:1.15rem;font-weight:800;color:var(--txt);font-variant-numeric:tabular-nums;line-height:1.1}
+.ntt2-stats i{font-style:normal;font-size:9.5px;color:var(--gray)}
+.ntt2-info{display:flex;flex-direction:column;gap:.45rem}
+.ntt2-ir{display:flex;align-items:center;gap:.6rem;font-size:11.5px;min-width:0}
+.ntt2-ir small{display:block;font-size:10px;color:var(--gray)}
+.ntt2-ir b{display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ntt2-ir>div{min-width:0;flex:1}
+.ntt2-ii{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+.ntt2-foot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:auto}
+.ntt2-sq{display:flex;gap:.25rem;flex-wrap:wrap}
+.ntt2-sq em{font-style:normal;font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--bg);color:var(--txt)}
+.ntt2-go{display:inline-flex;align-items:center;gap:5px;background:var(--tc);color:#fff;font-size:12px;font-weight:700;padding:8px 18px;border-radius:99px;transition:.15s}
+.ntt2-card:hover .ntt2-go{padding-inline-end:24px}
+.ntt2-back{text-align:center;margin-top:1.6rem}
+@media(max-width:640px){.ntt2-hero{padding:1.5rem 1rem 1.2rem;border-radius:18px}.ntt2-hero h1{font-size:1.35rem}.ntt2-grid{grid-template-columns:1fr}.ntt2-tot span{min-width:70px}.ntt2-wdl{display:none}}
 /* ============ CALENDAR ============ */
 .seg{display:inline-flex;background:var(--bg);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
 .seg button{border:none;background:none;padding:6px 12px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--gray);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:.15s}
@@ -2957,7 +3009,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.18-hub</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.19-teams</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -15685,9 +15737,11 @@ function enterNT(){
   logA('دخول منتخب فارس','crown','#d97706');
 }
 /* ---- شاشة اختيار المنتخب ---- */
+function ntGreet(){var h=new Date().getHours();return h<12?'صباح الخير':'مساء الخير';}
+function ntTeamInitials(name){var w=String(name||'').replace(/منتخب|فارس/g,'').trim().split(/\s+/).filter(Boolean);if(!w.length)return 'ف';var s=w[0].replace(/^ال/,'');return s.slice(0,2)||'ف';}
 function rNTTeams(){
   NTTEAM='';
-  var mine=ntMyTeams(),n=NTX();
+  var mine=ntMyTeams(),n=NTX(),now=Date.now();
   document.querySelectorAll('#NT .page').forEach(function(e){e.classList.remove('on');});
   var pg=g('ntpg-teams');if(pg)pg.classList.add('on');
   var nav=g('nt-links');if(nav)nav.innerHTML='';
@@ -15695,30 +15749,61 @@ function rNTTeams(){
   var mm=g('ntmm');if(mm)mm.innerHTML='';
   var rl=g('nt-rl');if(rl)rl.textContent='اختيار المنتخب';
   document.body.classList.add('nt-pick');
-  var h='<div class="ntt-wrap">';
-  h+='<div class="ntt-hd">'+ic('crown',30)+'<h1>منتخب فارس</h1><p>اختر المنتخب الذي تريد إدارته</p></div>';
-  h+='<div class="ntt-grid">';
-  mine.forEach(function(t){
+  /* إجماليات كل منتخباتي */
+  var tot={sq:0,mem:0,st:0,up:0};
+  var cards=mine.map(function(t){
     var sq=n.squads.filter(function(x){return x.teamId===t.id;});
     var sqIds=sq.map(function(x){return x.id;});
-    var mem=n.members.filter(function(m){return sqIds.indexOf(m.squadId)>-1;}).length;
-    var st=n.staff.filter(function(x){return x.teamId===t.id;}).length;
-    var up=n.matches.filter(function(m){return m.teamId===t.id&&m.status==='sched';}).length;
-    h+='<button class="ntt-card" onclick="ntPickTeam(\''+t.id+'\')" style="--tc:'+(t.color||'var(--red)')+'">';
-    h+='<span class="ntt-glow"></span>';
-    h+='<span class="ntt-ic">'+ic('shield',30)+'</span>';
-    h+='<span class="ntt-nm">'+esc(t.name)+'</span>';
-    h+='<span class="ntt-city">'+ic('pin',11)+' '+esc(t.city||'')+'</span>';
-    h+='<span class="ntt-stats">'
-      +'<span><b>'+sq.length+'</b>فئة</span>'
-      +'<span><b>'+mem+'</b>لاعب</span>'
-      +'<span><b>'+st+'</b>طاقم</span>'
-      +'<span><b>'+up+'</b>مباراة</span></span>';
-    h+='<span class="ntt-go">'+ic('chevron',15)+' دخول</span>';
-    h+='</button>';
+    var mem=n.members.filter(function(m){return sqIds.indexOf(m.squadId)>-1&&m.active!==false;});
+    var st=n.staff.filter(function(x){return x.teamId===t.id;});
+    var ms=n.matches.filter(function(m){return m.teamId===t.id;});
+    var up=ms.filter(function(m){return m.status==='sched'&&m.dt&&new Date(m.dt).getTime()>=now-36e5;}).sort(function(a,b){return a.dt<b.dt?-1:1;});
+    var done=ms.filter(function(m){return m.status==='done'&&m.s1!==''&&m.s1!=null&&m.s2!==''&&m.s2!=null;}).sort(function(a,b){return (b.dt||'')<(a.dt||'')?-1:1;});
+    var camps=n.camps.filter(function(c){return c.teamId===t.id;}).sort(function(a,b){return (b.from||'')<(a.from||'')?-1:1;});
+    var inj=mem.filter(function(m){return !ntMemAvailable(m.id);}).length;
+    var coaches=st.filter(function(x){return x.role==='coach';}).length;
+    var w=0,d=0,l=0;done.forEach(function(m){var a2=+m.s1,b2=+m.s2;if(a2>b2)w++;else if(a2===b2)d++;else l++;});
+    tot.sq+=sq.length;tot.mem+=mem.length;tot.st+=st.length;tot.up+=up.length;
+    return{t:t,sq:sq,mem:mem,st:st,up:up,done:done,camps:camps,inj:inj,coaches:coaches,w:w,d:d,l:l};
   });
-  h+='</div>';
-  h+='<button class="btn btn-g" style="margin-top:1.6rem" onclick="ntBack()">'+ic('swap',13)+' رجوع للأنظمة</button>';
+  var h='<div class="ntt2">';
+  /* الهيرو */
+  h+='<div class="ntt2-hero"><div class="ntt2-hero-bg"></div>';
+  h+='<div class="ntt2-hero-in"><div class="ntt2-crown">'+ic('crown',30)+'</div>';
+  h+='<div class="ntt2-greet">'+ntGreet()+'، <b>'+esc(CU?CU.name:'')+'</b> <span class="ntt2-role">'+esc(ntRoleLabel()||'')+'</span></div>';
+  h+='<h1>منتخب فارس</h1><p>اختر المنتخب الذي تريد إدارته — كل منتخب بفئاته وطاقمه ومبارياته المستقلة</p>';
+  h+='<div class="ntt2-tot"><span><b>'+ceN(mine.length)+'</b>منتخب</span><span><b>'+ceN(tot.sq)+'</b>فئة</span><span><b>'+ceN(tot.mem)+'</b>لاعب</span><span><b>'+ceN(tot.st)+'</b>طاقم</span><span><b>'+ceN(tot.up)+'</b>مباراة قادمة</span></div>';
+  h+='</div></div>';
+  if(!cards.length)h+=emptyBox('crown','لا يوجد منتخب مسند إليك','اطلب من مدير النظام إسناد صلاحية منتخب لحسابك');
+  else{
+    h+='<div class="ntt2-grid">';
+    cards.forEach(function(c,i){
+      var t=c.t,col=t.color||'var(--red)';
+      var nx=c.up[0],last=c.done[0],camp=c.camps[0];
+      var lastCl=last?(+last.s1>+last.s2?'#16a34a':(+last.s1===+last.s2?'var(--gray)':'var(--red)')):'';
+      h+='<div class="ntt2-card" style="--tc:'+col+';animation-delay:'+(i*80)+'ms" onclick="ntPickTeam(\''+t.id+'\')" role="button" tabindex="0" onkeydown="if(event.key===\'Enter\')ntPickTeam(\''+t.id+'\')">';
+      h+='<div class="ntt2-band"></div>';
+      h+='<div class="ntt2-top">'
+        +'<div class="ntt2-logo">'+(t.img?'<img src="'+esc(t.img)+'" alt="">':'<span>'+esc(ntTeamInitials(t.name))+'</span>')+'</div>'
+        +'<div class="ntt2-tx"><div class="ntt2-nm">'+esc(t.name)+'</div><div class="ntt2-city">'+ic('pin',11)+' '+esc(t.city||'—')+(t.acceptsNom?' <span class="badge approved" style="font-size:9.5px;padding:2px 8px">'+ic('inbox',9)+' يستقبل الترشيحات</span>':'')+'</div></div>'
+        +'<div class="ntt2-wdl" title="فوز - تعادل - خسارة"><span style="color:#16a34a">'+ceN(c.w)+'</span><i>-</i><span>'+ceN(c.d)+'</span><i>-</i><span style="color:var(--red)">'+ceN(c.l)+'</span><small>ف - ت - خ</small></div>'
+        +'</div>';
+      h+='<div class="ntt2-stats">'
+        +'<span><b>'+ceN(c.sq.length)+'</b>فئة</span>'
+        +'<span><b>'+ceN(c.mem.length)+'</b>لاعب'+(c.inj?'<i style="color:var(--red)">'+ceN(c.inj)+' مصاب</i>':'')+'</span>'
+        +'<span><b>'+ceN(c.st.length)+'</b>طاقم'+(c.coaches?'<i>'+ceN(c.coaches)+' مدرب</i>':'')+'</span>'
+        +'<span><b>'+ceN(c.up.length)+'</b>مباراة قادمة</span></div>';
+      h+='<div class="ntt2-info">';
+      h+='<div class="ntt2-ir"><span class="ntt2-ii" style="background:rgba(21,101,192,.12);color:#1565c0">'+ic('ball',13)+'</span><div><small>المباراة القادمة</small><b>'+(nx?esc(ntSqName(nx.squadId))+' × '+esc(nx.opp)+' — '+new Date(nx.dt).toLocaleDateString(locale(),{day:'numeric',month:'short'}):'لا مباريات مجدولة')+'</b></div></div>';
+      h+='<div class="ntt2-ir"><span class="ntt2-ii" style="background:rgba(22,163,74,.12);color:#16a34a">'+ic('trophy',13)+'</span><div><small>آخر نتيجة</small><b>'+(last?'<span style="color:'+lastCl+'">'+esc(last.s1)+' - '+esc(last.s2)+'</span> ضد '+esc(last.opp):'لم تُسجَّل نتائج بعد')+'</b></div></div>';
+      h+='<div class="ntt2-ir"><span class="ntt2-ii" style="background:rgba(217,119,6,.13);color:var(--amber)">'+ic('cal',13)+'</span><div><small>آخر تجمّع</small><b>'+(camp?esc(camp.title||'تجمّع')+(camp.from?' — '+xDateLbl(camp.from):''):'لا تجمعات بعد')+'</b></div></div>';
+      h+='</div>';
+      h+='<div class="ntt2-foot"><span class="ntt2-sq">'+c.sq.slice(0,4).map(function(s){return '<em>'+esc(s.year||s.name)+'</em>';}).join('')+(c.sq.length>4?'<em>+'+ceN(c.sq.length-4)+'</em>':'')+'</span><span class="ntt2-go">دخول '+ic('chev-l',13)+'</span></div>';
+      h+='</div>';
+    });
+    h+='</div>';
+  }
+  h+='<div class="ntt2-back"><button class="btn btn-g" onclick="ntBack()">'+ic('swap',13)+' رجوع للأنظمة</button></div>';
   h+='</div>';
   g('ntc-teams').innerHTML=h;
   hydrateIcons(g('ntc-teams'));
@@ -22578,7 +22663,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.18-hub</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.19-teams</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
