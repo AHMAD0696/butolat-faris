@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.20-wide">
+<meta name="build" content="2026.09.20-cities">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2891,15 +2891,31 @@ a.wl-b{text-decoration:none}
 .wl-ptc:hover img{filter:none;opacity:1}
 .wl-ptc b{font-size:12px;text-align:center}
 /* الأسئلة */
-.wl-faq{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
-.wl-fq{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden}
-.wl-fq summary{list-style:none;display:flex;align-items:center;gap:.6rem;padding:.85rem .95rem;cursor:pointer;font-size:12.5px;font-weight:700;color:#fff}
+.wl-faqw{display:grid;grid-template-columns:.75fr 1.45fr;gap:1.6rem;align-items:start}
+.wl-faq-in{position:sticky;top:80px}
+.wl-faq-in p{font-size:12.5px;line-height:1.9;color:rgba(255,255,255,.6);margin:0 0 1rem;max-width:36ch}
+.wl-faq-cta{display:flex;align-items:center;gap:.8rem;background:linear-gradient(135deg,rgba(221,29,69,.22),rgba(21,101,192,.18));border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:.9rem 1rem;color:#fff;text-decoration:none;font-family:inherit;cursor:pointer;width:100%;text-align:start;transition:.2s}
+.wl-faq-cta:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3)}
+.wl-faq-cta>svg{color:#25d366;flex-shrink:0}
+.wl-faq-cta b{display:block;font-size:13px}
+.wl-faq-cta small{display:block;font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+.wl-faq{display:flex;flex-direction:column;gap:.55rem}
+.wl-fq{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:16px;overflow:hidden;transition:.2s}
+.wl-fq[open]{background:rgba(255,255,255,.07);border-color:rgba(221,29,69,.45)}
+.wl-fq summary{list-style:none;display:flex;align-items:center;gap:.8rem;padding:1rem 1.1rem;cursor:pointer;font-size:13.5px;font-weight:700;color:#fff}
 .wl-fq summary::-webkit-details-marker{display:none}
-.wl-fq summary span{flex:1}
-.wl-fq summary svg:first-child{color:#ff6b8a;flex-shrink:0}
-.wl-fq summary svg:last-child{color:rgba(255,255,255,.4);transition:.2s;flex-shrink:0}
-.wl-fq[open] summary svg:last-child{transform:rotate(180deg)}
-.wl-fq-a{padding:0 .95rem .95rem 2.7rem;font-size:12px;line-height:1.9;color:rgba(255,255,255,.7)}
+.wl-fq summary i{font-style:normal;font-size:11px;font-weight:800;color:#ff6b8a;width:34px;height:34px;border-radius:10px;background:rgba(221,29,69,.14);display:grid;place-items:center;flex-shrink:0;direction:ltr;font-variant-numeric:tabular-nums}
+.wl-fq summary span{flex:1;line-height:1.5}
+.wl-fq summary b{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;color:rgba(255,255,255,.7);transition:.25s;flex-shrink:0}
+.wl-fq[open] summary b{transform:rotate(45deg);background:var(--red);border-color:var(--red);color:#fff}
+.wl-fq-a{padding:0 1.1rem 1.1rem calc(1.1rem);margin-inline-start:calc(34px + .8rem + 1.1rem);font-size:12.5px;line-height:1.95;color:rgba(255,255,255,.72);animation:fadeIn .3s}
+.wl-mapl{display:inline-flex;align-items:center;gap:6px;background:rgba(221,29,69,.12);border:1px solid rgba(221,29,69,.35);color:#fff;border-radius:99px;padding:6px 12px;font-size:11.5px;font-weight:700;text-decoration:none;transition:.15s}
+.wl-mapl:hover{background:var(--red);border-color:var(--red)}
+.wl-mapl svg:first-child{color:#ff6b8a}.wl-mapl:hover svg{color:#fff}
+.wl-maplinks{display:flex;gap:.5rem;flex-wrap:wrap;margin:-.3rem 0 .9rem}
+.wl-maplinks.foot{flex-direction:column;align-items:flex-start;gap:.4rem;margin:0 0 .7rem}
+.wl-foot3 .wl-maplinks.foot a{margin:0;font-size:11.5px}
+@media(max-width:900px){.wl-faqw{grid-template-columns:1fr;gap:1rem}.wl-faq-in{position:static}.wl-fq-a{margin-inline-start:0}}
 /* التذييل */
 .wl-foot3{position:relative;max-width:none}
 .wl-foot3-g{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:1.6rem;margin-bottom:1.4rem}
@@ -2916,6 +2932,41 @@ a.wl-b{text-decoration:none}
 .wl-soc a svg{color:#fff}
 .wl-wa{position:fixed;bottom:calc(1.1rem + env(safe-area-inset-bottom));left:1.1rem;z-index:30;width:54px;height:54px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;box-shadow:0 10px 26px rgba(37,211,102,.4);text-decoration:none;transition:.18s}
 .wl-wa:hover{transform:translateY(-3px) scale(1.04)}
+
+/* خريطة الفروع */
+.wl-mapw{display:grid;grid-template-columns:1.25fr .85fr;gap:1.2rem;align-items:start}
+.wl-map{position:relative;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(221,29,69,.12),transparent 70%),rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:1rem;overflow:hidden}
+.wl-map>svg{width:100%;height:auto;display:block;overflow:visible}
+.wl-ksa{fill:url(#wlmg);stroke:rgba(140,150,255,.55);stroke-width:1.4;stroke-linejoin:round}
+.wl-pin{cursor:pointer;animation:wlPinIn .6s cubic-bezier(.2,.8,.3,1) both;transition:opacity .2s}
+.wl-pin.dim{opacity:.35}
+.wl-pin-p{fill:rgba(221,29,69,.28);animation:wlPulse 2.4s ease-out infinite;transform-origin:center;transform-box:fill-box}
+.wl-pin-c{fill:#DD1D45;stroke:#fff;stroke-width:2.5;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+.wl-pin.on .wl-pin-c{fill:#fff;stroke:#DD1D45}
+.wl-pin.on .wl-pin-n{fill:#DD1D45}
+.wl-pin:hover .wl-pin-c{fill:#ff3d63}
+.wl-pin-n{fill:#fff;font-size:13px;font-weight:800;font-family:inherit;pointer-events:none}
+.wl-pin-l{fill:#fff;font-size:14px;font-weight:700;font-family:inherit;paint-order:stroke;stroke:rgba(13,14,36,.85);stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+@keyframes wlPulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+@keyframes wlPinIn{0%{opacity:0;transform:translateY(-14px)}100%{opacity:1;transform:none}}
+.wl-map-cap{position:absolute;bottom:.7rem;inset-inline-start:.9rem;font-size:11px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:4px;background:rgba(13,14,36,.7);padding:4px 10px;border-radius:99px}
+.wl-mapside{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:1rem;max-height:560px;display:flex;flex-direction:column}
+.wl-mapside-h{display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem}
+.wl-mapside-h b{font-size:13.5px;color:#fff;flex:1}
+.wl-mapside-h button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:99px;padding:4px 10px;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.wl-mapside-l{overflow-y:auto;flex:1;padding-inline-end:4px;scrollbar-width:thin;display:flex;flex-direction:column;gap:.6rem}
+.wl-mc-h{display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:800;color:#fff;margin-bottom:.4rem}
+.wl-mc-h svg{color:#ff6b8a}
+.wl-mc-h span{font-size:10.5px;color:rgba(255,255,255,.55);background:rgba(255,255,255,.08);border-radius:99px;padding:1px 8px;margin-inline-start:auto}
+.wl-mc-l{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.4rem}
+.wl-mc-b{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.45rem .6rem;color:#fff;text-decoration:none;font-size:11.5px;font-weight:700;transition:.15s;min-height:38px}
+.wl-mc-b[href]:hover{background:rgba(221,29,69,.18);border-color:rgba(221,29,69,.5)}
+.wl-mc-b>svg:first-child{color:#ff6b8a;flex-shrink:0}
+.wl-mc-b>svg:last-child{color:rgba(255,255,255,.4);margin-inline-start:auto;flex-shrink:0}
+.wl-mc-b img{width:20px;height:20px;object-fit:contain;border-radius:5px;flex-shrink:0}
+.wl-mc-b span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wl-mc-b small{display:block;font-size:10px;color:rgba(255,255,255,.5);font-weight:500}
+@media(max-width:900px){.wl-mapw{grid-template-columns:1fr}.wl-mapside{max-height:none}.wl-map{padding:.6rem}.wl-pin-l{font-size:22px;stroke-width:6px}.wl-pin-n{font-size:20px}.wl-pin-c{stroke-width:3.5}.wl-map-cap{display:none}}
 /* الإدارة: الأقسام */
 .adws-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.5rem}
 .adws-row{display:flex;align-items:center;gap:.6rem;background:var(--bg);border:1px solid var(--brd);border-radius:12px;padding:.6rem .75rem;cursor:pointer;font-size:12px;margin:0}
@@ -2932,7 +2983,6 @@ a.wl-b{text-decoration:none}
   .wl-alc{scroll-snap-align:start}
   .wl-gal{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:120px}.wl-gal-i.w3{grid-column:span 2}
   .wl-qs{grid-auto-columns:85%}
-  .wl-faq{grid-template-columns:1fr}
   .wl-foot3-g{grid-template-columns:1fr;gap:1.2rem}
   .wl-foot3 .wl-cp{justify-content:center;text-align:center}
   .wl-wa{width:50px;height:50px}
@@ -3292,8 +3342,8 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     </div>
     <div class="lf" id="lf-nid" style="display:none">
       <label>رقم هوية اللاعب</label>
-      <input type="tel" id="l-nid" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:2px;font-size:17px" oninput="this.value=normNid(this.value)" onkeydown="if(event.key==='Enter')goNid()">
-      <div class="lhint">حسابك جاهز تلقائياً — أدخل رقم هويتك أو إقامتك، وأول مرة فقط تؤكد تاريخ ميلادك وتختار رمزك</div>
+      <input type="tel" id="l-nid" inputmode="numeric" maxlength="10" placeholder="10 أرقام" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:2px;font-size:17px" oninput="this.value=normNid(this.value)" onkeydown="if(event.key==='Enter')goNid()">
+      <div class="lhint">حساب اللاعب جاهز تلقائياً — أدخل رقم هوية اللاعب أو إقامته (10 أرقام بالإنجليزية)، وأول مرة فقط تؤكد تاريخ ميلاده وتختار رمزاً</div>
       <div id="nid-trace" style="display:none;margin-top:.5rem;padding:.5rem .7rem;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.18);border-radius:8px;font-size:10px;line-height:1.9;color:#9aa4c7;direction:rtl;text-align:right;word-break:break-word"></div>
     </div>
     <div class="lf" id="lf-name" style="display:none">
@@ -3305,7 +3355,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.20-wide</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.20-cities</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3339,14 +3389,13 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       <div class="jhdr"><div><h3>إنشاء حساب جديد</h3><p>اختر نوع حسابك للبدء</p></div><button class="jclose" onclick="closeJoin()" data-ic="x"></button></div>
       <div class="rc-grid">
         <div class="rc" onclick="sJR('viewer',this)"><div class="ric" data-ic="eye"></div><div class="rn">ولي أمر</div><div class="rd">متابعة النتائج والجداول</div></div>
-        <div class="rc" onclick="sJR('admin-team',this)"><div class="ric" data-ic="shield"></div><div class="rn">إداري أكاديمية</div><div class="rd">تسجيل وإدارة أكاديمية</div></div>
       </div>
       <div class="jnote" style="margin-top:.9rem"><span data-ic="info"></span> اللاعبون لا ينشئون حسابات — حساب اللاعب جاهز تلقائياً بمجرد تسجيل بياناته لدى الأكاديمية، ويدخل من تبويب «لاعب» برقم هويته.</div>
       <div class="msg err" id="j-e1">يرجى اختيار نوع الحساب</div>
       <button class="btn btn-r" style="width:100%;margin-top:1.1rem" onclick="jN(1)">التالي</button>
     </div>
     <div class="jstep" id="js2">
-      <div class="jhdr"><div><h3 id="j2t">بيانات الحساب</h3><p>المعلومات الأساسية</p></div><button class="jclose" onclick="closeJoin()" data-ic="x"></button></div>
+      <div class="jhdr"><div><h3 id="j2t">حساب ولي أمر</h3><p>اسمك وجوالك ورمز سري — واللاعب يدخل برقم هويته</p></div><button class="jclose" onclick="closeJoin()" data-ic="x"></button></div>
       <div class="jprog"><div class="jd on"></div><div class="jd on"></div><div class="jd"></div></div>
       <div class="fg"><label>الاسم الكامل *</label><input type="text" id="j-name" placeholder="الاسم الكامل"></div>
       <div class="fg"><label>رقم الجوال *</label><div class="pfield"><span class="pfx">+966</span><input type="tel" id="j-phone" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this)"></div></div>
@@ -3354,7 +3403,8 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
         <div class="jp-row"><input type="tel" inputmode="numeric" maxlength="1" class="jpbox" id="jp1" oninput="jpI(this,1)"><input type="tel" inputmode="numeric" maxlength="1" class="jpbox" id="jp2" oninput="jpI(this,2)"><input type="tel" inputmode="numeric" maxlength="1" class="jpbox" id="jp3" oninput="jpI(this,3)"><input type="tel" inputmode="numeric" maxlength="1" class="jpbox" id="jp4" oninput="jpI(this,4)"></div>
       </div>
       <div class="msg err" id="j-e2">يرجى تعبئة جميع الحقول</div>
-      <div class="btnrow"><button class="btn btn-g" onclick="jB(2)">رجوع</button><button class="btn btn-r" onclick="jN(2)">التالي</button></div>
+      <div class="jnote"><span data-ic="info"></span> ابنك اللاعب لا يحتاج حساباً — يدخل من تبويب «لاعب» برقم هويته مباشرة.</div>
+      <div class="btnrow"><button class="btn btn-g" onclick="jB(2)">إلغاء</button><button class="btn btn-r" onclick="jN(2)">التالي</button></div>
     </div>
     <div class="jstep" id="js3">
       <div class="jhdr"><div><h3>معلومات إضافية</h3><p id="j3p">اختياري</p></div><button class="jclose" onclick="closeJoin()" data-ic="x"></button></div>
@@ -3675,7 +3725,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
         <div class="fg req"><label>اسم العائلة *</label><input type="text" id="ap-ln" placeholder="الأحمد"></div>
       </div>
       <input type="hidden" id="ap-name">
-      <div class="fg req"><label>رقم الهوية / الإقامة *</label><input type="text" id="ap-nid" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" style="direction:ltr" oninput="this.value=normNid(this.value);apReq()"></div>
+      <div class="fg req"><label>رقم الهوية / الإقامة *</label><input type="text" id="ap-nid" inputmode="numeric" maxlength="10" placeholder="10 أرقام" style="direction:ltr" oninput="this.value=normNid(this.value);apReq()"></div>
       <div class="frow">
         <div class="fg"><label>رقم القميص <small>(اختياري)</small></label><select id="ap-num"></select></div>
         <div class="fg"><label>المركز <small>(اختياري)</small></label><select id="ap-pos"></select></div>
@@ -4019,7 +4069,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
         <div class="fg req"><label>اسم العائلة *</label><input type="text" id="ep-ln" placeholder="الأحمد"></div>
       </div>
       <input type="hidden" id="ep-name">
-      <div class="fg req"><label>رقم الهوية / الإقامة *</label><input type="text" id="ep-nid" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" style="direction:ltr" oninput="this.value=normNid(this.value);epReq()"></div>
+      <div class="fg req"><label>رقم الهوية / الإقامة *</label><input type="text" id="ep-nid" inputmode="numeric" maxlength="10" placeholder="10 أرقام" style="direction:ltr" oninput="this.value=normNid(this.value);epReq()"></div>
       <div class="frow"><div class="fg"><label>رقم القميص <small>(اختياري)</small></label><select id="ep-num"></select></div><div class="fg"><label>المركز <small>(اختياري)</small></label><select id="ep-pos"></select></div></div>
       <div class="fg req"><label>تاريخ الميلاد *</label><div class="frow" style="grid-template-columns:1fr 1fr 1fr"><select id="ep-dd"></select><select id="ep-dm"></select><select id="ep-dy"></select></div></div>
       <div class="frow"><div class="fg"><label>الجنسية <small>(اختياري)</small></label><select id="ep-nat"></select></div><div class="fg req"><label>جوال ولي الأمر *</label><div class="pfield"><span class="pfx">+966</span><input type="tel" id="ep-gd" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this);epReq()"></div></div></div>
@@ -4072,7 +4122,7 @@ var IC={
  cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
  bell:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
  phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
- whatsapp:'<path d="M20.5 3.5A11.8 11.8 0 0 0 3.6 17.9L2 22l4.2-1.5A11.8 11.8 0 1 0 20.5 3.5z"/><path d="M8.6 7.6c.2-.4.5-.5.8-.5h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.5.7c-.2.2-.3.4-.1.7a8 8 0 0 0 3.9 3.5c.3.1.5 0 .7-.2l.7-.8c.2-.2.4-.2.6-.1l2 .9c.4.2.5.3.5.6a2.6 2.6 0 0 1-1.7 2.3c-.6.2-1.4.3-3.6-.6a10.8 10.8 0 0 1-5.4-5.5c-.7-1.5-.5-2.9.1-4.1z" fill="currentColor" stroke="none"/>',
+ whatsapp:'<path fill="currentColor" stroke="none" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>',
  mail:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',
  globe:'<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
  pin:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
@@ -4890,7 +4940,9 @@ var RC={admin:'#DD1D45',supervisor:'#0e7490',organizer:'#0e7490','admin-team':'#
 function isNTRole(r){return String(r||'').indexOf('nt-')===0;}
 function isPlayerRole(r){return r==='player'||r==='nt-player';}
 var COLS=['#181946','#DD1D45','#1565c0','#16a34a','#5b2d8f','#d97706','#0e7490','#9d174d','#374151','#7c2d12'];
-var CITIES=['الرياض','جدة','الدمام','المدينة المنورة','مكة المكرمة','الطائف','القصيم','الأحساء','حائل','تبوك','أخرى'];
+/* المدن الرئيسية أولاً ثم بقية مدن المملكة أبجدياً — كلها معرّفة على خريطة صفحة البدء */
+var CITIES=['الرياض','جدة','الدمام','الخبر','الظهران','المدينة المنورة','مكة المكرمة','الطائف','القصيم','بريدة','عنيزة','الأحساء','حائل','تبوك','أبها','خميس مشيط','جازان','نجران','الباحة','ينبع','الجبيل','القطيف','سكاكا','عرعر','الخرج','حفر الباطن',
+  'أبو عريش','أملج','الأفلاج','الدرعية','الدوادمي','الرس','الزلفي','العلا','القريات','القنفذة','الليث','المجمعة','المذنب','النعيرية','الوجه','بقيق','بلجرشي','بيشة','رأس تنورة','رابغ','رفحاء','شرورة','صبيا','ضباء','طريف','محايل عسير','وادي الدواسر','أخرى'];
 var NATS=['سعودي','إماراتي','كويتي','بحريني','قطري','عماني','يمني','أردني','مصري','سوري','لبناني','عراقي','فلسطيني','مغربي','تونسي','جزائري','سوداني','باكستاني','هندي','أخرى'];
 var POSS=['حارس مرمى','مدافع','لاعب وسط','مهاجم'];
 var MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
@@ -9845,7 +9897,14 @@ function mytCat(c){MYTCAT=c;rMyTeam();}
 
 /* ================= JOIN WIZARD ================= */
 var JR='';
-function openJoin(){g('JM').style.display='flex';JR='';document.querySelectorAll('.rc').forEach(function(e){e.classList.remove('on');});hydrateIcons(g('JM'));}
+function openJoin(){
+  g('JM').style.display='flex';
+  /* الحساب الجديد لولي الأمر وحده: اللاعب يدخل برقم هويته، والإداريون يُنشئهم مدير النظام */
+  JR='viewer';g('j2t').textContent='حساب ولي أمر';
+  ['js1','js2','js3','js3b','js4'].forEach(function(id){var e=g(id);if(e)e.classList.toggle('on',id==='js2');});
+  hydrateIcons(g('JM'));
+  setTimeout(function(){var e=g('j-name');if(e)e.focus();},80);
+}
 function closeJoin(){
   g('JM').style.display='none';
   ['js1','js2','js3','js3b','js4'].forEach(function(id){g(id).classList.toggle('on',id==='js1');});
@@ -9890,7 +9949,7 @@ function jN(step){
     jStep(2,3);
   }
 }
-function jB(from){jStep(from,from==='3b'?2:from-1);}
+function jB(from){if(from===2){closeJoin();return;}jStep(from,from==='3b'?2:from-1);}
 function showJ4(title,msg){
   ['js1','js2','js3','js3b'].forEach(function(id){g(id).classList.remove('on');});
   g('js4').classList.add('on');g('j4t').textContent=title;g('j4m').textContent=msg;
@@ -14410,7 +14469,7 @@ function rTDFix(){
     h+='<td class="fx-iss">'+(iss.length?warnBadge(iss,p.name):'<span class="ok-tick">'+ic('check',13)+'</span>')+'</td>';
     h+='<td data-l="الاسم"><input class="fxi nm" value="'+esc(p.name||'')+'" onchange="tdFixSave(\''+p.id+'\',\'name\',this)"></td>';
     h+='<td class="fx-br" data-l="الفرع" style="white-space:nowrap;font-size:11.5px;color:var(--gray)">'+esc(p.branch||'—')+'</td>';
-    h+='<td data-l="رقم الهوية"><input class="fxi num" inputmode="numeric" maxlength="10" placeholder="١٠ أرقام" value="'+esc(p.nid||'')+'" onchange="tdFixSave(\''+p.id+'\',\'nid\',this)"></td>';
+    h+='<td data-l="رقم الهوية"><input class="fxi num" inputmode="numeric" maxlength="10" placeholder="10 أرقام" value="'+esc(p.nid||'')+'" onchange="tdFixSave(\''+p.id+'\',\'nid\',this)"></td>';
     h+='<td data-l="جوال ولي الأمر"><input class="fxi num" inputmode="numeric" maxlength="9" placeholder="5XXXXXXXX" value="'+esc(phoneLocal(p.guardPhone||''))+'" onchange="tdFixSave(\''+p.id+'\',\'guardPhone\',this)"></td>';
     h+='<td data-l="جوال اللاعب"><input class="fxi num" inputmode="numeric" maxlength="9" placeholder="اختياري" value="'+esc(phoneLocal(p.phone||''))+'" onchange="tdFixSave(\''+p.id+'\',\'phone\',this)"></td>';
     h+='<td data-l="تاريخ الميلاد"><input class="fxi" type="date" value="'+esc(p.dob||'')+'" onchange="tdFixSave(\''+p.id+'\',\'dob\',this)"></td>';
@@ -21823,11 +21882,78 @@ function welSocialLinks(){
   if(s.youtube)out.push(['youtube','يوتيوب',/^https?:/.test(s.youtube)?s.youtube:'https://youtube.com/@'+s.youtube.replace('@','')]);
   return out;
 }
-function welCity(c,btn){
+function welCityOld(c,btn){
   var box=g('wl-brs3');if(!box)return;
   [].slice.call(box.querySelectorAll('.wl-br3')).forEach(function(e){e.style.display=(!c||e.getAttribute('data-city')===c)?'':'none';});
   if(btn){[].slice.call(btn.parentNode.children).forEach(function(x){x.classList.remove('on');});btn.classList.add('on');}
 }
+
+/* ==========================================================================
+   خريطة المملكة: حدود مبسّطة (Natural Earth) + إحداثيات المدن
+========================================================================== */
+var KSA_MAP={W:800,H:661,minx:34.616146,maxy:32.125371,kx:0.911775,sx:40.689977,pad:10,d:'M654,544L645,546L637,547L628,548L616,550L607,551L594,553L582,555L571,557L560,558L551,560L545,561L539,565L529,570L518,576L513,578L507,586L505,589L499,596L496,601L491,607L489,613L486,621L483,623L479,626L475,628L469,627L465,622L461,617L459,615L451,615L444,616L435,615L425,614L415,613L410,613L404,609L401,608L393,608L386,608L378,609L371,609L364,609L361,611L359,611L357,612L353,611L351,612L348,611L345,608L343,606L341,605L339,605L337,604L334,606L328,611L330,615L327,617L326,621L325,628L326,632L328,633L327,638L325,639L323,642L321,646L314,651L313,648L311,643L311,640L310,636L308,634L305,631L304,627L302,623L298,621L296,615L295,608L286,598L275,589L271,584L266,574L263,566L255,557L255,554L254,549L252,545L251,541L244,524L241,522L239,518L239,515L233,511L228,504L213,493L205,492L200,488L195,482L191,473L183,464L176,450L178,445L178,442L176,436L174,431L172,427L174,421L174,414L175,410L176,406L175,398L173,394L173,391L170,389L168,386L170,386L167,382L165,379L164,373L162,369L156,359L153,352L146,344L139,338L135,336L133,333L129,333L125,329L122,329L119,329L114,322L111,316L105,307L107,305L108,302L108,297L107,294L104,288L96,274L93,272L90,269L88,263L86,258L81,255L71,235L65,228L63,223L56,216L53,208L46,201L40,189L31,176L27,174L18,174L14,173L10,175L10,172L13,167L16,157L17,149L22,123L30,124L37,125L46,127L56,129L62,129L72,123L79,117L83,110L88,103L96,101L106,99L116,97L119,91L122,84L123,82L131,78L135,76L129,69L123,63L116,56L111,50L102,41L97,36L106,33L117,30L127,27L140,24L149,21L164,17L171,15L178,10L186,11L199,13L211,15L223,18L228,20L240,26L248,31L257,36L269,42L277,47L287,53L295,59L305,67L316,76L325,83L337,93L350,103L362,112L372,120L384,129L397,130L414,132L431,133L446,135L452,133L459,134L469,135L475,136L486,138L489,144L490,148L491,152L494,156L502,156L508,156L517,156L523,156L525,160L526,163L530,173L535,180L537,182L537,186L536,189L540,193L547,196L550,197L552,199L550,201L554,206L559,211L564,212L570,220L580,226L586,232L584,232L582,231L581,235L582,238L585,241L588,243L589,247L587,255L584,254L582,255L584,261L586,266L588,269L590,275L591,277L598,283L600,288L601,296L605,301L608,305L611,309L613,313L615,316L617,317L621,318L624,317L628,316L630,318L633,317L633,319L632,321L629,327L633,328L636,328L639,329L639,335L640,337L641,339L643,342L645,345L647,347L649,350L651,353L654,355L656,358L658,361L660,363L662,366L664,369L666,371L668,374L670,377L672,379L674,382L676,384L679,385L683,385L687,386L693,386L699,387L707,388L715,389L723,390L731,392L739,393L747,394L753,395L759,395L763,396L766,396L770,397L773,393L776,398L778,402L781,407L785,413L788,418L790,422L789,426L788,431L786,435L785,440L783,444L782,449L781,453L779,458L778,462L777,467L775,471L774,476L773,480L771,485L770,489L768,494L767,498L765,504L761,505L755,507L749,510L742,512L736,514L730,517L723,519L717,521L710,524L704,526L698,528L691,531L685,533L679,535L672,538L666,540L659,542L654,544Z'};
+function ksaXY(lat,lon){return [Math.round((lon-KSA_MAP.minx)*KSA_MAP.kx*KSA_MAP.sx+KSA_MAP.pad),Math.round((KSA_MAP.maxy-lat)*KSA_MAP.sx+KSA_MAP.pad)];}
+var WEL_CITY_XY={
+  'الرياض':[24.71,46.68],'جدة':[21.54,39.17],'مكة المكرمة':[21.39,39.86],'المدينة المنورة':[24.47,39.61],
+  'الدمام':[26.43,50.10],'الخبر':[26.28,50.21],'الظهران':[26.29,50.11],'القطيف':[26.56,50.01],'الجبيل':[27.0,49.66],
+  'الأحساء':[25.38,49.59],'الطائف':[21.27,40.42],'القصيم':[26.33,43.97],'بريدة':[26.33,43.97],'عنيزة':[26.08,43.99],
+  'حائل':[27.52,41.69],'تبوك':[28.38,36.57],'أبها':[18.22,42.51],'خميس مشيط':[18.30,42.73],'جازان':[16.89,42.55],
+  'نجران':[17.49,44.13],'الباحة':[20.01,41.47],'ينبع':[24.09,38.06],'سكاكا':[29.97,40.20],'عرعر':[30.98,41.02],
+  'الخرج':[24.15,47.30],'حفر الباطن':[28.43,45.97],'المجمعة':[25.90,45.35],'وادي الدواسر':[20.50,44.80],'بيشة':[20.00,42.60],
+  'رفحاء':[29.63,43.50],'القنفذة':[19.13,41.08],'شرورة':[17.48,47.11],'الدوادمي':[24.50,44.40],'الزلفي':[26.30,44.80],
+  'رابغ':[22.80,39.03],'الليث':[20.15,40.27],'طريف':[31.67,38.66],'القريات':[31.33,37.35],'ضباء':[27.35,35.70],
+  'الوجه':[26.24,36.45],'أملج':[25.02,37.27],'العلا':[26.60,37.93],'بلجرشي':[19.86,41.56],'محايل عسير':[18.55,42.05],
+  'صبيا':[17.15,42.63],'أبو عريش':[16.97,42.83],'الرس':[25.87,43.50],'المذنب':[25.86,44.22],'الأفلاج':[22.28,46.73],
+  'الدرعية':[24.74,46.57],'بقيق':[25.93,49.67],'رأس تنورة':[26.64,50.16],'النعيرية':[27.47,48.48]
+};
+var WEL_CITY_ALIAS={'مكة':'مكة المكرمة','المدينة':'المدينة المنورة','الشرقية':'الدمام','عسير':'أبها','الجوف':'سكاكا','الحدود الشمالية':'عرعر','جيزان':'جازان'};
+function welCityKey(c){c=normName(c);if(WEL_CITY_XY[c])return c;if(WEL_CITY_ALIAS[c])return WEL_CITY_ALIAS[c];return '';}
+function welCityOptions(){return CITIES.slice();}
+/* قسم الفروع: خريطة + قائمة جانبية */
+function welBranchesMapHTML(brs){
+  var byCity={},order=[],other=[];
+  brs.forEach(function(b){var k=welCityKey(b.city||'');if(!k){other.push(b);return;}if(!byCity[k]){byCity[k]=[];order.push(k);}byCity[k].push(b);});
+  order.sort(function(a,b){return byCity[b].length-byCity[a].length||a.localeCompare(b,'ar');});
+  var h='<div class="wl-mapw"><div class="wl-map"><svg viewBox="0 0 '+KSA_MAP.W+' '+KSA_MAP.H+'" role="img" aria-label="خريطة فروع أكاديمية فارس">';
+  h+='<defs><radialGradient id="wlmg" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#2a2d7a"/><stop offset="1" stop-color="#171945"/></radialGradient><filter id="wlsh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity=".55"/></filter></defs>';
+  h+='<path class="wl-ksa" d="'+KSA_MAP.d+'" filter="url(#wlsh)"/>';
+  order.forEach(function(c,i){
+    var xy=ksaXY(WEL_CITY_XY[c][0],WEL_CITY_XY[c][1]),n=byCity[c].length;
+    var mob=window.innerWidth<900;var r=(n>=10?15:(n>=4?13:11))+(mob?8:0);
+    h+='<g class="wl-pin" data-city="'+esc(c)+'" style="animation-delay:'+(i*90)+'ms" onclick="welMapCity(\''+jq(c)+'\')" tabindex="0" role="button" aria-label="'+esc(c)+': '+n+'">';
+    h+='<circle class="wl-pin-p" cx="'+xy[0]+'" cy="'+xy[1]+'" r="'+(r+10)+'"/>';
+    h+='<circle class="wl-pin-c" cx="'+xy[0]+'" cy="'+xy[1]+'" r="'+r+'"/>';
+    h+='<text class="wl-pin-n" x="'+xy[0]+'" y="'+(xy[1]+4)+'" text-anchor="middle">'+n+'</text>';
+    h+='<text class="wl-pin-l" x="'+xy[0]+'" y="'+(xy[1]+r+(mob?24:15))+'" text-anchor="middle">'+esc(c)+'</text>';
+    h+='</g>';
+  });
+  h+='</svg><div class="wl-map-cap">'+ic('pin',12)+' اضغط على المدينة لعرض فروعها</div></div>';
+  h+='<div class="wl-mapside"><div class="wl-mapside-h"><b id="wl-ms-t">كل الفروع</b><button type="button" id="wl-ms-all" onclick="welMapCity(\'\')" style="display:none">'+ic('x',11)+' الكل</button></div><div class="wl-mapside-l" id="wl-ms-l">';
+  var card=function(c,list){
+    return '<div class="wl-mc" data-city="'+esc(c)+'"><div class="wl-mc-h">'+ic('pin',12)+' '+esc(c)+' <span>'+welNum(list.length)+'</span></div><div class="wl-mc-l">'+list.map(function(b){
+      return '<a class="wl-mc-b"'+(b.map?' href="'+esc(b.map)+'" target="_blank" rel="noopener" title="الموقع على الخريطة"':'')+'>'+(b.img?'<img src="'+esc(b.img)+'" alt="">':ic('shield',12))+'<span>'+esc(b.name)+(b.area?'<small>'+esc(b.area)+'</small>':'')+'</span>'+(b.map?ic('external',11):'')+'</a>';}).join('')+'</div></div>';
+  };
+  order.forEach(function(c){h+=card(c,byCity[c]);});
+  if(other.length)h+=card('فروع أخرى',other);
+  h+='</div></div></div>';
+  return h;
+}
+function welMapLinksHTML(cls){
+  var so=WEL().social,out='';
+  if(so.mapRiyadh)out+='<a class="wl-mapl" href="'+esc(so.mapRiyadh)+'" target="_blank" rel="noopener">'+ic('pin',13)+' مواقع الفروع داخل الرياض '+ic('external',11)+'</a>';
+  if(so.mapOut)out+='<a class="wl-mapl" href="'+esc(so.mapOut)+'" target="_blank" rel="noopener">'+ic('pin',13)+' مواقع الفروع خارج الرياض '+ic('external',11)+'</a>';
+  return out?'<div class="'+cls+'">'+out+'</div>':'';
+}
+function welMapCity(c){
+  var side=g('wl-ms-l');if(!side)return;
+  [].slice.call(side.querySelectorAll('.wl-mc')).forEach(function(e){e.style.display=(!c||e.getAttribute('data-city')===c)?'':'none';});
+  [].slice.call(document.querySelectorAll('#WEL .wl-pin')).forEach(function(e){e.classList.toggle('on',!!c&&e.getAttribute('data-city')===c);e.classList.toggle('dim',!!c&&e.getAttribute('data-city')!==c);});
+  var t=g('wl-ms-t'),a=g('wl-ms-all');
+  if(t)t.textContent=c?'فروع '+c:'كل الفروع';
+  if(a)a.style.display=c?'':'none';
+  if(c&&window.innerWidth<900){var el=g('wl-ms-l');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+
 function welPhoneDisp(p){p=String(p||'').replace(/[^0-9]/g,'');if(!p)return '';if(p.indexOf('966')===0)p='0'+p.slice(3);return p;}
 
 function rWel(){
@@ -21903,15 +22029,9 @@ function rWel(){
   if(welSecOn('branches')&&brs.length){
     var cities=[];brs.forEach(function(b){var c=b.city||'أخرى';if(cities.indexOf(c)<0)cities.push(c);});
     h+='<section class="wl-section wl-rv" id="wl-br"><div class="wl-sec-t"><i></i><h2>فروعنا</h2><small>'+welNum(brs.length)+' فرعاً في '+welNum(cities.length)+' '+(cities.length===1?'مدينة':'مدن')+'</small></div>';
-    if(cities.length>1)h+='<div class="wl-cities"><button class="on" onclick="welCity(\'\',this)">الكل</button>'+cities.map(function(c){return '<button onclick="welCity(\''+jq(c)+'\',this)">'+esc(c)+'</button>';}).join('')+'</div>';
-    h+='<div class="wl-brs3" id="wl-brs3">';
-    brs.forEach(function(b){
-      var map=b.map?' href="'+esc(b.map)+'" target="_blank" rel="noopener"':'';
-      h+='<a class="wl-br3"'+map+' data-city="'+esc(b.city||'أخرى')+'">'+(b.img?'<img class="wl-br3-lg" src="'+esc(b.img)+'" alt="">':'<span class="wl-br3-i">'+ic('shield',14)+'</span>')
-        +'<div><b>'+esc(b.name)+'</b><small>'+esc(b.city||'')+(b.area?(b.city?' • ':'')+esc(b.area):'')+'</small></div>'
-        +(b.map?'<span class="wl-br3-go" title="الموقع على الخريطة">'+ic('external',13)+'</span>':'')+'</a>';
-    });
-    h+='</div></section>';
+    h+=welMapLinksHTML('wl-maplinks');
+    h+=welBranchesMapHTML(brs);
+    h+='</section>';
   }
 
   /* ===== المعرض ===== */
@@ -21967,10 +22087,12 @@ function rWel(){
   /* ===== الأسئلة الشائعة ===== */
   var fq=welSorted('faq');
   if(welSecOn('faq')&&fq.length){
-    h+='<section class="wl-section wl-rv" id="wl-faq"><div class="wl-sec-t"><i></i><h2>الأسئلة الشائعة</h2></div>';
+    h+='<section class="wl-section wl-rv" id="wl-faq"><div class="wl-faqw">';
+    h+='<div class="wl-faq-in"><div class="wl-sec-t"><i></i><h2>الأسئلة الشائعة</h2></div><p>كل ما يسأل عنه أولياء الأمور قبل التسجيل: الأعمار، الفروع، الرسوم، والمتابعة عبر التطبيق.</p>'
+      +(so.whatsapp?'<a class="wl-faq-cta" href="'+esc(welSocialLinks()[0][2])+'" target="_blank" rel="noopener">'+ic('whatsapp',18)+'<div><b>لم تجد إجابتك؟</b><small>راسلنا على واتساب وسنرد عليك</small></div></a>':'<button type="button" class="wl-faq-cta" onclick="welJoin()">'+ic('user-plus',18)+'<div><b>جاهز للبدء؟</b><small>سجّل ابنك الآن</small></div></button>')+'</div>';
     h+='<div class="wl-faq">';
-    fq.forEach(function(f){h+='<details class="wl-fq"><summary>'+ic('help',15)+'<span>'+esc(f.q)+'</span>'+ic('chev-d',15)+'</summary><div class="wl-fq-a">'+esc(f.a).replace(/\n/g,'<br>')+'</div></details>';});
-    h+='</div></section>';
+    fq.forEach(function(f,i){h+='<details class="wl-fq"'+(i===0?' open':'')+'><summary><i>'+(i<9?'0':'')+(i+1)+'</i><span>'+esc(f.q)+'</span><b>'+ic('plus',14)+'</b></summary><div class="wl-fq-a">'+esc(f.a).replace(/\n/g,'<br>')+'</div></details>';});
+    h+='</div></div></section>';
   }
 
   /* ===== دعوة أخيرة ===== */
@@ -21978,12 +22100,13 @@ function rWel(){
 
   /* ===== التذييل ===== */
   var links=welSocialLinks();
+  var mapLinks=welMapLinksHTML('wl-maplinks foot');
   h+='<footer class="wl-foot3"><div class="wl-foot3-g">';
   h+='<div class="wl-foot3-c"><div class="wl-foot2-lg"><span class="wl-bar-lg"></span><b>أكاديمية فارس</b></div><p>'+esc(so.about||'أكاديمية كرة قدم سعودية منذ '+(st.since||2018)+' تعمل على صناعة اللاعب فنياً وسلوكياً، بفروع في أنحاء المملكة ومنظومة رقمية متكاملة.')+'</p>';
   if(links.length)h+='<div class="wl-soc">'+links.map(function(l){return '<a href="'+esc(l[2])+'" target="_blank" rel="noopener" title="'+l[1]+'" aria-label="'+l[1]+'">'+ic(l[0],16)+'</a>';}).join('')+'</div>';
   h+='</div>';
-  h+='<div class="wl-foot3-c"><h4>الفروع</h4>'+brs.slice(0,6).map(function(b){return '<a href="#wl-br">'+ic('pin',12)+' '+esc(b.name)+'</a>';}).join('')+(brs.length>6?'<a href="#wl-br" style="color:#ff6b8a">كل الفروع ('+welNum(brs.length)+')</a>':'')+'</div>';
-  h+='<div class="wl-foot3-c"><h4>روابط</h4><a href="#wl-sys">الأنظمة</a>'+(welSecOn('alumni')&&al.length?'<a href="#wl-alumni">لاعبونا في الأندية</a>':'')+(welSecOn('gallery')&&gal.length?'<a href="#wl-gal">المعرض</a>':'')+(welSecOn('faq')&&fq.length?'<a href="#wl-faq">الأسئلة الشائعة</a>':'')+'<a href="#" onclick="welGo();return false">تسجيل الدخول</a><a href="#" onclick="welJoin();return false">إنشاء حساب</a></div>';
+  h+='<div class="wl-foot3-c"><h4>الفروع</h4>'+mapLinks+brs.slice(0,6).map(function(b){return '<a href="#wl-br">'+ic('pin',12)+' '+esc(b.name)+'</a>';}).join('')+(brs.length>6?'<a href="#wl-br" style="color:#ff6b8a">كل الفروع ('+welNum(brs.length)+')</a>':'')+'</div>';
+  h+='<div class="wl-foot3-c"><h4>روابط</h4><a href="#wl-sys">الأنظمة</a>'+(welSecOn('alumni')&&al.length?'<a href="#wl-alumni">لاعبونا في الأندية</a>':'')+(welSecOn('gallery')&&gal.length?'<a href="#wl-gal">المعرض</a>':'')+(welSecOn('faq')&&fq.length?'<a href="#wl-faq">الأسئلة الشائعة</a>':'')+'<a href="#" onclick="welGo();return false">تسجيل الدخول</a><a href="#" onclick="welParent();return false">حساب ولي أمر</a></div>';
   h+='<div class="wl-foot3-c"><h4>تواصل معنا</h4>';
   if(so.phone)h+='<a href="tel:'+esc(welPhoneDisp(so.phone))+'">'+ic('phone',13)+' <bdi>'+esc(welPhoneDisp(so.phone))+'</bdi></a>';
   if(so.whatsapp)h+='<a href="'+esc(links[0][2])+'" target="_blank" rel="noopener">'+ic('whatsapp',13)+' <bdi>'+esc(welPhoneDisp(so.whatsapp))+'</bdi></a>';
@@ -22089,6 +22212,7 @@ function adWelSocialHTML(){
   h+='<div class="frow">'+xInp('adwc-whatsapp','واتساب الأكاديمية',s.whatsapp||'','05xxxxxxxx','tel')+xInp('adwc-phone','هاتف موحّد',s.phone||'','920031974','tel')+'</div>';
   h+='<div class="frow">'+xInp('adwc-email','البريد',s.email||'','info@farisacademy.com','email')+xInp('adwc-hours','أوقات العمل',s.hours||'','٤ عصراً – ١٠ مساءً')+'</div>';
   h+=xInp('adwc-address','العنوان الرئيسي',s.address||'','الرياض، المملكة العربية السعودية');
+  h+='<div class="frow">'+xInp('adwc-mapRiyadh','رابط مواقع الفروع داخل الرياض',s.mapRiyadh||'','https://maps.app.goo.gl/…','url')+xInp('adwc-mapOut','رابط مواقع الفروع خارج الرياض',s.mapOut||'','https://maps.app.goo.gl/…','url')+'</div>';
   h+=xTxt('adwc-about','نبذة قصيرة (التذييل)',s.about||'',2,'أكاديمية كرة قدم سعودية…');
   h+='<div class="frow">'+xInp('adwc-snap','سناب شات',s.snap||'','farisacademy')+xInp('adwc-insta','إنستقرام',s.insta||'','farisacademy')+'</div>';
   h+='<div class="frow">'+xInp('adwc-tiktok','تيك توك',s.tiktok||'','farisacademy')+xInp('adwc-x','X (تويتر)',s.x||'','farisacademy')+'</div>';
@@ -22098,7 +22222,7 @@ function adWelSocialHTML(){
 }
 function adSaveWelSocial(){
   var s=WEL().social;
-  ['whatsapp','phone','email','hours','address','about','snap','insta','tiktok','x','youtube'].forEach(function(k){s[k]=gv('adwc-'+k).trim();});
+  ['whatsapp','phone','email','hours','address','about','snap','insta','tiktok','x','youtube','mapRiyadh','mapOut'].forEach(function(k){s[k]=gv('adwc-'+k).trim();});
   logA('تعديل بيانات التواصل في صفحة البدء','phone','#1565c0');sv();fl('adwc-ok');
 }
 /* قوائم العناصر */
@@ -22140,7 +22264,7 @@ function adWelForm(kind,id){
     if(ty==='img')h+='<div class="fg"><label>'+lb+(req?' *':'')+'</label>'+adbImgField(idn,val,K.ic,f[4]||900)+'</div>';
     else if(ty==='textarea')h+=xTxt(idn,lb,val,3,'',req);
     else if(ty==='branch')h+='<div class="fg"><label>'+lb+'</label><select id="'+idn+'"><option value="">— بدون —</option>'+brs.map(function(b){return '<option value="'+esc(b)+'"'+(val===b?' selected':'')+'>'+esc(b)+'</option>';}).join('')+(val&&brs.indexOf(val)<0?'<option value="'+esc(val)+'" selected>'+esc(val)+'</option>':'')+'</select></div>';
-    else if(ty==='city')h+='<div class="fg req"><label>'+lb+' *</label><select id="'+idn+'">'+opts(CITIES,'اختر')+(val&&CITIES.indexOf(val)<0?'<option value="'+esc(val)+'" selected>'+esc(val)+'</option>':'')+'</select></div>';
+    else if(ty==='city')h+='<div class="fg req"><label>'+lb+' *</label><select id="'+idn+'">'+opts(welCityOptions(),'اختر')+(val&&welCityOptions().indexOf(val)<0?'<option value="'+esc(val)+'" selected>'+esc(val)+'</option>':'')+'</select></div>';
     else h+=xInp(idn,lb,val,'',ty==='url'?'url':(ty==='number'?'number':'text'),req);
   });
   h+='<button class="btn btn-r" style="width:100%;min-height:48px;margin-top:.6rem" onclick="adWelSave(\''+kind+'\',\''+(id||'')+'\')">'+ic('check',15)+' '+(id?'حفظ التعديل':'إضافة')+'</button>';
@@ -22215,7 +22339,9 @@ function welGo(){
   g('LS').style.display='';
   var e=g('l-name');if(e)setTimeout(function(){e.focus();},80);
 }
-function welJoin(){welGo();openJoin();}
+function welJoin(){welGo();try{lsMode('nid');}catch(e){}setTimeout(function(){try{lsMode('nid');}catch(e){}},130);}
+/* حساب جديد = ولي أمر فقط */
+function welParent(){welGo();openJoin();}
 
 /* ================= شعار الافتتاح ================= */
 var SPL_DONE=false;
@@ -23705,7 +23831,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.20-wide</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.20-cities</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
