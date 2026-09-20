@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.20-pop">
+<meta name="build" content="2026.09.20-mov">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3361,7 +3361,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.20-pop</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.20-mov</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -22171,7 +22171,7 @@ function adWelHeroHTML(){
   h+='<div class="ce2-note" style="margin-bottom:.9rem">'+ic('info',13)+'<div>فيديو الخلفية يُشغَّل صامتاً ومتكرراً. الأفضل: MP4 (H.264) بدقة 1080p ومدة ١٠–٢٠ ثانية وحجم أقل من ٢٠ م.ب حتى يفتح بسرعة على الجوال. الصورة البديلة تظهر قبل تحميل الفيديو وعلى الجوال إن أُوقف الفيديو فيه.</div></div>';
   h+='<div class="frow"><div class="fg"><label>فيديو الخلفية <small>(رابط مباشر أو رفع ملف)</small></label>'
     +'<div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center"><input type="url" id="adw-video" style="flex:1;min-width:200px;direction:ltr" placeholder="https://…/hero.mp4" value="'+esc(s.welVideo||'')+'">'
-    +'<label class="img-pick-btn"><span data-ic="camera"></span> رفع فيديو<input type="file" accept="video/mp4,video/webm,video/quicktime" style="display:none" onchange="xVideoPick(this,\'adw-video\',\'adw-vmsg\')"></label></div>'
+    +'<label class="img-pick-btn"><span data-ic="camera"></span> رفع فيديو<input type="file" accept="video/mp4,video/webm,video/quicktime,.mov,.mp4,.webm" style="display:none" onchange="xVideoPick(this,\'adw-video\',\'adw-vmsg\')"></label></div>'
     +'<div id="adw-vmsg" style="font-size:11px;color:var(--gray);margin-top:.3rem"></div></div>';
   h+='<div class="fg"><label>الصورة البديلة (Poster)</label>'+adbImgField('adwp',s.welPoster||'','image',1600)+'</div></div>';
   h+='<div class="frow"><div class="fg"><label>الشارة أعلى العنوان</label><input type="text" id="adw-tag" value="'+esc(s.welTag||'')+'" placeholder="منصة أكاديمية فارس الرقمية"></div>';
@@ -22799,9 +22799,27 @@ function xUploadFile(file,folder){
   if(!FA.enabled||!FA.sb)return Promise.reject(new Error('الرفع يحتاج اتصالاً بالسحابة'));
   if(file.size>X_FILE_MAX)return Promise.reject(new Error('حجم الملف يتجاوز 80 ميغابايت'));
   var ext=(file.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,5)||'bin';
+  var type=file.type||'application/octet-stream';
+  /* فيديو الآيفون (.mov / QuickTime) نفس حاوية MP4 عملياً، والمخزن لا يقبل نوعه —
+     يُرفع باسم ونوع mp4 فيقبله المخزن ويشغّله المتصفح */
+  if(/quicktime|x-m4v/i.test(type)||/^(mov|m4v)$/.test(ext)){type='video/mp4';ext='mp4';}
+  if(/^video\/(x-)?matroska/i.test(type)||ext==='mkv')return Promise.reject(new Error('صيغة MKV غير مدعومة في المتصفح — حوّل الفيديو إلى MP4'));
   var name=(folder||'files')+'/'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)+'.'+ext;
-  return FA.sb.storage.from(FA.BUCKET).upload(name,file,{contentType:file.type||'application/octet-stream',cacheControl:'31536000',upsert:false})
-    .then(function(r){if(r.error)throw r.error;var u=FA.sb.storage.from(FA.BUCKET).getPublicUrl(name);var url=u&&u.data&&u.data.publicUrl;if(!url)throw new Error('no-url');return url;});
+  var up=function(ct){return FA.sb.storage.from(FA.BUCKET).upload(name,file,{contentType:ct,cacheControl:'31536000',upsert:false});};
+  return up(type).then(function(r){
+    /* نوع مرفوض؟ جرّب نوعاً عاماً قبل الاستسلام */
+    if(r.error&&/mime|type/i.test(String(r.error.message||''))&&type!=='application/octet-stream'){
+      var alt=/^video/.test(type)?'video/mp4':(/^image/.test(type)?'image/jpeg':'application/octet-stream');
+      if(alt===type)throw r.error;
+      return up(alt);
+    }
+    return r;
+  }).then(function(r){if(r.error)throw r.error;var u=FA.sb.storage.from(FA.BUCKET).getPublicUrl(name);var url=u&&u.data&&u.data.publicUrl;if(!url)throw new Error('no-url');return url;})
+  .catch(function(e){
+    var m=String((e&&e.message)||'');
+    if(/mime|type/i.test(m))throw new Error('صيغة الملف غير مقبولة في المخزن ('+(file.type||ext)+') — استخدم MP4 (H.264) للفيديو أو JPG/PNG للصور');
+    throw e;
+  });
 }
 /* منتقي ملفات عام: يخزن JSON [{url,name,type,size}] في حقل مخفي ويعرض القائمة */
 function xFilesHTML(pref,files,accept,label){
@@ -23836,7 +23854,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.20-pop</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.20-mov</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
