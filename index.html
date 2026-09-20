@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.20-sync">
+<meta name="build" content="2026.09.20-hub">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -2995,6 +2995,104 @@ a.wl-b{text-decoration:none}
   .wl-brs3{grid-template-columns:1fr 1fr}
 }
 
+/* ===== شاشة الأنظمة v2 ===== */
+#TS #ts-sys-wrap .ts-lbl{display:none}
+#TS #ts-sys-wrap,#TS #ts-tours-wrap{width:100%}
+#TS .ts-inner.v2 #ts-tours-wrap{text-align:center}
+#ts-bg{position:fixed;inset:0;background:center/cover no-repeat;opacity:.22;filter:saturate(.8);pointer-events:none}
+#ts-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,20,56,.55),rgba(26,20,56,.92) 60%,#1a1438)}
+#TS .ts-inner.v2{max-width:1180px;text-align:start;padding-top:calc(1.2rem + env(safe-area-inset-top));align-items:stretch}
+#TS .ts-inner.v2>.lgo,#TS .ts-inner.v2>.ts-hi,#TS .ts-inner.v2>.ts-nm,#TS .ts-inner.v2>.ts-rl,#TS .ts-inner.v2>.ts-out{display:none}
+.ts2-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.4rem;position:relative;z-index:1}
+.ts2-who{display:flex;align-items:center;gap:.9rem;min-width:0}
+.ts2-lg{width:54px;height:54px;background:var(--logo) center/contain no-repeat;flex-shrink:0;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
+.ts2-hi{color:#fff;font-size:clamp(1.1rem,2.4vw,1.5rem);font-weight:700;line-height:1.3}
+.ts2-hi b{font-weight:800}
+.ts2-meta{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.3rem}
+.ts2-role,.ts2-date{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:rgba(255,255,255,.65);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:99px;padding:3px 10px}
+.ts2-role{color:#fff;border-color:color-mix(in srgb,var(--rc) 60%,transparent);background:color-mix(in srgb,var(--rc) 22%,transparent)}
+.ts2-tools{display:flex;gap:.45rem;flex-shrink:0}
+.ts2-tb{position:relative;width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;cursor:pointer;display:grid;place-items:center;font-family:inherit;font-weight:800;font-size:12px;transition:.15s}
+.ts2-tb:hover{background:rgba(255,255,255,.14)}
+.ts2-tb i{position:absolute;top:-5px;inset-inline-end:-5px;min-width:18px;height:18px;border-radius:99px;background:var(--red);color:#fff;font-size:10px;font-weight:800;font-style:normal;display:grid;place-items:center;padding:0 4px;box-shadow:0 2px 8px rgba(221,29,69,.5)}
+/* شريط المتابعة والمهام */
+.ts2-strip{display:grid;grid-template-columns:minmax(260px,.9fr) 1.6fr;gap:.8rem;margin-bottom:1.6rem;position:relative;z-index:1}
+.ts2-strip:has(.ts2-resume):not(:has(.ts2-today)),.ts2-strip:not(:has(.ts2-resume)){grid-template-columns:1fr}
+.ts2-resume{display:flex;align-items:center;gap:.8rem;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 32%,transparent),rgba(255,255,255,.04));border:1px solid color-mix(in srgb,var(--c) 55%,transparent);border-radius:18px;padding:.9rem 1rem;color:#fff;font-family:inherit;cursor:pointer;text-align:start;transition:.2s}
+.ts2-resume:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(0,0,0,.35)}
+.ts2-rs-ic{width:40px;height:40px;border-radius:12px;background:var(--c);display:grid;place-items:center;flex-shrink:0;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.ts2-rs-t{flex:1;min-width:0}
+.ts2-rs-t small{display:block;font-size:11px;color:rgba(255,255,255,.6);margin-bottom:2px}
+.ts2-rs-t b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ts2-rs-t i{font-style:normal;opacity:.5;margin:0 4px}
+.ts2-resume>svg:last-child{color:rgba(255,255,255,.55);flex-shrink:0}
+.ts2-today{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:.8rem .9rem}
+.ts2-td-h{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;color:#ffb457;margin-bottom:.5rem}
+.ts2-td-l{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.45rem}
+.ts2-td-i{display:flex;align-items:center;gap:.6rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.55rem .7rem;color:#fff;font-family:inherit;cursor:pointer;text-align:start;transition:.15s;min-height:50px}
+.ts2-td-i:hover{background:rgba(255,255,255,.1);border-color:color-mix(in srgb,var(--c) 60%,transparent)}
+.ts2-td-ic{width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--c) 25%,transparent);color:var(--c);display:grid;place-items:center;flex-shrink:0}
+.ts2-td-i>span:nth-child(2){flex:1;min-width:0}
+.ts2-td-i b{display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ts2-td-i small{display:block;font-size:10.5px;color:rgba(255,255,255,.5);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ts2-td-i>svg:last-child{color:rgba(255,255,255,.4);flex-shrink:0}
+/* البطاقات */
+.ts2-lbl{color:rgba(255,255,255,.5);font-size:12.5px;font-weight:700;margin-bottom:.7rem;position:relative;z-index:1}
+.ts2-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.9rem;position:relative;z-index:1}
+.ts2-card{position:relative;aspect-ratio:3/4.1;border-radius:22px;overflow:hidden;cursor:pointer;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 55%,#1a1438),#14112c);border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 30px rgba(0,0,0,.35);transition:transform .25s cubic-bezier(.2,.8,.3,1),box-shadow .25s,border-color .25s;animation:ts2In .55s cubic-bezier(.2,.8,.3,1) both;outline:none}
+.ts2-card:hover,.ts2-card:focus-visible{transform:translateY(-8px);box-shadow:0 26px 50px rgba(0,0,0,.5),0 0 0 1px color-mix(in srgb,var(--c) 70%,transparent),0 0 40px color-mix(in srgb,var(--c) 35%,transparent);border-color:color-mix(in srgb,var(--c) 80%,transparent)}
+@keyframes ts2In{0%{opacity:0;transform:translateY(18px) scale(.97)}100%{opacity:1;transform:none}}
+.ts2-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.ts2-card:hover .ts2-img{transform:scale(1.06)}
+.ts2-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,17,44,.15) 0%,rgba(20,17,44,.1) 35%,rgba(20,17,44,.82) 68%,#14112c 100%)}
+.ts2-card.off .ts2-img{filter:grayscale(.7) brightness(.7)}
+.ts2-mode{position:absolute;top:10px;inset-inline-start:10px;z-index:3;display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:800;color:#fff;background:rgba(13,14,36,.78);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:4px 9px;cursor:pointer}
+.ts2-mode em{display:grid;place-items:center;width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.15);font-style:normal;margin-inline-start:2px}
+.ts2-mode:hover{background:var(--red);border-color:var(--red)}
+.ts2-mode.adm{cursor:default;background:rgba(91,45,143,.75);border-color:rgba(255,255,255,.25)}
+.ts2-mode.adm:hover{background:rgba(91,45,143,.75);border-color:rgba(255,255,255,.25)}
+.ts2-body{position:absolute;inset-inline:0;bottom:0;padding:0 1rem 1rem;z-index:2}
+.ts2-ic{width:40px;height:40px;border-radius:13px;background:var(--c);color:#fff;display:grid;place-items:center;margin-bottom:.55rem;box-shadow:0 8px 18px rgba(0,0,0,.35)}
+.ts2-name{color:#fff;font-size:15.5px;font-weight:800;line-height:1.35;margin-bottom:.3rem}
+.ts2-live{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.75);line-height:1.45}
+.ts2-live svg{color:color-mix(in srgb,var(--c) 70%,#fff);flex-shrink:0}
+.ts2-live span{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ts2-go{position:absolute;top:12px;inset-inline-end:12px;z-index:3;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;display:grid;place-items:center;opacity:0;transform:translateX(-6px);transition:.25s}
+.ts2-card:hover .ts2-go{opacity:1;transform:none;background:var(--c);border-color:var(--c)}
+/* شريط أسفل */
+.ts2-foot{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;margin-top:2rem;position:relative;z-index:1}
+.ts2-foot button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.75);border-radius:99px;padding:8px 16px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:40px;transition:.15s}
+.ts2-foot button:hover{background:rgba(255,255,255,.12);color:#fff}
+.ts2-foot button.out{color:#ff8fa3;border-color:rgba(221,29,69,.35)}
+.ts2-foot button.out:hover{background:rgba(221,29,69,.2);color:#fff}
+@media(max-width:1100px){.ts2-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:820px){.ts2-strip{grid-template-columns:1fr}}
+@media(max-width:640px){
+  #TS .ts-inner.v2{padding-inline:1rem}
+  .ts2-top{margin-bottom:1rem}
+  .ts2-lg{width:44px;height:44px}
+  .ts2-date{display:none}
+  .ts2-tb{width:38px;height:38px}
+  .ts2-cards{display:flex;flex-direction:column;gap:.6rem}
+  .ts2-card{aspect-ratio:auto;height:96px;border-radius:18px;display:flex;align-items:center}
+  .ts2-card:hover{transform:none}
+  .ts2-img{width:38%;inset-inline-end:0;inset-inline-start:auto;-webkit-mask-image:linear-gradient(to left,#000 60%,transparent);mask-image:linear-gradient(to left,#000 60%,transparent)}
+  html[dir="rtl"] .ts2-img{inset-inline-start:0;inset-inline-end:auto;-webkit-mask-image:linear-gradient(to right,#000 60%,transparent);mask-image:linear-gradient(to right,#000 60%,transparent)}
+  .ts2-ov{background:linear-gradient(90deg,#14112c 0%,rgba(20,17,44,.85) 45%,rgba(20,17,44,.2) 100%)}
+  html[dir="rtl"] .ts2-ov{background:linear-gradient(270deg,#14112c 0%,rgba(20,17,44,.85) 45%,rgba(20,17,44,.2) 100%)}
+  .ts2-body{position:relative;inset:auto;padding:0 1rem;display:flex;align-items:center;gap:.8rem;width:100%}
+  .ts2-ic{width:42px;height:42px;margin:0;flex-shrink:0}
+  .ts2-tx{flex:1;min-width:0}
+  .ts2-name{font-size:14px;margin-bottom:2px}
+  .ts2-live span{-webkit-line-clamp:1}
+  .ts2-go{opacity:1;transform:none;top:auto;inset-inline-end:14px;background:rgba(255,255,255,.08)}
+  .ts2-mode{top:6px;inset-inline-start:auto;inset-inline-end:52px;font-size:9px;padding:3px 7px}
+  .ts2-body{padding-inline-end:3.2rem}
+  .ts2-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ts2-foot{margin-top:1.4rem}
+  .ts2-foot button{padding:8px 12px;font-size:11.5px}
+}
+
 /* ============ CALENDAR ============ */
 .seg{display:inline-flex;background:var(--bg);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
 .seg button{border:none;background:none;padding:6px 12px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--gray);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:.15s}
@@ -3361,7 +3459,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.20-sync</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.20-hub</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3449,14 +3547,15 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
 
 <!-- ============ TOURNAMENT SELECT ============ -->
 <div id="TS">
-  <div class="ts-inner">
+  <div id="ts-bg"></div>
+  <div class="ts-inner v2">
     <div class="lgo" style="margin-bottom:1.2rem"></div>
     <div class="ts-hi">مرحباً بك</div>
     <div class="ts-nm" id="ts-nm">—</div>
     <div class="ts-rl" id="ts-rl">—</div>
     <div id="ts-sys-wrap">
       <div class="ts-lbl">اختر النظام للمتابعة</div>
-      <div class="ts-cards" id="ts-sys"></div>
+      <div id="ts-sys" class="ts2-wrap"></div>
     </div>
     <div id="ts-tours-wrap" style="display:none">
       <div class="ts-lbl">اختر البطولة للمتابعة</div>
@@ -6876,42 +6975,180 @@ function arCount(n,one,two,few,many){
   if(n<=10)return n+' '+(few||many);
   return n+' '+(many||few);
 }
+/* ==========================================================================
+   شاشة اختيار النظام (بعد الدخول) — النسخة الثانية
+   --------------------------------------------------------------------------
+   رأس مضغوط + «متابعة من حيث توقفت» + مهامي اليوم + بطاقات مرتبة حسب الدور
+   بأرقام حيّة + شريط أدوات أسفل. لا يُغيّر شيئاً في البيانات.
+========================================================================== */
+var TS_LAST_KEY='faris_last_page';
+var TS_LABELS={
+  app:{home:'الرئيسية',league:'الترتيب',teams:'الفرق',schedule:'المباريات',ko:'الأدوار الإقصائية',results:'النتائج',stats:'الإحصائيات',register:'التسجيل',myteam:'فريقي',admin:'الإدارة'}
+};
+function tsPageLabel(sys,pg){
+  try{
+    if(sys==='td'){var lb='';TDSECTIONS.forEach(function(s){if(s.page===pg)lb=s.label;(s.items||[]).forEach(function(i){if(i[0]===pg)lb=i[1];});});return lb||(TDNAV.find(function(x){return x[0]===pg;})||[])[1]||'';}
+    if(sys==='nt')return (NTNAV.find(function(x){return x[0]===pg;})||[])[1]||'';
+    if(sys==='ce')return (CENAV.find(function(x){return x[0]===pg;})||[])[1]||'';
+    if(sys==='ad')return (ADNAV.find(function(x){return x[0]===pg;})||[])[1]||'';
+    if(sys==='app')return TS_LABELS.app[pg]||'';
+  }catch(e){}
+  return '';
+}
+/* يُستدعى من محوّلات الصفحات في كل نظام */
+function tsRemember(sys,pg){
+  try{
+    if(!CU)return;
+    localStorage.setItem(TS_LAST_KEY,JSON.stringify({uid:CU.id,sys:sys,pg:pg,at:Date.now(),at_id:(typeof AT!=='undefined'?AT:''),nt_team:(typeof NTTEAM!=='undefined'?NTTEAM:'')}));
+  }catch(e){}
+}
+function tsLast(){
+  try{var o=JSON.parse(localStorage.getItem(TS_LAST_KEY)||'null');if(!o||!CU||o.uid!==CU.id)return null;if(Date.now()-(o.at||0)>14*864e5)return null;return o;}catch(e){return null;}
+}
+function tsResume(){
+  var o=tsLast();if(!o)return;
+  try{
+    if(o.sys==='td'&&sysAllowed('td')){enterTD();setTimeout(function(){tdP(o.pg);},60);}
+    else if(o.sys==='nt'&&sysAllowed('nt')){enterNT();if(o.nt_team){setTimeout(function(){try{ntPickTeam(o.nt_team,true);ntP(o.pg);}catch(e){}},80);}}
+    else if(o.sys==='ce'&&sysAllowed('ce')){enterCE();setTimeout(function(){ceP(o.pg);},60);}
+    else if(o.sys==='ad'&&CU.role==='admin'){enterAD();setTimeout(function(){adP(o.pg);},60);}
+    else if(o.sys==='app'){if(o.at_id&&(DB.tournaments||[]).some(function(t){return t.id===o.at_id;}))AT=o.at_id;selT(AT);setTimeout(function(){try{gP(o.pg);}catch(e){}},80);}
+  }catch(e){console.warn('tsResume',e);}
+}
+function tsGreet(){var h=new Date().getHours();return h<12?'صباح الخير':(h<17?'مساء الخير':'مساء النور');}
+function tsFirst(n){return String(n||'').trim().split(/\s+/)[0]||'';}
+function tsDateStr(){try{return new Date().toLocaleDateString('ar-SA-u-ca-gregory-nu-latn',{weekday:'long',day:'numeric',month:'long'});}catch(e){return '';}}
+function tsDayDiff(iso){var d=parseDob(iso);if(!d)return null;var a=new Date(d.y,d.m-1,d.d),b=new Date();b.setHours(0,0,0,0);return Math.round((a-b)/864e5);}
+function tsRel(n){if(n===0)return 'اليوم';if(n===1)return 'غداً';if(n>1)return 'بعد '+ceN(n)+' أيام';if(n===-1)return 'أمس';return 'متأخر '+ceN(-n)+' أيام';}
+/* المباراة القادمة في كل البطولات المرئية */
+function tsNextMatch(){
+  try{
+    var now=Date.now(),best=null;
+    visibleTournaments().forEach(function(tr){(tr.matches||[]).forEach(function(m){
+      if(!m.dt&&!m.date)return;var d=new Date(m.dt||(m.date+'T'+(m.time||'17:00')));if(isNaN(d)||d.getTime()<now-36e5)return;
+      if(m.done)return;
+      if(!best||d<best.d)best={d:d,a:m.t1||m.a||'',b:m.t2||m.b||'',tid:tr.id};
+    });});
+    return best;
+  }catch(e){return null;}
+}
+/* «مهامي اليوم»: حتى ٣ عناصر حسب الدور */
+function tsToday(){
+  var out=[],role=CU?CU.role:'';
+  var canTD=sysAllowed('td');
+  if(canTD){
+    try{
+      xSet('td');
+      var pend=xReqs().filter(function(q){return q.status==='pending';}).length;
+      var r=xC().role();
+      if(pend&&(r==='admin'||r==='manager'))out.push({ic:'check',c:'#d97706',t:arCount(pend,'طلب واحد','طلبان','طلبات','طلباً')+' بانتظار قرارك',s:'الإدارة الفنية ← الطلبات والاعتمادات',go:"enterTD();setTimeout(function(){tdP('requests');},60)"});
+      var ts=xTasks().filter(function(t){return t.status!=='done';});
+      var late=ts.filter(function(t){var d=tsDayDiff(t.due);return d!==null&&d<=0;});
+      if(r==='coach'&&ts.length)out.push({ic:'bell',c:'#DD1D45',t:(late.length?ceN(late.length)+' مهمة متأخرة من ':'')+arCount(ts.length,'مهمة واحدة','مهمتان','مهام','مهمة')+' مفتوحة',s:'الإدارة الفنية ← متابعة الجهاز الفني',go:"enterTD();setTimeout(function(){tdP('follow');},60)"});
+      if((r==='admin'||r==='manager')&&late.length)out.push({ic:'bell',c:'#DD1D45',t:arCount(late.length,'مهمة واحدة متأخرة','مهمتان متأخرتان','مهام متأخرة','مهمة متأخرة')+' عند المدربين',s:'الإدارة الفنية ← متابعة الجهاز الفني',go:"enterTD();setTimeout(function(){tdP('follow');},60)"});
+    }catch(e){}
+  }
+  var nm=tsNextMatch();
+  if(nm){var dd=Math.round((new Date(nm.d.getFullYear(),nm.d.getMonth(),nm.d.getDate())-new Date(new Date().setHours(0,0,0,0)))/864e5);
+    if(dd<=1)out.push({ic:'ball',c:'#1565c0',t:(dd===0?'مباراة اليوم ':'مباراة الغد ')+esc(nm.a)+' × '+esc(nm.b),s:nm.d.toLocaleTimeString(locale(),{hour:'2-digit',minute:'2-digit'})+' — بطولات فارس',go:"AT='"+nm.tid+"';selT(AT);setTimeout(function(){gP('schedule');},80)"});}
+  if(sysAllowed('nt')){
+    try{var camps=(NTX().camps||[]).filter(function(c){var d=tsDayDiff(c.from);return d!==null&&d>=0&&d<=3;}).sort(function(a,b){return (a.from||'')<(b.from||'')?-1:1;});
+      if(camps.length)out.push({ic:'crown',c:'#d97706',t:'تجمّع '+tsRel(tsDayDiff(camps[0].from))+': '+esc(camps[0].title||''),s:'منتخب فارس ← التجمعات',go:"enterNT()"});}catch(e){}
+  }
+  if(sysAllowed('ce')){
+    try{var cy=ceActiveCycle();if(cy&&cy.status==='open'&&cy.to){var d2=tsDayDiff(cy.to);if(d2!==null&&d2>=0&&d2<=7)out.push({ic:'star',c:'#0e7490',t:'دورة التقييم «'+esc(cy.name)+'» تنتهي '+tsRel(d2),s:'تقييم المدربين',go:"enterCE()"});}}catch(e){}
+  }
+  if(role==='admin'){
+    var jr=(DB.joinReqs||[]).filter(function(x){return x.status==='pending'||!x.status;}).length;
+    if(jr)out.push({ic:'user-plus',c:'#5b2d8f',t:arCount(jr,'طلب انضمام واحد','طلبا انضمام','طلبات انضمام','طلب انضمام')+' بانتظار الاعتماد',s:'الإدارة والمتابعة ← المستخدمون',go:"enterAD();setTimeout(function(){adP('users');},60)"});
+  }
+  return out.slice(0,3);
+}
+/* السطر الحي لكل بطاقة */
+function tsLive(k){
+  try{
+    if(k==='app'){var nm=tsNextMatch();if(nm){var dd=Math.round((new Date(nm.d.getFullYear(),nm.d.getMonth(),nm.d.getDate())-new Date(new Date().setHours(0,0,0,0)))/864e5);return {t:(dd===0?'اليوم ':(dd===1?'غداً ':''))+nm.a+' × '+nm.b,ic:'ball'};}
+      var vt=visibleTournaments().length;return {t:vt?arCount(vt,'بطولة نشطة','بطولتان نشطتان','بطولات نشطة','بطولة نشطة'):'الجداول والنتائج',ic:'trophy'};}
+    if(k==='td'){xSet('td');var r=xC().role();
+      if(r==='coach'){var ts=xTasks().filter(function(t){return t.status!=='done';}).length;return {t:ts?arCount(ts,'مهمة واحدة مفتوحة','مهمتان مفتوحتان','مهام مفتوحة','مهمة مفتوحة'):'لا مهام مفتوحة',ic:'bell'};}
+      if(r==='admin'||r==='manager'){var pend=xReqs().filter(function(q){return q.status==='pending';}).length;var ts2=xTasks().filter(function(t){return t.status!=='done';}).length;
+        if(pend||ts2)return {t:(pend?ceN(pend)+' طلب بانتظارك':'')+(pend&&ts2?' • ':'')+(ts2?ceN(ts2)+' مهمة مفتوحة':''),ic:'check'};}
+      var t=TDX();return {t:ceN((ACL.branches()||[]).length)+' فرعاً • '+ceN((t.players||[]).length)+' لاعباً',ic:'pin'};}
+    if(k==='nt'){var camps=(NTX().camps||[]).filter(function(c){var d=tsDayDiff(c.from);return d!==null&&d>=0;}).sort(function(a,b){return (a.from||'')<(b.from||'')?-1:1;});
+      if(camps.length)return {t:'تجمّع '+tsRel(tsDayDiff(camps[0].from)),ic:'cal'};
+      var cand=(typeof ntCandidates==='function')?ntCandidates().length:0;if(cand)return {t:arCount(cand,'مرشح جديد','مرشحان جديدان','مرشحين جدد','مرشحاً جديداً'),ic:'user-plus'};
+      return {t:ceN((NTX().teams||[]).length)+' منتخبات • '+ceN((NTX().squads||[]).length)+' فئة',ic:'crown'};}
+    if(k==='ce'){var cy=ceActiveCycle();if(cy&&cy.status==='open'){var d=cy.to?tsDayDiff(cy.to):null;return {t:'دورة مفتوحة: '+cy.name+(d!==null&&d>=0?' — تنتهي '+tsRel(d):''),ic:'star'};}return {t:cy?'آخر دورة: '+cy.name:'التقييم والتعميد والتطوير',ic:'star'};}
+    if(k==='ad'){var jr=(DB.joinReqs||[]).filter(function(x){return x.status==='pending'||!x.status;}).length;if(jr)return {t:arCount(jr,'طلب انضمام واحد','طلبا انضمام','طلبات انضمام','طلب انضمام')+' بانتظارك',ic:'user-plus'};var k0=(typeof adCounts==='function')?adCounts():null;return {t:k0?arCount(k0.users,'مستخدم واحد','مستخدمان','مستخدمين','مستخدماً'):'الحسابات والتقارير',ic:'users'};}
+  }catch(e){}
+  return {t:'',ic:'info'};
+}
+/* ترتيب الأنظمة حسب الدور: الأكثر استخداماً أولاً */
+function tsOrder(){
+  var r=CU?CU.role:'';
+  if(r==='admin')return ['td','app','nt','ce','ad'];
+  if(r==='coach'||r==='admin-team'||r==='supervisor')return ['td','app','ce','nt'];
+  if(/^nt-/.test(r))return ['nt','app','td','ce'];
+  if(isPlayerRole(r)||r==='viewer')return ['app','td','nt','ce'];
+  return ['app','td','nt','ce'];
+}
+var TS_META={
+  app:{name:'بطولات فارس',ic:'trophy',c:'#DD1D45',img:'tours',go:'tsTours()'},
+  td:{name:'الإدارة الفنية',ic:'whistle',c:'#1565c0',img:'td',go:'enterTD()'},
+  nt:{name:'منتخب فارس',ic:'crown',c:'#d97706',img:'nt',go:'enterNT()'},
+  ce:{name:'تقييم وتطوير المدربين',ic:'star',c:'#0e7490',img:'ce',go:'enterCE()'},
+  ad:{name:'الإدارة والمتابعة',ic:'gear',c:'#5b2d8f',img:'ad',go:'enterAD()'}
+};
 function tsSys(){
   g('ts-tours-wrap').style.display='none';g('ts-sys-wrap').style.display='block';
-  var t=TDX();
-  var tours=visibleTournaments();
-  var tPl=0;tours.forEach(function(x){(x.teams||[]).forEach(function(tm){tPl+=(tm.players||[]).length;});});
-  var cards='';
-  cards+='<div class="ts-card" onclick="tsTours()"><div class="ts-poster" style="--pc:var(--red)">'+(sysImgs().tours?'<img src="'+sysImgs().tours+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('trophy',26)+'</div>')+'</div><div class="ts-cap"><div class="ts-name">بطولات فارس</div><div class="ts-sub">'+arCount(tours.length,'بطولة واحدة','بطولتان','بطولات','بطولة')+'</div></div></div>';
-  var isAdm=CU&&CU.role==='admin',v=sysVis();
-  var visBtn=function(k){return isAdm?'<button class="ts-vis" onclick="sysVisToggle(\''+k+'\',event)" title="'+(sysMode(k)==='on'?'إخفاء عن المستخدمين':'إظهار للمستخدمين')+'">'+ic(sysMode(k)==='on'?'eye':'eye-off',14)+'</button>':'';};
-  var modeLbl=function(k){var m=sysMode(k);if(!isAdm||m==='on')return '';return '<span class="ts-hlbl">'+ic(m==='test'?'users':(m==='group'?'shield':'eye-off'),9)+' '+(m==='test'?'تجريبي — '+ceN(sysTesters(k).length)+' مستخدم':(m==='group'?'خاص — فئات محددة':'مخفي — تحت التعديل'))+'</span>';};
-  ['td','nt','ce'].forEach(function(k){v[k]=sysMode(k)==='on';});
-  var hidLbl='';
-  if(sysAllowed('td')||isAdm)cards+='<div class="ts-card'+(!v.td?' hidden-t':'')+'" onclick="enterTD()">'+modeLbl('td')+'<div class="ts-poster" style="--pc:#1565c0">'+visBtn('td')+(sysImgs().td?'<img src="'+sysImgs().td+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('whistle',26)+'</div>')+'</div><div class="ts-cap"><div class="ts-name">الإدارة الفنية</div><div class="ts-sub">'+((t.branches||[]).length?arCount((t.branches||[]).length,'فرع واحد','فرعان','فروع','فرعاً'):'الفروع والتقييمات')+'</div></div></div>';
-  var n=NTX();
-  var ntCand=(typeof ntCandidates==='function')?ntCandidates().length:0;
-  if(sysAllowed('nt')||isAdm)cards+='<div class="ts-card'+(!v.nt?' hidden-t':'')+'" onclick="enterNT()">'+modeLbl('nt')+'<div class="ts-poster" style="--pc:var(--amber)">'+visBtn('nt')+(sysImgs().nt?'<img src="'+sysImgs().nt+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('crown',26)+'</div>')+'</div><div class="ts-cap"><div class="ts-name">منتخب فارس</div><div class="ts-sub">'+arCount((n.teams||[]).length,'منتخب واحد','منتخبان','منتخبات','منتخباً')+'</div></div></div>';
-  if(sysAllowed('ce')||isAdm){
-    var ceX=CEX(),ceCy=ceActiveCycle();
-    var ceSub=ceCy?(ceCy.status==='open'?'دورة مفتوحة: '+ceCy.name:'آخر دورة: '+ceCy.name):'التقييم والتعميد والتطوير';
-    cards+='<div class="ts-card'+(!v.ce?' hidden-t':'')+'" onclick="enterCE()">'+modeLbl('ce')
-      +'<div class="ts-poster" style="--pc:#0e7490">'+visBtn('ce')
-      +(sysImgs().ce?'<img src="'+sysImgs().ce+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('star',26)+'</div>')
-      +'</div><div class="ts-cap"><div class="ts-name">تقييم وتطوير المدربين</div><div class="ts-sub">'+esc(ceSub)+'</div></div></div>';
+  var isAdm=CU&&CU.role==='admin';
+  var h='';
+  /* ===== الرأس ===== */
+  var un=NOTIFS.filter(function(n){return !n.read;}).length;
+  h+='<div class="ts2-top"><div class="ts2-who"><span class="ts2-lg"></span><div><div class="ts2-hi">'+tsGreet()+'، <b>'+esc(tsFirst(CU.name))+'</b></div><div class="ts2-meta"><span class="ts2-role" style="--rc:'+(RC[CU.role]||'#DD1D45')+'">'+ic('shield',11)+' '+esc(RL[CU.role]||'')+'</span><span class="ts2-date">'+ic('cal',11)+' '+esc(tsDateStr())+'</span></div></div></div>';
+  h+='<div class="ts2-tools"><button class="ts2-tb" onclick="openAccount(event)" title="التنبيهات والحساب">'+ic('bell',17)+(un?'<i>'+ceN(un)+'</i>':'')+'</button><button class="ts2-tb" onclick="toggleTheme();tsSys()" title="الوضع الليلي/النهاري">'+ic(THEME==='dark'?'sun':'moon',17)+'</button><button class="ts2-tb" onclick="toggleLang();tsSys()" title="English / العربية"><b>'+(LANG==='en'?'ع':'EN')+'</b></button></div></div>';
+  /* ===== متابعة من حيث توقفت + مهامي اليوم ===== */
+  var last=tsLast(),lastOk=last&&((last.sys==='td'&&sysAllowed('td'))||(last.sys==='nt'&&sysAllowed('nt'))||(last.sys==='ce'&&sysAllowed('ce'))||(last.sys==='ad'&&isAdm)||last.sys==='app');
+  var today=tsToday();
+  if(lastOk||today.length){
+    h+='<div class="ts2-strip">';
+    if(lastOk){var M=TS_META[last.sys],lbl=tsPageLabel(last.sys,last.pg);
+      h+='<button class="ts2-resume" style="--c:'+M.c+'" onclick="tsResume()"><span class="ts2-rs-ic">'+ic('refresh',16)+'</span><span class="ts2-rs-t"><small>متابعة من حيث توقفت</small><b>'+esc(M.name)+(lbl?' <i>›</i> '+esc(lbl):'')+'</b></span>'+ic('chevron-left',16)+'</button>';}
+    if(today.length){
+      h+='<div class="ts2-today"><div class="ts2-td-h">'+ic('zap',13)+' مهامي اليوم</div><div class="ts2-td-l">';
+      today.forEach(function(x){h+='<button class="ts2-td-i" style="--c:'+x.c+'" onclick="'+x.go+'"><span class="ts2-td-ic">'+ic(x.ic,14)+'</span><span><b>'+x.t+'</b><small>'+esc(x.s)+'</small></span>'+ic('chevron-left',13)+'</button>';});
+      h+='</div></div>';
+    }
+    h+='</div>';
   }
-  if(isAdm){
-    var k0=(typeof adCounts==='function')?adCounts():null;
-    cards+='<div class="ts-card" onclick="enterAD()">'
-      +'<span class="ts-hlbl">'+ic('shield',9)+' لمدير النظام</span>'
-      +'<div class="ts-poster" style="--pc:#5b2d8f">'
-      +(sysImgs().ad?'<img src="'+sysImgs().ad+'" alt="" loading="lazy">':'<div class="ts-ic">'+ic('gear',26)+'</div>')
-      +'</div><div class="ts-cap"><div class="ts-name">الإدارة والمتابعة</div>'
-      +'<div class="ts-sub">'+(k0?arCount(k0.users,'مستخدم واحد','مستخدمان','مستخدمين','مستخدماً'):'الحسابات والتقارير')+'</div></div></div>';
-  }
-  g('ts-sys').innerHTML=cards;
+  /* ===== البطاقات ===== */
+  h+='<div class="ts2-lbl">اختر النظام</div><div class="ts2-cards">';
+  var i=0;
+  tsOrder().forEach(function(k){
+    var M=TS_META[k];
+    if(k==='ad'&&!isAdm)return;
+    if(k!=='app'&&k!=='ad'&&!(sysAllowed(k)||isAdm))return;
+    var mode=(k==='app'||k==='ad')?'on':sysMode(k);
+    var live=tsLive(k),img=sysImgs()[M.img];
+    h+='<div class="ts2-card'+(mode!=='on'?' off':'')+'" style="--c:'+M.c+';animation-delay:'+(i*70)+'ms" onclick="'+M.go+'" role="button" tabindex="0" onkeydown="if(event.key===\'Enter\')this.click()">';
+    if(img)h+='<img class="ts2-img" src="'+esc(img)+'" alt="" loading="lazy">';
+    h+='<div class="ts2-ov"></div>';
+    if(isAdm&&mode!=='on'){var md=SYS_MODES.find(function(x){return x[0]===mode;})||[];
+      h+='<div class="ts2-mode" onclick="event.stopPropagation();enterAD();setTimeout(function(){adP(\'settings\');},60)" title="إعدادات الوصول">'+ic(md[3]||'eye-off',11)+' '+esc(md[1]||'')+(mode==='test'?' — '+ceN(sysTesters(k).length):'')+' <em>'+ic('gear',10)+'</em></div>';}
+    if(k==='ad')h+='<div class="ts2-mode adm">'+ic('shield',11)+' لمدير النظام</div>';
+    h+='<div class="ts2-body"><span class="ts2-ic">'+ic(M.ic,20)+'</span><div class="ts2-tx"><div class="ts2-name">'+M.name+'</div>'+(live.t?'<div class="ts2-live">'+ic(live.ic,11)+' <span>'+live.t+'</span></div>':'')+'</div></div>';
+    h+='<span class="ts2-go">'+ic('chevron-left',16)+'</span>';
+    h+='</div>';i++;
+  });
+  h+='</div>';
+  /* ===== شريط أسفل ===== */
+  h+='<div class="ts2-foot"><button onclick="openAccount(event)">'+ic('user',13)+' ملفي</button><button onclick="toggleTheme();tsSys()">'+ic(THEME==='dark'?'sun':'moon',13)+' '+(THEME==='dark'?'الوضع النهاري':'الوضع الليلي')+'</button><button onclick="toggleLang();tsSys()">'+ic('globe',13)+' '+(LANG==='en'?'العربية':'English')+'</button><button class="out" onclick="doLogout()">'+ic('logout',13)+' تسجيل الخروج</button></div>';
+  g('ts-sys').innerHTML=h;
+  /* خلفية الهيرو نفسها إن وُجدت */
+  var bg=g('ts-bg');if(bg){var ws=DB.settings||{};bg.style.backgroundImage=ws.welPoster?'url("'+ws.welPoster+'")':'';}
   hydrateIcons(g('TS'));
 }
+
 function tourPickItem(t,cls,val){
   var badge=t.img
     ?'<div class="tpick-ic"><img src="'+t.img+'"></div>'
@@ -8469,6 +8706,7 @@ function gP(id,btn){
      يشمل صفحات الإدارة الفنية والمنتخب وتقييم المدربين والإدارة والمتابعة،
      فيُلغي ظهورها ويختفي محتواها فجأة عند أي إعادة رسم. */
   document.querySelectorAll('#APP .page').forEach(function(p){p.classList.remove('on');});
+  try{tsRemember('app',id);}catch(e){}
   document.querySelectorAll('#nav-links .nl,#sbar-links .sb-l').forEach(function(b){b.classList.toggle('on',b.dataset.pg===id);});
   var el=g('page-'+id);if(el)el.classList.add('on');
   window.scrollTo({top:0,behavior:'smooth'});
@@ -13652,7 +13890,7 @@ function tdBack(){g('TD').style.display='none';showTS();}
 function tdP(pg){
   if(typeof closeAllDrawers==='function')closeAllDrawers();
   if(pg!=='player'&&!tdAllowed(pg))pg=(tdRole()==='player'?'plans':'home');
-  TDPAGE=pg;
+  TDPAGE=pg;try{tsRemember('td',pg);}catch(e){}
   document.querySelectorAll('#TD .page').forEach(function(e){e.classList.remove('on');});
   var el=g('tdpg-'+pg);if(el)el.classList.add('on');
   var sec=tdSecOf(pg);
@@ -16733,7 +16971,7 @@ function buildNTNav(){
 function ntP(pg){
   if(typeof closeAllDrawers==='function')closeAllDrawers();
   if(!ntAllowed(pg))pg=(ntRole()==='player'?'me':'home');
-  NTPAGE=pg;
+  NTPAGE=pg;try{tsRemember('nt',pg);}catch(e){}
   document.querySelectorAll('#NT .page').forEach(function(e){e.classList.remove('on');});
   var el=g('ntpg-'+pg);if(el)el.classList.add('on');
   document.querySelectorAll('#nt-links .nl,#nt-sbar-links .sb-l').forEach(function(b){b.classList.toggle('on',b.dataset.ntpg===pg);});
@@ -18906,7 +19144,7 @@ function buildCENav(){
 function ceP(pg){
   if(typeof closeAllDrawers==='function')closeAllDrawers();
   if(pg!=='coach'&&!ceAllowed(pg))pg=ceRole()==='player'?'eval':'home';
-  CEPAGE=pg;
+  CEPAGE=pg;try{tsRemember('ce',pg);}catch(e){}
   document.querySelectorAll('#CE .page').forEach(function(e){e.classList.remove('on');});
   var el=g('cepg-'+pg);if(el)el.classList.add('on');
   document.querySelectorAll('#ce-links .nl,#ce-sbar-links .sb-l').forEach(function(b){
@@ -20007,7 +20245,7 @@ function buildADNav(){
 function adP(pg){
   if(typeof closeAllDrawers==='function')closeAllDrawers();
   if(!adAllowed())return;
-  ADPAGE=pg;
+  ADPAGE=pg;try{tsRemember('ad',pg);}catch(e){}
   document.querySelectorAll('#AD .page').forEach(function(e){e.classList.remove('on');});
   var el=g('adpg-'+pg);if(el)el.classList.add('on');
   document.querySelectorAll('#ad-links .nl,#ad-sbar-links .sb-l').forEach(function(b){
@@ -23998,7 +24236,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.20-sync</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.20-hub</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
