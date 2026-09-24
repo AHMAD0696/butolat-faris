@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.24-tp">
+<meta name="build" content="2026.09.24-unify">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3572,7 +3572,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.24-tp</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.24-unify</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4414,6 +4414,20 @@ var _FA_CONFLICT=false;
 /* دمج حالتين: الأساس نسخة الزميل (remote)، وفوقها عناصرنا (local).
    المصفوفات ذات المعرّفات تُتَّحد: عنصر بنفس id → نسختنا تغلب (تعديلنا أحدث)،
    وعناصر الزميل التي لا نملكها تُضاف. الحقول المفردة: نسختنا (آخر من حفظ). */
+/* معرّفات آخر نسخة معروفة من الخادم (بعد كل تحميل أو حفظ ناجح).
+   عند الدمج: عنصر عند الخادم وليس عندنا — إن كان في هذه القائمة فنحن من حذفه
+   (دمج مكرّرين مثلاً) فلا يُعاد؛ وإلا فهو إضافة زميل تُحترم.
+   بدون هذا كان كل تصادم في رقم النسخة يُعيد ما حذفناه، فيبدو الدمج كأنه لم يحدث. */
+var FA_BASE_IDS={};
+function faIndexIds(state){
+  var out={};
+  var walk=function(o,d){if(d>7||!o||typeof o!=='object')return;
+    if(Array.isArray(o)){for(var i=0;i<o.length;i++){var x=o[i];if(x&&typeof x==='object'){if(x.id!=null)out[x.id]=1;walk(x,d+1);}}return;}
+    for(var k in o){var v=o[k];if(v&&typeof v==='object')walk(v,d+1);}
+  };
+  try{walk(state,0);}catch(e){}
+  FA_BASE_IDS=out;
+}
 function faMergeStates(remote,local){
   function mergeArr(a,b,key,depth){    /* a=زميل، b=نحن */
     key=key||'id';
@@ -4434,7 +4448,8 @@ function faMergeStates(remote,local){
         out.push(x);                              /* بلا معرّف: نبقيه */
       }
     });
-    (a||[]).forEach(function(x){var k=x&&x[key];if(k==null||!seen[k])out.push(x);}); /* إضافات الزميل */
+    /* إضافات الزميل — إلا ما كان في نسختنا الأساسية وحذفناه نحن */
+    (a||[]).forEach(function(x){var k=x&&x[key];if(k==null||!seen[k]){if(k!=null&&FA_BASE_IDS[k]&&key==='id')return;out.push(x);}});
     return out;
   }
   function mergeObj(r,l,depth){
@@ -4502,10 +4517,11 @@ var FA={
         self._rev=(r.data&&r.data._rev)||null;   /* رقم نسخة البيانات الحالية */
         self.loadOK=true;              /* ✅ التحميل نجح — الحفظ مسموح */
         faWarnClear();                 /* أزل أي تحذير سابق */
+        try{faIndexIds(r.data);}catch(e){}
         return r.data||null;
       });
     }
-    return self._loadDirect().then(function(d){self._rev=(d&&d._rev)||null;self.loadOK=true;faWarnClear();return d;});
+    return self._loadDirect().then(function(d){self._rev=(d&&d._rev)||null;self.loadOK=true;faWarnClear();try{faIndexIds(d);}catch(e){}return d;});
   },
   /* ===== تخزين الصور خارج قاعدة البيانات ===== */
   BUCKET:'images',
@@ -4702,7 +4718,7 @@ var FA={
         /* خادم لم يُحدَّث بعد (لا يعرف p_rev) — احفظ بالطريقة القديمة */
         if(/p_rev|PGRST202|Could not find/i.test(String(r.error.message||''))){
           return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state}).then(function(r2){
-            if(r2.error)throw r2.error; self._rev=next; return true;
+            if(r2.error)throw r2.error; self._rev=next; try{faIndexIds(state);}catch(e){} return true;
           });
         }
         throw r.error;
@@ -4714,6 +4730,7 @@ var FA={
         return self._mergeAndRetry(state);
       }
       self._rev=(d&&typeof d==='object'&&d.rev)?d.rev:next;
+      try{faIndexIds(state);}catch(e){}
       return true;
     });
   },
@@ -5625,7 +5642,8 @@ function acNeedsSync(u){
   var manual=acList(u).filter(function(a){return !a.auto;});
   var have=acList(u).filter(function(a){return a.auto;});
   /* يدوي بلا فرع ونظيره بفرع = ينقصه استكمال */
-  var gap=AC_LINK.some(function(l){var grp=manual.filter(function(a){return l[a.sys]===a.role;});return grp.some(function(a){return (a.scope||[]).length;})&&grp.some(function(a){return !(a.scope||[]).length;});});
+  var eff=function(a){return (a.scope||[]).filter(function(x){return a.sys!=='app'||acIsBranchName(x);});};
+  var gap=AC_LINK.some(function(l){var grp=manual.filter(function(a){return l[a.sys]===a.role;});return grp.some(function(a){return eff(a).length;})&&grp.some(function(a){return !(a.scope||[]).length;});});
   if(gap)return true;
   var der=acDerive(manual);
   var key=function(a){return a.sys+'|'+a.role+'|'+(a.scope||[]).slice().sort().join(',');};
@@ -7006,6 +7024,77 @@ function acUnifyUser(u){
   if(!u.team){var ap=acScope(u,'app');if(ap.length){u.team=ap[0];n++;}}
   return n;
 }
+/* الحساب المقابل لسجل (مدرب بطولات أو مدرب إدارة فنية): بالمعرّف ثم اسم الدخول ثم الاسم إن كان فريداً */
+function acUserForRec(rec,kind){
+  var us=(DB.users||[]).filter(function(u){return u.role==='coach'||u.role==='admin-team'||u.role==='viewer';});
+  var hit=us.find(function(u){return u.coachId&&u.coachId===rec.id;});if(hit)return hit;
+  var un=normName(rec.user||'');
+  if(un){hit=us.find(function(u){return normName(u.username||'')===un;});if(hit)return hit;}
+  var k=coachKey(rec.name||'');if(!k)return null;
+  var m=us.filter(function(u){return coachKey(u.name||'')===k||coachKey(u.username||'')===k;});
+  return m.length===1?m[0]:null;
+}
+/* سجلات بلا حساب: مدربو فرق الفروع في البطولات، ومدربو الإدارة الفنية */
+function acRecsWithoutUser(){
+  var out=[],seen={},usedU={};
+  /* الأسماء المكرّرة في سجلات الإدارة الفنية تُترك لتبويب «المكرّرون» — الدمج أولاً ثم الربط */
+  var dupTd={};(TDX().coaches||[]).forEach(function(c){var k=coachKey(c&&c.name);if(k)dupTd[k]=(dupTd[k]||0)+1;});
+  (DB.teams||[]).forEach(function(tm){
+    if(tm.ext||!acIsBranchName(tm.name))return;
+    (tm.coaches||[]).forEach(function(c){
+      if(!c||!c.name)return;
+      if(dupTd[coachKey(c.name)]>1)return;
+      var u=acUserForRec(c,'app');
+      if(u){
+        if(usedU[u.id])return;
+        /* موجود لكن بلا ربط بهذا الفريق: يُستكمل */
+        var need=(!u.coachId)||(!acScope(u,'app').some(function(x){return normName(x)===normName(tm.name);})&&normName(u.team||'')!==normName(tm.name));
+        if(need){usedU[u.id]=1;out.push({kind:'link-app',u:u,c:c,team:tm.name});}
+        return;
+      }
+      var key='n:'+coachKey(c.name);if(seen[key])return;seen[key]=1;
+      out.push({kind:'new-app',c:c,team:tm.name});
+    });
+  });
+  (TDX().coaches||[]).forEach(function(rec){
+    if(!rec||!rec.name)return;
+    if(dupTd[coachKey(rec.name)]>1)return;
+    var u=acUserForRec(rec,'td');
+    if(u){if(!u.coachId&&!usedU[u.id]){usedU[u.id]=1;out.push({kind:'link-td',u:u,rec:rec});}return;}
+    var key='n:'+coachKey(rec.name);if(seen[key])return;seen[key]=1;
+    out.push({kind:'new-td',rec:rec});
+  });
+  return out;
+}
+function acCreateUserFromRec(x){
+  var brs=x.rec?coachBranches(x.rec):[x.team];
+  var name=x.rec?x.rec.name:x.c.name;
+  var username=(x.rec&&x.rec.user)||name;
+  if((DB.users||[]).some(function(u){return normName(u.username||'')===normName(username);}))username=username+' '+(x.rec?x.rec.id:x.c.id).slice(-4);
+  var pin=(x.c&&x.c.pin)||'';
+  var u={id:'u_'+(x.rec?x.rec.id:x.c.id),name:name,username:username,role:'coach',team:brs[0]||'',phone:normPhone((x.rec?x.rec.phone:x.c.phone)||''),
+         coachId:(x.rec?x.rec.id:x.c.id),password:pin,pinSet:!!pin,src:'auto',at:Date.now(),
+         assign:[{id:uid(),sys:'td',role:'coach',scope:brs.slice()},{id:uid(),sys:'ce',role:'coach',scope:brs.slice()},{id:uid(),sys:'app',role:'team-coach',scope:brs.slice()}]};
+  DB.users.push(u);
+  if(x.rec&&!x.rec.user)x.rec.user=username;
+  if(FA.enabled&&FA.token){try{faSync(FA.upsertUser(u,pin||'0000'));}catch(e){}}
+  logA('إنشاء حساب مدرب من سجله: '+name+(pin?'':' (بلا رمز — يُعيَّن من بطاقة الحساب)'),'user-plus','#16a34a');
+  return u;
+}
+function acApplyRecItem(x){
+  if(x.kind==='new-app'||x.kind==='new-td'){var u=acCreateUserFromRec(x);acUnifyUser(u);return 1;}
+  if(x.kind==='link-app'){
+    var u1=x.u;if(!u1.coachId)u1.coachId=x.c.id;
+    if(!u1.assign)u1.assign=[];
+    var a=u1.assign.find(function(y){return y.sys==='app'&&y.role==='team-coach'&&!y.auto;});
+    if(!a){a={id:uid(),sys:'app',role:'team-coach',scope:[]};u1.assign.push(a);}
+    if(a.scope.indexOf(x.team)<0)a.scope.push(x.team);
+    if(!u1.team)u1.team=x.team;
+    acUnifyUser(u1);return 1;
+  }
+  if(x.kind==='link-td'){var u2=x.u;u2.coachId=x.rec.id;if(!x.rec.user&&u2.username)x.rec.user=u2.username;acUnifyUser(u2);return 1;}
+  return 0;
+}
 function acUnifyScan(){
   var need=[];
   (DB.users||[]).forEach(function(u){
@@ -7021,11 +7110,15 @@ function acUnifyScan(){
     }
     if(miss.length)need.push({u:u,miss:miss});
   });
+  acRecsWithoutUser().forEach(function(x){
+    var nm=x.rec?x.rec.name:x.c.name;
+    need.push({u:x.u||{name:nm},rec:x,miss:[x.kind==='new-app'?'مدرب في فريق '+x.team+' بلا حساب':x.kind==='new-td'?'مدرب في الإدارة الفنية بلا حساب':x.kind==='link-app'?'غير مرتبط بفريق '+x.team:'غير مرتبط بسجله']});
+  });
   return need;
 }
 function acUnifyAll(silent){
   var need=acUnifyScan(),n=0;
-  need.forEach(function(x){n+=acUnifyUser(x.u);});
+  need.forEach(function(x){if(x.rec)n+=acApplyRecItem(x.rec);else n+=acUnifyUser(x.u);});
   if(n){logA('توحيد الحسابات عبر الأنظمة: '+ceN(need.length)+' حساباً','users','#16a34a');}
   if(!silent){
     if(typeof rADUsers==='function'&&ADPAGE==='users')rADUsers();
@@ -11050,7 +11143,7 @@ function renderATab(){
   else if(ATAB==='import')c.innerHTML=admImportHTML();
   else if(ATAB==='matches'){c.innerHTML=admMatchHTML();popAM();}
   else if(ATAB==='results'){c.innerHTML=admResHTML();popResM();}
-  else if(ATAB==='users'){c.innerHTML=admUsersHTML();if(FA.enabled&&CU.role==='admin'){FA.listUsers().then(function(list){if(list){DB.users=list;if(ATAB==='users'){c.innerHTML=admUsersHTML();hydrateIcons(c);}}}).catch(function(e){console.warn(e);});}}
+  else if(ATAB==='users'){c.innerHTML=admUsersHTML();if(FA.enabled&&CU.role==='admin'){FA.listUsers().then(function(list){if(list){mergeServerUsers(list);if(ATAB==='users'){c.innerHTML=admUsersHTML();hydrateIcons(c);}}}).catch(function(e){console.warn(e);});}}
   else if(ATAB==='pending')c.innerHTML=admPendingHTML();
   else if(ATAB==='settings')c.innerHTML=admSettingsHTML();
   else if(ATAB==='log')c.innerHTML=admLogHTML();
@@ -11785,6 +11878,24 @@ function uCardHTML(u){
     +'<div style="min-width:0"><div class="un">'+esc(u.name)+warnBadge(issuesUser(u),u.name)+'</div>'
     +'<div class="ur">'+RL[u.role]+(acSummary(u)!=='—'?' • '+esc(acSummary(u)):(bs.length?' • '+esc(bs.join('، ')):''))+'</div></div>'+acts+'</div>';
 }
+/* قائمة الخادم تُدمج ولا تستبدل — الاستبدال كان يمسح التكليفات والربط بالسجلات من كل الحسابات */
+function mergeServerUsers(list){
+  if(!Array.isArray(list))return DB.users;
+  DB.users=DB.users||[];
+  var byId={};DB.users.forEach(function(u){byId[u.id]=u;});
+  var added=0;
+  list.forEach(function(su){
+    if(!su||!su.id)return;
+    var u=byId[su.id];
+    if(!u){u={id:su.id,name:su.name,username:su.username,role:su.role,team:su.team||'',phone:normPhone(su.phone||''),coachId:su.coachId||su.coach_id||''};DB.users.push(u);byId[u.id]=u;added++;return;}
+    ['name','username','role'].forEach(function(k){if(su[k]!=null&&su[k]!=='')u[k]=su[k];});
+    if(su.team&&!u.team)u.team=su.team;
+    if(su.phone&&normPhone(su.phone)&&!u.phone)u.phone=normPhone(su.phone);
+    var cid=su.coachId||su.coach_id;if(cid&&!u.coachId)u.coachId=cid;
+  });
+  if(added)console.log('[FA] حسابات من الخادم أُضيفت محلياً: '+added);
+  return DB.users;
+}
 function faSync(p){if(p&&p.catch)p.catch(function(e){console.warn('FA sync',e);});}
 
 /* ===== فرع المستخدم: يُستنتج ولا يُقرأ من حقل واحد =====
@@ -11822,6 +11933,11 @@ function userBranches(u){
   if(u.team){
     var t=all.find(function(b){return normName(b)===normName(u.team);});
     if(t)add(t);
+  }
+  /* نطاق التكليفات: فرع في الإدارة الفنية أو فريق (= فرع) في البطولات */
+  if(typeof acScope==='function'&&u.assign){
+    acScope(u,'td').forEach(function(x){var t2=all.find(function(b){return normName(b)===normName(x);});if(t2)add(t2);});
+    acScope(u,'app').forEach(function(x){var t3=all.find(function(b){return normName(b)===normName(x);});if(t3)add(t3);});
   }
   return out;
 }
@@ -20606,8 +20722,13 @@ function adHead(icn,title,sub,actions){
 /* ================= المستخدمون والصلاحيات ================= */
 var ADU='list';
 function adUTab(k){ADU=k;rADUsers();}
+var AD_USERS_FETCHED=false;
 function rADUsers(){
   var el=g('adc-users');
+  if(!AD_USERS_FETCHED&&FA.enabled&&FA.token&&CU&&CU.role==='admin'){
+    AD_USERS_FETCHED=true;
+    FA.listUsers().then(function(list){if(list&&list.length){var before=(DB.users||[]).length;mergeServerUsers(list);var n=0;try{n=acUnifyAll(true);}catch(e){}if((DB.users||[]).length!==before||n){sv();if(ADPAGE==='users')rADUsers();}}}).catch(function(e){console.warn('listUsers',e);});
+  }
   var dupN=adDupScan().length;
   var sc=adLinkScan();
   var linkN=sc.ready.length+sc.creatable.length+sc.ambiguous.length+sc.orphan.length;
@@ -24895,7 +25016,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.24-tp</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.24-unify</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
