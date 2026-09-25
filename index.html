@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.25-att3">
+<meta name="build" content="2026.09.25-clean">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3592,7 +3592,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.25-att3</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.25-clean</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -17351,7 +17351,7 @@ function tdEnsureGroup(catId){
   }
   return gg.id;
 }
-function tdCatGroupId(catId){return tdEnsureGroup(catId);}
+function tdCatGroupId(catId){var gg=TDX().groups.find(function(x){return x.catId===catId;});return gg?gg.id:'';}
 /* دمج أي مجموعات قديمة داخل الفئة في مجموعة واحدة */
 function tdMergeGroups(){
   var t=TDX();
@@ -17379,10 +17379,15 @@ function tdMergeGroups(){
   return moved;
 }
 /* خيارات الفئات (القيمة = معرّف المجموعة الضمنية لتبقى بقية النظام كما هي) */
+/* خيارات الفئات = حصصها الموجودة فعلاً — بلا إنشاء حصص تلقائياً أثناء العرض
+   (كان العرض يُنشئ «حصة بلا فترة» لكل فئة بلا حصة، فتعود بعد حذفها في كل مرة) */
 function tdCatOpts(list){
-  return (list||tdScopeCats()).map(function(c){
-    return [tdEnsureGroup(c.id),c.branch+' \u203a '+tdCatLabel(c)];
+  var out=[],gs=TDX().groups||[];
+  (list||tdScopeCats()).forEach(function(c){
+    var mine=gs.filter(function(x){return x.catId===c.id;});
+    mine.forEach(function(gg){out.push([gg.id,c.branch+' \u203a '+tdCatLabel(c)+(mine.length>1?' — '+gg.name:'')]);});
   });
+  return out;
 }
 function tdSaveCat(pfx){
   pfx=pfx||'tdst-c';
@@ -17397,7 +17402,6 @@ function tdSaveCat(pfx){
     c.grade=gv(pfx+'grade')||c.grade||'';
     c.years=[parseInt(year,10),parseInt(year,10)+1];
     c.days=gv(pfx+'days')||c.days||'';c.coachId=gv(pfx+'coach')||'';
-    tdEnsureGroup(c.id);
     t.groups.forEach(function(gg){if(gg.catId===c.id){gg.branch=branch;gg.cat=name;}});
     t.players.forEach(function(p){var gg=tdGroup(p.groupId);if(gg&&gg.catId===c.id){p.branch=branch;p.cat=name;p.catId=c.id;}});
     if(oldB!==branch)logA('نقل فئة بين الفروع: '+name,'edit','#1565c0');
@@ -22148,7 +22152,35 @@ function tpToggle(id){TP.open[id]=!TP.open[id];if(adbInTD())rTDSched();else adbR
 function tpRow(icn,label,val){return '<div class="tp-row"><span class="tp-k">'+ic(icn,13)+' '+label+'</span><span class="tp-v">'+val+'</span></div>';}
 function tpList(arr,empty){return arr.length?arr.map(esc).join('، '):'<span style="color:var(--gray)">'+(empty||'—')+'</span>';}
 /* ---------- البرامج التدريبية: بطاقة لكل فترة ---------- */
+/* حصص بلا فترة ولا ملعب ولا لاعبين = بقايا إنشاء تلقائي قديم — تُحذف */
+function tpCleanOrphans(bn){
+  var t=TDX(),gone=[];
+  t.groups=(t.groups||[]).filter(function(gg){
+    if(gg.branch!==bn||gg.periodId||gg.pitchId)return true;
+    if((t.players||[]).some(function(p){return p.groupId===gg.id;}))return true;
+    if((t.plans||[]).some(function(x){return x.groupId===gg.id;})||(t.friendlies||[]).some(function(x){return x.groupId===gg.id;}))return true;
+    gone.push(gg.name||gg.cat||'');return false;
+  });
+  if(gone.length){logA('حذف حصص بلا فترة ('+ceN(gone.length)+') — '+bn,'trash','#DD1D45');sv();}
+  return gone.length;
+}
+function tpDelOrphans(bn){
+  var n=tpSlotsOf(bn,'').length;
+  askConfirm('حذف كل الحصص بلا فترة في '+bn+' ('+ceN(n)+')؟\nالحصص التي فيها لاعبون لا تُحذف.',function(){
+    var t=TDX(),kept=0;
+    t.groups=(t.groups||[]).filter(function(gg){
+      if(gg.branch!==bn||gg.periodId)return true;
+      if((t.players||[]).some(function(p){return p.groupId===gg.id;})){kept++;return true;}
+      t.plans=(t.plans||[]).filter(function(x){return x.groupId!==gg.id;});
+      t.friendlies=(t.friendlies||[]).filter(function(x){return x.groupId!==gg.id;});
+      return false;
+    });
+    logA('حذف الحصص بلا فترة — '+bn,'trash','#DD1D45');sv();adbRender();
+    addN('تم الحذف',kept?ceN(kept)+' حصة فيها لاعبون بقيت':'حُذفت كل الحصص بلا فترة','success');
+  });
+}
 function tpProgramsHTML(bn,edit){
+  if(edit)try{tpCleanOrphans(bn);}catch(e){}
   var prs=tdPeriods(bn),h='';
   var orphan=tpSlotsOf(bn,'');
   if(!prs.length&&!orphan.length)return emptyBox('cal','لا توجد برامج تدريبية في هذا الفرع',edit?'أضف الفترات والملاعب والفئات ثم كوّن الحصص':'');
@@ -22162,6 +22194,7 @@ function tpProgramsHTML(bn,edit){
       +'<small><span dir="ltr">'+(pr?fmtRange12(pr.t1,pr.t2):'—')+'</span>'+(pr&&TDDAYS[pr.days]?' • '+TDDAYS[pr.days]:'')+'</small></div>';
     h+='<span class="tp-chip">'+ic('users',11)+' <span dir="ltr">'+ceN(i.n)+(i.cap?' / '+ceN(i.cap):'')+'</span> مشترك</span>';
     h+='<span class="tp-chip">'+ic('cal',11)+' '+ceN(i.slots.length)+' حصة</span>';
+    if(edit&&!pr)h+='<span class="uacts" onclick="event.stopPropagation()"><button class="udel" title="حذف كل الحصص بلا فترة" onclick="tpDelOrphans(\''+jq(bn)+'\')">'+ic('trash',13)+'</button></span>';
     if(edit&&pr)h+='<span class="uacts" onclick="event.stopPropagation()"><button class="udel uedit" title="إضافة حصة في هذه الفترة" onclick="tpAddSlot(\''+pr.id+'\')">'+ic('plus',13)+'</button><button class="udel uedit" title="تعديل الفترة" onclick="tpEditPeriod(\''+pr.id+'\')">'+ic('edit',13)+'</button></span>';
     h+='<span class="tp-cv">'+ic('chevron',14)+'</span>';
     h+='</div>';
@@ -25403,7 +25436,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.25-att3</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.25-clean</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
