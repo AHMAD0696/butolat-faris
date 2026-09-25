@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.25-purge">
+<meta name="build" content="2026.09.25-login">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3592,7 +3592,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.25-purge</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.25-login</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -7144,14 +7144,17 @@ function acCreateUserFromRec(x){
   var u={id:'u_'+(x.rec?x.rec.id:x.c.id),name:name,username:username,role:'coach',team:brs[0]||'',phone:normPhone((x.rec?x.rec.phone:x.c.phone)||''),
          coachId:(x.rec?x.rec.id:x.c.id),password:pin,pinSet:!!pin,src:'auto',at:Date.now(),
          assign:[{id:uid(),sys:'td',role:'coach',scope:brs.slice()},{id:uid(),sys:'ce',role:'coach',scope:brs.slice()},{id:uid(),sys:'app',role:'team-coach',scope:brs.slice()}]};
+  /* حساب جديد بلا رمز معروف: لا يُدفع للخادم إلا برمز حقيقي (دفعُه برمز افتراضي كان يلغي رموز المدربين الحقيقية) */
+  if(!pin){pin=String(1000+Math.floor(Math.random()*9000));u.password=pin;u.pinSet=true;u.pinAuto=true;}
   DB.users.push(u);
   if(x.rec&&!x.rec.user)x.rec.user=username;
-  if(FA.enabled&&FA.token){try{faSync(FA.upsertUser(u,pin||'0000'));}catch(e){}}
-  logA('إنشاء حساب مدرب من سجله: '+name+(pin?'':' (بلا رمز — يُعيَّن من بطاقة الحساب)'),'user-plus','#16a34a');
+  if(FA.enabled&&FA.token){try{faSync(FA.upsertUser(u,pin));}catch(e){}}
+  logA('إنشاء حساب مدرب من سجله: '+name+' — اسم الدخول: '+username+' — الرمز المؤقت: '+pin,'user-plus','#16a34a');
   return u;
 }
+var AC_ALLOW_CREATE=false;
 function acApplyRecItem(x){
-  if(x.kind==='new-app'||x.kind==='new-td'){var u=acCreateUserFromRec(x);acUnifyUser(u);return 1;}
+  if(x.kind==='new-app'||x.kind==='new-td'){if(!AC_ALLOW_CREATE)return 0;var u=acCreateUserFromRec(x);acUnifyUser(u);return 1;}
   if(x.kind==='link-app'){
     var u1=x.u;if(!u1.coachId)u1.coachId=x.c.id;
     if(!u1.assign)u1.assign=[];
@@ -7186,6 +7189,7 @@ function acUnifyScan(){
   return need;
 }
 function acUnifyAll(silent){
+  AC_ALLOW_CREATE=false;
   var need=acUnifyScan(),n=0;
   need.forEach(function(x){if(x.rec)n+=acApplyRecItem(x.rec);else n+=acUnifyUser(x.u);});
   if(n){logA('توحيد الحسابات عبر الأنظمة: '+ceN(need.length)+' حساباً','users','#16a34a');}
@@ -7195,11 +7199,33 @@ function acUnifyAll(silent){
   }
   return need.length;
 }
+function acCreateMissing(){
+  var items=acUnifyScan().filter(function(x){return x.rec&&(x.rec.kind==='new-app'||x.rec.kind==='new-td');});
+  if(!items.length)return;
+  askConfirm('إنشاء '+ceN(items.length)+' حساب مدرب برموز مؤقتة عشوائية؟\nستجد الرمز المؤقت لكل حساب في سجل النشاط، ويمكن تغييره من بطاقة الحساب.',function(){
+    AC_ALLOW_CREATE=true;var n=0;
+    try{items.forEach(function(x){n+=acApplyRecItem(x.rec);});}finally{AC_ALLOW_CREATE=false;}
+    sv();rADUsers();addN('أُنشئت الحسابات',ceN(n)+' حساباً — الرموز المؤقتة في سجل النشاط','success');
+  });
+}
+/* إصلاح: الحسابات التي أنشأتها النسخة السابقة تلقائياً برمز افتراضي تُحذف (محلياً ومن الخادم)
+   لأنها كانت تتعارض مع حسابات المدربين الحقيقية عند الدخول */
+var AC_REPAIRED=false;
+function acRepairAuto(){
+  if(AC_REPAIRED)return 0;AC_REPAIRED=true;
+  var bad=(DB.users||[]).filter(function(u){return u.src==='auto'&&!u.pinAuto;});
+  if(!bad.length)return 0;
+  DB.users=DB.users.filter(function(u){return !(u.src==='auto'&&!u.pinAuto);});
+  bad.forEach(function(u){if(FA.enabled&&FA.token){try{faSync(FA.deleteUser(u.id));}catch(e){}}});
+  logA('حذف حسابات تلقائية متعارضة ('+ceN(bad.length)+'): '+bad.map(function(u){return u.name;}).join('، '),'trash','#DD1D45');
+  sv();
+  return bad.length;
+}
 var AC_UNIFIED=false;
 /* عند دخول مدير النظام: توحيد صامت مرة في الجلسة */
 function acAutoUnify(){
   if(AC_UNIFIED||!CU||CU.role!=='admin')return;AC_UNIFIED=true;
-  setTimeout(function(){try{acUnifyAll(true);}catch(e){console.warn('acAutoUnify',e);}},700);
+  setTimeout(function(){try{acRepairAuto();}catch(e){}try{acUnifyAll(true);}catch(e){console.warn('acAutoUnify',e);}},700);
 }
 function adUnifyHTML(){
   var need=acUnifyScan();
@@ -7210,7 +7236,9 @@ function adUnifyHTML(){
     h+=need.slice(0,6).map(function(x){return '<span class="badge pending" style="font-size:9.5px;margin:2px">'+esc(x.u.name)+' — '+esc(x.miss[0])+'</span>';}).join('')+(need.length>6?' …':'');
   }
   h+='</div></div>';
-  if(need.length)h+='<button class="btn btn-r btn-sm" style="flex:none" onclick="acUnifyAll()">'+ic('refresh',12)+' توحيد الآن</button>';
+  if(need.length)h+='<button class="btn btn-r btn-sm" style="flex:none" onclick="acUnifyAll()">'+ic('refresh',12)+' ربط الآن</button>';
+  var newN=need.filter(function(x){return x.rec&&(x.rec.kind==='new-app'||x.rec.kind==='new-td');}).length;
+  if(newN)h+='<button class="btn btn-o btn-sm" style="flex:none" onclick="acCreateMissing()">'+ic('user-plus',12)+' إنشاء الحسابات الناقصة ('+ceN(newN)+')</button>';
   h+='</div>';
   return h;
 }
@@ -25470,7 +25498,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.25-purge</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.25-login</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
