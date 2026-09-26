@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.26-p0c">
+<meta name="build" content="2026.09.27-p1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3593,7 +3593,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.26-p0c</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-p1</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4844,10 +4844,8 @@ var FA={
     return self.sb.rpc('fa_public_state').then(function(r){
       if(r.error)throw r.error;
       return r.data||null;
-    }).catch(function(){
-      return self.sb.from('fa_state').select('data').eq('id',1).single().then(function(r){
-        if(r.error)throw r.error; return r.data?r.data.data:null;
-      });
+    }).catch(function(e){
+      throw e;   /* لا قراءة مباشرة للجدول — مغلق بـ RLS، والدالة العامة هي المصدر الوحيد قبل الدخول */
     });
   },
   saveState:function(state){
@@ -5002,6 +5000,7 @@ var FA={
 /* strip secrets (PINs) before pushing the public state blob */
 function cloudState(db){
   var c=JSON.parse(JSON.stringify(db));
+  delete c._me;delete c._public;   /* حقول يضيفها الخادم للقراءة فقط */
   (c.users||[]).forEach(function(u){delete u.password;});
   (c.joinReqs||[]).forEach(function(r){delete r.pin;});
   (c.resetReqs||[]).forEach(function(r){delete r.code;});
@@ -6339,7 +6338,7 @@ function goPhone(){
 
 /* ---- إضافة رقم الجوال بعد الدخول ---- */
 function needPhone(){
-  if(!CU)return false;
+  if(!CU||CU.role==='player')return false;   /* جوال اللاعب اختياري ولا يُحفظ من جهازه */
   var u=(DB.users||[]).find(function(x){return x.id===CU.id;});
   if(!u)return false;
   return !(u.phoneVerified&&phoneOK(u.phone))||!u.pinSet;
@@ -6524,73 +6523,24 @@ function goNid(){
   var raw=gv('l-nid');
   if(!nidOK(raw)){trc('رقم غير صالح');nameErr('أدخل رقم هوية صحيح (١٠ أرقام)');return;}
   if(faNoCloud()){nameErr('هذه النسخة غير متصلة بقاعدة البيانات — افتح الموقع من رابطه الرسمي');return;}
-  var p=findPlayerByNid(raw);
-  trc('البحث المحلي: '+(p?'وُجد '+(p.name||''):'غير موجود'));
-  if(p){nidProceed(p);return;}
-  /* غير موجودة في النسخة الحالية: قد يكون المدرب سجّلها للتو من جهاز آخر.
-     نجلب أحدث نسخة — مع مهلة قصوى حتى لا يعلق الزر إن لم يردّ الخادم. */
-  if(FA.enabled){
-    lsBusy(true);
-    var done=false;
-    var finish=function(reason){
-      if(done)return;done=true;
-      lsBusy(false);
-      var p2=findPlayerByNid(raw);
-      if(p2){var t=document.getElementById('vf-toast');if(t)t.style.display='none';nidProceed(p2);return;}
-      if(reason==='timeout'){
-        nameErr('تعذّر الوصول لقاعدة البيانات — تحقق من الإنترنت وحاول مجدداً');
-      }else{
-        var st2=nidStats();
-        if(st2.total===0)
-          nameErr('لم تصل بيانات اللاعبين لهذا الجهاز — حدّث الصفحة وحاول مجدداً');
-        else if(st2.withNid===0)
-          nameErr('الخادم لا يرسل أرقام الهوية لشاشة الدخول ('+(NIDSRC||'?')+') — راجع إدارة الأكاديمية');
-        else
-          nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');
-      }
-    };
-    setTimeout(function(){if(!done)trc('انتهت المهلة (9ث) بلا حسم');finish('timeout');},9000);
-    /* ١) الأفضل: سؤال الخادم مباشرة — لا يحتاج تنزيل أي بيانات */
-    trc('سؤال الخادم (fa_player_check)…');
-    FA.playerCheck(raw).then(function(res){
-      trc('رد الخادم: '+JSON.stringify(res||null).slice(0,80));
-      if(done)return;
-      if(res&&res.found){
-        done=true;lsBusy(false);
-        var t=document.getElementById('vf-toast');if(t)t.style.display='none';
-        /* أدرج اللاعب في الذاكرة ليكمل مسار التفعيل المعتاد */
-        DB.td=DB.td||{};DB.td.players=DB.td.players||[];
-        var exists=DB.td.players.some(function(x){return normNid(x.nid)===normNid(raw);});
-        if(!exists)DB.td.players.push({id:res.pid||('srv_'+normNid(raw)),name:res.name||'',
-                                       nid:normNid(raw),dob:res.dob||'',branch:res.team||''});
-        var pS=findPlayerByNid(raw);
-        if(pS){nidProceed(pS);return;}
-      }
-      if(res&&res.found===false){
-        done=true;lsBusy(false);
-        nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');
-      }
-    }).catch(function(e){ trc('خطأ الخادم: '+((e&&e.message)||e)); });
-    /* ٢) بديل: تحميل متعدد المصادر */
-    try{
-      var pr=FA.loadForLogin();
-      if(pr&&pr.then){
-        pr.then(function(res){
-          var st=res&&res.st;
-          NIDSRC=(res&&res.src)||'?';
-          if(st&&st.tournaments){
-            try{
-              /* دمج آمن: نأخذ اللاعبين من المصدر الجديد دون إفساد الجلسة */
-              var m=migrate(st);
-              if(m)DB=m;
-            }catch(e){}
-          }
-        }).catch(function(){}).then(function(){finish('loaded');});
-      }else finish('loaded');
-    }catch(e){finish('loaded');}
-    return;
-  }
-  nameErr('رقم الهوية غير مسجّل — تواصل مع إدارة الأكاديمية');
+  /* شاشة الدخول لا تحمل بيانات أي لاعب: الخادم وحده يجيب «موجود؟ مفعّل؟» */
+  lsBusy(true);
+  var done=false;
+  setTimeout(function(){if(done)return;done=true;lsBusy(false);trc('انتهت المهلة');nameErr('تعذّر الوصول لقاعدة البيانات — تحقق من الإنترنت وحاول مجدداً');},12000);
+  trc('سؤال الخادم (fa_player_check)…');
+  FA.playerCheck(raw).then(function(res){
+    if(done)return;done=true;lsBusy(false);
+    trc('رد الخادم: '+JSON.stringify(res||null).slice(0,60));
+    var t=document.getElementById('vf-toast');if(t)t.style.display='none';
+    if(!res||!res.found){nameErr('رقم الهوية غير مسجّل — تأكد من الرقم أو تواصل مع إدارة الأكاديمية');return;}
+    nidProceed({id:(res.pid||('srv_'+normNid(raw))),nid:normNid(raw),name:res.name||'',dob:'',active:!!res.active});
+  }).catch(function(e){
+    if(done)return;done=true;lsBusy(false);
+    var em=String(e&&e.message||e||'');trc('خطأ الخادم: '+em);
+    if(/locked/.test(em))nameErr('أُوقفت المحاولات مؤقتاً لهذا الرقم — انتظر ١٥ دقيقة ثم أعد المحاولة');
+    else if(/Could not find|PGRST/.test(em))nameErr('خلل في إعداد الخادم — أبلغ مدير النظام');
+    else nameErr('تعذّر الاتصال بالخادم — تحقق من الإنترنت ثم أعد المحاولة');
+  });
 }
 function nidProceed(p){
   lsBusy(false);
@@ -6608,34 +6558,20 @@ function nidProceed(p){
     }
     return;
   }
-  var acc=playerAccount(p.id);
-  if(acc&&acc.pinSet){
-    var nEl=g('l-name');if(nEl)nEl.value=acc.username||acc.name;
-    goPin();
-    return;
-  }
-  /* نسأل الخادم: هل فُعِّل حسابه من قبل؟ بيانات الحسابات لا تصل لشاشة الدخول */
   if(FA.enabled){
-    lsBusy(true);
-    trc('فحص وجود حساب سابق…');
-    FA.playerHasAccount(p.nid||'').then(function(has){
-      lsBusy(false);
-      trc('له حساب؟ '+(has?'نعم → شاشة الرمز':'لا → التفعيل'));
-      if(has){nidPinPrompt(p);return;}
-      NIDFLOW={pid:p.id,step:1};trc('فتح نافذة التفعيل');openNidActivate(p);
-    }).catch(function(e){
-      lsBusy(false);
-      trc('فحص الحساب تعذّر ('+((e&&e.message)||'?')+') → التفعيل');
-      NIDFLOW={pid:p.id,step:1};openNidActivate(p);
-    });
+    /* الخادم قال إن كان الحساب مفعّلاً: رمز، وإلا تفعيل أول مرة */
+    if(p.active){trc('مفعّل → شاشة الرمز');nidPinPrompt(p);return;}
+    NIDFLOW={pid:p.id,step:1,nid:normNid(p.nid||''),p:p};trc('فتح نافذة التفعيل');openNidActivate(p);
     return;
   }
+  var acc=playerAccount(p.id);
+  if(acc&&acc.pinSet){var nEl=g('l-name');if(nEl)nEl.value=acc.username||acc.name;goPin();return;}
   NIDFLOW={pid:p.id,step:1};
   openNidActivate(p);
 }
 /* شاشة إدخال الرمز للاعب مفعَّل — تتحقق عبر الخادم */
 function nidPinPrompt(p){
-  NIDFLOW={pid:p.id,step:3,nid:normNid(p.nid||'')};
+  NIDFLOW={pid:p.id,step:3,nid:normNid(p.nid||''),p:p};
   g('na-av').textContent=ti(p.name||'');
   g('na-nm').textContent='تسجيل الدخول';
   var h='<div class="ped-note free">'+ic('check',14)+'<div><b>'+esc(p.name||'')+'</b><br>أدخل رمزك السري للدخول.</div></div>';
@@ -6647,24 +6583,31 @@ function nidPinPrompt(p){
   g('naMod').classList.add('open');
   setTimeout(function(){var e=g('na-lpin');if(e)e.focus();},150);
 }
+/* دخول اللاعب بعد نجاح الخادم: رمز جلسة ← تحميل بياناته هو فقط ← الدخول */
+function playerSessionStart(res,nid,onErr){
+  FA.token=res.token||null;
+  CU={id:res.id,name:res.name||'',username:res.username||nid,role:'player',pid:res.pid,team:res.team||'',nid:nid};
+  loadShow('جارٍ تحميل بياناتك…',res.name||'');
+  var go=function(){closeNidAct();try{sessSave();}catch(e){}loginOK();};
+  if(!FA.token){go();return;}
+  FA.loadState().then(function(st){if(st&&st.tournaments)DB=migrate(st)||DB;go();})
+    .catch(function(e){loadHide();if(onErr)onErr('تعذّر تحميل بياناتك — '+String(e&&e.message||e).slice(0,80));});
+}
 function nidDoLogin(){
   var pin=gv('na-lpin');
   if(!/^[0-9]{4}$/.test(pin)){g('na-lerr').textContent='الرمز 4 أرقام';fl('na-lerr');return;}
   FA.playerLogin(NIDFLOW.nid,pin).then(function(res){
     if(!res||!res.ok){g('na-lerr').textContent='الرمز غير صحيح';fl('na-lerr');return;}
-    closeNidAct();
-    CU={id:res.id,name:res.name,username:res.username,role:'player',pid:res.pid,team:res.team||'',nid:NIDFLOW.nid};
-    sessSave&&sessSave();
-    loginOK();
-  }).catch(function(){g('na-lerr').textContent='تعذّر الاتصال — حاول مجدداً';fl('na-lerr');});
+    playerSessionStart(res,NIDFLOW.nid,function(m){g('na-lerr').textContent=m;fl('na-lerr');});
+  }).catch(function(e){var em=String(e&&e.message||e||'');g('na-lerr').textContent=/locked/.test(em)?'أُوقفت المحاولات ١٥ دقيقة بعد محاولات خاطئة':'تعذّر الاتصال — حاول مجدداً';fl('na-lerr');});
 }
 /* شاشة واحدة لأول دخول: الحساب موجود أصلاً منذ تسجيل بيانات اللاعب،
    فلا «تفعيل» ولا «إنشاء حساب» — فقط تأكيد الميلاد واختيار رمز. */
 function openNidActivate(p){
-  g('na-av').textContent=ti(p.name);
+  g('na-av').textContent=p.name?ti(p.name):'؟';
   g('na-nm').textContent='أول دخول لك';
   var h='';
-  h+='<div class="ped-note free">'+ic('check',14)+'<div><b>'+esc(p.name||'')+'</b><br>'
+  h+='<div class="ped-note free">'+ic('check',14)+'<div><b>'+esc(p.name||('هوية '+normNid(p.nid||'')))+'</b><br>'
     +'حسابك جاهز لدى الأكاديمية. أكّد تاريخ ميلادك واختر رمزاً سرياً تدخل به في المرات القادمة.</div></div>';
   var dOpts='<option value="">اليوم</option>',mOpts='<option value="">الشهر</option>',yOpts='<option value="">السنة</option>';
   for(var d=1;d<=31;d++)dOpts+='<option value="'+d+'">'+d+'</option>';
@@ -6688,7 +6631,7 @@ function openNidActivate(p){
 }
 function closeNidAct(){g('naMod').classList.remove('open');NIDFLOW={pid:null,step:0};}
 function nidFinish(){
-  var p=anyPlayer(NIDFLOW.pid);if(!p){closeNidAct();return;}
+  var p=anyPlayer(NIDFLOW.pid)||NIDFLOW.p;if(!p){closeNidAct();return;}
   /* ١) تأكيد الميلاد — الخادم يعيد التحقق منه أيضاً، هذا فحص مبكر للمستخدم */
   var dd=gv('na-dd'),dm=gv('na-dm'),dy=gv('na-dy');
   if(!dd||!dm||!dy){g('na-err2').textContent='اختر يوم وشهر وسنة ميلادك';fl('na-err2');return;}
@@ -6718,19 +6661,19 @@ function nidFinish(){
       if(!res||!res.ok){
         var m={nid:'رقم الهوية غير صحيح',pin:'الرمز يجب أن يكون 4 أرقام',
                notfound:'رقم الهوية غير مسجّل',nodob:'تاريخ ميلادك غير مسجّل لدى الأكاديمية — راجع الإدارة',
-               dob:'تاريخ الميلاد غير مطابق',state:'تعذّر الوصول لقاعدة البيانات'};
+               dob:'تاريخ الميلاد غير مطابق',state:'تعذّر الوصول لقاعدة البيانات',
+               exists:'حسابك مفعّل مسبقاً — ادخل برمزك السري، أو اطلب «نسيت الرمز»',
+               locked:'أُوقفت المحاولات مؤقتاً — انتظر ١٥ دقيقة'};
         g('na-err2').textContent=(res&&m[res.err])||'تعذّر الدخول — حاول مجدداً';
         fl('na-err2');return;
       }
-      closeNidAct();
-      /* دخول مباشر */
-      CU={id:'pu_'+normNid(p.nid),name:res.name||p.name,username:normNid(p.nid),role:'player',
-          pid:res.pid||p.id,team:res.team||'',nid:normNid(p.nid)};
-      try{sessSave();}catch(e){}
       addN('أهلاً بك '+(res.name||p.name||''),'في المرات القادمة ادخل برقم هويتك ورمزك السري','success');
-      loginOK();
+      playerSessionStart(res,normNid(p.nid),function(m){g('na-err2').textContent=m;fl('na-err2');});
+      /* الجوال اختياري: يُحفظ في حساب اللاعب بالخادم إن أمكن */
+      if(ph&&res.token)setTimeout(function(){try{FA.updateProfile(res.id,res.name||'',res.username||normNid(p.nid),res.team||'',ph).catch(function(){});}catch(e){}},1500);
     }).catch(function(e){
-      g('na-err2').textContent='تعذّر الاتصال بالخادم — تحقق من الإنترنت';fl('na-err2');
+      var em=String(e&&e.message||e||'');
+      g('na-err2').textContent=/locked/.test(em)?'أُوقفت المحاولات مؤقتاً — انتظر ١٥ دقيقة':'تعذّر الاتصال بالخادم — تحقق من الإنترنت';fl('na-err2');
     });
     return;
   }
@@ -6975,6 +6918,9 @@ function sessRestore(){
      الرمز نفسه تحقّق منه الخادم في faBoot عبر fa_load_state */
   if(FA.enabled&&!v.token){sessClear();return false;}
   var u=(DB.users||[]).find(function(x){return x.id===v.uid;});
+  /* الدور والهوية من الخادم (_me) لا من كتلة البيانات — لا ترقية ذاتية من العميل */
+  var me=DB._me;
+  if(me&&me.id===v.uid){u=Object.assign({},u||{},{id:me.id,name:me.name||(u&&u.name)||'',username:me.username||(u&&u.username)||'',role:me.role,team:me.team||'',coachId:me.coachId||(u&&u.coachId)||'',pid:me.pid||(u&&u.pid)||''});}
   if(!u){return false;}
   CU=Object.assign({},u);
   if(v.token)FA.token=v.token;
@@ -25805,7 +25751,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.26-p0c</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-p1</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
