@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.26-p0b">
+<meta name="build" content="2026.09.26-p0c">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3593,7 +3593,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.26-p0b</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.26-p0c</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4532,12 +4532,12 @@ function faProbe(kb){
    (عبر وصف OpenAPI الذي يقدّمه PostgREST) ويعرض المفقود واختلاف أسماء المعاملات
    قبل أن يظهر كخطأ في منتصف العمل.
 ========================================================================== */
-var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_get":["p_system","p_token"],"fa_players_count":["p_token"],"fa_entries_upsert":["p_rows","p_token"],"fa_entries_remove":["p_id","p_token"],"fa_player_tours":["p_player","p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit":["p_dob","p_nid","p_resp"],"fa_lookup":["p_id"],"fa_public_state":[]};
+var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit":["p_dob","p_nid","p_resp"],"fa_lookup":["p_id"],"fa_public_state":[]};
 var FA_RPC_CRIT=['fa_load_state','fa_save_state','fa_state_rev','fa_login'];
 var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)'};
 var FA_SRV={at:0,res:null};
 /* دوال يُؤمَن استدعاؤها بقيم فارغة (تفحص الرمز أو تعيد فراغاً ولا تكتب شيئاً) */
-var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_tours','fa_players_get','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile','fa_entries_remove'];
+var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile'];
 /* الفحص الحقيقي: استدعاء فعلي بأسماء المعاملات التي يستخدمها التطبيق — PGRST202 = غير موجودة أو بمعاملات مختلفة.
    (مواصفة OpenAPI وحدها كانت تعطي إنذاراً كاذباً «كل الدوال مفقودة» حين لا يعرضها الخادم) */
 function faProbeRpc(fn){
@@ -25805,7 +25805,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.26-p0b</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.26-p0c</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
