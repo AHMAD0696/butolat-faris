@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.26-sync3">
+<meta name="build" content="2026.09.26-chunks">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3592,7 +3592,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.26-sync3</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.26-chunks</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4501,7 +4501,29 @@ function faMergeStates(remote,local){
    تبقى في الذاكرة وعلى الجهاز، والمزامنة تُعاد تلقائياً بلا مقاطعة،
    والسبب يُسجَّل في وحدة التحكم وفي صفحة صحة البيانات. */
 var FA_SYNC={lastErr:'',conflicts:0,at:0,log:[],okAt:0,okKB:0};
+var FA_CHUNK_AT=600*1024,FA_CHUNK_SIZE=200*1024;   /* فوق 600 ك.ب يُرسل على أجزاء 200 ك.ب */
 /* سجل كل محاولة حفظ: الوقت والحجم والنتيجة — يظهر في صحة البيانات وفي شارة المزامنة */
+/* فشل على مستوى الشبكة (Failed to fetch): نفحص اتصالاً صغيراً بالخادم لنفرّق بين انقطاع الإنترنت
+   وبين رفض الشبكة/الجدار الناري لرفع كبير الحجم — ونعرض السبب والأقسام الأثقل */
+var FA_PROBE={at:0};
+function faProbe(kb){
+  if(!FA.enabled||!FA.sb||Date.now()-FA_PROBE.at<20000)return;FA_PROBE.at=Date.now();
+  FA.sb.rpc('fa_state_rev',{p_token:FA.token}).then(function(r){
+    var okSmall=!(r&&r.error);
+    var parts=[];
+    try{var st=cloudState(DB);Object.keys(st).forEach(function(k){var n=JSON.stringify(st[k]).length;if(n>50000)parts.push([k,Math.round(n/1024)]);});parts.sort(function(a,b){return b[1]-a[1];});}catch(e){}
+    var names={td:'الإدارة الفنية',tournaments:'البطولات',teams:'الفرق',users:'الحسابات',nt:'منتخب فارس',ce:'تقييم المدربين',actLog:'سجل النشاط',wel:'صفحة البدء',settings:'الإعدادات'};
+    var big=parts.slice(0,3).map(function(x){return (names[x[0]]||x[0])+' '+x[1]+' ك.ب';}).join('، ');
+    if(okSmall&&!FA._chunksNA)FA._useChunks=true;   /* المحاولة التالية على أجزاء صغيرة */
+    var msg=okSmall
+      ?(FA._chunksNA?'الاتصال سليم لكن رفع '+ceN(kb)+' ك.ب دفعة واحدة يُقطع — فعّل الحفظ المجزّأ بتنفيذ ملف fa_save_chunks.sql في Supabase. الأثقل: '+big
+                    :'الاتصال سليم لكن الرفع الكبير يُقطع — سيُعاد الحفظ على أجزاء صغيرة الآن. الأثقل: '+big)
+      :'لا يوجد اتصال بالخادم حالياً (حتى الطلبات الصغيرة تفشل) — تحقق من الإنترنت أو حظر الموقع في هذه الشبكة';
+    FA_SYNC.lastErr=msg;
+    try{syncFailBanner(msg,kb);}catch(e){}
+    try{faSyncLog(false,msg,kb,0);}catch(e){}
+  }).catch(function(){});
+}
 function faSyncLog(ok,msg,kb,ms){
   FA_SYNC.log.unshift({at:Date.now(),ok:!!ok,msg:String(msg||''),kb:kb||0,ms:ms||0});
   if(FA_SYNC.log.length>12)FA_SYNC.log.length=12;
@@ -4747,7 +4769,13 @@ var FA={
     return pre.then(function(prev){
       var next=Date.now().toString(36)+Math.random().toString(36).slice(2,8);
       state._rev=next;
-      return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state,p_rev:prev}).then(function(r){
+      var big=0;try{big=JSON.stringify(state).length;}catch(e){}
+      var useChunks=!self._chunksNA&&(self._useChunks||big>FA_CHUNK_AT);
+      var send=useChunks?self._saveChunked(state,prev):self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state,p_rev:prev});
+      return send.then(function(r){
+        if(r&&r._chunksNA){self._chunksNA=true;return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state,p_rev:prev});}
+        return r;
+      }).then(function(r){
         if(r.error){
           var em=String(r.error.message||'');
           /* الدالة بثلاثة معاملات غير موجودة على هذا الخادم: الصيغة القديمة */
@@ -4768,6 +4796,21 @@ var FA={
         return true;
       });
     });
+  },
+  /* الحفظ المجزّأ: النص يُقسَّم أجزاءً صغيرة تُرسل تباعاً ثم تُجمَّع في الخادم (fa_save_chunks.sql) */
+  _saveChunked:function(state,prev){
+    var self=this,txt=JSON.stringify(state),key='k'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+    var parts=[];for(var i=0;i<txt.length;i+=FA_CHUNK_SIZE)parts.push(txt.slice(i,i+FA_CHUNK_SIZE));
+    var idx=0;
+    function next(){
+      if(idx>=parts.length)return self.sb.rpc('fa_save_state_commit',{p_token:self.token,p_key:key,p_total:parts.length,p_rev:prev});
+      var i2=idx++;
+      return self.sb.rpc('fa_save_state_part',{p_key:key,p_idx:i2,p_part:parts[i2]}).then(function(r){
+        if(r.error){var em=String(r.error.message||'');if(/Could not find the function|PGRST202/i.test(em))return {_chunksNA:true};throw r.error;}
+        return next();
+      });
+    }
+    return next().then(function(r){if(r&&!r._chunksNA)self._useChunks=true;return r;});
   },
   /* رقم النسخة وحده — استعلام خفيف */
   refreshRev:function(){
@@ -5064,7 +5107,9 @@ function cloudQueue(delay){
       faSyncLog(true,'',_kb,Date.now()-_t0);
       CQ.fails=0;CQ.dirty=false;cloudChip(false);
     }).catch(function(e){
-      faSyncLog(false,(e&&(e.message||e.code))||String(e),_kb,Date.now()-_t0);
+      var _msg=(e&&(e.message||e.code))||String(e);
+      faSyncLog(false,_msg,_kb,Date.now()-_t0);
+      if(/Failed to fetch|NetworkError|Load failed/i.test(_msg))faProbe(_kb);
       CQ.fails++;
       console.warn('[FA] مزامنة مؤجلة (محاولة '+CQ.fails+')',e&&e.message);
       if(typeof FA_SYNC!=='undefined')FA_SYNC.lastErr='خطأ شبكة/خادم: '+(e&&e.message||e);
@@ -5233,8 +5278,8 @@ function g(id){return document.getElementById(id);}
 function gv(id){var e=g(id);return e?e.value.trim():'';}
 /* معرّفات أُنشئت في هذه الجلسة — يعتمد عليها الدمج للتفريق بين
    «إضافة جديدة منا» و«أثر قديم لعنصر حذفه زميل» */
-var SESSION_NEW={};
-function uid(){var v=Date.now().toString(36)+Math.random().toString(36).slice(2,6);SESSION_NEW[v]=1;return v;}
+var SESSION_NEW=SESSION_NEW||{};
+function uid(){var v=Date.now().toString(36)+Math.random().toString(36).slice(2,6);if(!SESSION_NEW)SESSION_NEW={};SESSION_NEW[v]=1;return v;}
 function ti(n){return n?n.charAt(0):'؟';}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function gc(n){var t=(T().teams||[]).find(function(x){return x.name===n;});if(t&&t.color)return t.color;var h=0;for(var i=0;i<n.length;i++)h=((h<<5)-h)+n.charCodeAt(i);return COLS[Math.abs(h)%COLS.length];}
@@ -25522,7 +25567,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.26-sync3</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.26-chunks</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
