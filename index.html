@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.27-p1">
+<meta name="build" content="2026.09.27-p1b">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3593,7 +3593,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-p1</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-p1b</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4532,9 +4532,9 @@ function faProbe(kb){
    (عبر وصف OpenAPI الذي يقدّمه PostgREST) ويعرض المفقود واختلاف أسماء المعاملات
    قبل أن يظهر كخطأ في منتصف العمل.
 ========================================================================== */
-var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit":["p_dob","p_nid","p_resp"],"fa_lookup":["p_id"],"fa_public_state":[]};
+var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[]};
 var FA_RPC_CRIT=['fa_load_state','fa_save_state','fa_state_rev','fa_login'];
-var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)'};
+var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)'};
 var FA_SRV={at:0,res:null};
 /* دوال يُؤمَن استدعاؤها بقيم فارغة (تفحص الرمز أو تعيد فراغاً ولا تكتب شيئاً) */
 var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile'];
@@ -4990,10 +4990,12 @@ var FA={
   /* ===== تقييم اللاعب للمدرب =====
      اللاعب لا يملك صلاحية كتابة قاعدة البيانات، فالإضافة تتم على الخادم:
      الدالة تتحقق من الهوية وتاريخ الميلاد ومن عدم التكرار ثم تُلحق الإجابة. */
-  ceSubmit:function(nid,dob,payload){
+  /* تقييم اللاعب لمدربه: برمز جلسة اللاعب فقط — الخادم يحدد المدرب ويمنع التكرار */
+  ceSubmit:function(payload){
     var self=this;
     if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
-    return self.sb.rpc('fa_ce_submit',{p_nid:String(nid),p_dob:String(dob),p_resp:payload})
+    if(!self.token)return Promise.reject(new Error('no-session'));
+    return self.sb.rpc('fa_ce_submit_tok',{p_token:self.token,p_resp:payload})
       .then(function(r){if(r.error)throw r.error;return r.data||null;});
   }
 };
@@ -6588,7 +6590,7 @@ function playerSessionStart(res,nid,onErr){
   FA.token=res.token||null;
   CU={id:res.id,name:res.name||'',username:res.username||nid,role:'player',pid:res.pid,team:res.team||'',nid:nid};
   loadShow('جارٍ تحميل بياناتك…',res.name||'');
-  var go=function(){closeNidAct();try{sessSave();}catch(e){}loginOK();};
+  var go=function(){closeNidAct();try{sessSave();}catch(e){}loginOK();if(CEPUB&&CEPUB.resume){CEPUB.resume=false;setTimeout(function(){CEPUB.step=1;cePubOpen();},400);}};
   if(!FA.token){go();return;}
   FA.loadState().then(function(st){if(st&&st.tournaments)DB=migrate(st)||DB;go();})
     .catch(function(e){loadHide();if(onErr)onErr('تعذّر تحميل بياناتك — '+String(e&&e.message||e).slice(0,80));});
@@ -20647,12 +20649,10 @@ function ceSubmit(cycleId,coachId,src){
   };
   /* اللاعب لا يملك صلاحية كتابة: إجابته تُلحق على الخادم، وإلا ضاعت بصمت */
   if(src==='pl'&&FA.enabled){
-    var p=ceMyPlayerRec();
     g('ce-ferr').textContent='جارٍ الإرسال…';fl('ce-ferr');
-    FA.ceSubmit(normNid(p&&p.nid||CU.nid||''),(p&&p.dob)||'',rec).then(function(res){
+    FA.ceSubmit(rec).then(function(res){
       if(!res||!res.ok){
-        g('ce-ferr').textContent=(res&&res.err==='dup')?'سبق أن قيّمت هذا المدرب في هذه الدورة'
-          :'تعذّر إرسال التقييم — راجع إدارة الأكاديمية';
+        g('ce-ferr').textContent=ceSubmitErr(res&&res.err);
         fl('ce-ferr');return;
       }
       CEX().resp.push(rec);   /* نسخة محلية ليظهر الأثر فوراً */
@@ -21150,15 +21150,34 @@ function ceDrawQRs(){
 
 /* ==================== دخول اللاعب بالباركود ==================== */
 var CEPUB={branch:'',pid:'',coachId:'',step:1};
+function ceSubmitErr(k){
+  var m={dup:'سبق أن قيّمت هذا المدرب في هذه الدورة',coach:'هذا ليس مدرب مجموعتك — التقييم لمدربك فقط',nocoach:'لم يُعيَّن مدرب لمجموعتك بعد — راجع إدارة الفرع',
+         closed:'انتهت فترة التقييم',nocycle:'لا يوجد تقييم مفتوح',role:'التقييم للاعبين فقط — ادخل بحساب اللاعب',notfound:'سجلك غير موجود — راجع إدارة الفرع'};
+  return m[k]||'تعذّر إرسال التقييم — راجع إدارة الأكاديمية';
+}
 function ceCheckLink(){
   var m=/[?&]ce=([^&]+)/.exec(location.search||'');
   if(!m)return false;
   var bid=decodeURIComponent(m[1]);
+  /* الفروع لا تصل للزائر قبل الدخول — الاسم يُعرف بعد دخول اللاعب */
   var b=(TDX().branches||[]).find(function(x){return x.id===bid;});
-  if(!b)return false;
-  CEPUB={branch:b.name,pid:'',coachId:'',step:1};
+  CEPUB={branchId:bid,branch:b?b.name:'',pid:'',coachId:'',step:1};
   cePubOpen();
   return true;
+}
+/* بعد دخول اللاعب (من الباركود): نكمل من مجموعته ومدربه */
+function cePubAfterLogin(){
+  if(!CU||CU.role!=='player')return;
+  var p=ceMyPlayerRec();
+  if(!p){CEPUB.step=1;CEPUB.err='سجلك غير موجود في الإدارة الفنية — راجع إدارة الفرع';cePubRender();return;}
+  CEPUB.pid=p.id;
+  var b=(TDX().branches||[]).find(function(x){return x.id===CEPUB.branchId;});
+  CEPUB.branch=(b&&b.name)||p.branch||CEPUB.branch;
+  var myCo=cePlayerCoach(p);
+  if(myCo){CEPUB.coachId=myCo.id;CEPUB.step=3;}
+  else{CEPUB.step=1;CEPUB.err='لم يُعيَّن مدرب لمجموعتك بعد — راجع إدارة الفرع';}
+  CEEVAL={coachId:CEPUB.coachId,ans:{},note:'',open:''};
+  cePubRender();
 }
 function cePubOpen(){
   var m=g('cePub');if(!m)return;
@@ -21172,28 +21191,28 @@ function cePubClose(){
 function cePubRender(){
   var body=g('cepub-body'),cy=ceActiveCycle();
   var h='';
-  if(!cy||!ceCycleOpen(cy)){
+  /* قبل الدخول لا تصل دورات التقييم للزائر — الفحص بعد دخول اللاعب */
+  if((CU||CEPUB.step!==1)&&(!cy||!ceCycleOpen(cy))){
     h='<div class="ped-note warn">'+ic('info',14)+'<div><b>لا يوجد تقييم مفتوح حالياً.</b><br>راجع مدربك أو إدارة الفرع.</div></div>';
     h+='<button class="btn btn-g" style="width:100%" onclick="cePubClose()">إغلاق</button>';
     body.innerHTML=h;hydrateIcons(body);return;
   }
   if(CEPUB.step===1){
-    h+='<div class="ped-note free">'+ic('pin',14)+'<div><b>فرع '+esc(CEPUB.branch)+'</b><br>'
-      +'أدخل بياناتك للتأكد أنك لاعب في الفرع — رأيك يصل للإدارة بلا اسمك.</div></div>';
-    h+='<div class="frow" style="grid-template-columns:1fr 1fr 1fr;gap:.45rem">';
-    h+='<div class="fg req" style="margin-bottom:0"><label>اسم اللاعب *</label><input type="text" id="cpb-fn" placeholder="محمد"></div>';
-    h+='<div class="fg req" style="margin-bottom:0"><label>اسم الأب *</label><input type="text" id="cpb-mn" placeholder="عبدالله"></div>';
-    h+='<div class="fg req" style="margin-bottom:0"><label>اسم العائلة *</label><input type="text" id="cpb-ln" placeholder="الأحمد"></div></div>';
-    h+='<div style="height:.9rem"></div>';
-    h+='<div class="fg"><label>رقم الجوال *</label>'+phoneField('cpb-phone','')
-      +'<div style="font-size:10.5px;color:var(--gray);margin-top:.25rem">جوالك أو جوال ولي أمرك</div></div>';
-    var yO='<option value="">اختر السنة</option>';
-    var yN=new Date().getFullYear();
-    for(var y=yN;y>=yN-45;y--)yO+='<option value="'+y+'">'+y+'</option>';
-    h+='<div class="fg"><label>سنة الميلاد *</label><select id="cpb-y">'+yO+'</select></div>';
-    h+='<button class="btn btn-r" style="width:100%;min-height:46px" onclick="cePubVerify()">'+ic('check',14)+' متابعة</button>';
+    if(CU&&CU.role!=='player'){
+      h+='<div class="ped-note warn">'+ic('info',14)+'<div><b>هذا الجهاز مسجّل دخول باسم '+esc(CU.name||'')+'.</b><br>تقييم المدرب يكون من حساب اللاعب نفسه — سجّل الخروج ثم افتح الرابط مجدداً.</div></div>';
+      h+='<button class="btn btn-g" style="width:100%" onclick="cePubClose()">إغلاق</button>';
+      body.innerHTML=h;hydrateIcons(body);return;
+    }
+    if(CU&&CU.role==='player'){cePubAfterLogin();return;}
+    h+='<div class="ped-note free">'+ic('shield',14)+'<div><b>'+(CEPUB.branch?'فرع '+esc(CEPUB.branch):'تقييم مدربك')+'</b><br>'
+      +'ادخل بهويتك ورمزك السري — رأيك يصل للإدارة بلا اسمك.</div></div>';
+    h+='<div class="fg req"><label>رقم الهوية *</label><input type="text" id="cpb-nid" inputmode="numeric" maxlength="10" placeholder="1XXXXXXXXX" style="direction:ltr;text-align:center;letter-spacing:2px"></div>';
+    h+='<div class="fg req"><label>الرمز السري (4 أرقام) *</label><input type="password" id="cpb-pin" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:6px"></div>';
+    h+='<button class="btn btn-r" style="width:100%;min-height:46px" id="cpb-go" onclick="cePubVerify()">'+ic('check',14)+' دخول ومتابعة</button>';
+    h+='<button class="btn btn-o" style="width:100%;margin-top:.5rem" onclick="cePubActivate()">أول دخول؟ فعّل حسابك</button>';
     h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="cePubClose()">إلغاء</button>';
-    h+='<div class="msg err" id="cpb-err">تحقق من البيانات</div>';
+    h+='<div class="msg err" id="cpb-err">'+esc(CEPUB.err||'تحقق من البيانات')+'</div>';
+    if(CEPUB.err){setTimeout(function(){fl('cpb-err');CEPUB.err='';},50);}
   }else if(CEPUB.step===2){
     var list=ceCoachesOfBranch(CEPUB.branch);
     h+='<div class="ped-note free">'+ic('whistle',14)+'<div><b>اختر مدربك</b><br>الذي يدرّبك في فرع '+esc(CEPUB.branch)+'.</div></div>';
@@ -21215,7 +21234,7 @@ function cePubRender(){
     }else{
       CEEVAL={coachId:CEPUB.coachId,ans:CEEVAL.ans||{},note:'',open:CEEVAL.open||''};
       h+=ceFormHTML(cyc,co2,'pl',true).replace('ceSubmit(','cePubSubmit(');
-      h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="CEPUB.step=2;cePubRender()">رجوع</button>';
+      h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="cePubClose()">إلغاء</button>';
     }
   }else{
     h+='<div class="ped-note free">'+ic('check',14)+'<div><b>وصل تقييمك.</b><br>شكراً لك — رأيك يساعد على تطوير التدريب.</div></div>';
@@ -21269,24 +21288,34 @@ function cePubFind(fn,mn,ln,phone,year){
   return {p:cand[0]};
 }
 function cePubVerify(){
-  var fn=gv('cpb-fn'),mn=gv('cpb-mn'),ln=gv('cpb-ln');
-  var phone=phoneVal('cpb-phone'),y=gv('cpb-y');
-  var err=g('cpb-err');
-  if(!fn||!mn||!ln){err.textContent='أكمل اسمك ثلاثياً: اسمك واسم أبيك واسم عائلتك';fl('cpb-err');return;}
-  if(!phone||normPhone(phone).length<10){err.textContent='أدخل رقم جوال صحيح';fl('cpb-err');return;}
-  if(!y){err.textContent='اختر سنة ميلادك';fl('cpb-err');return;}
-  var r=cePubFind(fn,mn,ln,phone,y);
-  if(r.err==='name'){err.textContent='اسمك غير مسجّل في فرع '+CEPUB.branch+' — راجع إدارة الفرع';fl('cpb-err');return;}
-  if(r.err==='year'){err.textContent='سنة الميلاد لا تطابق المسجّل باسمك — راجع إدارة الفرع';fl('cpb-err');return;}
-  if(r.err==='many'){err.textContent='أكثر من لاعب بنفس الاسم — راجع إدارة الفرع لتأكيد بياناتك';fl('cpb-err');return;}
-  var p=r.p;
-  if(!p.nid||!p.dob){err.textContent='بياناتك غير مكتملة لدى الأكاديمية — راجع إدارة الفرع';fl('cpb-err');return;}
-  CEPUB.pid=p.id;
-  var myCo=cePlayerCoach(p);
-  if(myCo){CEPUB.coachId=myCo.id;CEPUB.step=3;}
-  else CEPUB.step=2;
-  CEEVAL={coachId:CEPUB.coachId,ans:{},note:'',open:''};
-  cePubRender();
+  var nid=normNid(gv('cpb-nid')),pin=gv('cpb-pin'),err=g('cpb-err');
+  if(!nidOK(nid)){err.textContent='أدخل رقم هوية صحيح (١٠ أرقام)';fl('cpb-err');return;}
+  if(!/^[0-9]{4}$/.test(pin)){err.textContent='الرمز 4 أرقام';fl('cpb-err');return;}
+  if(!FA.enabled){err.textContent='هذه النسخة غير متصلة بقاعدة البيانات';fl('cpb-err');return;}
+  var btn=g('cpb-go');if(btn){btn.disabled=true;btn.style.opacity='.65';}
+  FA.playerLogin(nid,pin).then(function(res){
+    if(!res||!res.ok){if(btn){btn.disabled=false;btn.style.opacity='';}err.textContent='الرمز غير صحيح — أو الحساب غير مفعّل بعد';fl('cpb-err');return;}
+    /* جلسة لاعب حقيقية ثم نكمل التقييم من مجموعته */
+    FA.token=res.token||null;
+    CU={id:res.id,name:res.name||'',username:res.username||nid,role:'player',pid:res.pid,team:res.team||'',nid:nid};
+    try{sessSave();}catch(e){}
+    FA.loadState().then(function(st){if(st&&st.tournaments)DB=migrate(st)||DB;cePubAfterLogin();})
+      .catch(function(e){if(btn){btn.disabled=false;btn.style.opacity='';}err.textContent='تعذّر تحميل بياناتك — حاول مجدداً';fl('cpb-err');});
+  }).catch(function(e){
+    if(btn){btn.disabled=false;btn.style.opacity='';}
+    var em=String(e&&e.message||e||'');
+    err.textContent=/locked/.test(em)?'أُوقفت المحاولات ١٥ دقيقة بعد محاولات خاطئة':'تعذّر الاتصال — تحقق من الإنترنت';fl('cpb-err');
+  });
+}
+/* أول دخول من الباركود: نفعّل الحساب من شاشة الدخول المعتادة ثم نعود للتقييم */
+function cePubActivate(){
+  var nid=normNid(gv('cpb-nid'));
+  CEPUB.resume=true;
+  var m=g('cePub');if(m)m.classList.remove('open');
+  try{g('WEL').classList.remove('on');g('WEL').style.display='none';}catch(e){}
+  g('LS').style.display='flex';lsMode('nid');
+  var e=g('l-nid');if(e){e.value=nid;e.focus();}
+  showErrToast('فعّل حسابك بتاريخ ميلادك ورمز تختاره، ثم يُفتح التقييم تلقائياً',7000);
 }
 function cePubPick(id){CEPUB.coachId=id;CEPUB.step=3;CEEVAL={coachId:id,ans:{},note:'',open:''};cePubRender();}
 function cePubSubmit(cycleId,coachId,src){
@@ -21294,20 +21323,18 @@ function cePubSubmit(cycleId,coachId,src){
   if(miss.length){g('ce-ferr').textContent='بقي '+ceN(miss.length)+' سؤال بلا إجابة';fl('ce-ferr');return;}
   var by='pid:'+CEPUB.pid;
   if(ceHasResp(cycleId,coachId,'pl',by)){g('ce-ferr').textContent='سبق أن قيّمت هذا المدرب';fl('ce-ferr');return;}
-  var openEl=g('ce-open'),p=anyPlayer(CEPUB.pid);
+  var openEl=g('ce-open');
   var rec={id:uid(),cycleId:cycleId,coachId:coachId,src:'pl',by:by,byName:'',per:cePeriodKey(ceCycle(cycleId)),
     ans:JSON.parse(JSON.stringify(CEEVAL.ans)),note:'',open:openEl?openEl.value.trim():'',at:Date.now()};
-  var done=function(){CEX().resp.push(rec);CEPUB.step=4;CEEVAL={coachId:'',ans:{},note:'',open:''};cePubRender();};
+  var done=function(){CEX().resp.push(rec);CEPUB.step=4;CEPUB.sending=false;CEEVAL={coachId:'',ans:{},note:'',open:''};cePubRender();};
   if(FA.enabled){
+    if(CEPUB.sending)return;CEPUB.sending=true;   /* النقر المزدوج كان يرسل مرتين */
     g('ce-ferr').textContent='جارٍ الإرسال…';fl('ce-ferr');
-    FA.ceSubmit(normNid(p&&p.nid||''),(p&&p.dob)||'',rec).then(function(res){
-      if(!res||!res.ok){
-        g('ce-ferr').textContent=(res&&res.err==='dup')?'سبق أن قيّمت هذا المدرب في هذه الدورة'
-          :'تعذّر إرسال التقييم — راجع إدارة الأكاديمية';
-        fl('ce-ferr');return;
-      }
+    FA.ceSubmit(rec).then(function(res){
+      if(!res||!res.ok){CEPUB.sending=false;g('ce-ferr').textContent=ceSubmitErr(res&&res.err);fl('ce-ferr');return;}
       done();
     }).catch(function(){
+      CEPUB.sending=false;
       g('ce-ferr').textContent='تعذّر إرسال التقييم — تحقق من الإنترنت وحاول مجدداً';fl('ce-ferr');
     });
     return;
@@ -24526,10 +24553,11 @@ function faBoot(){
       }
     }).then(function(){
       window.__FA_READY=true;
-      /* باركود تقييم المدرب: يفتح النموذج مباشرة بلا حساب */
-      try{if(ceCheckLink())return;}catch(e){}
+      /* باركود تقييم المدرب: يفتح النموذج (بجلسة اللاعب إن كانت سارية) */
+      var _ceLink=false;try{_ceLink=ceCheckLink();}catch(e){}
       /* استئناف الجلسة إن كانت سارية — قبل عرض شاشة الدخول */
-      if(sessRestore())return;
+      if(sessRestore()){if(_ceLink)setTimeout(cePubOpen,300);return;}
+      if(_ceLink)return;
       var wel=g('WEL');
       if(wel&&wel.classList.contains('on'))rWel();
       else{var e=g('l-name');if(e)e.focus();}
@@ -25751,7 +25779,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-p1</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-p1b</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
