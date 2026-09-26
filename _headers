@@ -1,0 +1,12 @@
+# Netlify — ضعه في جذر المستودع بجانب index.html (اسم الملف: _headers بلا امتداد)
+# الصفحة وملف الإعدادات يُعاد التحقق منهما في كل زيارة: لا تبقى نسخة قديمة عند المستخدمين بعد الرفع
+/index.html
+  Cache-Control: no-cache, must-revalidate
+/
+  Cache-Control: no-cache, must-revalidate
+/config.js
+  Cache-Control: no-cache, must-revalidate
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
