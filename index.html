@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.25-login2">
+<meta name="build" content="2026.09.26-sync3">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3592,7 +3592,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.25-login2</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.26-sync3</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4549,6 +4549,8 @@ var FA={
         self.loadOK=true;              /* ✅ التحميل نجح — الحفظ مسموح */
         faWarnClear();                 /* أزل أي تحذير سابق */
         try{faIndexIds(r.data);}catch(e){}
+        /* الرقم قد يكون في عمود مستقل لا داخل البيانات: نأخذه من الخادم فوراً */
+        if(!self._rev){try{self.refreshRev();}catch(e){}}
         return r.data||null;
       });
     }
@@ -4733,47 +4735,41 @@ var FA={
   },
   saveState:function(state){
     if(!this.token)return Promise.resolve(false);
-    /* 🔒 قفل الأمان: لا يُسمح بالحفظ ما لم ينجح التحميل أولاً.
-       بدونه قد تُكتب نسخة افتراضية فارغة فوق البيانات الحقيقية. */
+    /* 🔒 قفل الأمان: لا يُسمح بالحفظ ما لم ينجح التحميل أولاً. */
     if(!this.loadOK){
       console.error('[FA] ⛔ الحفظ ممنوع — لم يكتمل تحميل البيانات');
       return Promise.resolve(false);
     }
-    /* 🔒 فحص النسخة: نرسل رقم النسخة التي حمّلناها؛ لو تغيّرت في الخادم
-       (تعديل من جهاز آخر) يرفض الخادم الحفظ بدل مسح تعديلات الآخرين. */
-    var self=this, prev=self._rev||null,
-        next=Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-    state._rev=next;
-    /* خادم لا يقارن رقم النسخة (ثبت ذلك في هذه الجلسة): الحفظ بالطريقة القديمة مباشرة
-       بدل دورة رفض/دمج/إعادة لا تنتهي كانت تُبقي الشارة «بانتظار الاتصال» وتُعيد ما حُذف */
-    if(self._noRev){
-      return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state}).then(function(r0){
-        if(r0.error)throw r0.error; self._rev=next; try{faIndexIds(state);}catch(e){} return true;
-      });
-    }
-    return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state,p_rev:prev}).then(function(r){
-      if(r.error){
-        /* خادم لم يُحدَّث بعد (لا يعرف p_rev) — احفظ بالطريقة القديمة */
-        if(/p_rev|PGRST202|Could not find/i.test(String(r.error.message||''))){
-          return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state}).then(function(r2){
-            if(r2.error)throw r2.error; self._rev=next; try{faIndexIds(state);}catch(e){} return true;
-          });
+    var self=this;
+    /* رقم النسخة يُؤخذ من الخادم نفسه (fa_state_rev) إن لم يكن معروفاً —
+       إرسال null كان يُرفض دائماً فتدور المزامنة بلا نهاية وتبقى الشارة «بانتظار الاتصال» */
+    var pre=self._rev?Promise.resolve(self._rev):self.refreshRev().then(function(r){return r||null;}).catch(function(){return null;});
+    return pre.then(function(prev){
+      var next=Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+      state._rev=next;
+      return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state,p_rev:prev}).then(function(r){
+        if(r.error){
+          var em=String(r.error.message||'');
+          /* الدالة بثلاثة معاملات غير موجودة على هذا الخادم: الصيغة القديمة */
+          if(/p_rev/.test(em)&&/Could not find|PGRST202/i.test(em)){
+            return self.sb.rpc('fa_save_state',{p_token:self.token,p_data:state}).then(function(r2){
+              if(r2.error)throw r2.error; self._rev=next; try{faIndexIds(state);}catch(e){} return true;
+            });
+          }
+          throw r.error;
         }
-        throw r.error;
-      }
-      var d=r.data;
-      /* الصيغة الجديدة {ok,rev} أو القديمة true/false */
-      if(d===false||(d&&typeof d==='object'&&d.ok===false)){
-        if(d&&d.rev)self._rev=d.rev;          /* عرفنا الرقم الحقيقي بلا تحميل */
-        return self._mergeAndRetry(state);
-      }
-      self._rev=(d&&typeof d==='object'&&d.rev)?d.rev:next;
-      try{faIndexIds(state);}catch(e){}
-      return true;
+        var d=r.data;
+        if(d===false||(d&&typeof d==='object'&&d.ok===false)){
+          if(d&&d.rev)self._rev=d.rev;          /* الرقم الحقيقي من رد الخادم */
+          return self._mergeAndRetry(state);
+        }
+        self._rev=(d&&typeof d==='object'&&d.rev)?d.rev:next;
+        try{faIndexIds(state);}catch(e){}
+        return true;
+      });
     });
   },
-  /* رقم النسخة وحده — قبل إعادة المحاولة بعد خطأ شبكة، حتى لا نحمل رقماً
-     قديماً لطلب نجح في الخادم ولم يصلنا جوابه */
+  /* رقم النسخة وحده — استعلام خفيف */
   refreshRev:function(){
     var self=this;
     if(!self.token)return Promise.resolve(null);
@@ -4794,32 +4790,27 @@ var FA={
     var sent=self._rev;
     if(self._mergeTries>4){
       var tries=self._mergeTries-1;self._mergeTries=0;
-      faConflict('الخادم رفض رقم النسخة '+tries+' مرات متتالية رغم جلب أحدث نسخة قبل كل محاولة (آخر رقم مُرسَل: '+sent+')');
+      faConflict('الخادم رفض رقم النسخة '+tries+' مرات متتالية (آخر رقم مُرسَل: '+sent+')');
       return false;
     }
     return self.sb.rpc('fa_load_state',{p_token:self.token}).then(function(r){
       if(r.error)throw r.error;
       var remote=r.data||null;
       if(!remote){self._mergeTries=0;faConflict('الخادم أعاد حالة فارغة عند الدمج');return false;}
-      /* تشخيص: إن كان رقم الخادم هو نفسه الذي أرسلناه فالرفض ليس تصادماً
-         بل خلل في دالة fa_save_state نفسها — نسجّله ليُرى */
-      console.warn('[FA] تصادم #'+self._mergeTries+' — أُرسل: '+sent+' | في الخادم: '+remote._rev
-        +(String(sent)===String(remote._rev)?'  ⚠ متطابقان: الخادم لا يقارن _rev كما يجب':''));
-      if(String(sent)===String(remote._rev)){
-        /* ليس تصادماً: الخادم رفض رقماً صحيحاً — نتجاوز فحص النسخة لبقية الجلسة ونحفظ نسختنا كما هي */
-        self._noRev=true;self._mergeTries=0;
-        return self.saveState(localState).then(function(ok){if(ok&&typeof rAllSoft==='function')try{rAllSoft();}catch(e){}return ok;});
-      }
-      var merged=faMergeStates(remote,localState);
-      merged._rev=remote._rev;
-      self._rev=remote._rev;
-      try{DB=migrate(merged)||DB;}catch(e){}
-      try{if(typeof cloudChip==='function')cloudChip(false);}catch(e){}
-      try{console.log('[FA] دُمجت تعديلات زميلك تلقائياً');}catch(e){}
-      return self.saveState(cloudState(DB)).then(function(ok){
-        self._mergeTries=0;
-        if(ok&&typeof rAllSoft==='function')try{rAllSoft();}catch(e){}
-        return ok;
+      /* الرقم الحقيقي: من fa_state_rev أولاً، ثم من رد الرفض، ثم من داخل البيانات */
+      return self.refreshRev().catch(function(){return null;}).then(function(rv){
+        var real=rv||self._rev||remote._rev||null;
+        console.warn('[FA] تصادم #'+self._mergeTries+' — أُرسل: '+sent+' | الخادم: '+real);
+        var merged=faMergeStates(remote,localState);
+        merged._rev=real;
+        self._rev=real;
+        try{DB=migrate(merged)||DB;}catch(e){}
+        try{if(typeof cloudChip==='function')cloudChip(false);}catch(e){}
+        return self.saveState(cloudState(DB)).then(function(ok){
+          self._mergeTries=0;
+          if(ok&&typeof rAllSoft==='function')try{rAllSoft();}catch(e){}
+          return ok;
+        });
       });
     }).catch(function(e){
       self._mergeTries=0;
@@ -7260,18 +7251,19 @@ function acAutoUnify(){
 }
 function adUnifyHTML(){
   var need=acUnifyScan();
-  var h='<div class="ce2-note'+(need.length?' warn':' ok')+'" style="margin-bottom:1rem"><div style="display:flex;gap:.6rem;align-items:flex-start;flex:1">'+ic(need.length?'info':'check',13)+'<div>';
+  var h='<div class="ce2-note'+(need.length?' warn':' ok')+'" style="margin-bottom:1rem;flex-wrap:wrap"><div style="display:flex;gap:.6rem;align-items:flex-start;flex:1;min-width:220px">'+ic(need.length?'info':'check',13)+'<div>';
   if(!need.length)h+='<b>الحسابات موحّدة</b> — كل حساب موجود في كل نظام يخصّه (البطولات، الإدارة الفنية، تقييم المدربين).';
   else{
     h+='<b>'+ceN(need.length)+' حساباً</b> ينقصه وجود في نظام آخر: ';
     h+=need.slice(0,6).map(function(x){return '<span class="badge pending" style="font-size:9.5px;margin:2px">'+esc(x.u.name)+' — '+esc(x.miss[0])+'</span>';}).join('')+(need.length>6?' …':'');
   }
   h+='</div></div>';
+  h+='<div style="display:flex;gap:.4rem;flex-wrap:wrap;width:100%;margin-top:.5rem">';
   if(need.length)h+='<button class="btn btn-r btn-sm" style="flex:none" onclick="acUnifyAll()">'+ic('refresh',12)+' ربط الآن</button>';
   h+='<button class="btn btn-g btn-sm" style="flex:none" title="يصلح حسابات المدربين المتأثرة بالإنشاء التلقائي السابق (رمز مؤقت 0000) ويحذف النسخ المكررة" onclick="AC_REPAIRED=false;acRepairAuto();setTimeout(rADUsers,900)">'+ic('shield',12)+' إصلاح حسابات المدربين</button>';
   var newN=need.filter(function(x){return x.rec&&(x.rec.kind==='new-app'||x.rec.kind==='new-td');}).length;
   if(newN)h+='<button class="btn btn-o btn-sm" style="flex:none" onclick="acCreateMissing()">'+ic('user-plus',12)+' إنشاء الحسابات الناقصة ('+ceN(newN)+')</button>';
-  h+='</div>';
+  h+='</div></div>';
   return h;
 }
 function adMigrateAll(){
@@ -25530,7 +25522,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.25-login2</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.26-sync3</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
