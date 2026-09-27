@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.27-p2a">
+<meta name="build" content="2026.09.28-t1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3610,7 +3610,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-p2a</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-t1</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4582,7 +4582,7 @@ var FA_RPC_CRIT=['fa_load_state','fa_save_state','fa_state_rev','fa_login'];
 var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
 var FA_SRV={at:0,res:null};
 /* دوال يُؤمَن استدعاؤها بقيم فارغة (تفحص الرمز أو تعيد فراغاً ولا تكتب شيئاً) */
-var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile'];
+var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile','fa_upsert_user','fa_vote','fa_profile_req','fa_ce_submit_tok','fa_players_prune','fa_save_patch','fa_state_sync'];
 /* الفحص الحقيقي: استدعاء فعلي بأسماء المعاملات التي يستخدمها التطبيق — PGRST202 = غير موجودة أو بمعاملات مختلفة.
    (مواصفة OpenAPI وحدها كانت تعطي إنذاراً كاذباً «كل الدوال مفقودة» حين لا يعرضها الخادم) */
 function faProbeRpc(fn){
@@ -5324,7 +5324,21 @@ function upsertGlobalTeam(src){
   g.categories=g.categories||[];
   (src.categories||[]).forEach(function(c){var e=g.categories.find(function(x){return x.name===c.name;});if(e){e.coach=c.coach;e.phone=c.phone;}else g.categories.push(JSON.parse(JSON.stringify(c)));});
   g.players=g.players||[];
-  (src.players||[]).forEach(function(p){var key=p.idImg||(p.name+'|'+p.cat);var e=g.players.find(function(x){return (x.idImg||(x.name+'|'+x.cat))===key;});if(e){['name','nid','number','pos','cat','dob','nat','guard','phone','img','idImg'].forEach(function(k){if(p[k]!==undefined&&p[k]!=='')e[k]=p[k];});}else g.players.push(JSON.parse(JSON.stringify(p)));});
+  /* المطابقة بالهوية أولاً ثم المعرّف ثم صورة الهوية/الاسم+الفئة ثم الاسم+الميلاد.
+     كانت بصورة الهوية أو الاسم+الفئة فقط: تغيّر الفئة أو إعادة رفع الصورة تُضيف نسخة
+     جديدة من اللاعب كل مرة — وهذا مصدر المكرّر في قوائم الفرق. وفهرس مرة واحدة بدل
+     بحث كامل لكل لاعب في كل حفظ. */
+  var ix={nid:{},id:{},key:{},nd:{}};
+  var put=function(x){if(!x)return;var n=normNid(x.nid||'');if(n&&!ix.nid[n])ix.nid[n]=x;if(x.id!=null&&!ix.id[x.id])ix.id[x.id]=x;var k=x.idImg||(x.name+'|'+x.cat);if(!ix.key[k])ix.key[k]=x;var d=String(x.dob||'').trim(),nk=coachKey(x.name||'');if(nk&&d&&!ix.nd[nk+'|'+d])ix.nd[nk+'|'+d]=x;};
+  g.players.forEach(put);
+  (src.players||[]).forEach(function(p){
+    if(!p)return;
+    var pn=normNid(p.nid||''),pd=String(p.dob||'').trim(),pk=coachKey(p.name||'');
+    var e=(pn&&ix.nid[pn])||(p.id!=null&&ix.id[p.id])||ix.key[p.idImg||(p.name+'|'+p.cat)]||(pk&&pd&&ix.nd[pk+'|'+pd])||null;
+    if(e&&pn&&normNid(e.nid||'')&&normNid(e.nid||'')!==pn)e=null;   /* هويتان مختلفتان: لاعبان مختلفان */
+    if(e){['name','nid','number','pos','cat','dob','nat','guard','phone','img','idImg'].forEach(function(k){if(p[k]!==undefined&&p[k]!=='')e[k]=p[k];});put(e);}
+    else{var c=JSON.parse(JSON.stringify(p));g.players.push(c);put(c);}
+  });
 }
 function syncGlobalTeams(){(DB.tournaments||[]).forEach(function(tr){(tr.teams||[]).forEach(function(t){upsertGlobalTeam(t);});});}
 /* ================= STORIES ================= */
@@ -12987,6 +13001,54 @@ function plAutoSync(){
     try{var r=plSyncAll({create:false});if(r.fill){logA('مزامنة بيانات اللاعبين بين الأنظمة: '+r.fill+' حقلاً','users','#16a34a');}}catch(e){console.warn('plAutoSync',e);}
   },400);
 }
+/* ===== المكرّر داخل قوائم الفرق العامة (DB.teams) =====
+   نفس الهوية مرتين في الفريق نفسه، أو نفس الاسم مع نفس الميلاد (أو اسم ثلاثي فأكثر
+   وميلاد ناقص عند أحدهما) — بلا تعارض في الهوية. يُدمج في السجل الأقدم: الفارغ يُملأ،
+   والقيمة الأحدث تغلب (النسخ الأحدث هي المنسوخة من البطولات الحالية). لا مساس بالبطولات
+   ولا بالإدارة الفنية — المطابقة بينها بالهوية والاسم لا بمعرّف هذه القائمة. */
+function teamsDedupe(apply){
+  var res={removed:0,teams:0,before:0,after:0,sample:[]};
+  try{res.before=JSON.stringify(DB.teams||[]).length;}catch(e){}
+  var filled=function(v){return !(v===undefined||v===null||v===''||(Array.isArray(v)&&!v.length));};
+  (DB.teams||[]).forEach(function(t){
+    var arr=Array.isArray(t.players)?t.players:[];if(arr.length<2)return;
+    var src=apply?arr:JSON.parse(JSON.stringify(arr));
+    var keep=[],byNid={},byNm={},gone=0;
+    src.forEach(function(p){
+      if(!p||typeof p!=='object'){keep.push(p);return;}
+      var nid=normNid(p.nid||''),nk=coachKey(p.name||joinName(p.fn,p.mn,p.ln)),dob=String(p.dob||'').trim();
+      var words=nk?nk.split(' ').length:0,hit=null;
+      if(nid&&byNid[nid])hit=byNid[nid];
+      if(!hit&&nk&&byNm[nk])hit=byNm[nk].find(function(q){
+        var qn=normNid(q.nid||'');if(nid&&qn&&nid!==qn)return false;
+        var qd=String(q.dob||'').trim();
+        return (dob&&qd&&dob===qd)||(words>=3&&(!dob||!qd));
+      })||null;
+      if(hit){
+        Object.keys(p).forEach(function(k){if(k!=='id'&&filled(p[k]))hit[k]=p[k];});
+        var hn=normNid(hit.nid||'');if(hn&&!byNid[hn])byNid[hn]=hit;
+        gone++;if(res.sample.length<8)res.sample.push(t.name+' — '+(p.name||''));
+        return;
+      }
+      keep.push(p);if(nid)byNid[nid]=p;if(nk)(byNm[nk]=byNm[nk]||[]).push(p);
+    });
+    if(gone){res.removed+=gone;res.teams++;if(apply)t.players=keep;else res.after+=JSON.stringify(keep).length-JSON.stringify(arr).length;}
+  });
+  try{res.after=apply?JSON.stringify(DB.teams||[]).length:res.before+res.after;}catch(e){}
+  return res;
+}
+function teamsDedupeRun(){
+  var r=teamsDedupe(false);if(!r.removed)return;
+  askConfirm('دمج '+r.removed+' نسخة مكرّرة من لاعبين في قوائم '+r.teams+' فريقاً؟\n\n'
+    +'• كل لاعب مكرّر يصبح سجلاً واحداً بأكمل بياناته — لا يُحذف لاعب.\n'
+    +'• البطولات والإدارة الفنية لا تتأثر.\n'
+    +'• يُنصح بتنزيل نسخة احتياطية قبلها (زر «نسخة احتياطية الآن» في هذه الصفحة).',function(){
+    var x=teamsDedupe(true);
+    logA('دمج المكرّر في قوائم الفرق: '+x.removed+' نسخة من '+x.teams+' فريقاً ('+Math.round((x.before-x.after)/1024)+' ك.ب أخف)','users','#16a34a');
+    sv();try{rADHealth();}catch(e){}
+    addN('تم الدمج',ceN(x.removed)+' نسخة مكرّرة • البيانات أخف بـ '+ceN(Math.round((x.before-x.after)/1024))+' ك.ب','success');
+  });
+}
 /* لوحة الصحة: حالة الترابط */
 function plSyncHTML(){
   var r=plSyncAll({create:false});
@@ -12997,6 +13059,12 @@ function plSyncHTML(){
     +(r.tdNoApp?'<br><b>'+ceN(r.tdNoApp)+'</b> لاعباً في الإدارة الفنية بلا نسخة في قائمة فريق فرعه بالبطولات.':'')
     +(r.appNoTd?'<br><b>'+ceN(r.appNoTd)+'</b> لاعباً في قوائم الفرق بالبطولات بلا سجل في الإدارة الفنية.':'')
     +'</div></div>';
+  var dd=teamsDedupe(false);
+  if(dd.removed){
+    h+='<div class="ce2-note warn" style="margin-bottom:.6rem">'+ic('users',13)+'<div><b>'+ceN(dd.removed)+'</b> نسخة مكرّرة من لاعبين في قوائم '+ceN(dd.teams)+' فريقاً (نفس الهوية، أو نفس الاسم والميلاد). دمجها يخفّف البيانات نحو <b>'+ceN(Math.max(1,Math.round((dd.before-dd.after)/1024)))+' ك.ب</b> ويُزيل تكرار اللاعب في القوائم.'
+      +(dd.sample.length?'<br><small style="opacity:.8">أمثلة: '+dd.sample.slice(0,4).map(esc).join('، ')+'</small>':'')+'</div></div>';
+    h+='<button class="btn btn-o" style="width:100%;margin-bottom:.8rem" onclick="teamsDedupeRun()">'+ic('users',14)+' دمج المكرّر في قوائم الفرق ('+ceN(dd.removed)+')</button>';
+  }
   if(r.tdNoApp+r.appNoTd)h+='<button class="btn btn-r" style="width:100%;margin-bottom:1.6rem" onclick="plSyncCreate()">'+ic('refresh',14)+' إنشاء النسخ الناقصة ('+ceN(r.tdNoApp+r.appNoTd)+')</button>';
   if(r.fill)sv();
   return h;
@@ -22113,7 +22181,7 @@ function rADHealth(){
     var names={td:'الإدارة الفنية',tournaments:'البطولات',teams:'الفرق',users:'الحسابات',nt:'منتخب فارس',ce:'تقييم المدربين',actLog:'سجل النشاط',joinReqs:'طلبات الانضمام'};
     h+=tdSubHead('حجم البيانات','<span class="pg-chip'+(total>1500000?'" style="color:var(--amber)':'')+'">'+kb(total)+'</span>');
     h+='<div class="ce2-note'+(b64>300000?' warn':'')+'" style="margin-bottom:.8rem">'+ic('info',13)+'<div>'
-      +'كل حفظ يرسل الحالة كاملة وكل تحميل يجلبها. '
+      +(FA._secBase&&!FA._patchNA?'الحفظ يرسل ما تغيّر فقط، والتحديث من الأجهزة الأخرى يجلب الأقسام المتغيّرة فقط؛ الحجم الكامل يُنزَّل مرة واحدة عند فتح الصفحة. ':'كل حفظ يرسل الحالة كاملة وكل تحميل يجلبها. ')
       +(b64?'<b>'+kb(b64)+'</b> منها صور مخزّنة داخل البيانات نصاً (base64) — نقلها إلى مخزن الصور يخفّف الحمل ويُنهي انتهاء المهلة.':'لا توجد صور مخزّنة داخل البيانات.')
       +'</div></div>';
     h+='<div class="at-wrap" style="margin-bottom:1.4rem"><table class="at"><thead><tr><th>القسم</th><th>الحجم</th><th>النسبة</th></tr></thead><tbody>';
@@ -25985,7 +26053,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-p2a</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-t1</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
