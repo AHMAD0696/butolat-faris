@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.28-p2b">
+<meta name="build" content="2026.09.28-bk1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3610,7 +3610,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-p2b</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-bk1</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4630,12 +4630,12 @@ function faProbe(kb){
    (عبر وصف OpenAPI الذي يقدّمه PostgREST) ويعرض المفقود واختلاف أسماء المعاملات
    قبل أن يظهر كخطأ في منتصف العمل.
 ========================================================================== */
-var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_save_patch":["p_base","p_items","p_rev","p_set","p_token"],"fa_state_sync":["p_have","p_token"],"fa_state_sync2":["p_have","p_seqs","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
+var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_save_patch":["p_base","p_items","p_rev","p_set","p_token"],"fa_state_sync":["p_have","p_token"],"fa_state_sync2":["p_have","p_seqs","p_token"],"fa_backup_now":["p_note","p_token"],"fa_backup_list":["p_token"],"fa_backup_get":["p_id","p_token"],"fa_backup_restore":["p_id","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
 var FA_RPC_CRIT=['fa_load_state','fa_save_state','fa_state_rev','fa_login'];
-var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_state_sync2:'التحديث بالعناصر',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
+var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_state_sync2:'التحديث بالعناصر',fa_backup_now:'نسخة احتياطية',fa_backup_list:'قائمة النسخ',fa_backup_get:'تنزيل نسخة',fa_backup_restore:'استعادة نسخة',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
 var FA_SRV={at:0,res:null};
 /* دوال يُؤمَن استدعاؤها بقيم فارغة (تفحص الرمز أو تعيد فراغاً ولا تكتب شيئاً) */
-var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile','fa_upsert_user','fa_vote','fa_profile_req','fa_ce_submit_tok','fa_players_prune','fa_save_patch','fa_state_sync','fa_state_sync2'];
+var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile','fa_upsert_user','fa_vote','fa_profile_req','fa_ce_submit_tok','fa_players_prune','fa_save_patch','fa_state_sync','fa_state_sync2','fa_backup_list'];
 /* الفحص الحقيقي: استدعاء فعلي بأسماء المعاملات التي يستخدمها التطبيق — PGRST202 = غير موجودة أو بمعاملات مختلفة.
    (مواصفة OpenAPI وحدها كانت تعطي إنذاراً كاذباً «كل الدوال مفقودة» حين لا يعرضها الخادم) */
 function faProbeRpc(fn){
@@ -4823,6 +4823,19 @@ var FA={
     });
   },
   /* حذف اللاعبين الذين لم يعودوا موجودين (keys = «النظام|المعرّف» لكل الموجودين) */
+  /* ===== النسخ الاحتياطية في الخادم (مدير النظام) ===== */
+  _bk:function(fn,args){
+    var self=this;
+    if(!self.enabled||!self.token)return Promise.reject(new Error('غير متصل'));
+    return self.sb.rpc(fn,Object.assign({p_token:self.token},args||{})).then(function(r){
+      if(r.error){var m=String(r.error.message||'');if(/Could not find the function|PGRST202/i.test(m+String(r.error.code||'')))throw new Error('na');throw r.error;}
+      return r.data;
+    });
+  },
+  backupNow:function(note){return this._bk('fa_backup_now',{p_note:note||''});},
+  backupList:function(){return this._bk('fa_backup_list');},
+  backupGet:function(id){return this._bk('fa_backup_get',{p_id:id});},
+  backupRestore:function(id){return this._bk('fa_backup_restore',{p_id:id});},
   playersPrune:function(keys){
     var self=this;
     if(!self.enabled||!self.token||!keys||!keys.length)return Promise.resolve(0);
@@ -13139,12 +13152,12 @@ function teamsDedupeRun(){
   askConfirm('دمج '+r.removed+' نسخة مكرّرة من لاعبين في قوائم '+r.teams+' فريقاً؟\n\n'
     +'• كل لاعب مكرّر يصبح سجلاً واحداً بأكمل بياناته — لا يُحذف لاعب.\n'
     +'• البطولات والإدارة الفنية لا تتأثر.\n'
-    +'• يُنصح بتنزيل نسخة احتياطية قبلها (زر «نسخة احتياطية الآن» في هذه الصفحة).',function(){
+    +'• تُحفظ نسخة احتياطية في الخادم قبلها تلقائياً.',function(){bkBefore('قبل دمج المكرّر في قوائم الفرق',function(){
     var x=teamsDedupe(true);
     logA('دمج المكرّر في قوائم الفرق: '+x.removed+' نسخة من '+x.teams+' فريقاً ('+Math.round((x.before-x.after)/1024)+' ك.ب أخف)','users','#16a34a');
     sv();try{rADHealth();}catch(e){}
     addN('تم الدمج',ceN(x.removed)+' نسخة مكرّرة • البيانات أخف بـ '+ceN(Math.round((x.before-x.after)/1024))+' ك.ب','success');
-  });
+  });});
 }
 /* لوحة الصحة: حالة الترابط */
 function plSyncHTML(){
@@ -13167,11 +13180,11 @@ function plSyncHTML(){
   return h;
 }
 function plSyncCreate(){
-  askConfirm('إنشاء النسخ الناقصة للاعبين في النظام المقابل؟\nتُنسخ البيانات كاملة (الاسم، الهوية، الميلاد، الجوال، الصور) ولا يُحذف شيء.',function(){
+  askConfirm('إنشاء النسخ الناقصة للاعبين في النظام المقابل؟\nتُنسخ البيانات كاملة (الاسم، الهوية، الميلاد، الجوال، الصور) ولا يُحذف شيء.',function(){bkBefore('قبل إنشاء النسخ الناقصة للاعبين',function(){
     var r=plSyncAll({create:true});
     logA('إنشاء نسخ اللاعبين الناقصة: '+r.newTd+' في الإدارة الفنية، '+r.newApp+' في البطولات','users','#16a34a');
     sv();rADHealth();addN('تمت المزامنة',ceN(r.newTd)+' في الإدارة الفنية • '+ceN(r.newApp)+' في البطولات','success');
-  });
+  });});
 }
 
 /* ---------- تكليفات الحساب في بطاقة المستخدم ---------- */
@@ -13926,6 +13939,117 @@ function dbStats(){
   var ls=0;try{ls=new Blob([localStorage.getItem('faris_tour_v2')||'']).size;}catch(e){}
   return{rows:rows,total:total,cloud:cloud,img:img,ls:ls};
 }
+/* ================= النسخ الاحتياطية في الخادم =================
+   الخادم يأخذ نسخة يومية تلقائياً قبل أول تعديل في اليوم، ومدير النظام يأخذ نسخة
+   متى شاء، والموقع يأخذ نسخة قبل كل عملية كبيرة. الاستعادة بزر — وقبلها نسخة من
+   الوضع الحالي، فالاستعادة نفسها قابلة للتراجع. */
+var BK={list:null,total:0,busy:false,err:'',na:false};
+var BK_KIND={auto:'يومية تلقائية',manual:'يدوية','pre-restore':'قبل استعادة'};
+/* نسخة قبل عملية كبيرة: لا تعطّل العملية إن فشلت (بلا اتصال مثلاً) — مهلة ٨ ثوانٍ */
+function bkBefore(note,go){
+  if(!FA.enabled||!FA.token||!CU||CU.role!=='admin'){go();return;}
+  var done=false,fin=function(){if(done)return;done=true;go();};
+  setTimeout(fin,8000);
+  FA.backupNow(note).then(function(){BK.list=null;fin();}).catch(function(){fin();});
+}
+function bkLoad(){
+  if(!FA.enabled||!FA.token||!CU||CU.role!=='admin')return;
+  BK.err='';
+  FA.backupList().then(function(d){BK.list=(d&&d.list)||[];BK.total=(d&&d.total)||0;BK.na=false;bkPaint();})
+    .catch(function(e){if(e&&e.message==='na')BK.na=true;else BK.err=(e&&e.message)||'خطأ';BK.list=BK.list||[];bkPaint();});
+}
+function bkHTML(){
+  if(!FA.enabled||!CU||CU.role!=='admin')return '';
+  var h=tdSubHead('النسخ الاحتياطية في الخادم','<span class="pg-chip" id="bk-chip">'+ic('shield',11)+' تلقائية يومياً</span>');
+  h+='<div id="bk-box"><div class="jnote">'+ic('info',12)+' جارٍ جلب النسخ…</div></div>';
+  setTimeout(bkLoad,50);
+  return h;
+}
+function bkPaint(){
+  var el=g('bk-box');if(!el)return;
+  var h='';
+  if(BK.na){
+    h='<div class="ce2-note warn" style="margin-bottom:1.2rem">'+ic('info',13)+'<div>النسخ التلقائية غير مفعّلة في الخادم بعد — نفّذ ملف <b>fa_backups.sql</b> في Supabase. إلى ذلك الحين استخدم «نسخة احتياطية كاملة (JSON)» للتنزيل اليدوي.</div></div>';
+    el.innerHTML=h;hydrateIcons(el);return;
+  }
+  var L=BK.list||[];
+  var kb=function(n){n=+n||0;return n>1048576?(Math.round(n/104857.6)/10)+' م.ب':Math.max(1,Math.round(n/1024))+' ك.ب';};
+  var lastAuto=L.find(function(x){return x.kind==='auto';});
+  h+='<div class="ce2-note ok" style="margin-bottom:.8rem">'+ic('check',13)+'<div>'
+    +'<b>'+ceN(L.length)+' نسخة محفوظة</b> في الخادم ('+kb(BK.total)+' بعد الضغط). '
+    +(lastAuto?'آخر نسخة يومية: '+esc(new Date(lastAuto.at).toLocaleString(locale()))+'. ':'أول نسخة يومية تُؤخذ تلقائياً قبل أول تعديل. ')
+    +'<br><small style="opacity:.85">اليومية تُحفظ ٣٠ يوماً ثم واحدة لكل أسبوع حتى ٩٠ يوماً • اليدوية ٩٠ يوماً • الحسابات والرموز لا تتأثر بالاستعادة.</small>'
+    +'</div></div>';
+  if(BK.err)h+='<div class="ce2-note warn" style="margin-bottom:.8rem">'+ic('info',13)+'<div>تعذّر جلب القائمة: '+esc(BK.err)+'</div></div>';
+  h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem">'
+    +'<button class="btn btn-r" onclick="bkTakeNow()"'+(BK.busy?' disabled':'')+'>'+ic('shield',14)+' خذ نسخة الآن</button>'
+    +'<button class="btn btn-o" onclick="backupNow()">'+ic('doc',14)+' تنزيل النسخة الحالية (JSON)</button></div>';
+  if(L.length){
+    /* بطاقات بدل جدول: تُقرأ على الجوال بلا تمرير أفقي */
+    var dfmt=function(t){var d=new Date(t);return d.toLocaleDateString(locale(),{weekday:'short',day:'numeric',month:'short'})+' — '+d.toLocaleTimeString(locale(),{hour:'numeric',minute:'2-digit'});};
+    h+='<div style="display:grid;gap:.5rem;margin-bottom:1.4rem">';
+    L.slice(0,40).forEach(function(b){
+      var sm=b.summary||{},col=b.kind==='auto'?'#16a34a':(b.kind==='pre-restore'?'var(--amber)':'#1565c0');
+      h+='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .8rem;padding:.7rem .9rem;border:1px solid var(--brd);border-radius:12px;background:var(--card)">'
+        +'<div style="flex:1 1 220px;min-width:0">'
+          +'<div style="display:flex;align-items:center;gap:.45rem;flex-wrap:wrap"><span style="font-size:11px;font-weight:700;color:'+col+';background:color-mix(in srgb,'+col+' 14%,transparent);padding:2px 8px;border-radius:20px">'+esc(BK_KIND[b.kind]||b.kind)+'</span>'
+          +'<b style="font-size:13px">'+esc(dfmt(b.at))+'</b></div>'
+          +(b.kind!=='auto'&&b.note?'<div style="font-size:11.5px;color:var(--gray);margin-top:.2rem">'+esc(b.note)+(b.by?' — '+esc(b.by):'')+'</div>':'')
+          +'<div style="font-size:11.5px;color:var(--gray);margin-top:.2rem">'+ceN(sm.players||0)+' لاعب • '+ceN(sm.attend||0)+' حصة حضور • '+ceN(sm.tours||0)+' بطولة • '+ceN(sm.teams||0)+' فريق • '+kb(b.bytes)+'</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:.4rem"><button class="btn btn-o btn-sm" onclick="bkDownload('+(+b.id)+')">'+ic('doc',12)+' تنزيل</button>'
+        +'<button class="btn btn-sm" style="background:rgba(221,29,69,.12);color:var(--red)" onclick="bkRestore('+(+b.id)+')">'+ic('refresh',12)+' استعادة</button></div>'
+        +'</div>';
+    });
+    h+='</div>';
+  }
+  el.innerHTML=h;hydrateIcons(el);
+}
+function bkTakeNow(){
+  if(BK.busy)return;BK.busy=true;bkPaint();
+  var go=function(){
+    FA.backupNow('نسخة يدوية').then(function(){BK.busy=false;logA('نسخة احتياطية في الخادم','shield','#16a34a');addN('تم حفظ نسخة احتياطية','في الخادم','success');bkLoad();})
+      .catch(function(e){BK.busy=false;BK.err=(e&&e.message)||'خطأ';bkPaint();});
+  };
+  /* تعديل لم يصل للخادم بعد؟ نرسله أولاً حتى تشمله النسخة */
+  if(CQ.dirty||CQ.timer||CQ.busy){cloudQueue(0);setTimeout(go,2500);}else go();
+}
+function bkDownload(id){
+  FA.backupGet(id).then(function(d){
+    if(!d){alert('النسخة غير موجودة');return;}
+    var b=(BK.list||[]).find(function(x){return +x.id===+id;})||{};
+    var dt=new Date(b.at||Date.now()),stamp=calISO(dt)+'-'+('0'+dt.getHours()).slice(-2)+'-'+('0'+dt.getMinutes()).slice(-2);
+    var blob=new Blob([JSON.stringify({_backup:'faris',_at:b.at||Date.now(),_src:'server',data:d})],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='faris-server-backup-'+stamp+'.json';
+    document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
+  }).catch(function(e){alert('تعذّر التنزيل: '+((e&&e.message)||e));});
+}
+function bkRestore(id){
+  var b=(BK.list||[]).find(function(x){return +x.id===+id;});if(!b)return;
+  if(CQ.dirty||CQ.busy||CQ.timer){alert('يوجد تعديل يُرسل الآن — انتظر ثوانٍ ثم أعد المحاولة.');return;}
+  var when=new Date(b.at).toLocaleString(locale()),sm=b.summary||{};
+  askConfirm('استعادة نسخة '+when+'؟\n\n'
+    +'• تحل محل البيانات الحالية في كل الأنظمة ولكل المستخدمين.\n'
+    +'• كل ما أُضيف أو عُدّل بعد هذا التاريخ سيختفي.\n'
+    +'• النسخة تحوي: '+(sm.players||0)+' لاعب، '+(sm.tours||0)+' بطولة.\n'
+    +'• قبل الاستعادة تُحفظ نسخة من الوضع الحالي، فيمكن التراجع.',function(){
+    setTimeout(function(){askConfirm('تأكيد نهائي: استعادة نسخة '+when+' الآن؟',function(){
+      loadShow&&loadShow('جارٍ الاستعادة…','');
+      FA.backupRestore(id).then(function(r){
+        if(!r||r.ok===false)throw new Error((r&&r.err)||'رفض الخادم');
+        logA('استعادة نسخة احتياطية: '+when,'shield','#DD1D45');
+        try{obClear();}catch(e){}
+        return FA.loadState().then(function(st){
+          if(st&&st.tournaments){DB=migrate(st)||DB;}
+          loadHide&&loadHide();
+          try{rAllSoft();}catch(e){}
+          BK.list=null;bkLoad();
+          addN('تمت الاستعادة','البيانات الآن كما كانت في '+when,'success');
+        });
+      }).catch(function(e){loadHide&&loadHide();alert('لم تتم الاستعادة: '+((e&&e.message)||e)+'\nالبيانات الحالية لم تتغيّر.');});
+    });},250);
+  });
+}
 /* ================= نسخة احتياطية =================
    تنزّل كل البيانات كملف JSON. قراءة فقط — لا تمسّ الأصل. */
 function backupNow(){
@@ -13951,7 +14075,7 @@ function restorePick(inp){
     var d=obj&&obj.data?obj.data:obj;
     if(!d||!d.users){alert('هذا الملف لا يبدو نسخة احتياطية صحيحة');return;}
     var when=obj._at?new Date(obj._at).toLocaleString(locale()):'غير معروف';
-    askConfirm('استعادة نسخة بتاريخ '+when+'؟\n\nستحل محل البيانات الحالية بالكامل.',function(){
+    askConfirm('استعادة نسخة بتاريخ '+when+'؟\n\nستحل محل البيانات الحالية بالكامل.',function(){bkBefore('قبل الاستعادة من ملف',function(){
       DB=migrate(d)||d;
       if(FA.enabled&&FA.token){
         loadShow&&loadShow('جارٍ رفع النسخة إلى قاعدة البيانات…','');
@@ -13960,7 +14084,7 @@ function restorePick(inp){
           alert('تمت الاستعادة ووصلت إلى قاعدة البيانات. سيُعاد تحميل الصفحة.');setTimeout(function(){location.reload();},400);
         }).catch(function(e){loadHide&&loadHide();alert('لم تُحفظ النسخة في الخادم: '+(e&&e.message||e)+'\nلم يُعد تحميل الصفحة حتى لا تضيع.');sv();});
       }else{sv();alert('تمت الاستعادة. سيُعاد تحميل الصفحة.');setTimeout(function(){location.reload();},600);}
-    });
+    });});
   };
   rd.readAsText(f);inp.value='';
 }
@@ -22290,6 +22414,7 @@ function rADHealth(){
     h+='</tbody></table></div>';
   }catch(e){}
   h+=faServerHTML();
+  h+=bkHTML();
   h+=plSyncHTML();
   h+=tdBackfillHTML();
   h+=tdSubHead('صحة البيانات');
@@ -26150,7 +26275,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-p2b</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-bk1</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
