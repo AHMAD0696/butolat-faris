@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.28-bk1">
+<meta name="build" content="2026.09.28-l1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -135,6 +135,12 @@ svg{display:block;flex-shrink:0}
 .pin-row{display:flex;gap:10px;justify-content:center;direction:ltr;margin:.4rem 0 .2rem}
 .pbox{width:52px;height:58px;border-radius:12px;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;font-size:1.5rem;font-weight:700;text-align:center;outline:none;transition:border-color .15s,transform .1s}
 .pbox:focus{border-color:var(--red)}
+.pin-row.six{gap:7px}.pin-row.six .pbox{width:44px}
+@media(max-width:380px){.pin-row.six{gap:5px}.pin-row.six .pbox{width:40px}}
+.lacc{display:flex;align-items:center;gap:.7rem;width:100%;padding:.75rem .9rem;margin-top:.45rem;border-radius:12px;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff;font:600 14px inherit;cursor:pointer;text-align:start}
+.lacc:hover,.lacc:focus{border-color:var(--red);outline:none}
+.lacc .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(221,29,69,.18);color:#fff;font-weight:800;flex:none}
+.lacc small{display:block;color:rgba(255,255,255,.5);font-weight:500;font-size:11px}
 /* تبويبا الدخول */
 /* حقل الجوال: يُقرأ من اليسار كأي رقم دولي — +966 ثم الرقم */
 .brpick{display:flex;gap:.4rem;flex-wrap:wrap}
@@ -3586,11 +3592,13 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <button class="bkbtn" onclick="welShow()">رجوع</button>
     <div class="lgo"></div>
     <div class="ltitle">أكاديمية فارس</div>
-    <div class="ltabs">
-      <button type="button" class="ltab on" id="ltab-staff" onclick="lsMode('phone')">موظف / مدرب</button>
-      <button type="button" class="ltab" id="ltab-nid" onclick="lsMode('nid')">لاعب</button>
+    <div class="lf" id="lf-id">
+      <label for="l-id">رقم الجوال أو رقم الهوية</label>
+      <input type="tel" id="l-id" inputmode="numeric" autocomplete="username" maxlength="16" placeholder="05XXXXXXXX  /  1XXXXXXXXX" style="direction:ltr;text-align:center;letter-spacing:1px;font-size:17px" onkeydown="if(event.key==='Enter')lsNext()">
+      <div class="lhint">الموظفون والمدربون: رقم الجوال • اللاعبون: رقم الهوية أو الإقامة<span id="lswap-name"> — <a href="#" class="lswap" onclick="event.preventDefault();lsMode('name')">أو ادخل باسمك</a></span></div>
     </div>
-    <div class="lf" id="lf-phone">
+    <div class="lf" id="lf-acc" style="display:none"></div>
+    <div class="lf" id="lf-phone" style="display:none">
       <label>رقم الجوال</label>
       <div class="pfield"><span class="pfx">+966</span><input type="tel" id="l-phone" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this)" onkeydown="if(event.key==='Enter')goPhone()"></div>
       <div class="lhint">للمدربين والإداريين — <a href="#" class="lswap" onclick="event.preventDefault();lsMode('name')">أو ادخل باسمك</a></div>
@@ -3604,24 +3612,26 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lf" id="lf-name" style="display:none">
       <label>الاسم الكامل</label>
       <input type="text" id="l-name" placeholder="أدخل اسمك الكامل" autocomplete="off" onkeydown="if(event.key==='Enter')goPin()">
-      <div class="lhint"><a href="#" class="lswap" onclick="event.preventDefault();lsMode('phone')">الرجوع للدخول برقم الجوال</a></div>
+      <div class="lhint"><a href="#" class="lswap" onclick="event.preventDefault();lsMode('id')">الرجوع للدخول برقم الجوال أو الهوية</a></div>
     </div>
     <button class="lbtn" id="l-next" onclick="lsNext()">التالي</button>
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-bk1</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-l1</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
     <div class="uav" id="pin-av">؟</div>
     <div style="color:#fff;font-size:15px;font-weight:700;margin-bottom:.2rem" id="pin-nm">—</div>
-    <div style="color:rgba(255,255,255,.4);font-size:11px;margin-bottom:1.2rem">أدخل الرمز السري (4 أرقام)</div>
+    <div style="color:rgba(255,255,255,.4);font-size:11px;margin-bottom:1.2rem" id="pin-lbl">أدخل الرمز السري (4 أرقام)</div>
     <div class="pin-row">
       <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p1" oninput="pI(this,1)" onkeydown="pK(event,1)" aria-label="الرقم الأول">
       <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p2" oninput="pI(this,2)" onkeydown="pK(event,2)" aria-label="الرقم الثاني">
       <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p3" oninput="pI(this,3)" onkeydown="pK(event,3)" aria-label="الرقم الثالث">
       <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p4" oninput="pI(this,4)" onkeydown="pK(event,4)" aria-label="الرقم الرابع">
+      <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p5" oninput="pI(this,5)" onkeydown="pK(event,5)" aria-label="الرقم الخامس" style="display:none">
+      <input type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="1" class="pbox" id="p6" oninput="pI(this,6)" onkeydown="pK(event,6)" aria-label="الرقم السادس" style="display:none">
     </div>
     <button type="button" class="pin-eye" id="pin-eye" onclick="pinReveal()" aria-label="إظهار الرمز"><span data-ic="eye"></span> إظهار الرمز</button>
     <button class="lbtn" onclick="doLogin()">دخول</button>
@@ -3743,7 +3753,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       <div class="fg"><label>شعار الأكاديمية *</label><div class="img-pick"><div class="img-prev" id="ct-prev" data-ic="shield"></div><div><label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,'ct')"></label><button class="img-rm" id="ct-rm" onclick="rmImg('ct','shield')">إزالة</button></div><input type="hidden" id="ct-img"></div></div>
       <div class="cat-wrap"><div class="cw-t"><span data-ic="shield"></span> حساب الإداري</div>
         <div class="frow"><div class="fg"><label>اسم الإداري *</label><input type="text" id="ct-aname" placeholder="الاسم الكامل"></div><div class="fg"><label>جواله *</label><input type="tel" id="ct-aphone" maxlength="10" style="direction:ltr" placeholder="05XXXXXXXX"></div></div>
-        <div class="fg"><label>الرمز السري للإداري (4 أرقام) *</label><input type="tel" inputmode="numeric" id="ct-apin" maxlength="4" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="1234"></div>
+        <div class="fg"><label>الرمز السري للإداري (6 أرقام) *</label><input type="tel" inputmode="numeric" id="ct-apin" maxlength="6" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="123456"></div>
       </div>
       <div class="cat-wrap"><div class="cw-t"><span data-ic="whistle"></span> المدربون <small>(اختياري)</small></div>
         <table class="cat-tbl"><thead><tr><th>اسم المدرب</th><th>الجوال</th><th>الرمز</th><th></th></tr></thead><tbody id="ct-coaches"></tbody></table>
@@ -3784,7 +3794,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
       <div class="fg"><label>شعار الأكاديمية *</label><div class="img-pick"><div class="img-prev" id="et-prev" data-ic="shield"></div><div><label class="img-pick-btn"><span data-ic="camera"></span> تغيير الصورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,'et')"></label><button class="img-rm" id="et-rm" onclick="rmImg('et','shield')">إزالة</button></div><input type="hidden" id="et-img"></div></div>
       <div class="cat-wrap"><div class="cw-t"><span data-ic="shield"></span> حساب الإداري</div>
         <div class="frow"><div class="fg"><label>اسم الإداري *</label><input type="text" id="et-aname"></div><div class="fg"><label>جواله *</label><input type="tel" id="et-aphone" maxlength="10" style="direction:ltr"></div></div>
-        <div class="fg"><label>رمز سري جديد للإداري <small>(اتركه فارغاً للإبقاء على الحالي)</small></label><input type="tel" inputmode="numeric" id="et-apin" maxlength="4" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="••••"></div>
+        <div class="fg"><label>رمز سري جديد للإداري <small>(اتركه فارغاً للإبقاء على الحالي)</small></label><input type="tel" inputmode="numeric" id="et-apin" maxlength="6" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="••••"></div>
       </div>
       <div class="cat-wrap"><div class="cw-t"><span data-ic="whistle"></span> المدربون</div>
         <table class="cat-tbl"><thead><tr><th>اسم المدرب</th><th>الجوال</th><th>رمز جديد</th><th></th></tr></thead><tbody id="et-coaches"></tbody></table>
@@ -3796,7 +3806,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
           </div>
         </div>
         <div style="font-size:10.5px;color:var(--gray);margin-top:6px">
-          <b>مدرب جديد:</b> أدخل رمزاً من 4 أرقام. &nbsp;•&nbsp; <b>ربط مدرب موجود:</b> يعمل في فريق آخر — يُضاف بنفس حسابه بلا تكرار. &nbsp;•&nbsp; للمدرب الحالي اترك الرمز فارغاً.
+          <b>مدرب جديد:</b> أدخل رمزاً من 6 أرقام. &nbsp;•&nbsp; <b>ربط مدرب موجود:</b> يعمل في فريق آخر — يُضاف بنفس حسابه بلا تكرار. &nbsp;•&nbsp; للمدرب الحالي اترك الرمز فارغاً.
         </div>
       </div>
       <button class="btn btn-r" style="width:100%;margin-top:.4rem" onclick="saveEditTeam()">حفظ التعديلات</button>
@@ -4295,11 +4305,11 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="mbody" style="text-align:start">
       <div class="fg"><label>اسم المدرب *</label><input type="text" id="cm-name" placeholder="الاسم الكامل"></div>
       <div class="fg"><label>جوال المدرب *</label><div class="pfield"><span class="pfx">+966</span><input type="tel" id="cm-phone" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="5XXXXXXXX" oninput="phoneClean(this)"></div></div>
-      <div class="fg"><label>الرمز السري للدخول (4 أرقام) *</label><input type="tel" inputmode="numeric" id="cm-pin" maxlength="4" placeholder="مثال: 1234" style="direction:ltr;letter-spacing:6px;text-align:center"></div>
+      <div class="fg"><label>الرمز السري للدخول (6 أرقام) *</label><input type="tel" inputmode="numeric" id="cm-pin" maxlength="6" placeholder="مثال: 123456" style="direction:ltr;letter-spacing:6px;text-align:center"></div>
       <div class="ibox"><span data-ic="info"></span> يدخل المدرب لاحقاً بنفس الاسم والرمز السري ليضيف لاعبيه.</div>
       <button class="btn btn-r" style="width:100%;margin-top:.4rem" onclick="createCoach()">إضافة المدرب وإنشاء الحساب</button>
       <div class="msg ok" id="cm-ok">تمت إضافة المدرب وإنشاء حسابه</div>
-      <div class="msg err" id="cm-err">يرجى تعبئة الاسم والجوال ورمز من 4 أرقام</div>
+      <div class="msg err" id="cm-err">يرجى تعبئة الاسم والجوال ورمز من 6 أرقام</div>
     </div>
   </div>
 </div>
@@ -4630,12 +4640,12 @@ function faProbe(kb){
    (عبر وصف OpenAPI الذي يقدّمه PostgREST) ويعرض المفقود واختلاف أسماء المعاملات
    قبل أن يظهر كخطأ في منتصف العمل.
 ========================================================================== */
-var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_save_patch":["p_base","p_items","p_rev","p_set","p_token"],"fa_state_sync":["p_have","p_token"],"fa_state_sync2":["p_have","p_seqs","p_token"],"fa_backup_now":["p_note","p_token"],"fa_backup_list":["p_token"],"fa_backup_get":["p_id","p_token"],"fa_backup_restore":["p_id","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
+var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_save_patch":["p_base","p_items","p_rev","p_set","p_token"],"fa_state_sync":["p_have","p_token"],"fa_state_sync2":["p_have","p_seqs","p_token"],"fa_backup_now":["p_note","p_token"],"fa_auth_lookup":["p_ident"],"fa_login_acc":["p_id","p_pin"],"fa_change_pin":["p_new","p_old","p_token"],"fa_login_readiness":["p_token"],"fa_backup_list":["p_token"],"fa_backup_get":["p_id","p_token"],"fa_backup_restore":["p_id","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
 var FA_RPC_CRIT=['fa_load_state','fa_save_state','fa_state_rev','fa_login'];
-var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_state_sync2:'التحديث بالعناصر',fa_backup_now:'نسخة احتياطية',fa_backup_list:'قائمة النسخ',fa_backup_get:'تنزيل نسخة',fa_backup_restore:'استعادة نسخة',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
+var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_state_sync2:'التحديث بالعناصر',fa_backup_now:'نسخة احتياطية',fa_auth_lookup:'تعريف الحساب (الدخول الجديد)',fa_login_acc:'الدخول بالحساب',fa_change_pin:'تغيير الرمز',fa_login_readiness:'جاهزية الدخول',fa_backup_list:'قائمة النسخ',fa_backup_get:'تنزيل نسخة',fa_backup_restore:'استعادة نسخة',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
 var FA_SRV={at:0,res:null};
 /* دوال يُؤمَن استدعاؤها بقيم فارغة (تفحص الرمز أو تعيد فراغاً ولا تكتب شيئاً) */
-var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile','fa_upsert_user','fa_vote','fa_profile_req','fa_ce_submit_tok','fa_players_prune','fa_save_patch','fa_state_sync','fa_state_sync2','fa_backup_list'];
+var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile','fa_upsert_user','fa_vote','fa_profile_req','fa_ce_submit_tok','fa_players_prune','fa_save_patch','fa_state_sync','fa_state_sync2','fa_backup_list','fa_login_readiness','fa_change_pin'];
 /* الفحص الحقيقي: استدعاء فعلي بأسماء المعاملات التي يستخدمها التطبيق — PGRST202 = غير موجودة أو بمعاملات مختلفة.
    (مواصفة OpenAPI وحدها كانت تعطي إنذاراً كاذباً «كل الدوال مفقودة» حين لا يعرضها الخادم) */
 function faProbeRpc(fn){
@@ -4904,6 +4914,18 @@ var FA={
     return found;
   },
   /* استعلام خادمي مباشر عن لاعب برقم الهوية (يعمل إن نُفِّذ ملف SQL) */
+  /* ===== الدخول الجديد ===== */
+  _auth:function(fn,args){
+    var self=this;
+    return self.sb.rpc(fn,args).then(function(r){
+      if(r.error){var m=String(r.error.message||'');if(/Could not find the function|PGRST202/i.test(m+String(r.error.code||'')))throw new Error('na');throw r.error;}
+      return r.data;
+    });
+  },
+  authLookup:function(ident){return this._auth('fa_auth_lookup',{p_ident:String(ident||'')});},
+  loginAcc:function(id,pin){return this._auth('fa_login_acc',{p_id:id,p_pin:pin});},
+  changePin:function(oldPin,newPin){return this._auth('fa_change_pin',{p_token:this.token,p_old:oldPin,p_new:newPin});},
+  loginReadiness:function(){return this._auth('fa_login_readiness',{p_token:this.token});},
   playerCheck:function(nid){
     var self=this;
     if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
@@ -6542,7 +6564,7 @@ function cfClose(){var m=g('cfMod');if(m)m.classList.remove('open');_CONFIRM_CB=
 function cfYes(){var cb=_CONFIRM_CB;cfClose();if(cb)cb();}
 /* استبدال confirm الأصلي: يعيد true دائماً لأن التأكيد صار عبر askConfirm */
 function askReset(){
-  var id=gv('l-name');
+  var id=(LSMODE==='name'?gv('l-name'):'')||gv('l-id')||gv('l-name');
   if(!id){nameErr('اكتب اسمك أو رقم جوالك أولاً');return;}
   if(FA.enabled){
     /* قائمة الحسابات لا تصل لشاشة الدخول: الخادم يبحث ويسجّل الطلب (بلا كشف وجود الحساب) */
@@ -6566,7 +6588,8 @@ function askReset(){
   if(e){e.textContent='تم إرسال طلب استعادة الرمز — ستستلم رمزاً مؤقتاً من إدارة النظام';e.style.color='var(--green)';fl('n-err');
     setTimeout(function(){e.style.color='';},4000);}
 }
-function tmpCode(){var s='';for(var i=0;i<4;i++)s+=Math.floor(Math.random()*10);return s;}
+/* رمز مؤقت ٦ أرقام — بلا تكرار أرقام ولا تسلسل سهل التخمين */
+function tmpCode(){for(var t=0;t<20;t++){var s='';for(var i=0;i<6;i++)s+=Math.floor(Math.random()*10);if(!/^(\d)\1{5}$/.test(s)&&'0123456789'.indexOf(s)<0&&'9876543210'.indexOf(s)<0)return s;}return '482913';}
 function setAccountPin(name,pin){
   var n=normName(name),hit=false;
   (DB.users||[]).forEach(function(u){if(normName(u.username)===n||normName(u.name)===n){u.password=pin;u.mustChange=true;hit=true;}});
@@ -6629,11 +6652,11 @@ function nameErr(msg){
   var e=g('n-err');if(e)e.textContent=msg;
   fl('n-err');
   showErrToast(msg,6000);   /* رسالة عائمة لا تُفوَّت أينما كان النظر */
-  var inp=(typeof LSMODE!=='undefined'&&LSMODE==='nid')?g('l-nid'):(g('l-name')||g('l-phone'));
+  var inp=(typeof LSMODE!=='undefined'&&LSMODE==='name')?g('l-name'):(g('l-id')||g('l-name'));
   if(inp){inp.classList.remove('err');void inp.offsetWidth;inp.classList.add('err');setTimeout(function(){inp.classList.remove('err');},700);inp.focus();}
 }
 /* ================= الدخول بالجوال ================= */
-var LSMODE='phone';
+var LSMODE='id';
 /* ===== نسخة بلا إعدادات سحابية =====
    يحدث عند فتح index.html وحده (تنزيل مباشر) بلا ملف config.js بجانبه.
    حينها لا يوجد اتصال بقاعدة البيانات ولا أي حساب حقيقي، فكل محاولة دخول
@@ -6660,30 +6683,160 @@ function faNoCloudBanner(){
     else box.appendChild(el);
   }catch(e){}
 }
-function lsMode(m){
-  LSMODE=m;
-  faNoCloudBanner();
-  ['phone','nid','name'].forEach(function(k){
-    var f=g('lf-'+k);
-    if(f)f.style.display=(m===k)?'':'none';
+/* ===== رمز جديد إلزامي (٦ أرقام) =====
+   بعد الدخول برمز مؤقت من الإدارة، أو برمز قديم من ٤ أرقام. لا يمكن تجاوزه —
+   الخيار الآخر الوحيد «خروج». الخادم يتحقق من الرمز الحالي ويرفض الضعيف. */
+var PINUP={old:'',done:null};
+function pinUpgradeOpen(oldPin,done,why){
+  PINUP={old:oldPin,done:done};
+  var bn=g('pinUpMod');
+  if(!bn){bn=document.createElement('div');bn.id='pinUpMod';document.body.appendChild(bn);}
+  bn.setAttribute('role','dialog');bn.setAttribute('aria-modal','true');
+  bn.style.cssText='position:fixed;inset:0;z-index:100001;background:rgba(10,12,30,.8);display:flex;align-items:center;justify-content:center;padding:16px;direction:rtl';
+  var inp='direction:ltr;text-align:center;letter-spacing:.55em;font-size:22px;width:100%;padding:.7rem;border-radius:12px;border:1.5px solid var(--brd,#ccd);background:var(--bg2,#fff);color:inherit';
+  bn.innerHTML='<div style="background:var(--card,#fff);color:var(--text,#181946);max-width:380px;width:100%;border-radius:18px;padding:22px 20px;box-shadow:0 20px 60px rgba(0,0,0,.4)">'
+    +'<div style="text-align:center;font-size:28px;line-height:1">🔐</div>'
+    +'<div style="text-align:center;font-weight:800;font-size:16px;margin:.5rem 0 .3rem">'+(why==='temp'?'اختر رمزك السري الخاص':'رمز سري جديد من ٦ أرقام')+'</div>'
+    +'<div style="text-align:center;font-size:12.5px;line-height:1.8;opacity:.8;margin-bottom:.9rem">'
+      +(why==='temp'?'دخلت برمز مؤقت من الإدارة. اختر الآن رمزاً تعرفه أنت وحدك.':'لحماية حسابك صار الرمز السري ٦ أرقام. خطوة واحدة ولن تتكرر.')+'</div>'
+    +'<label for="pu-1" style="font-size:12px;font-weight:700">الرمز الجديد</label>'
+    +'<input type="password" id="pu-1" inputmode="numeric" maxlength="6" autocomplete="new-password" style="'+inp+';margin:.3rem 0 .7rem">'
+    +'<label for="pu-2" style="font-size:12px;font-weight:700">تأكيد الرمز</label>'
+    +'<input type="password" id="pu-2" inputmode="numeric" maxlength="6" autocomplete="new-password" style="'+inp+';margin-top:.3rem" onkeydown="if(event.key===\'Enter\')pinUpgradeSave()">'
+    +'<div id="pu-err" style="display:none;color:#DD1D45;font-size:12.5px;font-weight:700;margin-top:.6rem;text-align:center"></div>'
+    +'<button id="pu-go" onclick="pinUpgradeSave()" style="margin-top:1rem;width:100%;background:#DD1D45;color:#fff;border:none;border-radius:12px;padding:12px;font:800 14px inherit;cursor:pointer">حفظ ومتابعة</button>'
+    +'<button onclick="pinUpgradeQuit()" style="margin-top:.5rem;width:100%;background:none;border:none;color:inherit;opacity:.6;font:600 12.5px inherit;cursor:pointer;padding:6px">خروج</button>'
+    +'<div style="font-size:11px;opacity:.6;text-align:center;margin-top:.4rem">تجنّب الأرقام المتكررة أو المتسلسلة مثل 111111 و123456</div></div>';
+  setTimeout(function(){var e=g('pu-1');if(e)e.focus();},120);
+}
+function pinUpgradeSave(){
+  var a=String(gv('pu-1')||''),b=String(gv('pu-2')||''),er=g('pu-err');
+  var say=function(t){if(er){er.textContent=t;er.style.display='block';}};
+  if(!/^[0-9]{6}$/.test(a))return say('الرمز ٦ أرقام');
+  if(a!==b)return say('الرمزان غير متطابقين');
+  if(/^(\d)\1{5}$/.test(a)||'0123456789'.indexOf(a)>-1||'9876543210'.indexOf(a)>-1||/^(\d\d\d)\1$/.test(a))return say('رمز سهل التخمين — اختر رمزاً آخر');
+  if(a===PINUP.old)return say('اختر رمزاً مختلفاً عن الحالي');
+  var btn=g('pu-go');if(btn){btn.disabled=true;btn.style.opacity='.65';}
+  FA.changePin(PINUP.old,a).then(function(r){
+    if(btn){btn.disabled=false;btn.style.opacity='';}
+    if(r&&r.ok){
+      var bn=g('pinUpMod');if(bn)bn.remove();
+      try{var mu=(DB.users||[]).find(function(x){return CU&&x.id===CU.id;});if(mu){mu.pinSet=true;}}catch(e){}
+      addN('تم تغيير الرمز السري','استخدم الرمز الجديد في المرات القادمة','success');
+      var d=PINUP.done;PINUP={old:'',done:null};if(d)d();
+      return;
+    }
+    var m={old:'انتهت الجلسة — ادخل من جديد',len:'الرمز ٦ أرقام',same:'اختر رمزاً مختلفاً عن الحالي',weak:'رمز سهل التخمين — اختر رمزاً آخر',locked:'محاولات كثيرة — انتظر ١٥ دقيقة'};
+    say(m[r&&r.err]||'تعذّر الحفظ');
+  }).catch(function(e){
+    if(btn){btn.disabled=false;btn.style.opacity='';}
+    if(e&&e.message==='na'){var bn=g('pinUpMod');if(bn)bn.remove();var d=PINUP.done;PINUP={old:'',done:null};if(d)d();return;}   /* الخادم قبل التحديث */
+    say('تعذّر الاتصال — حاول مجدداً');
   });
-  /* تبويب «موظف» يغطي الجوال والاسم معاً */
-  var ts=g('ltab-staff'),tn=g('ltab-nid');
-  if(ts)ts.classList.toggle('on',m==='phone'||m==='name');
-  if(tn)tn.classList.toggle('on',m==='nid');
-  var e=g(m==='phone'?'l-phone':(m==='nid'?'l-nid':'l-name'));
+}
+function pinUpgradeQuit(){var bn=g('pinUpMod');if(bn)bn.remove();PINUP={old:'',done:null};try{doLogout();}catch(e){}}
+function faLoginPhoneOnly(){return !!(DB&&DB.settings&&DB.settings.loginPhoneOnly);}
+function lsMode(m){
+  /* خانة واحدة للجوال أو الهوية؛ «الاسم» مسار قديم يبقى حتى يفعّل المدير الدخول بالجوال فقط */
+  if(m!=='name'||faLoginPhoneOnly())m='id';
+  LSMODE=m;LOGIN_ACC=null;
+  faNoCloudBanner();
+  var show={id:m==='id',name:m==='name'};
+  ['id','name'].forEach(function(k){var f=g('lf-'+k);if(f)f.style.display=show[k]?'':'none';});
+  ['phone','nid','acc'].forEach(function(k){var f=g('lf-'+k);if(f)f.style.display='none';});
+  var sw=g('lswap-name');if(sw)sw.style.display=faLoginPhoneOnly()?'none':'';
+  var nb=g('l-next');if(nb)nb.style.display='';
+  var e=g(m==='name'?'l-name':'l-id');
   if(e)setTimeout(function(){e.focus();},60);
   var er=g('n-err');if(er)er.style.display='none';
 }
 function lsNext(){
   try{
-    if(LSMODE==='phone')return goPhone();
-    if(LSMODE==='nid')return goNid();
-    return goPin();
+    if(LSMODE==='name')return goPin();
+    return goIdent();
   }catch(e){
     console.error('[login] خطأ:',e);
     nameErr('تعذّر إكمال العملية — حدّث الصفحة وحاول مجدداً');
   }
+}
+/* ===== الدخول الجديد: من أنت؟ ===== */
+var LOGIN_ACC=null,LS_ACCS=[];
+function goIdent(){
+  var raw=String(gv('l-id')||'').trim(),d=raw.replace(/[^0-9]/g,'');
+  if(!raw){nameErr('اكتب رقم جوالك أو رقم هويتك');return;}
+  /* رقم هوية/إقامة: مسار اللاعب كما هو */
+  if(/^[12][0-9]{9}$/.test(d)){var ni=g('l-nid');if(ni)ni.value=d;return goNid();}
+  /* كتب اسماً (قبل تفعيل الدخول بالجوال فقط) */
+  if(/[^0-9\s+\-()]/.test(raw)){
+    if(faLoginPhoneOnly()){nameErr('الدخول برقم الجوال أو الهوية فقط — اكتب رقم جوالك 05XXXXXXXX');return;}
+    var ne=g('l-name');if(ne)ne.value=raw;LSMODE='name';return goPin();
+  }
+  if(!phoneOK(raw)){nameErr(d.length===10&&/^[12]/.test(d)?'رقم الهوية غير صحيح':'الرقم غير صحيح — الجوال 10 أرقام يبدأ بـ 05، والهوية 10 أرقام تبدأ بـ 1 أو 2');return;}
+  var legacy=function(){var ph=g('l-phone');if(ph)ph.value=normPhone(raw).slice(-9);LSMODE='phone';goPhone();};
+  if(!FA.enabled)return legacy();
+  lsBusy(true,'جارٍ البحث عن حسابك…');
+  FA.authLookup(raw).then(function(res){
+    lsBusy(false);
+    if(!res){nameErr('تعذّر التحقق — حاول مجدداً');return;}
+    if(res.kind==='locked'){nameErr('محاولات كثيرة من هذا الجهاز — انتظر ١٥ دقيقة ثم أعد المحاولة');return;}
+    if(res.kind==='none'){nameErr('لا يوجد حساب بهذا الرقم. اللاعب يدخل برقم هويته، والموظف يطلب من الإدارة تسجيل جواله في حسابه.');return;}
+    if(res.kind!=='staff'||!(res.accounts||[]).length){nameErr('أدخل رقم جوال صحيح');return;}
+    if(res.accounts.length===1)return pinStart(res.accounts[0]);
+    lsChoose(res.accounts);
+  }).catch(function(e){
+    lsBusy(false);
+    if(e&&e.message==='na')return legacy();          /* الخادم قبل تحديث الدخول: المسار القديم */
+    nameErr('تعذّر الاتصال بالخادم — تحقق من الإنترنت ثم أعد المحاولة');
+  });
+}
+/* رقم مشترك (أقارب، أو أكثر من حساب): يختار صاحبه اسمه */
+function lsChoose(list){
+  LS_ACCS=list||[];
+  var box=g('lf-acc');if(!box)return;
+  var h='<label>هذا الرقم مرتبط بأكثر من حساب — اختر اسمك</label>';
+  LS_ACCS.forEach(function(a,i){
+    h+='<button type="button" class="lacc" onclick="pinStart(LS_ACCS['+i+'])"><span class="av">'+esc(ti(a.name||''))+'</span><span>'+esc(a.name||'')+'<small>'+esc(roleLabel(a.role)||'')+'</small></span></button>';
+  });
+  h+='<div class="lhint" style="margin-top:.6rem"><a href="#" class="lswap" onclick="event.preventDefault();lsMode(\'id\')">رقم آخر</a></div>';
+  box.innerHTML=h;
+  ['id','name'].forEach(function(k){var f=g('lf-'+k);if(f)f.style.display='none';});
+  box.style.display='';
+  var nb=g('l-next');if(nb)nb.style.display='none';
+}
+function pinStart(acc){
+  if(!acc)return;
+  LOGIN_ACC=acc;
+  setPinLen(acc.pin_len||4);
+  var nEl=g('l-name');if(nEl)nEl.value=acc.name||'';
+  g('pin-nm').textContent=acc.name||'';
+  g('pin-av').textContent=ti(acc.name||'');
+  pinReset();var pe=g('p-err');if(pe)pe.style.display='none';
+  g('ls-s1').style.display='none';g('ls-s2').style.display='block';
+  setTimeout(function(){var e=g('p1');if(e)e.focus();},120);
+}
+function doLoginAcc(){
+  if(LOGIN_BUSY)return;
+  var pass=getPin();
+  if(pass.length!==PIN_LEN){fl('p-err');return;}
+  LOGIN_BUSY=true;
+  loadShow('جارٍ التحقق من الرمز…','أكاديمية فارس');
+  FA.loginAcc(LOGIN_ACC.id,pass).then(function(res){
+    if(!res||!res.ok){
+      LOGIN_BUSY=false;
+      var er=res&&res.err;
+      if(er==='locked'){pinMsg('أُوقف الدخول ١٥ دقيقة بعد ٥ محاولات خاطئة — انتظر أو اطلب رمزاً جديداً من الإدارة');return;}
+      if(er==='expired'){pinMsg('انتهت صلاحية الرمز المؤقت (٢٤ ساعة) — ارجع واضغط «نسيت الرمز السري؟» لطلب رمز جديد');return;}
+      pinErr();
+      if(res&&res.left!=null&&res.left<=2){var pe=g('p-err');if(pe)pe.textContent='الرمز السري غير صحيح — '+(res.left?'بقيت '+res.left+' محاولة قبل الإيقاف المؤقت':'أُوقف الدخول ١٥ دقيقة');}
+      return;
+    }
+    faLoginSuccess(res,pass);
+  }).catch(function(e){
+    LOGIN_BUSY=false;
+    var em=String(e&&e.message||e||'');
+    if(/Failed to fetch|NetworkError|Load failed|timed? ?out|abort|ERR_/i.test(em)){pinMsg('تعذّر الاتصال بالخادم — تحقق من الإنترنت ثم أعد المحاولة');return;}
+    pinMsg('تعذّر الدخول: '+em.slice(0,90));
+  });
 }
 /* حسابات موثّقة بهذا الرقم */
 function usersByPhone(v){
@@ -6721,7 +6874,7 @@ function goPhone(){
       return normPhone(x.phone)===nn||normPhone(x.guardPhone)===nn;});
     if(asPlayer){
       nameErr('هذا الرقم مسجّل للاعب — ادخل برقم هوية اللاعب');
-      setTimeout(function(){lsMode('nid');var e=g('l-nid');if(e)e.focus();},1600);
+      setTimeout(function(){lsMode('nid');var e=g('l-id');if(e)e.focus();},1600);
       return;
     }
     nameErr('لا يوجد حساب مرتبط بهذا الرقم — جرّب الدخول بالاسم');
@@ -6756,8 +6909,8 @@ function askPhone(){
     +'أكّد رقم جوالك'+(needPin?' واختر رمزاً سرياً جديداً تعرفه أنت وحدك':'')+'. تُطلب مرة واحدة فقط.</div></div>';
   h+='<div class="fg"><label>رقم الجوال *</label>'+phoneField('ap-phone',u&&u.phone?u.phone:'')+'</div>';
   if(needPin){
-    h+='<div class="fg"><label>رمز سري جديد (4 أرقام) *</label><input type="password" id="ap-pin" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
-    h+='<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="ap-pin2" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
+    h+='<div class="fg"><label>رمز سري جديد (6 أرقام) *</label><input type="password" id="ap-pin" inputmode="numeric" maxlength="6" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
+    h+='<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="ap-pin2" inputmode="numeric" maxlength="6" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
   }
   h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="savePhone()">'+ic('check',14)+' حفظ ومتابعة</button>';
   h+='<div class="msg ok" id="apm-ok">تم الحفظ</div><div class="msg err" id="apm-err">تحقق من البيانات</div>';
@@ -6782,7 +6935,7 @@ function savePhone(){
   var needPin=!u.pinSet, pin='';
   if(needPin){
     pin=gv('ap-pin');var pin2=gv('ap-pin2');
-    if(!/^[0-9]{4}$/.test(pin)){g('apm-err').textContent='الرمز يجب أن يكون 4 أرقام';fl('apm-err');return;}
+    if(!/^[0-9]{6}$/.test(pin)){g('apm-err').textContent='الرمز يجب أن يكون 6 أرقام';fl('apm-err');return;}
     if(pin!==pin2){g('apm-err').textContent='الرمزان غير متطابقين';fl('apm-err');return;}
   }
   u.phone=n;u.phoneVerified=true;delete u.phoneSkipped;
@@ -6971,7 +7124,7 @@ function nidProceed(p){
       doLogout();
       setTimeout(function(){
         lsMode('nid');
-        var e=g('l-nid');if(e){e.value=normNid(p.nid||'');e.focus();}
+        var e=g('l-id');if(e){e.value=normNid(p.nid||'');e.focus();}
         showErrToast('تم تسجيل الخروج — اضغط «التالي» لمتابعة التفعيل',6000);
       },500);
     },'تسجيل الخروج');
@@ -6994,7 +7147,7 @@ function nidPinPrompt(p){
   g('na-av').textContent=ti(p.name||'');
   g('na-nm').textContent='تسجيل الدخول';
   var h='<div class="ped-note free">'+ic('check',14)+'<div><b>'+esc(p.name||'')+'</b><br>أدخل رمزك السري للدخول.</div></div>';
-  h+='<div class="fg"><label>الرمز السري (4 أرقام) *</label><input type="password" id="na-lpin" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px" onkeydown="if(event.key===\'Enter\')nidDoLogin()"></div>';
+  h+='<div class="fg"><label>الرمز السري *</label><input type="password" id="na-lpin" inputmode="numeric" maxlength="6" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px" onkeydown="if(event.key===\'Enter\')nidDoLogin()"></div>';
   h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidDoLogin()">'+ic('check',14)+' دخول</button>';
   h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="closeNidAct()">رجوع</button>';
   h+='<div class="msg err" id="na-lerr">الرمز غير صحيح</div>';
@@ -7003,21 +7156,23 @@ function nidPinPrompt(p){
   setTimeout(function(){var e=g('na-lpin');if(e)e.focus();},150);
 }
 /* دخول اللاعب بعد نجاح الخادم: رمز جلسة ← تحميل بياناته هو فقط ← الدخول */
-function playerSessionStart(res,nid,onErr){
+function playerSessionStart(res,nid,onErr,pin){
   FA.token=res.token||null;
   CU={id:res.id,name:res.name||'',username:res.username||nid,role:'player',pid:res.pid,team:res.team||'',nid:nid};
   loadShow('جارٍ تحميل بياناتك…',res.name||'');
-  var go=function(){closeNidAct();try{sessSave();}catch(e){}loginOK();if(CEPUB&&CEPUB.resume){CEPUB.resume=false;setTimeout(function(){CEPUB.step=1;cePubOpen();},400);}};
+  var go0=function(){closeNidAct();try{sessSave();}catch(e){}loginOK();if(CEPUB&&CEPUB.resume){CEPUB.resume=false;setTimeout(function(){CEPUB.step=1;cePubOpen();},400);}};
+  /* رمز قديم (٤ أرقام) أو مؤقت: رمز جديد من ٦ أرقام قبل الدخول */
+  var go=function(){if(pin&&(res.must_change||(res.pin_len&&res.pin_len<6))){loadHide();closeNidAct();pinUpgradeOpen(pin,go0,res.must_change?'temp':'upgrade');}else go0();};
   if(!FA.token){go();return;}
   FA.loadState().then(function(st){if(st&&st.tournaments)DB=migrate(st)||DB;go();})
     .catch(function(e){loadHide();if(onErr)onErr('تعذّر تحميل بياناتك — '+String(e&&e.message||e).slice(0,80));});
 }
 function nidDoLogin(){
   var pin=gv('na-lpin');
-  if(!/^[0-9]{4}$/.test(pin)){g('na-lerr').textContent='الرمز 4 أرقام';fl('na-lerr');return;}
+  if(!/^([0-9]{4}|[0-9]{6})$/.test(pin)){g('na-lerr').textContent='اكتب رمزك كاملاً';fl('na-lerr');return;}
   FA.playerLogin(NIDFLOW.nid,pin).then(function(res){
-    if(!res||!res.ok){g('na-lerr').textContent='الرمز غير صحيح';fl('na-lerr');return;}
-    playerSessionStart(res,NIDFLOW.nid,function(m){g('na-lerr').textContent=m;fl('na-lerr');});
+    if(!res||!res.ok){g('na-lerr').textContent=(res&&res.err==='expired')?'انتهت صلاحية الرمز المؤقت — اطلب رمزاً جديداً من الإدارة':'الرمز غير صحيح';fl('na-lerr');return;}
+    playerSessionStart(res,NIDFLOW.nid,function(m){g('na-lerr').textContent=m;fl('na-lerr');},pin);
   }).catch(function(e){var em=String(e&&e.message||e||'');g('na-lerr').textContent=/locked/.test(em)?'أُوقفت المحاولات ١٥ دقيقة بعد محاولات خاطئة':'تعذّر الاتصال — حاول مجدداً';fl('na-lerr');});
 }
 /* شاشة واحدة لأول دخول: الحساب موجود أصلاً منذ تسجيل بيانات اللاعب،
@@ -7039,8 +7194,8 @@ function openNidActivate(p){
     +'<select id="na-dm">'+mOpts+'</select>'
     +'<select id="na-dy">'+yOpts+'</select>'
     +'</div></div>';
-  h+='<div class="fg"><label>رمز سري (4 أرقام) *</label><input type="password" id="na-pin" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
-  h+='<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="na-pin2" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px" onkeydown="if(event.key===\'Enter\')nidFinish()"></div>';
+  h+='<div class="fg"><label>رمز سري (6 أرقام) *</label><input type="password" id="na-pin" inputmode="numeric" maxlength="6" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"></div>';
+  h+='<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="na-pin2" inputmode="numeric" maxlength="6" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px" onkeydown="if(event.key===\'Enter\')nidFinish()"></div>';
   h+='<div class="fg"><label>رقم الجوال <small>(اختياري — يسهّل دخولك لاحقاً)</small></label>'+phoneField('na-phone',p.phone||'')+'</div>';
   h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidFinish()">'+ic('check',14)+' دخول</button>';
   h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="closeNidAct()">رجوع</button>';
@@ -7064,7 +7219,7 @@ function nidFinish(){
   }
   NIDFLOW.dobStr=dstr;NIDFLOW.step=2;
   var pin=gv('na-pin'),pin2=gv('na-pin2'),ph=phoneVal('na-phone');
-  if(!/^[0-9]{4}$/.test(pin)){g('na-err2').textContent='الرمز يجب أن يكون 4 أرقام';fl('na-err2');return;}
+  if(!/^[0-9]{6}$/.test(pin)){g('na-err2').textContent='الرمز يجب أن يكون 6 أرقام';fl('na-err2');return;}
   if(pin!==pin2){g('na-err2').textContent='الرمزان غير متطابقان';fl('na-err2');return;}
   if(ph&&!phoneOK(ph)){g('na-err2').textContent='رقم الجوال غير صحيح';fl('na-err2');return;}
   if(ph&&phoneFake(ph)){g('na-err2').textContent='رقم الجوال غير مقبول';fl('na-err2');return;}
@@ -7079,7 +7234,7 @@ function nidFinish(){
     var dobStr=(NIDFLOW.dobStr||p.dob||'');
     FA.playerActivate(normNid(p.nid),dobStr,pin).then(function(res){
       if(!res||!res.ok){
-        var m={nid:'رقم الهوية غير صحيح',pin:'الرمز يجب أن يكون 4 أرقام',
+        var m={nid:'رقم الهوية غير صحيح',pin:'الرمز يجب أن يكون 6 أرقام',
                notfound:'رقم الهوية غير مسجّل',nodob:'تاريخ ميلادك غير مسجّل لدى الأكاديمية — راجع الإدارة',
                dob:'تاريخ الميلاد غير مطابق',state:'تعذّر الوصول لقاعدة البيانات',
                exists:'حسابك مفعّل مسبقاً — ادخل برمزك السري، أو اطلب «نسيت الرمز»',
@@ -7131,13 +7286,13 @@ function goPin(){
       nameErr('حسابات اللاعبين تدخل برقم الهوية — سنحوّلك الآن');
       setTimeout(function(){
         lsMode('nid');
-        var e=g('l-nid');if(e){e.value='';e.focus();}
+        var e=g('l-id');if(e){e.value='';e.focus();}
       },1500);
       return;
     }
     /* السحابة مفعّلة: البيانات لم تصل بعد (جهاز جديد) — دع الخادم يتحقق */
     if(FA.enabled){
-      g('ls-s1').style.display='none';g('ls-s2').style.display='block';
+      g('ls-s1').style.display='none';g('ls-s2').style.display='block';pinLegacyLen();
       g('pin-nm').textContent=name;g('pin-av').textContent=ti(name);
       pinReset();g('p-err').style.display='none';
       setTimeout(function(){var e=g('p1');if(e)e.focus();},120);
@@ -7151,23 +7306,42 @@ function goPin(){
   if(acc.status==='rejected'){nameErr('تم رفض طلب انضمامك — تواصل مع الإدارة');return;}
   name=acc.name;g('l-name').value=name;
   var disp=acc.display||name;                 /* الاسم للعرض، والمعرّف للدخول */
-  g('ls-s1').style.display='none';g('ls-s2').style.display='block';
+  g('ls-s1').style.display='none';g('ls-s2').style.display='block';pinLegacyLen();
   g('pin-nm').textContent=disp;g('pin-av').textContent=ti(disp);
   pinReset();
   g('p-err').style.display='none';
   setTimeout(function(){g('p1').focus();},80);
 }
-function goBack(){loadHide();LOGIN_BUSY=false;pinReset();lsMode(LSMODE);g('ls-s2').style.display='none';g('ls-s1').style.display='block';}
-function pI(el,n){el.value=el.value.replace(/[^0-9]/g,'');if(el.value&&n<4)g('p'+(n+1)).focus();if(el.value&&n===4)setTimeout(doLogin,140);}
+/* المسار القديم (بالاسم): طول الرمز غير معروف مسبقاً — ٦ خانات، ويُقبل ٤ بزر «دخول» */
+function pinLegacyLen(){LOGIN_ACC=null;setPinLen(6);var l=g('pin-lbl');if(l)l.textContent='أدخل الرمز السري (٤ أو ٦ أرقام)';}
+function goBack(){loadHide();LOGIN_BUSY=false;LOGIN_ACC=null;pinReset();lsMode(LSMODE);g('ls-s2').style.display='none';g('ls-s1').style.display='block';}
+/* طول الرمز حسب الحساب: ٤ (قديم) أو ٦ */
+var PIN_LEN=4;
+function pinIdx(){var a=[];for(var i=1;i<=PIN_LEN;i++)a.push(i);return a;}
+function setPinLen(n){
+  PIN_LEN=(+n===6)?6:4;
+  [5,6].forEach(function(i){var e=g('p'+i);if(e)e.style.display=PIN_LEN>=i?'':'none';});
+  var r=document.querySelector('#ls-s2 .pin-row');if(r)r.classList.toggle('six',PIN_LEN===6);
+  var l=g('pin-lbl');if(l)l.textContent='أدخل الرمز السري ('+PIN_LEN+' أرقام)';
+}
+function pI(el,n){
+  var v=el.value.replace(/[^0-9]/g,'');
+  /* لصق الرمز كاملاً في خانة واحدة: يُوزَّع على الخانات */
+  if(v.length>1){var ds=v.split('');for(var k=0;k<ds.length&&n+k<=PIN_LEN;k++){var e=g('p'+(n+k));if(e)e.value=ds[k];}
+    var last=Math.min(PIN_LEN,n+ds.length-1);var le=g('p'+last);if(le)le.focus();if(getPin().length===PIN_LEN)setTimeout(doLogin,140);return;}
+  el.value=v;
+  if(el.value&&n<PIN_LEN)g('p'+(n+1)).focus();
+  if(el.value&&n===PIN_LEN)setTimeout(doLogin,140);
+}
 function pK(e,n){if(e.key==='Backspace'&&!e.target.value&&n>1)g('p'+(n-1)).focus();if(e.key==='Enter')doLogin();}
-function getPin(){return[1,2,3,4].map(function(i){return g('p'+i).value;}).join('');}
+function getPin(){return pinIdx().map(function(i){return g('p'+i).value;}).join('');}
 var PIN_SHOWN=false;
 function pinApplyMask(){
   /* تبديل نوع الحقل هو الطريقة الوحيدة الموثوقة — حقل password يخفيه المتصفح
      نفسه ولا تلغيه أي قاعدة CSS */
-  var act=document.activeElement, isPin=act&&/^p[1-4]$/.test(act.id||''), pos=0;
+  var act=document.activeElement, isPin=act&&/^p[1-6]$/.test(act.id||''), pos=0;
   if(isPin){try{pos=act.selectionStart;}catch(e){}}
-  [1,2,3,4].forEach(function(i){
+  [1,2,3,4,5,6].forEach(function(i){
     var e=g('p'+i);if(!e)return;
     e.type=PIN_SHOWN?'text':'password';
   });
@@ -7181,7 +7355,7 @@ function pinReveal(){
 }
 function pinReset(){
   PIN_SHOWN=false;
-  [1,2,3,4].forEach(function(i){var e=g('p'+i);if(e){e.value='';e.className='pbox';e.type='password';}});
+  [1,2,3,4,5,6].forEach(function(i){var e=g('p'+i);if(e){e.value='';e.className='pbox';e.type='password';}});
   var b=g('pin-eye');if(b){b.innerHTML=ic('eye',14)+' إظهار الرمز';}
 }
 /* رسالة في شاشة الرمز بلا مسح الرمز (لأخطاء الشبكة والخادم) */
@@ -7198,9 +7372,9 @@ function pinErr(){
   if(_pe)_pe.textContent=faNoCloud()
     ? 'هذه النسخة غير متصلة بقاعدة البيانات — افتح الموقع من رابطه الرسمي'
     : 'الرمز السري غير صحيح';
-  [1,2,3,4].forEach(function(i){var e=g('p'+i);e.className='pbox err';e.value='';});
+  pinIdx().forEach(function(i){var e=g('p'+i);e.className='pbox err';e.value='';});
   fl('p-err');
-  setTimeout(function(){[1,2,3,4].forEach(function(i){g('p'+i).className='pbox';});g('p1').focus();},650);
+  setTimeout(function(){pinIdx().forEach(function(i){g('p'+i).className='pbox';});g('p1').focus();},650);
 }
 
 /* ================= شاشة التحميل ================= */
@@ -7236,6 +7410,7 @@ function loadHide(){
 }
 var LOGIN_BUSY=false;
 function doLogin(){
+  if(LOGIN_ACC&&FA.enabled)return doLoginAcc();   /* الدخول الجديد: الحساب محدد من الجوال */
   if(LOGIN_BUSY)return;                      /* امنع الضغط المزدوج */
   var name=gv('l-name'),pass=getPin();
   if(pass.length<4){fl('p-err');return;}
@@ -7244,6 +7419,27 @@ function doLogin(){
     loadShow('جارٍ التحقق من الرمز…','أكاديمية فارس');
     FA.login(name,pass).then(function(u){
       if(!u){LOGIN_BUSY=false;pinErr();return;}
+      faLoginSuccess(u,pass);
+    }).catch(function(e){
+      console.warn('login error',e);LOGIN_BUSY=false;
+      var em=String(e&&e.message||e||'');
+      if(em.indexOf('expired')>-1){pinMsg('انتهت صلاحية الرمز المؤقت (٢٤ ساعة) — اطلب رمزاً جديداً من الإدارة');return;}
+      if(em.indexOf('locked')>-1){
+        loadHide();goBack();
+        nameErr('أُوقفت المحاولات مؤقتاً بعد محاولات خاطئة متكررة — انتظر ١٥ دقيقة ثم أعد المحاولة');
+        return;
+      }
+      if(/Failed to fetch|NetworkError|Load failed|timed? ?out|abort|ERR_/i.test(em)){pinMsg('تعذّر الاتصال بالخادم — تحقق من الإنترنت ثم أعد المحاولة');return;}
+      if(/Could not find|PGRST|schema cache|does not exist|permission denied|JWT|apikey/i.test(em)){pinMsg('خلل في إعداد الخادم — أبلغ مدير النظام ('+em.slice(0,80)+')');return;}
+      if(em&&!/null|undefined/.test(em)){pinMsg('تعذّر الدخول: '+em.slice(0,90));return;}
+      pinErr();
+    });
+    return;
+  }
+  doLoginLocal(name,pass);
+}
+/* بعد نجاح الخادم (بالجوال أو بالاسم): الجلسة ← البيانات ← الرمز الجديد إن لزم ← الدخول */
+function faLoginSuccess(u,pass){
       FA.token=u.token;
       loadStep('جارٍ تحميل بياناتك…',u.name||'');
       /* refresh state from cloud on login so we have latest, then enter */
@@ -7265,27 +7461,14 @@ function doLogin(){
         mem.pinSet=true;
         if(mem.phone&&phoneOK(mem.phone))mem.phoneVerified=true;
         CU=Object.assign({},mem);
-        loadStep('جارٍ تجهيز الواجهة…','مرحباً بك');
         LOGIN_BUSY=false;
-        setTimeout(function(){loginOK();},260);   /* لحظة قصيرة حتى تُقرأ الرسالة */
+        var go=function(){loadStep('جارٍ تجهيز الواجهة…','مرحباً بك');setTimeout(function(){loginOK();},260);};
+        /* رمز مؤقت من الإدارة، أو رمز قديم من ٤ أرقام: رمز جديد قبل الدخول */
+        if(u.must_change||(u.pin_len&&u.pin_len<6)){loadHide();pinUpgradeOpen(pass,go,u.must_change?'temp':'upgrade');}
+        else go();
       });
-    }).catch(function(e){
-      console.warn('login error',e);LOGIN_BUSY=false;
-      var em=String(e&&e.message||e||'');
-      if(em.indexOf('locked')>-1){
-        loadHide();goBack();
-        nameErr('أُوقفت المحاولات مؤقتاً بعد محاولات خاطئة متكررة — انتظر ١٥ دقيقة ثم أعد المحاولة');
-        return;
-      }
-      /* انقطاع شبكة أو خلل في الخادم ليس «رمزاً خاطئاً»: كانت الرسالة تضلّل المستخدم
-         فيعيد المحاولة حتى يُقفل حسابه. نقول السبب الحقيقي ولا نمسح الرمز. */
-      if(/Failed to fetch|NetworkError|Load failed|timed? ?out|abort|ERR_/i.test(em)){pinMsg('تعذّر الاتصال بالخادم — تحقق من الإنترنت ثم أعد المحاولة');return;}
-      if(/Could not find|PGRST|schema cache|does not exist|permission denied|JWT|apikey/i.test(em)){pinMsg('خلل في إعداد الخادم — أبلغ مدير النظام ('+em.slice(0,80)+')');return;}
-      if(em&&!/null|undefined/.test(em)){pinMsg('تعذّر الدخول: '+em.slice(0,90));return;}
-      pinErr();
-    });
-    return;
-  }
+}
+function doLoginLocal(name,pass){
   var u=DB.users.find(function(x){return x.username===name&&x.password===pass;});
   if(!u){
     var jr=DB.joinReqs.find(function(r){return r.name===name&&r.pin===pass&&r.status==='approved';});
@@ -7306,7 +7489,7 @@ function doLogin(){
 /* ================= حفظ الجلسة =================
    تبقى الجلسة فعّالة بعد تحديث الصفحة حتى تنتهي مدتها أو يخرج المستخدم.
    لا يُحفظ الرمز السري إطلاقاً — فقط معرّف الجلسة ورمز الخادم. */
-var SESS_KEY='faris_session', SESS_HOURS=12;
+var SESS_KEY='faris_session', SESS_HOURS=24*30;   /* ٣٠ يوماً — والخادم ينهي الجلسة بعد ٣٠ يوماً بلا استخدام */
 function sessSave(){
   try{
     if(!CU)return;
@@ -7360,7 +7543,8 @@ function sessRestore(){
     else if(v.sys==='app'&&AT)selT(AT);
     else showTS();
   }catch(e){showTS();}
-  logA('استئناف الجلسة','user','#1565c0',true);   /* بلا رفع للبيانات عند كل فتح للصفحة */
+  logA('استئناف الجلسة','user','#1565c0',true);
+  setTimeout(function(){try{sessSave();}catch(e){}},1500);   /* تمديد الجلسة مع كل استخدام */   /* بلا رفع للبيانات عند كل فتح للصفحة */
   return true;
 }
 function loginOK(){
@@ -7733,7 +7917,7 @@ function acCreateUserFromRec(x){
          coachId:(x.rec?x.rec.id:x.c.id),password:pin,pinSet:!!pin,src:'auto',at:Date.now(),
          assign:[{id:uid(),sys:'td',role:'coach',scope:brs.slice()},{id:uid(),sys:'ce',role:'coach',scope:brs.slice()},{id:uid(),sys:'app',role:'team-coach',scope:brs.slice()}]};
   /* حساب جديد بلا رمز معروف: لا يُدفع للخادم إلا برمز حقيقي (دفعُه برمز افتراضي كان يلغي رموز المدربين الحقيقية) */
-  if(!pin){pin=String(1000+Math.floor(Math.random()*9000));u.password=pin;u.pinSet=true;u.pinAuto=true;}
+  if(!pin){pin=tmpCode();u.password=pin;u.pinSet=true;u.pinAuto=true;}
   DB.users.push(u);
   if(x.rec&&!x.rec.user)x.rec.user=username;
   if(FA.enabled&&FA.token){try{faSync(FA.upsertUser(u,pin));}catch(e){}}
@@ -8327,7 +8511,7 @@ function openCT(){
 }
 function ctAddCoach(){
   var tr=document.createElement('tr');
-  tr.innerHTML='<td><input type="text" placeholder="اسم المدرب"></td><td><input type="tel" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td><input type="tel" inputmode="numeric" placeholder="1234" maxlength="4" style="direction:ltr;width:70px"></td><td><button class="del-btn" onclick="this.closest(\'tr\').remove()">'+ic('x',13)+'</button></td>';
+  tr.innerHTML='<td><input type="text" placeholder="اسم المدرب"></td><td><input type="tel" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td><input type="tel" inputmode="numeric" placeholder="123456" maxlength="6" style="direction:ltr;width:70px"></td><td><button class="del-btn" onclick="this.closest(\'tr\').remove()">'+ic('x',13)+'</button></td>';
   g('ct-coaches').appendChild(tr);hydrateIcons(tr);
 }
 /* copy a global team into a tournament (respecting its birth years) */
@@ -8376,7 +8560,7 @@ function tmAddToTour(name){
 function createTeam(){
   var name=gv('ct-name'),city=gv('ct-city');
   var an=gv('ct-aname'),ap=normPhone(gv('ct-aphone')),apin=gv('ct-apin');
-  if(!name||!city||!an||!ap||apin.length!==4){g('ct-err').textContent='أكمل: اسم الأكاديمية، المدينة، وبيانات الإداري (رمز 4 أرقام)';fl('ct-err');return;}
+  if(!name||!city||!an||!ap||apin.length!==6){g('ct-err').textContent='أكمل: اسم الأكاديمية، المدينة، وبيانات الإداري (رمز 6 أرقام)';fl('ct-err');return;}
   if(!phoneOK(ap)){g('ct-err').textContent='جوال الإداري غير صحيح — 05XXXXXXXX';fl('ct-err');return;}
   if(!gv('ct-img')){g('ct-err').textContent='شعار الأكاديمية مطلوب';fl('ct-err');return;}
   if(gTeam(name)||DB.tournaments.some(function(tr){return (tr.teams||[]).some(function(t){return t.name===name;});})){g('ct-err').textContent='اسم الأكاديمية مستخدم مسبقاً';fl('ct-err');return;}
@@ -8387,7 +8571,7 @@ function createTeam(){
   g('ct-coaches').querySelectorAll('tr').forEach(function(tr){
     var ins=tr.querySelectorAll('input');var cn=ins[0].value.trim(),cp=normPhone(ins[1].value.trim()),cpin=ins[2].value.trim();
     if(!cn)return;
-    if(cp===''||cpin.length!==4){bad=true;return;}
+    if(cp===''||cpin.length!==6){bad=true;return;}
     if(!phoneOK(cp)){bad='phone';return;}
     if(DB.users.some(function(u){return u.username===cn;})||coachUsers.some(function(u){return u.username===cn;})){bad='dup';return;}
     var cid=uid();
@@ -8396,7 +8580,7 @@ function createTeam(){
   });
   if(bad==='dup'){g('ct-err').textContent='اسم مدرب مستخدم في حساب آخر';fl('ct-err');return;}
   if(bad==='phone'){g('ct-err').textContent='جوال أحد المدربين غير صحيح — 05XXXXXXXX';fl('ct-err');return;}
-  if(bad){g('ct-err').textContent='أكمل جوال ورمز (4 أرقام) لكل مدرب';fl('ct-err');return;}
+  if(bad){g('ct-err').textContent='أكمل جوال ورمز (6 أرقام) لكل مدرب';fl('ct-err');return;}
   /* create team in global store first */
   var isExt=!!(g('ct-ext')&&g('ct-ext').checked);
   var newTeam={id:uid(),name:name,branch:city,admin:an,phone:ap,ext:isExt,color:COLS[(DB.teams||[]).length%COLS.length],img:gv('ct-img'),coaches:coaches,categories:[],players:[]};
@@ -8425,7 +8609,7 @@ function openET(name){
   var tb=g('et-coaches');tb.innerHTML='';
   (t.coaches||[]).forEach(function(c){
     var tr=document.createElement('tr');tr.dataset.cid=c.id||'';tr.dataset.account=c.account?'1':'';
-    tr.innerHTML='<td><input type="text" value="'+esc(c.name||'')+'" placeholder="اسم المدرب"></td><td><input type="tel" value="'+esc(phone05(c.phone))+'" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td><input type="tel" inputmode="numeric" placeholder="'+(c.account?'إبقاء':'1234')+'" maxlength="4" style="direction:ltr;width:70px"></td><td><button class="del-btn" onclick="this.closest(\'tr\').remove()">'+ic('x',13)+'</button></td>';
+    tr.innerHTML='<td><input type="text" value="'+esc(c.name||'')+'" placeholder="اسم المدرب"></td><td><input type="tel" value="'+esc(phone05(c.phone))+'" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td><input type="tel" inputmode="numeric" placeholder="'+(c.account?'إبقاء':'123456')+'" maxlength="6" style="direction:ltr;width:70px"></td><td><button class="del-btn" onclick="this.closest(\'tr\').remove()">'+ic('x',13)+'</button></td>';
     tb.appendChild(tr);
   });
   etFillLinkSel();
@@ -8468,7 +8652,7 @@ function etLinkCoach(){
 }
 function etAddCoach(){
   var tr=document.createElement('tr');tr.dataset.cid='';tr.dataset.account='';
-  tr.innerHTML='<td><input type="text" placeholder="اسم المدرب"></td><td><input type="tel" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td><input type="tel" inputmode="numeric" placeholder="1234" maxlength="4" style="direction:ltr;width:70px"></td><td><button class="del-btn" onclick="this.closest(\'tr\').remove()">'+ic('x',13)+'</button></td>';
+  tr.innerHTML='<td><input type="text" placeholder="اسم المدرب"></td><td><input type="tel" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td><input type="tel" inputmode="numeric" placeholder="123456" maxlength="6" style="direction:ltr;width:70px"></td><td><button class="del-btn" onclick="this.closest(\'tr\').remove()">'+ic('x',13)+'</button></td>';
   g('et-coaches').appendChild(tr);hydrateIcons(tr);
 }
 /* ===== إعادة التسمية الموحّدة: الفريق والفرع كيان واحد، والاسم مفتاح في مواضع كثيرة =====
@@ -8539,7 +8723,7 @@ function saveEditTeam(){
   var an=gv('et-aname').trim(),ap=normPhone(gv('et-aphone').trim()),apin=gv('et-apin').trim();
   if(!newName||!city||!img||!an||!ap){g('et-err').textContent='أكمل: اسم الفريق، المدينة، الشعار، واسم/جوال الإداري';fl('et-err');return;}
   if(!phoneOK(ap)){g('et-err').textContent='جوال الإداري غير صحيح — 05XXXXXXXX';fl('et-err');return;}
-  if(apin&&apin.length!==4){g('et-err').textContent='الرمز الجديد للإداري يجب أن يكون 4 أرقام';fl('et-err');return;}
+  if(apin&&apin.length!==6){g('et-err').textContent='الرمز الجديد للإداري يجب أن يكون 6 أرقام';fl('et-err');return;}
   /* name uniqueness */
   if(newName!==ETNAME&&(gTeam(newName)||DB.tournaments.some(function(tr){return (tr.teams||[]).some(function(x){return x.name===newName;});}))){g('et-err').textContent='اسم الفريق مستخدم مسبقاً';fl('et-err');return;}
   /* collect coaches from rows */
@@ -8553,13 +8737,13 @@ function saveEditTeam(){
     if(linked){ /* مدرب مرتبط من فريق آخر: نفس المعرّف ونفس الحساب، بلا رمز جديد */
       newCoaches.push({id:cid,name:cn,phone:cp,pin:'',account:hasAcc,linked:true});keptIds.push(cid);return;
     }
-    if(!hasAcc&&!cid&&cpin.length!==4){bad='new';return;}
+    if(!hasAcc&&!cid&&cpin.length!==6){bad='new';return;}
     if(!cid)cid=uid();
     /* username uniqueness for new coach accounts */
     if(!hasAcc&&DB.users.some(function(u){return u.username===cn&&!(adminUser&&u.id===adminUser.id);})){bad='dup';return;}
-    newCoaches.push({id:cid,name:cn,phone:cp,pin:cpin,account:hasAcc||cpin.length===4});keptIds.push(cid);
+    newCoaches.push({id:cid,name:cn,phone:cp,pin:cpin,account:hasAcc||cpin.length===6});keptIds.push(cid);
   });
-  if(bad==='new'){g('et-err').textContent='للمدرب الجديد أدخل رمزاً من 4 أرقام';fl('et-err');return;}
+  if(bad==='new'){g('et-err').textContent='للمدرب الجديد أدخل رمزاً من 6 أرقام';fl('et-err');return;}
   if(bad==='phone'){g('et-err').textContent='جوال أحد المدربين غير صحيح — 05XXXXXXXX';fl('et-err');return;}
   /* اسم الإداري اسم دخول: لا يتكرر مع حساب آخر */
   if(DB.users.some(function(u){return normName(u.username)===normName(an)&&!(adminUser&&u.id===adminUser.id);})){g('et-err').textContent='اسم الإداري مستخدم في حساب آخر — اختر اسماً مميزاً';fl('et-err');return;}
@@ -8599,7 +8783,7 @@ function saveEditTeam(){
       if(nc.pin){u.password=nc.pin;if(FA.enabled)faSync(FA.setPin(u.id,nc.pin));}
     } else if(u){ /* له حساب أصلاً (أضيف بنفس المعرّف) — لا ننشئ نسخة ثانية */
       return;
-    } else if(nc.account&&/^[0-9]{4}$/.test(nc.pin||'')){ /* حساب جديد — فقط برمز صحيح؛ كان يُعاد إنشاء الحساب برمز فارغ */
+    } else if(nc.account&&/^[0-9]{6}$/.test(nc.pin||'')){ /* حساب جديد — فقط برمز صحيح؛ كان يُعاد إنشاء الحساب برمز فارغ */
       var nu={id:'u_'+nc.id,name:nc.name,username:nc.name,password:nc.pin,role:'coach',team:curName,coachId:nc.id,phone:nc.phone};
       DB.users.push(nu);if(FA.enabled)faSync(FA.upsertUser(nu,nc.pin),'لم يُنشأ حساب المدرب '+nc.name+' في الخادم');
     }
@@ -11455,7 +11639,7 @@ function openCoachMod(){
 function createCoach(){
   var a=myAcad();if(!a){g('coachMod').classList.remove('open');return;}
   var n=gv('cm-name'),ph=phoneVal('cm-phone'),pin=gv('cm-pin');
-  if(!n||!ph||pin.length!==4){fl('cm-err');return;}
+  if(!n||!ph||!/^[0-9]{6}$/.test(pin)){fl('cm-err');return;}
   if(DB.users.some(function(u){return u.username===n;})){g('cm-err').textContent='هذا الاسم مستخدم في حساب آخر، اختر اسماً مختلفاً';fl('cm-err');return;}
   var o=a.obj;o.coaches=o.coaches||[];
   var existing=o.coaches.find(function(c){return c.name===n&&!c.account;});
@@ -12014,7 +12198,7 @@ function doImport(data,execute){
   var usedUsernames={};DB.users.forEach(function(u){usedUsernames[u.username]=u.id;});
   var coachByTeam={};(data.coaches||[]).forEach(function(c){
     var nm=_impNorm(c.name);if(!nm||nm==='لا يوجد')return;
-    var key=_impNorm(c.team);(coachByTeam[key]=coachByTeam[key]||[]).push({tour:_impNorm(c.tour),cat:_impNorm(c.cat),name:nm,phone:c.phone||'',pin:(c.pin&&/^[0-9]{4}$/.test(String(c.pin))?String(c.pin):tmpCode())});   /* بلا رمز في الملف: رمز عشوائي مؤقت لكل مدرب — لا 1111 للجميع */
+    var key=_impNorm(c.team);(coachByTeam[key]=coachByTeam[key]||[]).push({tour:_impNorm(c.tour),cat:_impNorm(c.cat),name:nm,phone:c.phone||'',pin:(c.pin&&/^([0-9]{4}|[0-9]{6})$/.test(String(c.pin))?String(c.pin):tmpCode())});   /* بلا رمز في الملف: رمز عشوائي مؤقت لكل مدرب — لا 1111 للجميع */
   });
   Object.keys(data.academies).forEach(function(aName){
     var acad=data.academies[aName];var gname=_impNorm(aName);
@@ -12679,7 +12863,7 @@ function admUsersHTML(skipReqs){
 function uNewPage(){
   var h='';
   h+='<div class="frow"><div class="fg req"><label>الاسم الكامل *</label><input type="text" id="nu-name" placeholder="الاسم الثلاثي"></div>';
-  h+='<div class="fg req"><label>الرمز السري (٤ أرقام) *</label><input type="tel" inputmode="numeric" id="nu-pass" maxlength="4" placeholder="1234" style="direction:ltr;letter-spacing:6px;text-align:center"></div></div>';
+  h+='<div class="fg req"><label>الرمز السري (٦ أرقام) *</label><input type="tel" inputmode="numeric" id="nu-pass" maxlength="6" placeholder="123456" style="direction:ltr;letter-spacing:6px;text-align:center"></div></div>';
   h+='<div class="frow"><div class="fg req"><label>الصلاحية الأساسية * <small>(وصف الحساب)</small></label><select id="nu-role">'
     +USER_ROLES.map(function(r){return '<option value="'+r+'">'+RL[r]+'</option>';}).join('')+'</select></div>';
   h+='<div class="fg"><label>الفريق / الفرع</label><select id="nu-team">'+opts(acTeamOpts(),'— بدون —')+'</select></div></div>';
@@ -12835,7 +13019,7 @@ function rUED(){
   }else{
     h+='<div class="ce-note" style="margin-bottom:.6rem">'+ic('info',13)+'<div>الرمز الحالي غير قابل للعرض — الأرقام السرية تُحفظ في الخادم ولا تُنزَّل مع البيانات. تستطيع تعيين رمز جديد بدلاً منه.</div></div>';
   }
-  h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end;margin-top:.5rem"><div class="fg" style="margin-bottom:0"><label>تعيين رمز جديد (4 أرقام)</label><input type="text" id="ued-pin-i" maxlength="4" inputmode="numeric" placeholder="اتركه فارغاً لعدم التغيير" style="direction:ltr"></div>'
+  h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end;margin-top:.5rem"><div class="fg" style="margin-bottom:0"><label>تعيين رمز جديد (6 أرقام)</label><input type="text" id="ued-pin-i" maxlength="6" inputmode="numeric" placeholder="اتركه فارغاً لعدم التغيير" style="direction:ltr"></div>'
     +'<button class="btn btn-o btn-sm" onclick="uedSetPin()">تغيير الرمز</button></div>';
   h+='</div>';
 
@@ -13332,7 +13516,7 @@ function uedApplyBranches(u,brs){
 function uedSetPin(){
   var u=uedUser();if(!u)return;
   var pin=gv('ued-pin-i');
-  if(!/^[0-9]{4}$/.test(pin)){g('ued-err').textContent='الرمز يجب أن يكون 4 أرقام';fl('ued-err');return;}
+  if(!/^[0-9]{6}$/.test(pin)){g('ued-err').textContent='الرمز يجب أن يكون 6 أرقام';fl('ued-err');return;}
   u.password=pin;
   if(FA.enabled)faSync(FA.setPin(u.id,pin));
   logA('تغيير الرمز السري للمستخدم: '+u.name,'shield','#d97706');
@@ -13340,7 +13524,7 @@ function uedSetPin(){
 }
 function addUser(){
   var n=gv('nu-name'),p=gv('nu-pass'),r=gv('nu-role');
-  if(!n||p.length!==4||!r){fl('nu-err');return;}
+  if(!n||!/^[0-9]{6}$/.test(p)||!r){fl('nu-err');return;}
   if(DB.users.some(function(u){return u.username===n;})){g('nu-err').textContent='هذا الاسم مسجل مسبقاً';fl('nu-err');return;}
   var nu={id:uid(),name:n,username:n,password:p,role:r,team:gv('nu-team')||'',assign:[]};
   DB.users.push(nu);
@@ -13939,6 +14123,80 @@ function dbStats(){
   var ls=0;try{ls=new Blob([localStorage.getItem('faris_tour_v2')||'']).size;}catch(e){}
   return{rows:rows,total:total,cloud:cloud,img:img,ls:ls};
 }
+/* ================= جاهزية الدخول برقم الجوال =================
+   الشاشة الجديدة تعرّف الموظف برقم جواله — فكل حساب يحتاج رقماً صحيحاً حقيقياً.
+   هنا: الحسابات التي تحتاج تصحيحاً مع خانة تعديل مباشرة، ونسبة الانتقال للرمز
+   من ٦ أرقام، ومفتاح «الدخول بالجوال فقط» (يُلغي الدخول بالاسم). */
+var LR={list:null,err:'',na:false};
+var LR_ST={none:'بلا رقم',invalid:'رقم غير صالح',fake:'رقم وهمي',shared:'رقم مشترك',ok:'جاهز'};
+function faPhoneFake(v){var p=String(normPhone(v)||'').slice(-9);return /^5(\d)\1{7}$/.test(p)||p==='512345678'||p==='500000000'||/^5(0123456|1234567|2345678|9876543)/.test(p);}
+function lrHTML(){
+  if(!FA.enabled||!CU||CU.role!=='admin')return '';
+  var on=faLoginPhoneOnly();
+  var h=tdSubHead('الدخول برقم الجوال','<span class="pg-chip"'+(on?' style="color:#16a34a"':'')+'>'+ic(on?'check':'info',11)+' '+(on?'مفعّل':'غير مفعّل بعد')+'</span>');
+  h+='<div id="lr-box"><div class="jnote">'+ic('info',12)+' جارٍ فحص الحسابات…</div></div>';
+  setTimeout(lrLoad,60);
+  return h;
+}
+function lrLoad(){
+  FA.loginReadiness().then(function(l){LR.list=l||[];LR.err='';LR.na=false;lrPaint();})
+    .catch(function(e){if(e&&e.message==='na')LR.na=true;else LR.err=(e&&e.message)||'خطأ';LR.list=LR.list||[];lrPaint();});
+}
+function lrPaint(){
+  var el=g('lr-box');if(!el)return;
+  if(LR.na){el.innerHTML='<div class="ce2-note warn" style="margin-bottom:1.2rem">'+ic('info',13)+'<div>نفّذ ملف <b>fa_login1.sql</b> في Supabase أولاً لتفعيل الدخول الجديد.</div></div>';hydrateIcons(el);return;}
+  var L=LR.list||[],c={ok:0,shared:0,none:0,invalid:0,fake:0},p6=0,mc=0;
+  L.forEach(function(a){c[a.status]=(c[a.status]||0)+1;if(+a.pin_len===6)p6++;if(a.must_change)mc++;});
+  var bad=c.none+c.invalid+c.fake,on=faLoginPhoneOnly(),tot=L.length||1;
+  var h='<div class="ce2-kpis" style="margin-bottom:.8rem">'
+    +ceKpi('check','جاهزة للدخول بالجوال',ceN(c.ok+c.shared)+' / '+ceN(L.length),c.shared?ceN(c.shared)+' برقم مشترك (يختار اسمه)':'')
+    +ceKpi('phone','تحتاج تصحيح',ceN(bad),bad?'بلا رقم أو رقم غير صالح/وهمي':'لا شيء')
+    +ceKpi('shield','رمز من ٦ أرقام',ceN(p6)+' / '+ceN(L.length),Math.round(p6*100/tot)+'٪ انتقلوا')
+    +'</div>';
+  if(LR.err)h+='<div class="ce2-note warn" style="margin-bottom:.8rem">'+ic('info',13)+'<div>تعذّر الفحص: '+esc(LR.err)+'</div></div>';
+  var rows=L.filter(function(a){return a.status!=='ok'&&!(a.status==='shared'&&(a.role==='viewer'));});
+  if(rows.length){
+    h+='<div style="display:grid;gap:.45rem;margin-bottom:.9rem">';
+    rows.forEach(function(a){
+      var col=a.status==='shared'?'var(--amber)':'var(--red)';
+      h+='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .8rem;padding:.6rem .8rem;border:1px solid var(--brd);border-radius:12px;background:var(--card)">'
+        +'<div style="flex:1 1 180px;min-width:0"><b style="font-size:13px">'+esc(a.name)+'</b> <small style="color:var(--gray)">'+esc(roleLabel(a.role)||a.role)+'</small>'
+        +'<div style="font-size:11.5px;color:'+col+';font-weight:700">'+esc(LR_ST[a.status]||a.status)+(a.phone?' — <span dir="ltr">'+esc(a.phone)+'</span>':'')+'</div></div>'
+        +'<div style="display:flex;gap:.4rem;align-items:center"><input type="tel" id="lr-ph-'+esc(a.id)+'" inputmode="numeric" maxlength="10" placeholder="05XXXXXXXX" aria-label="رقم جوال '+esc(a.name)+'" value="'+(a.status==='fake'||a.status==='invalid'?'':esc(phone05(a.phone||'')))+'" style="direction:ltr;width:130px;text-align:center">'
+        +'<button class="btn btn-r btn-sm" onclick="lrSave(\''+jq(a.id)+'\')">حفظ</button></div></div>';
+    });
+    h+='</div>';
+  }else h+='<div class="ce2-note ok" style="margin-bottom:.9rem">'+ic('check',13)+'<div><b>كل الحسابات جاهزة</b> — لكل موظف رقم جوال صحيح.</div></div>';
+  h+='<div class="ce2-note'+(on?' ok':'')+'" style="margin-bottom:.6rem">'+ic(on?'check':'info',13)+'<div>'
+    +(on?'<b>الدخول بالجوال أو الهوية فقط مفعّل.</b> الدخول بالاسم أُلغي.'
+        :'الشاشة الجديدة تعمل الآن (جوال أو هوية)، والدخول بالاسم ما زال متاحاً كرابط صغير. فعّل «الجوال فقط» بعد تصحيح كل الأرقام.')
+    +'</div></div>';
+  h+=on?'<button class="btn btn-o" style="width:100%;margin-bottom:1.4rem" onclick="lrToggle(false)">إعادة السماح بالدخول بالاسم مؤقتاً</button>'
+       :'<button class="btn btn-r" style="width:100%;margin-bottom:1.4rem" onclick="lrToggle(true)">'+ic('shield',14)+' تفعيل الدخول بالجوال فقط'+(bad?' ('+ceN(bad)+' حساب لم يُصحَّح)':'')+'</button>';
+  el.innerHTML=h;hydrateIcons(el);
+}
+function lrSave(id){
+  var a=(LR.list||[]).find(function(x){return x.id===id;});if(!a)return;
+  var raw=gv('lr-ph-'+id),ph=normPhone(raw);
+  if(!phoneOK(raw)){alert('رقم غير صحيح — 10 أرقام يبدأ بـ 05');return;}
+  if(faPhoneFake(raw)){alert('هذا رقم وهمي — أدخل رقم الجوال الحقيقي');return;}
+  var u=(DB.users||[]).find(function(x){return x.id===id;});
+  FA.updateProfile(id,a.name,(u&&u.username)||a.username||a.name,(u&&u.team)||a.team||'',ph).then(function(){
+    if(u){u.phone=ph;u.phoneVerified=true;}
+    /* نفس الرقم في سجل المدرب داخل فرعه */
+    var cid=a.coachId||(u&&u.coachId);
+    if(cid){var c=(TDX().coaches||[]).find(function(x){return x.id===cid;});if(c)c.phone=ph;}
+    logA('تصحيح جوال للدخول: '+a.name,'phone','#16a34a');sv();
+    addN('تم حفظ الرقم',a.name,'success');lrLoad();
+  }).catch(function(e){alert('لم يُحفظ الرقم: '+((e&&e.message)||e));});
+}
+function lrToggle(on){
+  var go=function(){DB.settings=DB.settings||{};DB.settings.loginPhoneOnly=!!on;logA(on?'تفعيل الدخول بالجوال فقط':'إعادة السماح بالدخول بالاسم','shield','#1565c0');sv();lrPaint();try{rADHealth();}catch(e){}};
+  if(!on){go();return;}
+  var L=LR.list||[],bad=L.filter(function(a){return a.status==='none'||a.status==='invalid'||a.status==='fake';});
+  askConfirm((bad.length?'⚠️ '+bad.length+' حساب بلا رقم صحيح ولن يستطيع أصحابها الدخول: '+bad.slice(0,6).map(function(a){return a.name;}).join('، ')+(bad.length>6?'…':'')+'\n\n':'')
+    +'تفعيل الدخول برقم الجوال أو الهوية فقط وإلغاء الدخول بالاسم؟',go);
+}
 /* ================= النسخ الاحتياطية في الخادم =================
    الخادم يأخذ نسخة يومية تلقائياً قبل أول تعديل في اليوم، ومدير النظام يأخذ نسخة
    متى شاء، والموقع يأخذ نسخة قبل كل عملية كبيرة. الاستعادة بزر — وقبلها نسخة من
@@ -14303,8 +14561,8 @@ function rPED(){
   else h+='<div class="ped-note warn">'+ic('info',14)+'<div><b>استخدمت تعديلك المباشر.</b><br>هذا التعديل سيُرسل كطلب لمدير النظام، ولن يُطبَّق إلا بعد موافقته.</div></div>';
 
   h+='<div class="fg"><label>رقم الجوال</label>'+phoneField('ped-phone',u.phone||'')+'</div>';
-  h+='<div class="fg"><label>الرمز السري الجديد (4 أرقام)</label><input type="text" id="ped-pin" maxlength="4" inputmode="numeric" placeholder="اتركه فارغاً لعدم التغيير" style="direction:ltr"></div>';
-  h+='<div class="fg"><label>تأكيد الرمز الجديد</label><input type="text" id="ped-pin2" maxlength="4" inputmode="numeric" placeholder="أعد كتابة الرمز" style="direction:ltr"></div>';
+  h+='<div class="fg"><label>الرمز السري الجديد (6 أرقام)</label><input type="text" id="ped-pin" maxlength="6" inputmode="numeric" placeholder="اتركه فارغاً لعدم التغيير" style="direction:ltr"></div>';
+  h+='<div class="fg"><label>تأكيد الرمز الجديد</label><input type="text" id="ped-pin2" maxlength="6" inputmode="numeric" placeholder="أعد كتابة الرمز" style="direction:ltr"></div>';
   h+='<button class="btn btn-r" style="width:100%;margin-top:.4rem" onclick="pedSubmit()">'+ic('check',14)+' '+(cnt===0?'حفظ التعديل':'إرسال الطلب للموافقة')+'</button>';
   h+='<div class="msg ok" id="ped-ok">تم</div><div class="msg err" id="ped-err">تحقق من البيانات</div>';
   g('ped-body').innerHTML=h;hydrateIcons(g('ped-body'));
@@ -14321,7 +14579,7 @@ function pedSubmit(){
   var phone=phoneVal('ped-phone'),pin=gv('ped-pin'),pin2=gv('ped-pin2');
   var changePhone=(phone||'')!==(u.phone||'');
   if(pin||pin2){
-    if(!/^[0-9]{4}$/.test(pin)){g('ped-err').textContent='الرمز يجب أن يكون 4 أرقام';fl('ped-err');return;}
+    if(!/^[0-9]{6}$/.test(pin)){g('ped-err').textContent='الرمز يجب أن يكون 6 أرقام';fl('ped-err');return;}
     if(pin!==pin2){g('ped-err').textContent='الرمزان غير متطابقين';fl('ped-err');return;}
   }
   if(!changePhone&&!pin){g('ped-err').textContent='لم تغيّر شيئاً';fl('ped-err');return;}
@@ -20096,7 +20354,7 @@ function ntDelInjury(id){
 /* ==========================================================================
    صفحة الطاقم — الأعضاء وصلاحياتهم وحسابات دخولهم
    --------------------------------------------------------------------------
-   إضافة عضو تُنشئ له حساب دخول فعلياً (اسم مستخدم + رمز من ٤ أرقام)
+   إضافة عضو تُنشئ له حساب دخول فعلياً (اسم مستخدم + رمز من ٦ أرقام)
    بصلاحية nt-* المقابلة لدوره. قبل ذلك كان النموذج يَعِد بأنه «يسجّل
    دخوله بجواله» ولا يُنشئ شيئاً، فلا يستطيع الدخول أبداً.
    ========================================================================== */
@@ -20121,8 +20379,8 @@ function ntSyncAcc(s,pin,un){
   var acc=ntStaffAcc(s);
   if(!acc&&!pin&&!un)return '';
   if(!un)return 'اكتب اسم المستخدم أو اترك الرمز فارغاً بلا حساب';
-  if(!acc&&!pin)return 'الرمز السري مطلوب لإنشاء الحساب (٤ أرقام)';
-  if(pin&&!/^[0-9]{4}$/.test(pin))return 'الرمز السري يجب أن يكون ٤ أرقام';
+  if(!acc&&!pin)return 'الرمز السري مطلوب لإنشاء الحساب (٦ أرقام)';
+  if(pin&&!/^[0-9]{6}$/.test(pin))return 'الرمز السري يجب أن يكون ٦ أرقام';
   var clash=(DB.users||[]).some(function(u){
     return (!acc||u.id!==acc.id)&&normName(u.username||u.name)===normName(un);});
   if(clash)return 'اسم المستخدم «'+un+'» مستخدم في حساب آخر';
@@ -20209,7 +20467,7 @@ function rNTStaff(){
       +(acc?' <small style="font-weight:500;color:#16a34a">(حساب قائم — صلاحيته '+esc(RL[acc.role]||acc.role)+')</small>'
            :' <small style="font-weight:500;color:var(--gray)">(اتركه فارغاً إن كنت لا تريد حساباً الآن)</small>')+'</div>';
     h+='<div class="frow"><div class="fg"><label>اسم المستخدم</label><input type="text" id="ntst-user" value="'+esc((acc&&acc.username)||(ed&&ed.user)||'')+'" placeholder="يُقترح من الاسم"></div>';
-    h+='<div class="fg"><label>الرمز السري (٤ أرقام)</label><input type="tel" inputmode="numeric" id="ntst-pin" maxlength="4" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="'+(acc?'إبقاء الرمز الحالي':'1234')+'"></div></div>';
+    h+='<div class="fg"><label>الرمز السري (٦ أرقام)</label><input type="tel" inputmode="numeric" id="ntst-pin" maxlength="6" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="'+(acc?'إبقاء الرمز الحالي':'1234')+'"></div></div>';
     h+='</div>';
     h+='<div class="xacts"><button class="btn btn-r" onclick="ntSaveStaff()">'
       +ic(ed?'check':'plus',13)+' '+(ed?'حفظ التعديلات':'إضافة العضو وإنشاء حسابه')+'</button>'
@@ -21666,7 +21924,7 @@ function cePubRender(){
     h+='<div class="ped-note free">'+ic('shield',14)+'<div><b>'+(CEPUB.branch?'فرع '+esc(CEPUB.branch):'تقييم مدربك')+'</b><br>'
       +'ادخل بهويتك ورمزك السري — رأيك يصل للإدارة بلا اسمك.</div></div>';
     h+='<div class="fg req"><label>رقم الهوية *</label><input type="text" id="cpb-nid" inputmode="numeric" maxlength="10" placeholder="1XXXXXXXXX" style="direction:ltr;text-align:center;letter-spacing:2px"></div>';
-    h+='<div class="fg req"><label>الرمز السري (4 أرقام) *</label><input type="password" id="cpb-pin" inputmode="numeric" maxlength="4" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:6px"></div>';
+    h+='<div class="fg req"><label>الرمز السري *</label><input type="password" id="cpb-pin" inputmode="numeric" maxlength="6" autocomplete="off" style="direction:ltr;text-align:center;letter-spacing:6px"></div>';
     h+='<button class="btn btn-r" style="width:100%;min-height:46px" id="cpb-go" onclick="cePubVerify()">'+ic('check',14)+' دخول ومتابعة</button>';
     h+='<button class="btn btn-o" style="width:100%;margin-top:.5rem" onclick="cePubActivate()">أول دخول؟ فعّل حسابك</button>';
     h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="cePubClose()">إلغاء</button>';
@@ -21749,7 +22007,7 @@ function cePubFind(fn,mn,ln,phone,year){
 function cePubVerify(){
   var nid=normNid(gv('cpb-nid')),pin=gv('cpb-pin'),err=g('cpb-err');
   if(!nidOK(nid)){err.textContent='أدخل رقم هوية صحيح (١٠ أرقام)';fl('cpb-err');return;}
-  if(!/^[0-9]{4}$/.test(pin)){err.textContent='الرمز 4 أرقام';fl('cpb-err');return;}
+  if(!/^([0-9]{4}|[0-9]{6})$/.test(pin)){err.textContent='اكتب رمزك كاملاً';fl('cpb-err');return;}
   if(!FA.enabled){err.textContent='هذه النسخة غير متصلة بقاعدة البيانات';fl('cpb-err');return;}
   var btn=g('cpb-go');if(btn){btn.disabled=true;btn.style.opacity='.65';}
   FA.playerLogin(nid,pin).then(function(res){
@@ -22415,6 +22673,7 @@ function rADHealth(){
   }catch(e){}
   h+=faServerHTML();
   h+=bkHTML();
+  h+=lrHTML();
   h+=plSyncHTML();
   h+=tdBackfillHTML();
   h+=tdSubHead('صحة البيانات');
@@ -23463,13 +23722,13 @@ function adbPersonForm(pfx,rec){
   h+='<div class="frow"><div class="fg"><label>رقم الجوال</label>'+phoneField(pfx+'-ph',(rec&&rec.phone)||'')+'</div>';
   h+='<div class="fg"><label>تاريخ الميلاد</label><input type="date" id="'+pfx+'-dob" style="direction:ltr" value="'+esc(rec&&rec.dob?rec.dob:'')+'"></div></div>';
   h+='<div class="fg"><label>تاريخ الانضمام</label><input type="date" id="'+pfx+'-joined" style="direction:ltr" value="'+esc(rec&&rec.joined?rec.joined:'')+'"></div>';
-  /* حساب الدخول — نفس ما يُطلب عند تسجيل فريق: اسم + جوال + رمز 4 أرقام.
+  /* حساب الدخول — نفس ما يُطلب عند تسجيل فريق: اسم + جوال + رمز 6 أرقام.
      بدونه يبقى الشخص سجلاً بلا حساب، ولا يستطيع الدخول للنظام. */
   var acc=adbAccountOf(rec);
   h+='<div class="cat-wrap" style="margin-top:.2rem"><div class="cw-t">'+ic('shield',12)+' حساب الدخول'
     +(acc?' <small style="font-weight:500;color:#16a34a">(حساب قائم)</small>':' <small style="font-weight:500;color:var(--gray)">(اتركه فارغاً إن كنت لا تريد حساباً الآن)</small>')+'</div>';
   h+='<div class="frow"><div class="fg"><label>اسم المستخدم</label><input type="text" id="'+pfx+'-user" value="'+esc((acc&&acc.username)||(rec&&rec.user)||'')+'" placeholder="يُملأ من الاسم تلقائياً"></div>';
-  h+='<div class="fg"><label>الرمز السري (4 أرقام)</label><input type="tel" inputmode="numeric" id="'+pfx+'-pin" maxlength="4" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="'+(acc?'إبقاء الرمز الحالي':'1234')+'"></div></div>';
+  h+='<div class="fg"><label>الرمز السري (6 أرقام)</label><input type="tel" inputmode="numeric" id="'+pfx+'-pin" maxlength="6" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="'+(acc?'إبقاء الرمز الحالي':'1234')+'"></div></div>';
   h+='</div>';
   return h;
 }
@@ -23496,8 +23755,8 @@ function adbSyncAccount(rec,role,bn,pin,un){
   un=(un||rec.user||rec.name||'').trim();
   var acc=adbAccountOf(rec);
   if(!acc&&!pin)return '';                      /* لا حساب مطلوب الآن */
-  if(!acc&&pin&&!/^[0-9]{4}$/.test(pin))return 'الرمز السري يجب أن يكون 4 أرقام';
-  if(pin&&!/^[0-9]{4}$/.test(pin))return 'الرمز السري يجب أن يكون 4 أرقام';
+  if(!acc&&pin&&!/^[0-9]{6}$/.test(pin))return 'الرمز السري يجب أن يكون 6 أرقام';
+  if(pin&&!/^[0-9]{6}$/.test(pin))return 'الرمز السري يجب أن يكون 6 أرقام';
   var clash=(DB.users||[]).some(function(u){
     return (!acc||u.id!==acc.id)&&normName(u.username||u.name)===normName(un);});
   if(clash)return 'اسم المستخدم «'+un+'» مستخدم في حساب آخر';
@@ -24692,7 +24951,7 @@ function welGo(){
   g('WEL').classList.remove('on');
   document.body.style.overflow='';
   g('LS').style.display='';
-  var e=g('l-name');if(e)setTimeout(function(){e.focus();},80);
+  try{lsMode(LSMODE==='name'?'name':'id');}catch(e){}
 }
 function welJoin(){welGo();try{lsMode('nid');}catch(e){}setTimeout(function(){try{lsMode('nid');}catch(e){}},130);}
 /* حساب جديد = ولي أمر فقط */
@@ -25080,7 +25339,7 @@ function faBoot(){
     var pend=false;
     try{
       var _s=JSON.parse(localStorage.getItem('faris_session')||'null');
-      pend=!!(_s&&_s.uid&&(Date.now()-(_s.at||0))<12*3600000);
+      pend=!!(_s&&_s.uid&&(Date.now()-(_s.at||0))<SESS_HOURS*3600000);
     }catch(e){}
     if(!inside&&!onWel&&!pend){
       ls.style.display='flex';
@@ -26275,7 +26534,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-bk1</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-l1</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
