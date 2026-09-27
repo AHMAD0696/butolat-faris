@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.27-p1c">
+<meta name="build" content="2026.09.27-m1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3595,7 +3595,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-p1c</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-m1</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -6093,12 +6093,6 @@ function fpgHTML(t,icn,sub,html,close){
 }
 
 /* ================= ACCOUNT SAFETY ================= */
-function normPhone(s){
-  var d=String(s==null?'':s).replace(/[^0-9]/g,'');
-  if(d.indexOf('966')===0)d='0'+d.slice(3);
-  if(d.length===9&&d[0]==='5')d='0'+d;
-  return d;
-}
 /* normPhone تُرجع 9665XXXXXXXX — التحقق موحّد عبر phoneOK */
 function validPhone(s){return phoneOK(s);}
 function phoneTaken(phone,skipId){
@@ -6431,9 +6425,24 @@ function normNid(v){
   var ar='٠١٢٣٤٥٦٧٨٩',fa='۰۱۲۳۴۵۶۷۸۹',out='';
   var t=String(v);
   for(var i=0;i<t.length;i++){var c=t[i],k=ar.indexOf(c);if(k<0)k=fa.indexOf(c);out+=(k>-1?String(k):c);}
-  return out.replace(/[^0-9]/g,'').slice(0,10);
+  return out.replace(/[^0-9]/g,'');   /* لا بتر صامت: ١١ رقماً كانت تُقصّ فيمرّ رقم خاطئ كهوية */
 }
-function nidOK(v){return /^[0-9]{10}$/.test(normNid(v));}
+/* صيغة الهوية: ١٠ أرقام تبدأ بـ 1 (مواطن) أو 2 (مقيم) — رقم الجوال 05… لا يمر */
+function nidOK(v){return /^[12][0-9]{9}$/.test(normNid(v));}
+/* خانة التحقق للهوية/الإقامة السعودية — تكشف خطأ الكتابة في رقم واحد */
+function nidChk(v){
+  var n=normNid(v);if(!/^[12][0-9]{9}$/.test(n))return false;
+  var s=0;for(var i=0;i<10;i++){var d=+n[i];if(i%2===0){d*=2;s+=Math.floor(d/10)+d%10;}else s+=d;}
+  return s%10===0;
+}
+/* رسالة موحّدة لحقول إدخال الهوية ('' = سليم). old = القيمة المخزّنة: لا نمنع حفظ سجل قديم لم تتغير هويته */
+function nidErr(v,old){
+  var n=normNid(v);
+  if(n.length!==10)return 'رقم الهوية / الإقامة يجب أن يكون ١٠ أرقام';
+  if(!/^[12]/.test(n))return 'رقم الهوية يبدأ بـ 1 (مواطن) أو 2 (مقيم) — تأكد أنه ليس رقم جوال';
+  if(!nidChk(n)&&normNid(old||'')!==n)return 'رقم الهوية غير صحيح — راجع الأرقام (خانة التحقق لا تطابق)';
+  return '';
+}
 /* اللاعب قد يكون في الإدارة الفنية أو في فرق البطولات — الدخول بالهوية يشمل الاثنين */
 function findPlayerByNid(v){
   var n=normNid(v);if(!n)return null;
@@ -6572,14 +6581,14 @@ function nidProceed(p){
      لا نفتح النافذة تلقائياً بعد الخروج — كانت تعلق فوق التطبيق عند الدخول من جديد. */
   if(CU&&CU.role!=='player'){
     var t0=document.getElementById('vf-toast');if(t0)t0.style.display='none';
-    if(confirm('هذا الجهاز مسجّل دخول باسم '+(CU.name||'')+' ('+(RL[CU.role]||CU.role)+').\n\nحساب اللاعب يُفعَّل من جهاز اللاعب نفسه.\n\nاضغط «موافق» لتسجيل الخروج والمتابعة هنا، أو «إلغاء» للبقاء في حسابك.')){
+    askConfirm('هذا الجهاز مسجّل دخول باسم '+(CU.name||'')+' ('+(RL[CU.role]||CU.role)+').\n\nحساب اللاعب يُفعَّل من جهاز اللاعب نفسه.\n\nاضغط «موافق» لتسجيل الخروج والمتابعة هنا، أو «إلغاء» للبقاء في حسابك.',function(){   /* نافذة التطبيق — confirm الأصلي قد يحجبه المتصفح فيصمت الزر */
       doLogout();
       setTimeout(function(){
         lsMode('nid');
         var e=g('l-nid');if(e){e.value=normNid(p.nid||'');e.focus();}
         showErrToast('تم تسجيل الخروج — اضغط «التالي» لمتابعة التفعيل',6000);
       },500);
-    }
+    },'تسجيل الخروج');
     return;
   }
   if(FA.enabled){
@@ -6659,6 +6668,7 @@ function nidFinish(){
   /* ١) تأكيد الميلاد — الخادم يعيد التحقق منه أيضاً، هذا فحص مبكر للمستخدم */
   var dd=gv('na-dd'),dm=gv('na-dm'),dy=gv('na-dy');
   if(!dd||!dm||!dy){g('na-err2').textContent='اختر يوم وشهر وسنة ميلادك';fl('na-err2');return;}
+  if(!validYMD(dy,dm,dd)){g('na-err2').textContent='التاريخ غير صحيح — هذا اليوم غير موجود في الشهر';fl('na-err2');return;}
   var dstr=dy+'-'+dm+'-'+dd;
   if(p.dob&&!sameDob(dstr,p.dob)){
     g('na-err2').textContent='تاريخ الميلاد غير مطابق للمسجّل لدى الأكاديمية';fl('na-err2');return;
@@ -7978,8 +7988,9 @@ function tmAddToTour(name){
 }
 function createTeam(){
   var name=gv('ct-name'),city=gv('ct-city');
-  var an=gv('ct-aname'),ap=gv('ct-aphone'),apin=gv('ct-apin');
+  var an=gv('ct-aname'),ap=normPhone(gv('ct-aphone')),apin=gv('ct-apin');
   if(!name||!city||!an||!ap||apin.length!==4){g('ct-err').textContent='أكمل: اسم الأكاديمية، المدينة، وبيانات الإداري (رمز 4 أرقام)';fl('ct-err');return;}
+  if(!phoneOK(ap)){g('ct-err').textContent='جوال الإداري غير صحيح — 05XXXXXXXX';fl('ct-err');return;}
   if(!gv('ct-img')){g('ct-err').textContent='شعار الأكاديمية مطلوب';fl('ct-err');return;}
   if(gTeam(name)||DB.tournaments.some(function(tr){return (tr.teams||[]).some(function(t){return t.name===name;});})){g('ct-err').textContent='اسم الأكاديمية مستخدم مسبقاً';fl('ct-err');return;}
   if(DB.users.some(function(u){return u.username===an;})){g('ct-err').textContent='اسم الإداري مستخدم في حساب آخر';fl('ct-err');return;}
@@ -7987,15 +7998,17 @@ function createTeam(){
   /* collect coaches */
   var coaches=[],coachUsers=[],bad=false;
   g('ct-coaches').querySelectorAll('tr').forEach(function(tr){
-    var ins=tr.querySelectorAll('input');var cn=ins[0].value.trim(),cp=ins[1].value.trim(),cpin=ins[2].value.trim();
+    var ins=tr.querySelectorAll('input');var cn=ins[0].value.trim(),cp=normPhone(ins[1].value.trim()),cpin=ins[2].value.trim();
     if(!cn)return;
     if(cp===''||cpin.length!==4){bad=true;return;}
+    if(!phoneOK(cp)){bad='phone';return;}
     if(DB.users.some(function(u){return u.username===cn;})||coachUsers.some(function(u){return u.username===cn;})){bad='dup';return;}
     var cid=uid();
     coaches.push({id:cid,name:cn,phone:cp,pin:cpin,account:true});
     coachUsers.push({id:'u_'+cid,name:cn,username:cn,password:cpin,role:'coach',team:name,coachId:cid,phone:cp});
   });
   if(bad==='dup'){g('ct-err').textContent='اسم مدرب مستخدم في حساب آخر';fl('ct-err');return;}
+  if(bad==='phone'){g('ct-err').textContent='جوال أحد المدربين غير صحيح — 05XXXXXXXX';fl('ct-err');return;}
   if(bad){g('ct-err').textContent='أكمل جوال ورمز (4 أرقام) لكل مدرب';fl('ct-err');return;}
   /* create team in global store first */
   var isExt=!!(g('ct-ext')&&g('ct-ext').checked);
@@ -8021,11 +8034,11 @@ function openET(name){
   g('et-name').value=t.name;
   fillSel('et-city',CITIES);g('et-city').value=t.branch||'';
   g('et-img').value=t.img||'';g('et-prev').innerHTML=t.img?'<img src="'+srcOK(t.img)+'">':ic('shield',22);g('et-rm').style.display=t.img?'inline-block':'none';
-  g('et-aname').value=t.admin||'';g('et-aphone').value=t.phone||'';g('et-apin').value='';
+  g('et-aname').value=t.admin||'';g('et-aphone').value=phone05(t.phone);g('et-apin').value='';
   var tb=g('et-coaches');tb.innerHTML='';
   (t.coaches||[]).forEach(function(c){
     var tr=document.createElement('tr');tr.dataset.cid=c.id||'';tr.dataset.account=c.account?'1':'';
-    tr.innerHTML='<td><input type="text" value="'+esc(c.name||'')+'" placeholder="اسم المدرب"></td><td><input type="tel" value="'+esc(c.phone||'')+'" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td><input type="tel" inputmode="numeric" placeholder="'+(c.account?'إبقاء':'1234')+'" maxlength="4" style="direction:ltr;width:70px"></td><td><button class="del-btn" onclick="this.closest(\'tr\').remove()">'+ic('x',13)+'</button></td>';
+    tr.innerHTML='<td><input type="text" value="'+esc(c.name||'')+'" placeholder="اسم المدرب"></td><td><input type="tel" value="'+esc(phone05(c.phone))+'" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td><input type="tel" inputmode="numeric" placeholder="'+(c.account?'إبقاء':'1234')+'" maxlength="4" style="direction:ltr;width:70px"></td><td><button class="del-btn" onclick="this.closest(\'tr\').remove()">'+ic('x',13)+'</button></td>';
     tb.appendChild(tr);
   });
   etFillLinkSel();
@@ -8136,8 +8149,9 @@ function setTeamAdminEverywhere(name,adminName,adminPhone){
 function saveEditTeam(){
   var t=gTeam(ETNAME);if(!t){g('etMod').classList.remove('open');return;}
   var newName=gv('et-name').trim(),city=gv('et-city'),img=gv('et-img');
-  var an=gv('et-aname').trim(),ap=gv('et-aphone').trim(),apin=gv('et-apin').trim();
+  var an=gv('et-aname').trim(),ap=normPhone(gv('et-aphone').trim()),apin=gv('et-apin').trim();
   if(!newName||!city||!img||!an||!ap){g('et-err').textContent='أكمل: اسم الفريق، المدينة، الشعار، واسم/جوال الإداري';fl('et-err');return;}
+  if(!phoneOK(ap)){g('et-err').textContent='جوال الإداري غير صحيح — 05XXXXXXXX';fl('et-err');return;}
   if(apin&&apin.length!==4){g('et-err').textContent='الرمز الجديد للإداري يجب أن يكون 4 أرقام';fl('et-err');return;}
   /* name uniqueness */
   if(newName!==ETNAME&&(gTeam(newName)||DB.tournaments.some(function(tr){return (tr.teams||[]).some(function(x){return x.name===newName;});}))){g('et-err').textContent='اسم الفريق مستخدم مسبقاً';fl('et-err');return;}
@@ -8145,8 +8159,9 @@ function saveEditTeam(){
   var rows=g('et-coaches').querySelectorAll('tr'),newCoaches=[],keptIds=[],bad='';
   var adminUser=DB.users.find(function(u){return u.role==='admin-team'&&u.team===ETNAME;});
   rows.forEach(function(tr){
-    var ins=tr.querySelectorAll('input');var cn=ins[0].value.trim(),cp=ins[1].value.trim(),cpin=(ins[2].value||'').trim();
+    var ins=tr.querySelectorAll('input');var cn=ins[0].value.trim(),cp=normPhone(ins[1].value.trim()),cpin=(ins[2].value||'').trim();
     if(!cn)return;
+    if(cp&&!phoneOK(cp)){bad='phone';return;}
     var cid=tr.dataset.cid||'',hasAcc=tr.dataset.account==='1',linked=tr.dataset.linked==='1';
     if(linked){ /* مدرب مرتبط من فريق آخر: نفس المعرّف ونفس الحساب، بلا رمز جديد */
       newCoaches.push({id:cid,name:cn,phone:cp,pin:'',account:hasAcc,linked:true});keptIds.push(cid);return;
@@ -8158,6 +8173,9 @@ function saveEditTeam(){
     newCoaches.push({id:cid,name:cn,phone:cp,pin:cpin,account:hasAcc||cpin.length===4});keptIds.push(cid);
   });
   if(bad==='new'){g('et-err').textContent='للمدرب الجديد أدخل رمزاً من 4 أرقام';fl('et-err');return;}
+  if(bad==='phone'){g('et-err').textContent='جوال أحد المدربين غير صحيح — 05XXXXXXXX';fl('et-err');return;}
+  /* اسم الإداري اسم دخول: لا يتكرر مع حساب آخر */
+  if(DB.users.some(function(u){return normName(u.username)===normName(an)&&!(adminUser&&u.id===adminUser.id);})){g('et-err').textContent='اسم الإداري مستخدم في حساب آخر — اختر اسماً مميزاً';fl('et-err');return;}
   if(bad==='dup'){g('et-err').textContent='اسم مدرب مستخدم في حساب آخر';fl('et-err');return;}
   /* rename first */
   if(newName!==ETNAME)renameTeamEverywhere(ETNAME,newName);
@@ -8194,9 +8212,9 @@ function saveEditTeam(){
       if(nc.pin){u.password=nc.pin;if(FA.enabled)faSync(FA.setPin(u.id,nc.pin));}
     } else if(u){ /* له حساب أصلاً (أضيف بنفس المعرّف) — لا ننشئ نسخة ثانية */
       return;
-    } else if(nc.account){ /* new coach account */
+    } else if(nc.account&&/^[0-9]{4}$/.test(nc.pin||'')){ /* حساب جديد — فقط برمز صحيح؛ كان يُعاد إنشاء الحساب برمز فارغ */
       var nu={id:'u_'+nc.id,name:nc.name,username:nc.name,password:nc.pin,role:'coach',team:curName,coachId:nc.id,phone:nc.phone};
-      DB.users.push(nu);if(FA.enabled)faSync(FA.upsertUser(nu,nc.pin));
+      DB.users.push(nu);if(FA.enabled)faSync(FA.upsertUser(nu,nc.pin),'لم يُنشأ حساب المدرب '+nc.name+' في الخادم');
     }
   });
   /* write coaches array into master + tournament copies */
@@ -8294,6 +8312,7 @@ function createT(){
   var name=gv('nt-name');
   if(!name){g('nt-err').textContent='يرجى إدخال اسم البطولة';fl('nt-err');return;}
   var births=[],teamCounts={},catGrp={},catMd={},catQ={},preAssign={},picks=[],rows=document.querySelectorAll('#nt-births .nt-brow'),bad=false;
+  var koSizesNew={};
   rows.forEach(function(r){
     var b=r.querySelector('select.nt-b').value,c=r.querySelector('select.nt-bc').value;
     var gsel=r.querySelector('select.nt-bg'),gv0=gsel?gsel.value:'1';
@@ -8305,6 +8324,8 @@ function createT(){
     if(births.indexOf(b)<0){
       births.push(b);teamCounts[b]=parseInt(c);
       catMd[b]=ko?'ko':'groups';
+      /* فئة إقصائية بلا حجم شجرة = صفحة الأدوار مخفية (طريق مسدود) — نضبط الحجم من عدد الفرق */
+      if(ko){var _n=parseInt(c)||2,_sz=2;while(_sz<_n&&_sz<32)_sz*=2;koSizesNew[b]=_sz;}
       if(qn)catQ[b]=qn;
       if(!ko&&gn>1){var arr=[];for(var q=0;q<gn;q++)arr.push(GRP_NAMES[q]);catGrp[b]=arr;}
     }
@@ -8318,7 +8339,7 @@ function createT(){
   if(bad==='g'){g('nt-err').textContent='عدد المجموعات لا يمكن أن يتجاوز عدد الفرق في الفئة';fl('nt-err');return;}
   if(bad==='c'){g('nt-err').textContent='يرجى تحديد عدد الفرق لكل فئة مواليد';fl('nt-err');return;}
   if(!births.length||bad==='b'){g('nt-err').textContent='يرجى اختيار المواليد لكل فئة';fl('nt-err');return;}
-  var t={id:uid(),name:name,subtitle:gv('nt-sub'),system:NTSYS,icon:TICONS[DB.tournaments.length%TICONS.length],img:gv('nt-img'),color:COLS[DB.tournaments.length%COLS.length],birthYears:births,teamCounts:teamCounts,catGroups:catGrp,catMode:catMd,catQual:catQ,teamGroup:{},ko:{size:parseInt(gv('nt-kosize'))||0,matches:[]},partTeams:picks,visible:g('nt-vis').checked,regOpen:g('nt-reg').checked,regs:[],teams:[],matches:[]};
+  var t={id:uid(),name:name,subtitle:gv('nt-sub'),system:NTSYS,icon:TICONS[DB.tournaments.length%TICONS.length],img:gv('nt-img'),color:COLS[DB.tournaments.length%COLS.length],birthYears:births,teamCounts:teamCounts,catGroups:catGrp,catMode:catMd,catQual:catQ,teamGroup:{},ko:{size:parseInt(gv('nt-kosize'))||0,sizes:koSizesNew,matches:[]},partTeams:picks,visible:g('nt-vis').checked,regOpen:g('nt-reg').checked,regs:[],teams:[],matches:[]};
   /* copy chosen academies (only allowed birth categories) into this tournament */
   picks.forEach(function(nm){
     var src=gTeam(nm)||null;
@@ -9520,7 +9541,7 @@ function setTeamGroup(cat,tname,grp){
   sv();
 }
 function catMode(cat){var t=T();t.catMode=t.catMode||{};return t.catMode[cat]||'groups';}
-function setCatMode(cat,m){var t=T();t.catMode=t.catMode||{};t.catMode[cat]=m;if(m==='ko'){setCatGroupCount(cat,1);}sv();}
+function setCatMode(cat,m){var t=T();t.catMode=t.catMode||{};t.catMode[cat]=m;if(m==='ko'){setCatGroupCount(cat,1);if(!koSizeOf(cat)){var n=teamsInCat(cat).length||2,sz=2;while(sz<n&&sz<32)sz*=2;koData().sizes[cat]=sz;}try{buildNav();}catch(e){}}sv();}
 function catQual(cat){var t=T();t.catQual=t.catQual||{};return +t.catQual[cat]||0;}
 function setCatQual(cat,n){var t=T();t.catQual=t.catQual||{};t.catQual[cat]=Math.max(0,+n||0);sv();}
 function shuffleGroups(cat){
@@ -9571,8 +9592,10 @@ function computeStandings(cat,grp){
 function teamRecord(tname){
   var r={p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0};
   (T().matches||[]).filter(function(m){return m.done&&(m.t1===tname||m.t2===tname);}).forEach(function(m){
-    var mine=m.t1===tname,gf=mine?(m.s1||0):(m.s2||0),ga=mine?(m.s2||0):(m.s1||0);
+    var mine=m.t1===tname,gf=+(mine?m.s1:m.s2)||0,ga=+(mine?m.s2:m.s1)||0;   /* أرقام لا نصوص («2»+«1» كانت تُلصق) */
     r.p++;r.gf+=gf;r.ga+=ga;
+    /* الإقصائيات: فوز/خسارة فقط — لا نقاط دوري */
+    if(m.ko){if(gf>ga||(gf===ga&&m.w===tname))r.w++;else if(ga>gf||(gf===ga&&m.w&&m.w!==tname))r.l++;else r.d++;return;}
     if(gf>ga){r.w++;r.pts+=3;}else if(ga>gf){r.l++;}else{r.d++;r.pts++;}
   });
   return r;
@@ -9592,6 +9615,11 @@ function standTable(cat,full,grp){
   }else{
     ncols=full?8:5;
     hd=full?'<div class="c">'+(sm?'ل':'لعب')+'</div><div class="c hm">'+(sm?'ف':'فوز')+'</div><div class="c hm">'+(sm?'ت':'تعادل')+'</div><div class="c hm">'+(sm?'خ':'خسارة')+'</div><div class="c hm">'+(sm?'له':'له')+'</div><div class="c hm">'+(sm?'عليه':'عليه')+'</div><div class="c">'+(sm?'+/-':'ف.أ')+'</div><div class="c">'+(sm?'ن':'نقاط')+'</div>':'<div class="c">لعب</div><div class="c hm">فوز</div><div class="c hm">خسارة</div><div class="c">ف.أ</div><div class="c">نقاط</div>';
+  }
+  /* الإنجليزية: اختصارات موحّدة — كانت الترجمة تخلط («P W Draw Losses») والحروف المفردة تبقى عربية */
+  if(typeof LANG!=='undefined'&&LANG==='en'){
+    var _ab={'لعب':'P','ل':'P','فوز':'W','ف':'W','تعادل':'D','ت':'D','خسارة':'L','خ':'L','له':'GF','عليه':'GA','له:عليه':'GF:GA','ف.أ':'GD','نقاط':'Pts','ن':'Pts'};
+    hd=hd.replace(/>([^<>]+)</g,function(m0,t){var k=t.trim();return _ab[k]?'>'+_ab[k]+'<':m0;});
   }
   var h='<div class="stand"><div class="st-row hd'+rowc+'" style="--cols:'+ncols+'"><div>#</div><div>الفريق</div>'+hd+'</div>';
   ts.forEach(function(t,i){
@@ -9950,11 +9978,11 @@ function fxCardHTML(m,opt){
   var mid='<div class="fx-mid"><span class="fx-date">'+esc(ds)+'</span>';
   if(m.done){
     var s1=+m.s1||0,s2=+m.s2||0;
-    /* الفريق الأول على اليمين في الواجهة العربية */
+    /* الفريق الأول على اليمين في الواجهة العربية (الشبكة RTL: العنصر الأول يميناً) — مثل بطاقة المباراة وبقية الواجهة */
     mid+='<div class="fx-score">'
-      +'<span class="fx-sc '+(s2>s1?'w':(s2<s1?'l':'w'))+'">'+s2+'</span>'
-      +'<span class="fx-time">'+ts+'</span>'
       +'<span class="fx-sc '+(s1>s2?'w':(s1<s2?'l':'w'))+'">'+s1+'</span>'
+      +'<span class="fx-time">'+ts+'</span>'
+      +'<span class="fx-sc '+(s2>s1?'w':(s2<s1?'l':'w'))+'">'+s2+'</span>'
       +'</div>';
   }else if(m.live){
     mid+='<span class="fx-live"><i></i> مباشر</span>';
@@ -9964,7 +9992,7 @@ function fxCardHTML(m,opt){
   mid+='<span class="fx-cat">'+esc(m.cat||tName(AT)||'')+'</span></div>';
 
   var h='<div class="fx'+(open?' open':'')+'" data-mid="'+esc(m.id)+'">';
-  h+='<div class="fx-main" onclick="'+(opt.onclick||'')+'">'+fxSide(m.t2)+mid+fxSide(m.t1)+'</div>';
+  h+='<div class="fx-main" onclick="'+(opt.onclick||'')+'">'+fxSide(m.t1)+mid+fxSide(m.t2)+'</div>';
   if(opt.foot!==false){
     h+='<div class="fx-foot" onclick="'+(opt.onclick||'')+'">'
       +(loc?ic('pin',11)+' '+esc(loc):'')
@@ -10035,9 +10063,11 @@ function rSch(rnd){
   if(SCHCAT&&cats.indexOf(SCHCAT)<0)SCHCAT='';
   var ct=g('sch-cats');if(ct){ct.innerHTML=catTabsHTML(cats,SCHCAT,'schCat');hydrateIcons(ct);}
   var pool=ms.filter(function(m){return !SCHCAT||(m.cat||'')===SCHCAT;});
-  var rounds=[];pool.forEach(function(m){if(rounds.indexOf(m.round)<0)rounds.push(m.round);});rounds.sort();
+  var rounds=[];pool.forEach(function(m){if(rounds.indexOf(m.round)<0)rounds.push(m.round);});rounds.sort(roundCmp);
   if(!rounds.length){g('wtabs').innerHTML='';g('sch-b').innerHTML=emptyBox('cal','لا توجد مباريات بعد','سيضيف المنظم المباريات قريباً');return;}
-  var act=(rnd&&rounds.indexOf(rnd)>-1)?rnd:rounds[0];
+  /* الافتراضي: أول جولة فيها مباراة لم تُلعب — لا جولة منتهية */
+  var firstOpen=rounds.find(function(r){return pool.some(function(m){return m.round===r&&!m.done;});});
+  var act=(rnd&&rounds.indexOf(rnd)>-1)?rnd:(firstOpen||rounds[rounds.length-1]);
   g('wtabs').innerHTML=rounds.map(function(r){return '<button class="wtab'+(r===act?' on':'')+'" onclick="rSch(\''+jq(r)+'\')">'+esc(r)+'</button>';}).join('');
   var list=pool.filter(function(m){return m.round===act&&!m.done;});
   if(!list.length){g('sch-b').innerHTML=emptyBox('check','انتهت مباريات هذه الجولة');return;}
@@ -10304,8 +10334,9 @@ function koFreeSlot(round,cat){
 function koCanEdit(){return CU&&['admin','organizer'].indexOf(CU.role)>-1;}
 function koWinner(m){
   if(!m||!m.done)return '';
-  if(m.s1>m.s2)return m.t1;
-  if(m.s2>m.s1)return m.t2;
+  var a=+m.s1||0,b=+m.s2||0;   /* مقارنة رقمية: «10»>«9» نصياً خاطئة */
+  if(a>b)return m.t1;
+  if(b>a)return m.t2;
   if((m.pen1|0)>(m.pen2|0))return m.t1;
   if((m.pen2|0)>(m.pen1|0))return m.t2;
   return '';
@@ -10462,12 +10493,13 @@ function koCard(id){
   var m=(T().matches||[]).find(function(x){return x.id===id;});if(!m)return;
   KOCARD=id;
   var can=koCanEdit();
-  var wn=koWinner(m);
+  var isKo=!!m.ko;
+  var wn=isKo?koWinner(m):'';   /* مباراة دوري: لا «متأهل» ولا ركلات ترجيح */
   var h='<div class="mc-hd">';
   h+='<div class="mc-round">'+ic('trophy',12)+' '+esc(m.round||'')+(m.cat?' • '+esc(m.cat):'')+'</div>';
   h+='<div class="mc-vs">';
   h+='<div class="mc-t'+(wn===m.t1?' win':'')+'">'+tlogoN(m.t1,52)+'<span>'+esc(m.t1)+'</span></div>';
-  h+='<div class="mc-sc">'+(m.done?((m.s1|0)+' - '+(m.s2|0)):'—')+(m.done&&m.s1===m.s2?'<small>ركلات الترجيح '+(m.pen1|0)+' - '+(m.pen2|0)+'</small>':'')+'</div>';
+  h+='<div class="mc-sc">'+(m.done?((m.s1|0)+' - '+(m.s2|0)):'—')+(isKo&&m.done&&(+m.s1||0)===(+m.s2||0)?'<small>ركلات الترجيح '+(m.pen1|0)+' - '+(m.pen2|0)+'</small>':'')+'</div>';
   h+='<div class="mc-t'+(wn===m.t2?' win':'')+'">'+tlogoN(m.t2,52)+'<span>'+esc(m.t2)+'</span></div>';
   h+='</div>';
   h+='<div class="mc-meta">'+ic('cal',11)+' '+esc(dashDate(m.dt,true))+(m.venue?' &nbsp;•&nbsp; '+ic('shield',11)+' '+esc(m.venue):'')+(m.court?' ('+esc(m.court)+')':'')+'</div>';
@@ -10605,6 +10637,8 @@ function rStats(){
 function stCat(c){STCAT=c;rStats();}
 var STMVPR='';
 function roundNum(r){var m=(r||'').match(/\d+/);return m?parseInt(m[0]):0;}
+/* ترتيب الجولات رقمياً: «الجولة 10» بعد «الجولة 9» لا قبل «الجولة 2» */
+function roundCmp(a,b){var na=(String(a||'').match(/\d+/)||[])[0],nb=(String(b||'').match(/\d+/)||[])[0];na=na?+na:9999;nb=nb?+nb:9999;return na!==nb?na-nb:String(a||'').localeCompare(String(b||''),'ar');}
 function roundList(){
   var rs=[];(T().matches||[]).forEach(function(m){if(m.round&&rs.indexOf(m.round)<0)rs.push(m.round);});
   rs.sort(function(a,b){return roundNum(a)-roundNum(b);});
@@ -11003,7 +11037,7 @@ function renderMyAcad(){
   var logo=o.img?'<img src="'+srcOK(o.img)+'">':ic('shield',22);
   var h='<h3><span data-ic="trophy"></span> أكاديميتي '+(pending?'<span class="badge pending" style="margin-inline-start:6px">قيد الاعتماد</span>':'<span class="badge approved" style="margin-inline-start:6px">معتمدة</span>')+'</h3>';
   h+='<div class="frow"><div class="fg"><label>اسم الأكاديمية *</label><input type="text" id="ma-name" value="'+esc(o.name||'')+'"></div><div class="fg"><label>المدينة *</label><select id="ma-city"></select></div></div>';
-  h+='<div class="frow"><div class="fg"><label>اسم الإداري *</label><input type="text" id="ma-admin" value="'+esc(o.admin||'')+'"></div><div class="fg"><label>رقم التواصل *</label><input type="tel" id="ma-phone" value="'+esc(o.phone||'')+'" maxlength="10" style="direction:ltr"></div></div>';
+  h+='<div class="frow"><div class="fg"><label>اسم الإداري *</label><input type="text" id="ma-admin" value="'+esc(o.admin||'')+'"></div><div class="fg"><label>رقم التواصل *</label><input type="tel" id="ma-phone" value="'+esc(phone05(o.phone))+'" maxlength="10" style="direction:ltr"></div></div>';
   h+='<div class="fg"><label>شعار الأكاديمية</label><div class="img-pick"><div class="img-prev" id="ma-prev">'+logo+'</div><div><label class="img-pick-btn"><span data-ic="camera"></span> تغيير الصورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,\'ma\')"></label><button class="img-rm" id="ma-rm" onclick="rmImg(\'ma\',\'shield\')" style="'+(o.img?'':'display:none')+'">إزالة</button></div><input type="hidden" id="ma-img" value="'+esc(o.img||'')+'"></div></div>';
   h+='<div class="cat-wrap"><div class="cw-t"><span data-ic="whistle"></span> المدربون *</div><table class="cat-tbl"><thead><tr><th>اسم المدرب</th><th>جوال المدرب</th><th>الحساب</th><th></th></tr></thead><tbody id="ma-coaches"></tbody></table><button class="add-row" onclick="openCoachMod()">+ إضافة مدرب</button></div>';
   h+='<button class="btn btn-r" style="width:100%" onclick="saveMyAcad()">حفظ التعديلات</button><div class="msg ok" id="ma-ok">تم حفظ التعديلات</div><div class="msg err" id="ma-err">يرجى تعبئة جميع الحقول ومدرب واحد على الأقل</div>';
@@ -11013,7 +11047,7 @@ function renderMyAcad(){
   (o.coaches||[]).forEach(function(c){
     var tr=document.createElement('tr');tr.dataset.cid=c.id||'';
     var acc=c.account?'<span class="badge approved" style="font-size:9.5px">له حساب</span>':'<span class="badge pending" style="font-size:9.5px">بدون حساب</span>';
-    tr.innerHTML='<td><input type="text" value="'+esc(c.name||'')+'" placeholder="اسم المدرب"></td><td><input type="tel" value="'+esc(c.phone||'')+'" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td>'+acc+'</td><td><button class="del-btn" onclick="delCat(this,\'ma-coaches\')">'+ic('x',13)+'</button></td>';
+    tr.innerHTML='<td><input type="text" value="'+esc(c.name||'')+'" placeholder="اسم المدرب"></td><td><input type="tel" value="'+esc(phone05(c.phone))+'" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr"></td><td>'+acc+'</td><td><button class="del-btn" onclick="delCat(this,\'ma-coaches\')">'+ic('x',13)+'</button></td>';
     tb.appendChild(tr);
   });
   if(!tb.children.length)tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--gray);font-size:12px;padding:.8rem">لا يوجد مدربون بعد — أضِف مدرباً عبر الزر بالأسفل</td></tr>';
@@ -11045,12 +11079,13 @@ function createCoach(){
 function saveMyAcad(){
   var a=myAcad();if(!a)return;
   var o=a.obj;
-  var name=gv('ma-name'),city=gv('ma-city'),admin=gv('ma-admin'),phone=gv('ma-phone'),img=gv('ma-img');
+  var name=gv('ma-name'),city=gv('ma-city'),admin=gv('ma-admin'),phone=normPhone(gv('ma-phone')),img=gv('ma-img');
+  if(phone&&!phoneOK(phone)){var _me=g('ma-err');if(_me){_me.textContent='رقم التواصل غير صحيح — 05XXXXXXXX';fl('ma-err');}return;}
   /* collect coach rows preserving id + pin/account, and sync user accounts */
   var rows=g('ma-coaches').querySelectorAll('tr');var newCoaches=[];var keptIds=[];
   rows.forEach(function(tr){
     var ins=tr.querySelectorAll('input');if(!ins.length)return;
-    var cn=ins[0].value.trim(),cp=ins[1]?ins[1].value.trim():'';if(!cn||!cp)return;
+    var cn=ins[0].value.trim(),cp=ins[1]?normPhone(ins[1].value.trim()):'';if(!cn||!cp)return;
     var cid=tr.dataset.cid||'';
     var old=(o.coaches||[]).find(function(c){return (c.id&&c.id===cid);});
     var entry={id:cid||uid(),name:cn,phone:cp,pin:old?old.pin:'',account:old?!!old.account:false};
@@ -11141,7 +11176,7 @@ function getCoaches(tbId){
   var out=[];
   g(tbId).querySelectorAll('tr').forEach(function(tr){
     var ins=tr.querySelectorAll('input');
-    var n=ins[0]?ins[0].value.trim():'',p=ins[1]?ins[1].value.trim():'';
+    var n=ins[0]?ins[0].value.trim():'',p=ins[1]?normPhone(ins[1].value.trim()):'';
     if(n&&p)out.push({name:n,phone:p});
   });
   return out;
@@ -11304,8 +11339,9 @@ function saveEditPlayer(){
   var dd=gv('ep-dd'),dm=g('ep-dm').value,dy=gv('ep-dy'),nat=gv('ep-nat'),gd=phoneVal('ep-gd');
   if(!cat){vFail('ep-err','اختر الفئة السنية','ep-cat');return;}
   if(!fn||!mn||!ln){vFail('ep-err','الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة',!fn?'ep-fn':(!mn?'ep-mn':'ep-ln'));return;}
-  if(nid.length!==10){vFail('ep-err','رقم الهوية / الإقامة مطلوب — ١٠ أرقام','ep-nid');return;}
+  var _ne=nidErr(nid,p.nid);if(_ne){vFail('ep-err',_ne,'ep-nid');return;}
   if(!dd||!dm||!dy){vFail('ep-err','تاريخ الميلاد مطلوب','ep-dd');return;}
+  if(!validYMD(dy,dm,dd)){vFail('ep-err','تاريخ الميلاد غير صحيح — هذا اليوم غير موجود في الشهر','ep-dd');return;}
   if(!phoneOK(gd)){vFail('ep-err','جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5','ep-gd');return;}
   if(phoneFake(gd)){vFail('ep-err','جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً','ep-gd');return;}
   var dupN=null;
@@ -11372,8 +11408,9 @@ function subAddPlayer(){
   var dd=gv('ap-dd'),dm=g('ap-dm').value,dy=gv('ap-dy'),nat=gv('ap-nat'),gd=phoneVal('ap-gd'),img=gv('ap-img'),idImg=gv('apid-img');
   if(!cat){g('ap-err').textContent='اختر الفئة السنية';fl('ap-err');return;}
   if(!fn||!mn||!ln){g('ap-err').textContent='الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة';fl('ap-err');return;}
-  if(nid.length!==10){vFail('ap-err','رقم الهوية / الإقامة مطلوب — ١٠ أرقام','ap-nid');return;}
+  var _ne=nidErr(nid);if(_ne){vFail('ap-err',_ne,'ap-nid');return;}
   if(!dd||!dm||!dy){vFail('ap-err','تاريخ الميلاد مطلوب','ap-dd');return;}
+  if(!validYMD(dy,dm,dd)){vFail('ap-err','تاريخ الميلاد غير صحيح — هذا اليوم غير موجود في الشهر','ap-dd');return;}
   if(!phoneOK(gd)){vFail('ap-err','جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5','ap-gd');return;}
   if(phoneFake(gd)){vFail('ap-err','جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً','ap-gd');return;}
   if(!idImg){vFail('ap-err','صورة الهوية مطلوبة','apid-prev');return;}
@@ -11860,7 +11897,7 @@ function popAM(){
   var dd=[];for(var d=1;d<=31;d++)dd.push(String(d));
   fillSel('am-dd',dd,'اليوم');
   g('am-dm').innerHTML='<option value="">الشهر</option>'+MONTHS.map(function(m,i){return '<option value="'+(i+1)+'">'+m+'</option>';}).join('');
-  fillSel('am-dy',['2026','2027'],'السنة');
+  var _y=new Date().getFullYear();fillSel('am-dy',[String(_y-1),String(_y),String(_y+1)],'السنة');
   var hh=[];for(var h=6;h<=23;h++)hh.push((h<10?'0':'')+h+':00');
   g('am-h').innerHTML='<option value="">الساعة</option>'+hh.map(function(x){return '<option value="'+x.slice(0,2)+'">'+x+'</option>';}).join('');
   fillSel('am-min',['00','15','30','45'],'الدقيقة');
@@ -11901,6 +11938,7 @@ function addMatch(){
   var cat=gv('am-cat'),t1=gv('am-t1'),t2=gv('am-t2'),isKo=gv('am-type')==='ko';
   var d=gv('am-dd'),mo=g('am-dm').value,y=gv('am-dy'),h=gv('am-h'),mi=gv('am-min')||'00';
   if(!cat||!t1||!t2||t1===t2||!d||!mo||!y){fl('am-err');return;}
+  if(!validYMD(y,mo,d)){g('am-err').textContent='التاريخ غير صحيح — '+d+' '+MONTHS[mo-1]+' لا يوجد';fl('am-err');return;}
   var dt=y+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0')+'T'+(h||'00')+':'+mi;
   var rec={id:uid(),cat:cat,t1:t1,t2:t2,dt:dt,venue:gv('am-venue'),court:gv('am-court'),done:false};
   if(isKo){
@@ -12345,7 +12383,7 @@ function uFiltered(){
     if(!q)return true;
     return normName(u.name||'').indexOf(q)>-1
         || normName(u.username||'').indexOf(q)>-1
-        || String(u.phone||'').indexOf(UF.q.trim())>-1
+        || phoneHit(u.phone,String(UF.q||'').replace(/[^0-9]/g,''))
         || normName(u.team||'').indexOf(q)>-1;
   });
 }
@@ -13065,12 +13103,25 @@ function normPhone(v){
     if(k<0)k=fa.indexOf(c);
     out+=(k>-1?String(k):c);
   }
+  var intl=/^\s*(\+|00)/.test(out);
   var d=out.replace(/[^0-9]/g,'');
-  if(d.indexOf('00966')===0)d=d.slice(5);
-  else if(d.indexOf('966')===0)d=d.slice(3);
-  else if(d.indexOf('0')===0)d=d.slice(1);
+  if(d.indexOf('00')===0)d=d.slice(2);
+  if(d.indexOf('966')===0){
+    d=d.slice(3);
+    if(d[0]==='0')d=d.slice(1);   /* «+966 05…» كان يعطي ١٣ رقماً */
+  }else if(intl){
+    return d;                      /* رقم دولي غير سعودي: يبقى كما هو بلا 966 */
+  }else if(d[0]==='0')d=d.slice(1);
   if(d.length===9&&d[0]==='5')return '966'+d;
-  return d?'966'+d:'';           /* غير سعودي أو ناقص — يبقى كما هو بعد التنظيف */
+  return d?'966'+d:'';
+}
+/* الجوال بصيغة 05XXXXXXXX للحقول النصية القديمة (كانت تعرض 9665… في خانة من ١٠ أرقام) */
+function phone05(v){var n=normPhone(v);return /^9665[0-9]{8}$/.test(n)?'0'+n.slice(3):String(v||'');}
+/* بحث بالجوال: «05…» أو «5…» أو «9665…» كلها تطابق نفس الرقم */
+function phoneHit(v,dg){
+  if(!dg||!v)return false;
+  var raw=String(v).replace(/[^0-9]/g,''),n=normPhone(v),loc=n.indexOf('966')===0?'0'+n.slice(3):n;
+  return raw.indexOf(dg)>-1||n.indexOf(dg)>-1||loc.indexOf(dg)>-1;
 }
 function phoneOK(v){return /^9665[0-9]{8}$/.test(normPhone(v));}
 function phoneDisp(v){
@@ -13140,6 +13191,7 @@ function issuesPlayerRanked(p){
   else if(!n.first||!n.mid||!n.last){crit.push('الاسم غير ثلاثي (اللاعب • الأب • العائلة)');codes.name=1;}
   if(!p.nid){crit.push('لا يوجد رقم هوية');codes.nid=1;}
   else if(String(p.nid).replace(/[^0-9]/g,'').length!==10){crit.push('رقم الهوية ناقص — يجب ١٠ أرقام');codes.nid=1;}
+  else if(!nidChk(p.nid)){crit.push('رقم الهوية غير صحيح — لا يبدأ بـ 1/2 أو خانة التحقق لا تطابق');codes.nid=1;}
   if(!p.dob){crit.push('لا يوجد تاريخ ميلاد — لن يستطيع الدخول لحسابه');codes.dob=1;}
   if(!p.guardPhone){crit.push('لا يوجد جوال ولي أمر');codes.gph=1;}
   else if(!phoneOK(p.guardPhone)){crit.push('جوال ولي الأمر غير صحيح');codes.gph=1;}
@@ -13170,6 +13222,7 @@ function issuesTPlayerRanked(p){
   else if(!n.first||!n.mid||!n.last){crit.push('الاسم غير ثلاثي (اللاعب • الأب • العائلة)');codes.name=1;}
   if(!p.nid){crit.push('لا يوجد رقم هوية');codes.nid=1;}
   else if(normNid(p.nid).length!==10){crit.push('رقم الهوية ناقص — يجب ١٠ أرقام');codes.nid=1;}
+  else if(!nidChk(p.nid)){crit.push('رقم الهوية غير صحيح — لا يبدأ بـ 1/2 أو خانة التحقق لا تطابق');codes.nid=1;}
   var gp=p.guard||p.guardPhone||'';
   if(!gp){crit.push('لا يوجد جوال ولي أمر');codes.gph=1;}
   else if(!phoneOK(gp)){crit.push('جوال ولي الأمر غير صحيح');codes.gph=1;}
@@ -13341,7 +13394,11 @@ function admMigHTML(){
    الهوية هي الرابط: نفس رقم الهوية = نفس اللاعب في كل البطولات. */
 function playerKey(p){
   var n=normNid(p&&p.nid||'');
-  return n||('name:'+normName(p&&p.name||''));
+  if(n)return n;
+  /* بلا هوية: الاسم وحده يدمج شخصين مختلفين — نشترط تاريخ الميلاد معه، وإلا فالسجل نفسه فقط */
+  var d=parseDob(p&&p.dob);
+  if(d&&p&&p.name)return 'name:'+normName(p.name)+'|'+d.y+'-'+d.m+'-'+d.d;
+  return 'id:'+(p&&p.id||Math.random());
 }
 /* كل البطولات التي يظهر فيها هذا اللاعب (من البيانات الحالية) */
 function playerTournaments(p){
@@ -13574,7 +13631,7 @@ function dbStats(){
    تنزّل كل البيانات كملف JSON. قراءة فقط — لا تمسّ الأصل. */
 function backupNow(){
   try{
-    var stamp=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+    var _n=new Date(),stamp=calISO(_n)+'-'+('0'+_n.getHours()).slice(-2)+'-'+('0'+_n.getMinutes()).slice(-2);
     var payload={_backup:'faris',_at:Date.now(),_ver:(window.__FA_BUILD||''),data:cloudState(DB)};   /* بلا أي رموز سرية */
     var blob=new Blob([JSON.stringify(payload)],{type:'application/json'});
     var a=document.createElement('a');
@@ -14106,7 +14163,7 @@ function openCont(e){
 function dlPDF(){
   var ms=T().matches||[];
   if(!ms.length){alert('لا توجد مباريات للطباعة');return;}
-  var rounds=[];ms.forEach(function(m){if(rounds.indexOf(m.round)<0)rounds.push(m.round);});rounds.sort();
+  var rounds=[];ms.forEach(function(m){if(rounds.indexOf(m.round)<0)rounds.push(m.round);});rounds.sort(roundCmp);
   var rows='';
   rounds.forEach(function(r){
     ms.filter(function(m){return m.round===r;}).forEach(function(m){
@@ -14141,6 +14198,8 @@ var CAL_MONTHS=['يناير','فبراير','مارس','أبريل','مايو','
 var CAL_PERIODS=[['day','يومي'],['week','أسبوعي'],['month','شهري'],['year','سنوي'],['all','الكل']];
 function calD(v){var d=v instanceof Date?new Date(v.getTime()):new Date(v);return isNaN(d.getTime())?null:d;}
 function calMid(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+/* تاريخ حقيقي؟ (٣٠ فبراير كان يُقبل) */
+function validYMD(y,m,d){y=+y;m=+m;d=+d;if(!y||!m||!d)return false;var t=new Date(y,m-1,d);return t.getFullYear()===y&&t.getMonth()===m-1&&t.getDate()===d;}
 function calISO(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
 function calSameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
 function calRange(period,ref){
@@ -15668,7 +15727,7 @@ function tdBrCSV(b,kind){
     rows=x.coaches.map(function(c){var st=tdCoachStats(c);
       return [c.name,c.phone||'—',st.groups.map(function(gg){return gg.name;}).join(' / ')||'—',st.players.length,st.plansM,st.evPct===null?'—':st.evPct+'%',st.lastRating===null?'—':tdCeOf5(st.lastRating)+' / 5'];});
   }else{return;}
-  var lines=[head].concat(rows).map(function(r){return r.map(function(c){return '"'+String(c==null?'':c).replace(/"/g,'""')+'"';}).join(',');});
+  var lines=[head].concat(rows).map(function(r){return r.map(function(c){return csvCell(c);}).join(',');});
   var blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -15717,8 +15776,8 @@ function tdFixList(){
       /* الأرقام تُطابق فقط إن كتب المستخدم أرقاماً — وإلا طابق الفراغ كل شيء */
       if(dg){
         if(String(p.nid||'').indexOf(dg)>-1)return true;
-        if(String(p.guardPhone||'').indexOf(dg)>-1)return true;
-        if(String(p.phone||'').indexOf(dg)>-1)return true;
+        if(phoneHit(p.guardPhone,dg)||phoneHit(p.guard,dg))return true;
+        if(phoneHit(p.phone,dg))return true;
       }
       return false;
     });
@@ -15742,7 +15801,8 @@ function tdFixSave(pid,field,el){
   }else if(field==='nid'){
     var d=v.replace(/[^0-9]/g,'').slice(0,10);
     el.value=d;
-    if(d&&d.length!==10){el.classList.add('bad');return;}
+    if(d&&nidErr(d,p.nid)){el.classList.add('bad');el.title=nidErr(d,p.nid);return;}
+    el.title='';
     el.classList.remove('bad');
     p.nid=d;
   }else if(field==='dob'){
@@ -16004,7 +16064,8 @@ function tdSavePlayer(){
   var pp=phoneVal('tdp-phone');
   if(pp&&!phoneOK(pp)){g('tdp-err').textContent='جوال اللاعب غير صحيح';fl('tdp-err');return;}
   if(!id.nid){g('tdp-err').textContent='رقم الهوية مطلوب — به يدخل اللاعب لحسابه';fl('tdp-err');return;}
-  if(id.nid.length!==10){g('tdp-err').textContent='رقم الهوية يجب أن يكون 10 أرقام';fl('tdp-err');return;}
+  var _old=TDPF.edit?((TDX().players||[]).find(function(x){return x.id===TDPF.edit;})||{}).nid:'';
+  var _ne=nidErr(id.nid,_old);if(_ne){g('tdp-err').textContent=_ne;fl('tdp-err');return;}
   /* الهوية فريدة: لا يُسمح بلاعبين يحملان نفس الرقم — وإلا تعذّر ربط الحساب */
   var _dupNid=(TDX().players||[]).find(function(x){return x.id!==TDPF.edit&&normNid(x.nid)===normNid(id.nid);});
   if(_dupNid){g('tdp-err').textContent='رقم الهوية مسجّل مسبقاً للاعب: '+(_dupNid.name||'');fl('tdp-err');return;}
@@ -17340,7 +17401,7 @@ function rTDReports(){
 }
 function tdRepCSV(){
   var d=tdReportData();
-  var lines=[d.head].concat(d.rows).map(function(r){return r.map(function(c){return '"'+String(c==null?'':c).replace(/"/g,'""')+'"';}).join(',');});
+  var lines=[d.head].concat(d.rows).map(function(r){return r.map(function(c){return csvCell(c);}).join(',');});
   var blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -18185,7 +18246,7 @@ function ntAlerts(){
     txt:noEv.length===1?('لم يُقيَّم اللاعب «'+ntPName(noEv[0])+'» في المنتخب بعد')
                        :(ceN(noEv.length)+' لاعباً بلا تقييم في المنتخب'),cl:'var(--amber)'});
   var inj=(n.injuries||[]).filter(function(x){
-    var t=new Date().toISOString().slice(0,10);
+    var t=calISO(new Date());
     return x.from<=t&&(!x.to||x.to>=t)&&ntScopeMembers().some(function(m){return m.id===x.mid;});});
   if(inj.length)out.push({ic:'info',txt:ceN(inj.length)+' لاعباً خارج الملاعب بسبب الإصابة',cl:'var(--red)'});
   var noResp=0;
@@ -18608,7 +18669,7 @@ function ntAddNewSave(){
   if(!fn||!mn||!ln)return err('اكتب الاسم ثلاثياً: اسم اللاعب، اسم الأب، اسم العائلة');
   if(!dob)return err('تاريخ الميلاد مطلوب');
   if(!sid)return err('اختر الفئة في المنتخب');
-  if(nid&&nid.length!==10)return err('رقم الهوية يجب أن يكون 10 أرقام');
+  if(nid&&nidErr(nid))return err(nidErr(nid));
   if(nid){var dup=(TDX().players||[]).find(function(x){return normNid(x.nid)===normNid(nid);});if(dup)return err('رقم الهوية مسجّل مسبقاً للاعب: '+(dup.name||'')+' — أضفه من «لاعب من الفروع»');}
   var ph=phoneVal('ntn-phone'),gp=phoneVal('ntn-gphone');
   if(ph&&!phoneOK(ph))return err('جوال اللاعب غير صحيح');
@@ -19347,7 +19408,7 @@ function ntReportData(){
     });
   }else if(type==='inj'){
     head=['اللاعب','الفئة','الإصابة','من','عودة متوقعة','الحالة'];
-    var _t=new Date().toISOString().slice(0,10);
+    var _t=calISO(new Date());
     (n.injuries||[]).forEach(function(x){
       var m=ntMember(x.mid);if(!m||!mem.some(function(y){return y.id===m.id;}))return;
       var on=x.from<=_t&&(!x.to||x.to>=_t);
@@ -19379,7 +19440,7 @@ function rNTReports(){
 }
 function ntRepCSV(){
   var d=ntReportData();
-  var lines=[d.head].concat(d.rows).map(function(r){return r.map(function(c){return '"'+String(c==null?'':c).replace(/"/g,'""')+'"';}).join(',');});
+  var lines=[d.head].concat(d.rows).map(function(r){return r.map(function(c){return csvCell(c);}).join(',');});
   var blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -19536,7 +19597,7 @@ function ntInjuriesOf(mid){
   return (NTX().injuries||[]).filter(function(x){return x.mid===mid;}).sort(function(a,b){return (b.from||'')<(a.from||'')?-1:1;});
 }
 function ntMemAvailable(mid){
-  var t=new Date().toISOString().slice(0,10);
+  var t=calISO(new Date());
   return !ntInjuriesOf(mid).some(function(x){return x.from<=t&&(!x.to||x.to>=t);});
 }
 
@@ -19603,7 +19664,7 @@ function rNTMe(){
   +'</div>';
 
   /* الاستدعاءات القادمة */
-  var today=new Date().toISOString().slice(0,10);
+  var today=calISO(new Date());
   var calls=n.camps.filter(function(c){return (c.invited||[]).indexOf(m.id)>-1&&(!c.to?c.from>=today:c.to>=today);})
                    .sort(function(a,b){return (a.from||'')<(b.from||'')?-1:1;});
   h+=tdSubHead('الاستدعاءات','<span class="pg-chip">'+ceN(calls.length)+'</span>');
@@ -19680,7 +19741,7 @@ function rNTMe(){
   if(!inj.length)h+=emptyBox('check-big','لا توجد إصابات مسجّلة');
   else{
     h+='<div class="at-wrap"><table class="at"><thead><tr><th>الإصابة</th><th>من</th><th>عودة متوقعة</th><th>الحالة</th>'+(ntCanManage()?'<th></th>':'')+'</tr></thead><tbody>';
-    var t2=new Date().toISOString().slice(0,10);
+    var t2=calISO(new Date());
     inj.forEach(function(x){
       var on=x.from<=t2&&(!x.to||x.to>=t2);
       h+='<tr><td style="font-weight:700">'+esc(x.type||'إصابة')+'</td><td style="direction:ltr;text-align:start">'+esc(x.from)+'</td>'
@@ -20155,7 +20216,7 @@ function cePeriodLabel(cy){
 function ceCycleOpen(cy){
   if(!cy||cy.status!=='open')return false;
   if(ceIsCont(cy))return true;              /* المستمر مفتوح ما دام مفعّلاً */
-  var t=new Date().toISOString().slice(0,10);
+  var t=calISO(new Date());
   if(cy.from&&t<cy.from)return false;
   if(cy.to&&t>cy.to)return false;
   return true;
@@ -20380,7 +20441,7 @@ function rCEHome(){
   });
   var avg=nComp?Math.round(sum/nComp):null;
   var plans=c.plans.filter(function(p){return coaches.some(function(co){return co.id===p.coachId;});});
-  var today=new Date().toISOString().slice(0,10);
+  var today=calISO(new Date());
   var late=plans.filter(function(p){return p.st!=='done'&&p.due&&p.due<today;}).length;
   var act=plans.filter(function(p){return p.st!=='done';}).length;
 
@@ -20807,7 +20868,7 @@ function ceDecide(cycleId,coachId){
 /* ==================== خطط التطوير ==================== */
 var CEPF={showForm:false,edit:''};
 function cePlanCard(p,acts){
-  var co=tdCoach(p.coachId),today=new Date().toISOString().slice(0,10);
+  var co=tdCoach(p.coachId),today=calISO(new Date());
   var late=p.st!=='done'&&p.due&&p.due<today;
   var col=p.st==='done'?'#16a34a':(late?'var(--red)':'var(--amber)');
   var h='<div class="ce2-plan" style="border-inline-start-color:'+col+'">';
@@ -20970,7 +21031,7 @@ function ceAddCycle(){
     f=gv('cc-f');t=gv('cc-t');
     if(!f||!t){g('cc-err').textContent='أكمل تاريخي البداية والنهاية';fl('cc-err');return;}
     if(t<f){g('cc-err').textContent='تاريخ النهاية قبل البداية';fl('cc-err');return;}
-  }else f=new Date().toISOString().slice(0,10);
+  }else f=calISO(new Date());
   c.cycles.push({id:uid(),name:nm,kind:cont?'cont':'cycle',every:cont?(gv('cc-every')||'month'):'',
     from:f,to:cont?'':t,status:'open',
     weights:JSON.parse(JSON.stringify(c.settings.weights)),
@@ -21911,14 +21972,20 @@ function rADReports(){
     +'<div>ملفات CSV تُفتح مباشرة في Excel. التصدير قراءة فقط ولا يغيّر أي بيان.</div></div>';
   el.innerHTML=h;hydrateIcons(el);
 }
+/* خلية CSV آمنة: نص يبدأ بـ = + - @ يُنفَّذ صيغةً في Excel — نسبقه بعلامة ' (الأرقام السالبة تبقى أرقاماً) */
+function csvCell(v){
+  var s=String(v==null?'':v);
+  if(/^[=+\-@\t\r]/.test(s)&&!/^[+\-]?\d+([.,]\d+)?%?$/.test(s))s="'"+s;
+  return '"'+s.replace(/"/g,'""')+'"';
+}
 /* CSV: نضيف BOM ليقرأ Excel العربية صحيحة */
 function adCSV(name,rows){
-  var esc2=function(v){var s=String(v==null?'':v);return '"'+s.replace(/"/g,'""')+'"';};
+  var esc2=csvCell;
   var txt=rows.map(function(r){return r.map(esc2).join(',');}).join('\r\n');
   var blob=new Blob(['﻿'+txt],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download=name+'-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.download=name+'-'+calISO(new Date())+'.csv';
   document.body.appendChild(a);a.click();
   setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
 }
@@ -22271,7 +22338,7 @@ function tdSubEnd(start,type){
   if(!start||!TDSUBD[type])return '';
   var d=new Date(start+'T00:00:00');
   d.setDate(d.getDate()+TDSUBD[type]);
-  return d.toISOString().slice(0,10);
+  return calISO(d);   /* بالتوقيت المحلي — toISOString (UTC) كان ينقص يوماً في السعودية */
 }
 /* حساب تاريخ الانتهاء تلقائياً في النموذج */
 function tdSubCalc(){
@@ -23901,7 +23968,7 @@ function adPlFiltered(){
     if(q||qd){
       var hit=false;
       if(q&&coachKey(p.name||'').indexOf(q)>-1)hit=true;
-      if(!hit&&qd.length>=3){var f=[p.nid,p.phone,p.guardPhone].map(function(v){return String(v||'').replace(/[^0-9]/g,'');});if(f.some(function(v){return v.indexOf(qd)>-1;}))hit=true;}
+      if(!hit&&qd.length>=3){if(String(p.nid||'').replace(/[^0-9]/g,'').indexOf(qd)>-1||phoneHit(p.phone,qd)||phoneHit(p.guardPhone,qd)||phoneHit(p.guard,qd))hit=true;}
       if(!hit&&q&&coachKey(p.branch||'').indexOf(q)>-1)hit=true;
       if(!hit)return false;
     }
@@ -25832,7 +25899,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-p1c</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-m1</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
