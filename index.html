@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.27-s2">
+<meta name="build" content="2026.09.27-p2a">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3610,7 +3610,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-s2</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-p2a</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4459,6 +4459,34 @@ var _FA_CONFLICT=false;
    عند الدمج: عنصر عند الخادم وليس عندنا — إن كان في هذه القائمة فنحن من حذفه
    (دمج مكرّرين مثلاً) فلا يُعاد؛ وإلا فهو إضافة زميل تُحترم.
    بدون هذا كان كل تصادم في رقم النسخة يُعيد ما حذفناه، فيبدو الدمج كأنه لم يحدث. */
+/* ===== الأقسام (المرحلة ٢-أ) =====
+   الكتلة تُقسَّم منطقياً: كل مفتاح أعلى قسم، وداخل td / nt / ce كل مجموعة قسم.
+   نفس القاعدة في الخادم (fa_sec_items) — يجب أن تبقيا متطابقتين. */
+var FA_SPLIT={td:1,nt:1,ce:1};
+function faSecSplit(st){
+  var out={};if(!st||typeof st!=='object')return out;
+  Object.keys(st).forEach(function(k){
+    if(k.charAt(0)==='_')return;var v=st[k];if(v===undefined)return;
+    if(FA_SPLIT[k]&&v&&typeof v==='object'&&!Array.isArray(v)){Object.keys(v).forEach(function(x){if(v[x]!==undefined)out[k+'.'+x]=v[x];});}
+    else out[k]=v;
+  });
+  return out;
+}
+function faSecPut(st,k,v){
+  var i=k.indexOf('.');
+  if(i<0){if(v===null||v===undefined)delete st[k];else st[k]=v;return;}
+  var par=k.slice(0,i),x=k.slice(i+1);
+  if(!st[par]||typeof st[par]!=='object'||Array.isArray(st[par]))st[par]={};
+  if(v===null||v===undefined)delete st[par][x];else st[par][x]=v;
+}
+/* قائمة عناصر بمعرّفات فريدة (اللاعبون، الحضور، البطولات…): تُرسل عناصرها المتغيّرة فقط */
+function faItemMode(v){
+  if(!Array.isArray(v)||v.length<8)return false;
+  var seen={};
+  for(var i=0;i<v.length;i++){var x=v[i];if(!x||typeof x!=='object'||Array.isArray(x)||x.id==null||x.id==='')return false;var id=String(x.id);if(seen[id])return false;seen[id]=1;}
+  return true;
+}
+function faItemIndex(v){var ids=[],s={};v.forEach(function(x){var id=String(x.id);ids.push(id);s[id]=JSON.stringify(x);});return {ids:ids,s:s};}
 var FA_BASE_IDS={};
 function faIndexIds(state){
   var out={};
@@ -4549,9 +4577,9 @@ function faProbe(kb){
    (عبر وصف OpenAPI الذي يقدّمه PostgREST) ويعرض المفقود واختلاف أسماء المعاملات
    قبل أن يظهر كخطأ في منتصف العمل.
 ========================================================================== */
-var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
+var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_save_patch":["p_base","p_items","p_rev","p_set","p_token"],"fa_state_sync":["p_have","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
 var FA_RPC_CRIT=['fa_load_state','fa_save_state','fa_state_rev','fa_login'];
-var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
+var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
 var FA_SRV={at:0,res:null};
 /* دوال يُؤمَن استدعاؤها بقيم فارغة (تفحص الرمز أو تعيد فراغاً ولا تكتب شيئاً) */
 var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile'];
@@ -4677,10 +4705,11 @@ var FA={
           /* فراغ: إن كان للخادم رقم نسخة فالبيانات موجودة والرد ناقص — لا حفظ إطلاقاً (نمط حادثة الفقد السابقة) */
           return self.refreshRev().then(function(rv){
             if(rv){self.loadOK=false;var _e2=new Error('الخادم يحمل نسخة ('+rv+') لكن التحميل أعاد فراغاً — حُجب الحفظ');_e2.badState=true;throw _e2;}
-            self._rev=null;self.loadOK=true;faWarnClear();FA_BASE_IDS={};return null;
+            self._rev=null;self.loadOK=true;faWarnClear();FA_BASE_IDS={};self._secBase=null;self._secRev=null;return null;
           });
         }
         self._rev=(r.data&&r.data._rev)||null;   /* رقم نسخة البيانات الحالية */
+        try{self._secSetBase(r.data,r.data&&r.data._secrev);}catch(e){self._secBase=null;}
         self.loadOK=true;              /* ✅ التحميل نجح — الحفظ مسموح */
         faWarnClear();                 /* أزل أي تحذير سابق */
         try{faIndexIds(r.data);}catch(e){}
@@ -4875,7 +4904,105 @@ var FA={
       throw e;   /* لا قراءة مباشرة للجدول — مغلق بـ RLS، والدالة العامة هي المصدر الوحيد قبل الدخول */
     });
   },
-  saveState:function(state){
+  /* آخر نسخة معروفة من الخادم لكل قسم: نصّها ورقمها — منها نعرف ما تغيّر عندنا */
+  _secBase:null,_secRev:null,_secItems:null,_patchNA:false,_syncNA:false,_sentKb:null,
+  _secSetBase:function(st,secrev){
+    if(!st||!secrev||typeof secrev!=='object'){this._secBase=null;this._secRev=null;return;}
+    var sp=faSecSplit(st),b={},it={};
+    Object.keys(sp).forEach(function(k){b[k]=JSON.stringify(sp[k]);if(faItemMode(sp[k]))it[k]=faItemIndex(sp[k]);});
+    this._secBase=b;this._secItems=it;this._secRev=Object.assign({},secrev);
+  },
+  /* الحالة كما في الخادم: أقسامنا الأساسية + ما تغيّر عنده */
+  _secRebuild:function(res){
+    var self=this,st={},keys={};
+    Object.keys(self._secBase||{}).forEach(function(k){keys[k]=1;});
+    Object.keys((res&&res.sec)||{}).forEach(function(k){keys[k]=1;});
+    Object.keys(keys).forEach(function(k){
+      var v=(res.sec&&Object.prototype.hasOwnProperty.call(res.sec,k))?res.sec[k]:JSON.parse(self._secBase[k]);
+      if(v!==null&&v!==undefined)faSecPut(st,k,v);
+    });
+    st._rev=res.rev||null;
+    return st;
+  },
+  _sync:function(){
+    var self=this;
+    if(self._syncNA||!self.token||!self._secRev)return Promise.resolve(null);
+    return self.sb.rpc('fa_state_sync',{p_token:self.token,p_have:self._secRev}).then(function(r){
+      if(r.error){if(/Could not find the function|PGRST202/i.test(String(r.error.message||'')+String(r.error.code||''))){self._syncNA=true;return null;}throw r.error;}
+      return r.data||null;
+    });
+  },
+  /* الحفظ بالأقسام: يُرسل ما تغيّر فقط */
+  _savePatch:function(state){
+    var self=this,sp=faSecSplit(state),set={},items={},strs={},idx={},n=0;
+    /* مفتاح فيه نقطة لا يُعبَّر عنه كقسم: هذه المرة حفظ كامل */
+    if(Object.keys(sp).some(function(k){var q=k.split('.');return q.length>2||(q.length===2&&!FA_SPLIT[q[0]]);}))return self.saveState(state,true);
+    self._secItems=self._secItems||{};
+    Object.keys(sp).forEach(function(k){
+      var v=sp[k],t=JSON.stringify(v);
+      if(t===self._secBase[k])return;
+      var bi=self._secItems[k],im=faItemMode(v);
+      if(bi&&im){
+        /* عناصر فقط: المعدَّل والجديد، والمحذوف بمعرّفه، والترتيب إن اختلف عمّا سيبنيه الخادم */
+        var cur=faItemIndex(v),up=[];
+        v.forEach(function(x){var id=String(x.id);if(bi.s[id]!==cur.s[id])up.push(x);});
+        var del=bi.ids.filter(function(id){return !(id in cur.s);});
+        var exp=bi.ids.filter(function(id){return id in cur.s;}).concat(cur.ids.filter(function(id){return !(id in bi.s);}));
+        var ord=(exp.join('\u0001')===cur.ids.join('\u0001'))?null:cur.ids;
+        items[k]={up:up,del:del,ord:ord};idx[k]=cur;
+      }else{set[k]=v;idx[k]=im?faItemIndex(v):null;}
+      strs[k]=t;n++;
+    });
+    Object.keys(self._secBase).forEach(function(k){if(!(k in sp)&&k!=='tournaments'){set[k]=null;strs[k]=null;idx[k]=null;n++;}});
+    if(!n){self._sentKb=0;return Promise.resolve(true);}
+    var base={};Object.keys(strs).forEach(function(k){base[k]=self._secRev[k]||'';});
+    var next=Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+    var kb=0;try{kb=Math.max(1,Math.round((JSON.stringify(set).length+JSON.stringify(items).length)/1024));}catch(e){}
+    return self.sb.rpc('fa_save_patch',{p_token:self.token,p_base:base,p_set:set,p_items:items,p_rev:next}).then(function(r){
+      if(r.error){
+        if(/Could not find the function|PGRST202/i.test(String(r.error.message||'')+String(r.error.code||''))){self._patchNA=true;return self.saveState(state);}
+        throw r.error;
+      }
+      var d=r.data||{};
+      if(d.ok===false&&d.conflicts){if(d.rev)self._rev=d.rev;return self._mergeSections(state);}
+      if(d.ok===false)throw new Error('رفض الخادم الحفظ ('+(d.err||'')+')');
+      self._rev=d.rev||next;self._sentKb=kb;
+      Object.keys(strs).forEach(function(k){
+        if(strs[k]===null){delete self._secBase[k];delete self._secRev[k];delete self._secItems[k];return;}
+        self._secBase[k]=strs[k];
+        if(idx[k])self._secItems[k]=idx[k];else delete self._secItems[k];
+        self._secRev[k]=(d.secrev&&d.secrev[k])||self._rev;
+      });
+      try{faIndexIds(state);}catch(e){}
+      return true;
+    });
+  },
+  /* تصادم في قسم: ننزّل الأقسام التي تغيّرت فقط، ندمج، ثم نحفظ */
+  _mergeSections:function(localState){
+    var self=this;
+    self._mergeTries++;
+    if(self._mergeTries>4){var tries=self._mergeTries-1;self._mergeTries=0;faConflict('تصادم متكرر في الأقسام ('+tries+' مرات)');return false;}
+    return self._sync().then(function(res){
+      if(!res||res.fallback){self._mergeTries--;return self._mergeAndRetry(localState);}
+      var remote=self._secRebuild(res);
+      console.warn('[FA] تصادم أقسام #'+self._mergeTries+' — يُدمج: '+Object.keys(res.sec||{}).join('، '));
+      var merged=faMergeStates(remote,localState);
+      self._secSetBase(remote,res.secrev);self._rev=res.rev||self._rev;
+      try{merged._me=DB._me;}catch(e){}
+      try{DB=migrate(merged)||DB;}catch(e){}
+      try{if(typeof cloudChip==='function')cloudChip(false);}catch(e){}
+      return self.saveState(cloudState(DB)).then(function(ok){
+        self._mergeTries=0;
+        if(ok&&typeof rAllSoft==='function')try{rAllSoft();}catch(e){}
+        return ok;
+      });
+    }).catch(function(e){
+      self._mergeTries=0;
+      faConflict('خطأ من الخادم أثناء الدمج: '+(e&&e.message||e));
+      return false;
+    });
+  },
+  saveState:function(state,whole){
     if(!this.token)return Promise.resolve(false);
     /* 🔒 قفل الأمان: لا يُسمح بالحفظ ما لم ينجح التحميل أولاً. */
     if(!this.loadOK){
@@ -4883,6 +5010,8 @@ var FA={
       return Promise.resolve(false);
     }
     var self=this;
+    if(!whole&&!self._patchNA&&self._secBase&&self._secRev)return self._savePatch(state);
+    self._sentKb=null;
     /* رقم النسخة يُؤخذ من الخادم نفسه (fa_state_rev) إن لم يكن معروفاً —
        إرسال null كان يُرفض دائماً فتدور المزامنة بلا نهاية وتبقى الشارة «بانتظار الاتصال» */
     var pre=self._rev?Promise.resolve(self._rev):self.refreshRev().then(function(r){return r||null;}).catch(function(){return null;});
@@ -4913,6 +5042,8 @@ var FA={
         }
         self._rev=(d&&typeof d==='object'&&d.rev)?d.rev:next;
         try{faIndexIds(state);}catch(e){}
+        /* الخادم الجديد يُرجع أرقام الأقسام: من الآن يُرسل ما تغيّر فقط */
+        try{self._secSetBase(state,d&&typeof d==='object'?d.secrev:null);}catch(e){self._secBase=null;}
         return true;
       });
     });
@@ -4965,6 +5096,7 @@ var FA={
       if(r.error)throw r.error;
       var remote=r.data||null;
       if(!remote){self._mergeTries=0;faConflict('الخادم أعاد حالة فارغة عند الدمج');return false;}
+      try{self._secSetBase(remote,remote._secrev);}catch(e){self._secBase=null;}
       /* الرقم الحقيقي: من fa_state_rev أولاً، ثم من رد الرفض، ثم من داخل البيانات */
       return self.refreshRev().catch(function(){return null;}).then(function(rv){
         var real=rv||self._rev||remote._rev||null;
@@ -5367,7 +5499,7 @@ function cloudQueue(delay){
       CQ.busy=false;
       if(FA._authLost)return;
       if(ok===false){faSyncLog(false,'الخادم رفض الحفظ (رقم النسخة) — تُعاد المحاولة',_kb,Date.now()-_t0);CQ.fails++;cloudQueue(Math.min(60000,4000*CQ.fails));return;}
-      faSyncLog(true,'',_kb,Date.now()-_t0);
+      faSyncLog(true,FA._sentKb!=null?'أقسام متغيّرة فقط':'',FA._sentKb!=null?FA._sentKb:_kb,Date.now()-_t0);
       CQ.fails=0;cloudChip(false);
       if(CQ.seq===mySeq){CQ.dirty=false;obClear();}   /* لا تعديل أحدث بالطريق */
     }).catch(function(e){
@@ -5411,6 +5543,27 @@ function cloudPoll(){
       console.log('[FA] تحدّثت البيانات من جهاز آخر بصمت');
     }).catch(function(){});
   };
+  /* الموظفون: الأقسام التي تغيّرت فقط (fa_state_sync) بدل تنزيل الكتلة كاملة */
+  if(FA.sb&&FA._secRev&&FA._secBase&&!FA._syncNA&&faWriter()){
+    FA._sync().then(function(res){
+      if(!res||res.fallback){go();return;}
+      if(!res.rev||String(res.rev)===String(prevRev))return;
+      if(CQ.dirty||CQ.busy||CQ.timer)return;
+      if(document.querySelector('.modal.open,.mod.open')||(typeof FPG!=='undefined'&&FPG.open))return;
+      if(typeof formDirty==='function'&&formDirty())return;
+      if(FA._rev!==prevRev)return;                       /* حُفظ شيء أثناء الطلب */
+      var ks=Object.keys(res.sec||{});
+      if(!ks.length){FA._rev=res.rev;FA._secRev=Object.assign({},res.secrev||FA._secRev);return;}
+      var remote=FA._secRebuild(res);
+      FA._secSetBase(remote,res.secrev);FA._rev=res.rev;
+      try{faIndexIds(remote);}catch(e){}
+      Object.keys(DB).forEach(function(k){if(k.charAt(0)==='_'&&k!=='_rev'&&!(k in remote))remote[k]=DB[k];});
+      DB=migrate(remote)||DB;
+      if(typeof rAllSoft==='function')rAllSoft();
+      console.log('[FA] تحدّثت أقسام من جهاز آخر: '+ks.join('، '));
+    }).catch(function(){});
+    return;
+  }
   /* فحص رقم النسخة أولاً (استعلام خفيف) — ولا نجلب الحالة كاملة إلا إن تغيّرت */
   if(FA.sb&&FA.sb.rpc&&prevRev){
     FA.sb.rpc('fa_state_rev',{p_token:FA.token}).then(function(r){
@@ -7098,7 +7251,7 @@ function loginOK(){
   FA._authLost=false;
   logA('تسجيل دخول','user','#1565c0',true);
 }
-function doLogout(){try{if(CQ.timer){clearTimeout(CQ.timer);CQ.timer=null;}if(CQ.dirty&&FA.loadOK&&FA.token&&CU){var _s=cloudState(DB);obWrite(_s,Math.round(JSON.stringify(_s).length/1024));}CQ.dirty=false;CQ.fails=0;var _sf=document.getElementById('sync-fail');if(_sf)_sf.remove();}catch(e){}try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';var ce=g('CE');if(ce)ce.style.display='none';var ad=g('AD');if(ad)ad.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
+function doLogout(){try{FA._secBase=null;FA._secRev=null;}catch(e){}try{if(CQ.timer){clearTimeout(CQ.timer);CQ.timer=null;}if(CQ.dirty&&FA.loadOK&&FA.token&&CU){var _s=cloudState(DB);obWrite(_s,Math.round(JSON.stringify(_s).length/1024));}CQ.dirty=false;CQ.fails=0;var _sf=document.getElementById('sync-fail');if(_sf)_sf.remove();}catch(e){}try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';var ce=g('CE');if(ce)ce.style.display='none';var ad=g('AD');if(ad)ad.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
 function visibleTournaments(){
   return DB.tournaments.filter(function(t){return t.visible||(CU&&['admin','organizer'].indexOf(CU.role)>-1);});
 }
@@ -25832,7 +25985,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-s2</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-p2a</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
