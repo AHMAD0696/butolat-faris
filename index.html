@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.28-l1">
+<meta name="build" content="2026.09.28-l2">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3618,7 +3618,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-l1</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-l2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -3636,6 +3636,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <button type="button" class="pin-eye" id="pin-eye" onclick="pinReveal()" aria-label="إظهار الرمز"><span data-ic="eye"></span> إظهار الرمز</button>
     <button class="lbtn" onclick="doLogin()">دخول</button>
     <div class="lerr" id="p-err">الرمز السري غير صحيح</div>
+    <button type="button" class="lnk-forgot" onclick="pinForgot()">نسيت الرمز السري؟</button>
   </div>
 </div>
 
@@ -4640,12 +4641,12 @@ function faProbe(kb){
    (عبر وصف OpenAPI الذي يقدّمه PostgREST) ويعرض المفقود واختلاف أسماء المعاملات
    قبل أن يظهر كخطأ في منتصف العمل.
 ========================================================================== */
-var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_save_patch":["p_base","p_items","p_rev","p_set","p_token"],"fa_state_sync":["p_have","p_token"],"fa_state_sync2":["p_have","p_seqs","p_token"],"fa_backup_now":["p_note","p_token"],"fa_auth_lookup":["p_ident"],"fa_login_acc":["p_id","p_pin"],"fa_change_pin":["p_new","p_old","p_token"],"fa_login_readiness":["p_token"],"fa_backup_list":["p_token"],"fa_backup_get":["p_id","p_token"],"fa_backup_restore":["p_id","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
+var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_save_patch":["p_base","p_items","p_rev","p_set","p_token"],"fa_state_sync":["p_have","p_token"],"fa_state_sync2":["p_have","p_seqs","p_token"],"fa_backup_now":["p_note","p_token"],"fa_auth_lookup":["p_ident"],"fa_reset_request_acc":["p_id"],"fa_reset_issue":["p_req","p_token"],"fa_temp_pin":["p_id","p_token"],"fa_login_acc":["p_id","p_pin"],"fa_change_pin":["p_new","p_old","p_token"],"fa_login_readiness":["p_token"],"fa_backup_list":["p_token"],"fa_backup_get":["p_id","p_token"],"fa_backup_restore":["p_id","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
 var FA_RPC_CRIT=['fa_load_state','fa_save_state','fa_state_rev','fa_login'];
-var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_state_sync2:'التحديث بالعناصر',fa_backup_now:'نسخة احتياطية',fa_auth_lookup:'تعريف الحساب (الدخول الجديد)',fa_login_acc:'الدخول بالحساب',fa_change_pin:'تغيير الرمز',fa_login_readiness:'جاهزية الدخول',fa_backup_list:'قائمة النسخ',fa_backup_get:'تنزيل نسخة',fa_backup_restore:'استعادة نسخة',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
+var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_state_sync2:'التحديث بالعناصر',fa_backup_now:'نسخة احتياطية',fa_auth_lookup:'تعريف الحساب (الدخول الجديد)',fa_reset_request_acc:'طلب استعادة لحساب',fa_reset_issue:'إصدار رمز مؤقت',fa_temp_pin:'رمز مؤقت من بطاقة المستخدم',fa_login_acc:'الدخول بالحساب',fa_change_pin:'تغيير الرمز',fa_login_readiness:'جاهزية الدخول',fa_backup_list:'قائمة النسخ',fa_backup_get:'تنزيل نسخة',fa_backup_restore:'استعادة نسخة',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
 var FA_SRV={at:0,res:null};
 /* دوال يُؤمَن استدعاؤها بقيم فارغة (تفحص الرمز أو تعيد فراغاً ولا تكتب شيئاً) */
-var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile','fa_upsert_user','fa_vote','fa_profile_req','fa_ce_submit_tok','fa_players_prune','fa_save_patch','fa_state_sync','fa_state_sync2','fa_backup_list','fa_login_readiness','fa_change_pin'];
+var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile','fa_upsert_user','fa_vote','fa_profile_req','fa_ce_submit_tok','fa_players_prune','fa_save_patch','fa_state_sync','fa_state_sync2','fa_backup_list','fa_login_readiness','fa_change_pin','fa_reset_issue','fa_temp_pin'];
 /* الفحص الحقيقي: استدعاء فعلي بأسماء المعاملات التي يستخدمها التطبيق — PGRST202 = غير موجودة أو بمعاملات مختلفة.
    (مواصفة OpenAPI وحدها كانت تعطي إنذاراً كاذباً «كل الدوال مفقودة» حين لا يعرضها الخادم) */
 function faProbeRpc(fn){
@@ -5290,6 +5291,9 @@ var FA={
     var self=this;if(!self.enabled||!self.sb||!self.token)return Promise.reject(new Error('no-session'));
     return self.sb.rpc('fa_profile_req',{p_token:self.token,p_item:item||{}}).then(function(r){if(r.error)throw r.error;return r.data||null;});
   },
+  resetRequestAcc:function(id){return this._auth('fa_reset_request_acc',{p_id:String(id||'')});},
+  resetIssue:function(reqId){return this._auth('fa_reset_issue',{p_token:this.token,p_req:String(reqId||'')});},
+  tempPin:function(userId){return this._auth('fa_temp_pin',{p_token:this.token,p_id:String(userId||'')});},
   resetRequest:function(ident){
     var self=this;if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
     return self.sb.rpc('fa_reset_request',{p_ident:String(ident||'')}).then(function(r){if(r.error)throw r.error;return r.data||null;});
@@ -5706,6 +5710,7 @@ function cloudPoll(){
       Object.keys(DB).forEach(function(k){if(k.charAt(0)==='_'&&k!=='_rev'&&!(k in remote))remote[k]=DB[k];});
       DB=migrate(remote)||DB;
       if(typeof rAllSoft==='function')rAllSoft();
+      if(ks.indexOf('resetReqs')>-1)rrWatch();
       console.log('[FA] تحدّثت أقسام من جهاز آخر: '+ks.join('، '));
     }).catch(function(){});
     return;
@@ -6565,7 +6570,7 @@ function cfYes(){var cb=_CONFIRM_CB;cfClose();if(cb)cb();}
 /* استبدال confirm الأصلي: يعيد true دائماً لأن التأكيد صار عبر askConfirm */
 function askReset(){
   var id=(LSMODE==='name'?gv('l-name'):'')||gv('l-id')||gv('l-name');
-  if(!id){nameErr('اكتب اسمك أو رقم جوالك أولاً');return;}
+  if(!id){nameErr('اكتب رقم جوالك أو رقم هويتك أولاً، ثم اضغط «نسيت الرمز السري؟»');return;}
   if(FA.enabled){
     /* قائمة الحسابات لا تصل لشاشة الدخول: الخادم يبحث ويسجّل الطلب (بلا كشف وجود الحساب) */
     lsBusy(true,'جارٍ الإرسال…');
@@ -6573,7 +6578,7 @@ function askReset(){
       lsBusy(false);
       if(res&&res.err==='locked'){nameErr('أُوقفت المحاولات مؤقتاً — انتظر ١٥ دقيقة');return;}
       var e=g('n-err');
-      if(e){e.textContent='إن كان الحساب مسجّلاً فقد وصل طلبك — ستستلم رمزاً مؤقتاً من إدارة النظام';e.style.color='var(--green)';fl('n-err');setTimeout(function(){e.style.color='';},4000);}
+      if(e){e.textContent='وصل طلبك لإدارة الأكاديمية ✓ سيصلك رمز مؤقت على واتساب رقمك المسجّل (للاعب: جوال ولي الأمر).';e.style.color='var(--green)';fl('n-err');setTimeout(function(){e.style.color='';},4000);}
     }).catch(function(){lsBusy(false);nameErr('تعذّر الاتصال بالخادم — حاول مجدداً');});
     return;
   }
@@ -6599,6 +6604,25 @@ function setAccountPin(name,pin){
 function doReset(id){
   var r=resetReqs().find(function(x){return x.id===id;});
   if(!r)return;
+  if(FA.enabled&&FA.token){
+    /* الخادم يولّد الرمز ويثبّته مؤقتاً ويغلق الطلب — والرمز يُعرض مرة للإرسال بواتساب */
+    FA.resetIssue(id).then(function(res){
+      if(!res||res.ok===false){alert(res&&res.err==='noacc'?'الحساب غير موجود في الخادم':'تعذّر إصدار الرمز');return;}
+      r.status='done';r.doneAt=Date.now();r.by=CU&&CU.name;
+      logA('رمز مؤقت لـ '+res.name,'shield','#DD1D45',true);
+      showTempCode(res);
+      if(typeof renderATab==='function')renderATab();
+    }).catch(function(e){
+      if(e&&e.message==='na')return doResetLegacy(id);
+      alert('تعذّر إصدار الرمز: '+((e&&e.message)||e));
+    });
+    return;
+  }
+  doResetLegacy(id);
+}
+function doResetLegacy(id){
+  var r=resetReqs().find(function(x){return x.id===id;});
+  if(!r)return;
   var code=tmpCode();
   var hit=setAccountPin(r.name,code);
   if(!hit&&!r.userId){alert('تعذّر العثور على الحساب');return;}
@@ -6607,11 +6631,12 @@ function doReset(id){
     if(r.userId)faSync(FA.setPin(r.userId,code),'لم يُثبَّت الرمز المؤقت في الخادم');
     else{var _n=normName(r.name);(DB.users||[]).forEach(function(u){if(normName(u.username)===_n||normName(u.name)===_n)faSync(FA.setPin(u.id,code),'لم يُثبَّت الرمز المؤقت في الخادم');});}
   }
-  r.status='done';r.code=code;r.doneAt=Date.now();
+  r.status='done';r.doneAt=Date.now();r.by=CU&&CU.name;
   lockClear(r.name);
   logA('إعادة تعيين رمز: '+r.name,'shield','#DD1D45');
   sv();
-  alert('الرمز المؤقت لـ '+r.name+' هو: '+code+'\nسلّمه لصاحب الحساب، وسيُطلب منه تغييره عند أول دخول.');
+  var _u=(DB.users||[]).find(function(u){return u.id===r.userId||normName(u.name)===normName(r.name);});
+  showTempCode({code:code,name:r.name,phone:_u&&_u.phone?normPhone(_u.phone):'',role:_u&&_u.role});
   if(typeof rAdminUsers==='function')rAdminUsers();
   if(typeof renderATab==='function')renderATab();
 }
@@ -6734,6 +6759,52 @@ function pinUpgradeSave(){
     say('تعذّر الاتصال — حاول مجدداً');
   });
 }
+/* نسيت الرمز من شاشة الرمز: الحساب معروف — الطلب له مباشرة */
+function pinForgot(){
+  var done=function(res){
+    if(res&&res.err==='locked'){pinMsg('طلبات كثيرة — انتظر ١٥ دقيقة');return;}
+    var pe=g('p-err');if(pe){pe.textContent='وصل طلبك للإدارة ✓ سيصلك رمز مؤقت على واتساب رقمك المسجّل';pe.style.color='var(--green)';fl('p-err');setTimeout(function(){pe.style.color='';},6000);}
+  };
+  if(!FA.enabled){goBack();askReset();return;}
+  var pr=LOGIN_ACC?FA.resetRequestAcc(LOGIN_ACC.id):FA.resetRequest(gv('l-name')||gv('l-id'));
+  pr.then(done).catch(function(e){if(e&&e.message==='na'){FA.resetRequest(gv('l-id')||gv('l-name')).then(done).catch(function(){pinMsg('تعذّر الإرسال — تحقق من الإنترنت');});return;}pinMsg('تعذّر الإرسال — تحقق من الإنترنت');});
+}
+/* لاعب نسي رمزه (بعد إدخال هويته) */
+function nidForgot(){
+  var nid=(NIDFLOW&&NIDFLOW.nid)||normNid(gv('l-id'));
+  FA.resetRequest(nid).then(function(res){
+    var er=g('na-lerr');if(!er)return;
+    er.textContent=(res&&res.err==='locked')?'طلبات كثيرة — انتظر ١٥ دقيقة':'وصل طلبك للإدارة ✓ سيصل رمز مؤقت على واتساب جوال ولي الأمر المسجّل';
+    er.style.color=(res&&res.err==='locked')?'':'var(--green)';fl('na-lerr');
+  }).catch(function(){var er=g('na-lerr');if(er){er.textContent='تعذّر الإرسال — تحقق من الإنترنت';fl('na-lerr');}});
+}
+/* ===== الرمز المؤقت: عرضه للمدير مع زر واتساب — لا يُحفظ في أي مكان ===== */
+function showTempCode(r){
+  if(!r||!r.code)return;
+  var ph=String(r.phone||'').replace(/[^0-9]/g,'');
+  var site=(location.origin&&/^https?:/.test(location.origin))?location.origin:'';
+  var who=r.role==='player'?'دخول اللاعب '+(r.name||'')+' (برقم الهوية)':'دخولك برقم جوالك';
+  var msg='مرحباً '+(r.name||'')+'\n'
+    +'رمز الدخول المؤقت لموقع أكاديمية فارس: '+r.code+'\n'
+    +'• لـ'+who+'\n'
+    +'• صالح ٢٤ ساعة، وسيُطلب منك اختيار رمزك الخاص فور الدخول.'+(site?'\n'+site:'');
+  var wa=ph?'https://wa.me/'+ph+'?text='+encodeURIComponent(msg):'';
+  var bn=g('tmpCodeMod');
+  if(!bn){bn=document.createElement('div');bn.id='tmpCodeMod';document.body.appendChild(bn);}
+  bn.setAttribute('role','dialog');bn.setAttribute('aria-modal','true');
+  bn.style.cssText='position:fixed;inset:0;z-index:100001;background:rgba(10,12,30,.72);display:flex;align-items:center;justify-content:center;padding:16px;direction:rtl';
+  bn.innerHTML='<div style="background:var(--card,#fff);color:var(--text,#181946);max-width:390px;width:100%;border-radius:18px;padding:22px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)">'
+    +'<div style="font-weight:800;font-size:15px">رمز مؤقت لـ '+esc(r.name||'')+'</div>'
+    +'<div style="font-size:12px;opacity:.7;margin:.2rem 0 .8rem">صالح ٢٤ ساعة • يُغيَّر إلزامياً عند أول دخول • لا يُحفظ في النظام</div>'
+    +'<div dir="ltr" style="font:800 34px/1.2 ui-monospace,monospace;letter-spacing:.35em;padding:.6rem;border-radius:12px;background:rgba(221,29,69,.08);color:#DD1D45;user-select:all">'+esc(r.code)+'</div>'
+    +(wa?'<a href="'+esc(wa)+'" target="_blank" rel="noopener" onclick="tmpCodeSent()" style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1rem;background:#25D366;color:#fff;border-radius:12px;padding:12px;font:800 14px inherit;text-decoration:none">إرسال بواتساب إلى <span dir="ltr">'+esc(phone05(ph))+'</span></a>'
+        :'<div style="margin-top:1rem;font-size:12.5px;color:#d97706;font-weight:700">لا يوجد جوال صالح مسجّل — سلّم الرمز لصاحبه مباشرة</div>')
+    +'<button onclick="tmpCodeCopy(\''+jq(r.code)+'\')" style="margin-top:.5rem;width:100%;background:none;border:1.5px solid var(--brd,#ccd);color:inherit;border-radius:12px;padding:10px;font:700 13px inherit;cursor:pointer">نسخ الرمز</button>'
+    +'<button onclick="var m=g(\'tmpCodeMod\');if(m)m.remove();" style="margin-top:.5rem;width:100%;background:none;border:none;color:inherit;opacity:.65;font:600 12.5px inherit;cursor:pointer;padding:6px">إغلاق</button></div>';
+  hydrateIcons(bn);
+}
+function tmpCodeCopy(c){try{navigator.clipboard.writeText(c).then(function(){addN('تم نسخ الرمز','','success');});}catch(e){}}
+function tmpCodeSent(){setTimeout(function(){var m=g('tmpCodeMod');if(m)m.remove();},1200);}
 function pinUpgradeQuit(){var bn=g('pinUpMod');if(bn)bn.remove();PINUP={old:'',done:null};try{doLogout();}catch(e){}}
 function faLoginPhoneOnly(){return !!(DB&&DB.settings&&DB.settings.loginPhoneOnly);}
 function lsMode(m){
@@ -7151,6 +7222,7 @@ function nidPinPrompt(p){
   h+='<button class="btn btn-r" style="width:100%;min-height:48px" onclick="nidDoLogin()">'+ic('check',14)+' دخول</button>';
   h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="closeNidAct()">رجوع</button>';
   h+='<div class="msg err" id="na-lerr">الرمز غير صحيح</div>';
+  h+='<button type="button" class="btn btn-g" style="width:100%;margin-top:.3rem;font-size:12px" onclick="nidForgot()">نسيت الرمز السري؟</button>';
   g('na-body').innerHTML=h;hydrateIcons(g('na-body'));
   g('naMod').classList.add('open');
   setTimeout(function(){var e=g('na-lpin');if(e)e.focus();},150);
@@ -7544,8 +7616,21 @@ function sessRestore(){
     else showTS();
   }catch(e){showTS();}
   logA('استئناف الجلسة','user','#1565c0',true);
-  setTimeout(function(){try{sessSave();}catch(e){}},1500);   /* تمديد الجلسة مع كل استخدام */   /* بلا رفع للبيانات عند كل فتح للصفحة */
+  setTimeout(function(){try{sessSave();}catch(e){}},1500);   /* تمديد الجلسة مع كل استخدام */
+  RR_SEEN=null;setTimeout(rrWatch,2000);   /* بلا رفع للبيانات عند كل فتح للصفحة */
   return true;
+}
+/* تنبيه المدير بطلبات الاستعادة الجديدة (عند الدخول ومع كل تحديث من الخادم) */
+var RR_SEEN=null;
+function rrWatch(){
+  try{
+    if(!CU||['admin','admin-team'].indexOf(CU.role)<0)return;
+    var open=resetReqs().filter(function(r){return r.status==='open';});
+    var ids={};open.forEach(function(r){ids[r.id]=1;});
+    if(RR_SEEN===null){RR_SEEN=ids;if(open.length)addN('طلبات استعادة رمز',open.length+' طلب بانتظارك — الإدارة ← الطلبات','warning');return;}
+    open.forEach(function(r){if(!RR_SEEN[r.id])addN('طلب استعادة رمز جديد',r.name+' — افتح الطلبات لإصدار رمز مؤقت','warning');});
+    RR_SEEN=ids;
+  }catch(e){}
 }
 function loginOK(){
   loadHide();
@@ -7556,7 +7641,7 @@ function loginOK(){
   g('LS').style.display='none';showTS();
   pinReset();
   try{var _lu=(DB.users||[]).find(function(x){return CU&&x.id===CU.id;});if(_lu){_lu.lastLogin=Date.now();_lu.logins=(_lu.logins||0)+1;}}catch(e){}
-  FA._authLost=false;
+  FA._authLost=false;RR_SEEN=null;setTimeout(rrWatch,1500);
   logA('تسجيل دخول','user','#1565c0',true);
 }
 function doLogout(){try{FA._secBase=null;FA._secRev=null;}catch(e){}try{if(CQ.timer){clearTimeout(CQ.timer);CQ.timer=null;}if(CQ.dirty&&FA.loadOK&&FA.token&&CU){var _s=cloudState(DB);obWrite(_s,Math.round(JSON.stringify(_s).length/1024));}CQ.dirty=false;CQ.fails=0;var _sf=document.getElementById('sync-fail');if(_sf)_sf.remove();}catch(e){}try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';var ce=g('CE');if(ce)ce.style.display='none';var ad=g('AD');if(ad)ad.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
@@ -12683,16 +12768,16 @@ function resetReqsHTML(){
   if(open.length){
     h+='<div class="at-wrap"><table class="at"><thead><tr><th>الحساب</th><th>وقت الطلب</th><th></th></tr></thead><tbody>';
     open.forEach(function(r){
-      h+='<tr><td><strong>'+esc(r.name)+'</strong></td><td>'+new Date(r.at).toLocaleString(locale())+'</td>'
-        +'<td style="display:flex;gap:.35rem"><button class="btn btn-r btn-sm" onclick="doReset(\''+r.id+'\')">'+ic('shield',12)+' توليد رمز مؤقت</button>'
+      h+='<tr><td><strong>'+esc(r.name)+'</strong>'+(r.role?'<br><small style="color:var(--gray)">'+esc(roleLabel(r.role)||r.role)+'</small>':'')+'</td><td>'+new Date(r.at).toLocaleString(locale())+'</td>'
+        +'<td style="display:flex;gap:.35rem"><button class="btn btn-r btn-sm" onclick="doReset(\''+r.id+'\')">'+ic('shield',12)+' إصدار رمز مؤقت + واتساب</button>'
         +'<button class="btn btn-g btn-sm" style="color:var(--red)" onclick="dropReset(\''+r.id+'\')">'+ic('trash',12)+'</button></td></tr>';
     });
     h+='</tbody></table></div>';
   }
   if(done.length){
     h+='<div style="font-size:11px;color:var(--gray);margin:.7rem 0 .4rem">آخر عمليات إعادة التعيين</div>';
-    h+='<div class="at-wrap"><table class="at"><thead><tr><th>الحساب</th><th>الرمز المؤقت</th><th>التاريخ</th></tr></thead><tbody>'
-      +done.map(function(r){return '<tr><td>'+esc(r.name)+'</td><td style="font-weight:800;direction:ltr">'+esc(r.code||'—')+'</td><td>'+new Date(r.doneAt||r.at).toLocaleString(locale())+'</td></tr>';}).join('')
+    h+='<div class="at-wrap"><table class="at"><thead><tr><th>الحساب</th><th>أصدره</th><th>التاريخ</th></tr></thead><tbody>'
+      +done.map(function(r){return '<tr><td>'+esc(r.name)+'</td><td>'+esc(r.by||'—')+'</td><td>'+new Date(r.doneAt||r.at).toLocaleString(locale())+'</td></tr>';}).join('')
       +'</tbody></table></div>';
   }
   return h+'<div style="height:1.4rem"></div>';
@@ -13020,7 +13105,8 @@ function rUED(){
     h+='<div class="ce-note" style="margin-bottom:.6rem">'+ic('info',13)+'<div>الرمز الحالي غير قابل للعرض — الأرقام السرية تُحفظ في الخادم ولا تُنزَّل مع البيانات. تستطيع تعيين رمز جديد بدلاً منه.</div></div>';
   }
   h+='<div class="frow" style="grid-template-columns:1fr auto;align-items:end;margin-top:.5rem"><div class="fg" style="margin-bottom:0"><label>تعيين رمز جديد (6 أرقام)</label><input type="text" id="ued-pin-i" maxlength="6" inputmode="numeric" placeholder="اتركه فارغاً لعدم التغيير" style="direction:ltr"></div>'
-    +'<button class="btn btn-o btn-sm" onclick="uedSetPin()">تغيير الرمز</button></div>';
+    +'<button class="btn btn-o btn-sm" onclick="uedSetPin()">تغيير الرمز</button></div>'
+    +(FA.enabled&&CU&&['admin','admin-team'].indexOf(CU.role)>-1&&u.id!==CU.id?'<button class="btn btn-r btn-sm" style="margin-top:.5rem" onclick="uedTempPin()">'+ic('shield',12)+' رمز مؤقت + إرسال بواتساب</button>':'');
   h+='</div>';
 
   h+='<div style="display:flex;gap:.5rem;margin-top:1rem"><button class="btn btn-r" style="flex:1" onclick="uedSave()">'+ic('check',14)+' حفظ التعديلات</button></div>';
@@ -13512,6 +13598,16 @@ function uedApplyBranches(u,brs){
     if(!rec&&sb.length){rec={id:uid(),userId:u.id,name:u.name,branches:[]};c2.sups.push(rec);}
     if(rec){rec.branches=sb.slice();rec.name=u.name;}
   }
+}
+function uedTempPin(){
+  var u=uedUser();if(!u)return;
+  askConfirm('إصدار رمز مؤقت لـ '+u.name+'؟\nالرمز الحالي يتوقف فوراً، والرمز المؤقت صالح ٢٤ ساعة ويُغيَّر عند أول دخول.',function(){
+    FA.tempPin(u.id).then(function(res){
+      if(!res||res.ok===false){alert(res&&res.err==='noacc'?'الحساب غير موجود في الخادم':'تعذّر إصدار الرمز');return;}
+      logA('رمز مؤقت لـ '+u.name,'shield','#DD1D45',true);
+      showTempCode(res);
+    }).catch(function(e){alert(e&&e.message==='na'?'نفّذ ملف fa_login2.sql في Supabase أولاً':'تعذّر إصدار الرمز: '+((e&&e.message)||e));});
+  });
 }
 function uedSetPin(){
   var u=uedUser();if(!u)return;
@@ -26534,7 +26630,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-l1</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-l2</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
