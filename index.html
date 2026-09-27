@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.28-l2">
+<meta name="build" content="2026.09.28-l3">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -140,6 +140,10 @@ svg{display:block;flex-shrink:0}
 .lacc{display:flex;align-items:center;gap:.7rem;width:100%;padding:.75rem .9rem;margin-top:.45rem;border-radius:12px;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff;font:600 14px inherit;cursor:pointer;text-align:start}
 .lacc:hover,.lacc:focus{border-color:var(--red);outline:none}
 .lacc .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(221,29,69,.18);color:#fff;font-weight:800;flex:none}
+.gdk{display:flex;align-items:center;gap:.7rem;width:100%;padding:.8rem .9rem;margin-top:.5rem;border-radius:12px;border:1.5px solid var(--brd);background:var(--bg);color:var(--txt);font:inherit;text-align:start;cursor:pointer}
+.gdk:hover,.gdk:focus{border-color:var(--red);outline:none}
+.gdk .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#16a34a;color:#fff;font-weight:800;flex:none}
+.gdk>span:nth-child(2){flex:1}.gdk b{display:block;font-size:14px}.gdk small{display:block;color:var(--gray);font-size:11.5px}
 .lacc small{display:block;color:rgba(255,255,255,.5);font-weight:500;font-size:11px}
 /* تبويبا الدخول */
 /* حقل الجوال: يُقرأ من اليسار كأي رقم دولي — +966 ثم الرقم */
@@ -161,7 +165,7 @@ svg{display:block;flex-shrink:0}
   transition:.15s}
 .brsw-b:hover{border-color:var(--red);color:var(--txt)}
 .brsw-b.on{background:var(--red);border-color:var(--red);color:#fff}
-.acc-brsw{display:flex;gap:.4rem;flex-wrap:wrap;padding:.2rem 0 .6rem}
+.acc-brsw{display:flex;gap:.4rem;flex-wrap:wrap;padding:.2rem 1.2rem .6rem}
 .tdbr-sec{margin-bottom:1.5rem}
 .tdbr-hd{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin:0 0 .7rem;
   padding:.5rem .8rem;background:var(--sur);border:1px solid var(--brd);
@@ -3617,8 +3621,8 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <button class="lbtn" id="l-next" onclick="lsNext()">التالي</button>
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
-    <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-l2</div>
+    <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-l3</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4641,9 +4645,9 @@ function faProbe(kb){
    (عبر وصف OpenAPI الذي يقدّمه PostgREST) ويعرض المفقود واختلاف أسماء المعاملات
    قبل أن يظهر كخطأ في منتصف العمل.
 ========================================================================== */
-var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_save_patch":["p_base","p_items","p_rev","p_set","p_token"],"fa_state_sync":["p_have","p_token"],"fa_state_sync2":["p_have","p_seqs","p_token"],"fa_backup_now":["p_note","p_token"],"fa_auth_lookup":["p_ident"],"fa_reset_request_acc":["p_id"],"fa_reset_issue":["p_req","p_token"],"fa_temp_pin":["p_id","p_token"],"fa_login_acc":["p_id","p_pin"],"fa_change_pin":["p_new","p_old","p_token"],"fa_login_readiness":["p_token"],"fa_backup_list":["p_token"],"fa_backup_get":["p_id","p_token"],"fa_backup_restore":["p_id","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
+var FA_RPCS={"fa_state_rev":["p_token"],"fa_load_state":["p_token"],"fa_players_upsert":["p_rows","p_token"],"fa_players_count":["p_token"],"fa_player_check":["p_nid"],"fa_player_activate":["p_dob","p_nid","p_pin"],"fa_player_login":["p_nid","p_pin"],"fa_player_has_account":["p_nid"],"fa_save_state":["p_data","p_rev","p_token"],"fa_save_state_commit":["p_key","p_rev","p_token","p_total"],"fa_save_state_part":["p_idx","p_key","p_part"],"fa_login":["p_pin","p_username"],"fa_signup":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_username"],"fa_upsert_user":["p_coach_id","p_id","p_name","p_phone","p_pin","p_role","p_team","p_token","p_username"],"fa_delete_user":["p_id","p_token"],"fa_update_profile":["p_id","p_name","p_phone","p_team","p_token","p_username"],"fa_set_pin":["p_id","p_pin","p_token"],"fa_list_users":["p_token"],"fa_ce_submit_tok":["p_resp","p_token"],"fa_lookup":["p_id"],"fa_public_state":[],"fa_vote":["p_mid","p_pick","p_tid","p_token"],"fa_players_prune":["p_keys","p_token"],"fa_save_patch":["p_base","p_items","p_rev","p_set","p_token"],"fa_state_sync":["p_have","p_token"],"fa_state_sync2":["p_have","p_seqs","p_token"],"fa_backup_now":["p_note","p_token"],"fa_auth_lookup":["p_ident"],"fa_guardian_activate":["p_dob","p_nid","p_phone","p_pin"],"fa_guardian_login":["p_phone","p_pin"],"fa_guardian_kids":["p_tok"],"fa_guardian_child":["p_nid","p_tok"],"fa_guardian_change_pin":["p_new","p_old","p_tok"],"fa_guardian_stats":["p_token"],"fa_reset_request_acc":["p_id"],"fa_reset_issue":["p_req","p_token"],"fa_temp_pin":["p_id","p_token"],"fa_login_acc":["p_id","p_pin"],"fa_change_pin":["p_new","p_old","p_token"],"fa_login_readiness":["p_token"],"fa_backup_list":["p_token"],"fa_backup_get":["p_id","p_token"],"fa_backup_restore":["p_id","p_token"],"fa_profile_req":["p_item","p_token"],"fa_reset_request":["p_ident"]};
 var FA_RPC_CRIT=['fa_load_state','fa_save_state','fa_state_rev','fa_login'];
-var FA_RPC_LABEL={fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_state_sync2:'التحديث بالعناصر',fa_backup_now:'نسخة احتياطية',fa_auth_lookup:'تعريف الحساب (الدخول الجديد)',fa_reset_request_acc:'طلب استعادة لحساب',fa_reset_issue:'إصدار رمز مؤقت',fa_temp_pin:'رمز مؤقت من بطاقة المستخدم',fa_login_acc:'الدخول بالحساب',fa_change_pin:'تغيير الرمز',fa_login_readiness:'جاهزية الدخول',fa_backup_list:'قائمة النسخ',fa_backup_get:'تنزيل نسخة',fa_backup_restore:'استعادة نسخة',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
+var FA_RPC_LABEL={fa_guardian_activate:'تفعيل ولي الأمر',fa_guardian_login:'دخول ولي الأمر',fa_guardian_kids:'أبناء ولي الأمر',fa_guardian_child:'دخول ولي الأمر على ابنه',fa_guardian_change_pin:'رمز ولي الأمر',fa_guardian_stats:'إحصاء أولياء الأمور',fa_load_state:'تحميل البيانات',fa_save_state:'حفظ البيانات',fa_state_rev:'رقم النسخة',fa_login:'دخول الموظفين',fa_signup:'إنشاء حساب',fa_upsert_user:'حفظ حساب',fa_delete_user:'حذف حساب',fa_update_profile:'تعديل الملف',fa_set_pin:'تعيين رمز',fa_list_users:'قائمة الحسابات',fa_player_check:'فحص لاعب',fa_player_activate:'تفعيل لاعب',fa_player_login:'دخول لاعب',fa_player_has_account:'حساب اللاعب',fa_player_tours:'بطولات اللاعب',fa_players_upsert:'الكتابة المزدوجة',fa_players_get:'قراءة اللاعبين',fa_players_count:'عدّ اللاعبين',fa_players_prune:'تنظيف جدول اللاعبين',fa_save_patch:'الحفظ بالأقسام',fa_state_sync:'تحديث الأقسام',fa_state_sync2:'التحديث بالعناصر',fa_backup_now:'نسخة احتياطية',fa_auth_lookup:'تعريف الحساب (الدخول الجديد)',fa_reset_request_acc:'طلب استعادة لحساب',fa_reset_issue:'إصدار رمز مؤقت',fa_temp_pin:'رمز مؤقت من بطاقة المستخدم',fa_login_acc:'الدخول بالحساب',fa_change_pin:'تغيير الرمز',fa_login_readiness:'جاهزية الدخول',fa_backup_list:'قائمة النسخ',fa_backup_get:'تنزيل نسخة',fa_backup_restore:'استعادة نسخة',fa_entries_upsert:'إدخالات',fa_entries_remove:'حذف إدخال',fa_ce_submit_tok:'تقييم اللاعب للمدرب',fa_save_state_part:'الحفظ المجزّأ (جزء)',fa_save_state_commit:'الحفظ المجزّأ (تجميع)',fa_lookup:'بحث',fa_public_state:'القراءة العامة (بلا دخول)',fa_vote:'توقعات المباريات',fa_profile_req:'طلب تعديل الملف',fa_reset_request:'طلب استعادة رمز'};
 var FA_SRV={at:0,res:null};
 /* دوال يُؤمَن استدعاؤها بقيم فارغة (تفحص الرمز أو تعيد فراغاً ولا تكتب شيئاً) */
 var FA_RPC_PROBE=['fa_state_rev','fa_load_state','fa_save_state','fa_login','fa_list_users','fa_lookup','fa_public_state','fa_player_check','fa_player_has_account','fa_players_count','fa_player_login','fa_set_pin','fa_delete_user','fa_update_profile','fa_upsert_user','fa_vote','fa_profile_req','fa_ce_submit_tok','fa_players_prune','fa_save_patch','fa_state_sync','fa_state_sync2','fa_backup_list','fa_login_readiness','fa_change_pin','fa_reset_issue','fa_temp_pin'];
@@ -4925,6 +4929,12 @@ var FA={
   },
   authLookup:function(ident){return this._auth('fa_auth_lookup',{p_ident:String(ident||'')});},
   loginAcc:function(id,pin){return this._auth('fa_login_acc',{p_id:id,p_pin:pin});},
+  guardianActivate:function(phone,nid,dob,pin){return this._auth('fa_guardian_activate',{p_phone:String(phone||''),p_nid:String(nid||''),p_dob:String(dob||''),p_pin:String(pin||'')});},
+  guardianLogin:function(phone,pin){return this._auth('fa_guardian_login',{p_phone:String(phone||''),p_pin:String(pin||'')});},
+  guardianKids:function(tok){return this._auth('fa_guardian_kids',{p_tok:tok});},
+  guardianChild:function(tok,nid){return this._auth('fa_guardian_child',{p_tok:tok,p_nid:String(nid||'')});},
+  guardianChangePin:function(tok,o,n){return this._auth('fa_guardian_change_pin',{p_tok:tok,p_old:String(o||''),p_new:String(n||'')});},
+  guardianStats:function(){return this._auth('fa_guardian_stats',{p_token:this.token});},
   changePin:function(oldPin,newPin){return this._auth('fa_change_pin',{p_token:this.token,p_old:oldPin,p_new:newPin});},
   loginReadiness:function(){return this._auth('fa_login_readiness',{p_token:this.token});},
   playerCheck:function(nid){
@@ -5334,6 +5344,17 @@ function faWrapRpc(sb){
 }
 function faAuthLost(){
   if(FA._authLost)return;
+  /* ولي الأمر: جلسة ابنه انتهت (تغيّر رمز الابن مثلاً) — تُجدَّد بهدوء من جلسة ولي الأمر */
+  if(CU&&CU.gd&&CU.gd.tok&&!FA._gdRenew){
+    FA._gdRenew=true;FA._authLost=true;
+    var _nid=CU.nid||CU.username;
+    FA.guardianChild(CU.gd.tok,_nid).then(function(r){
+      FA._authLost=false;
+      if(r&&r.ok&&r.token){FA.token=r.token;try{sessSave();}catch(_){}setTimeout(function(){FA._gdRenew=false;},30000);showErrToast('تم تجديد الجلسة — أعد آخر خطوة إن لم تظهر',4000);return;}
+      faAuthLost();
+    }).catch(function(){FA._authLost=false;faAuthLost();});
+    return;
+  }
   FA._authLost=true;
   var pend=false;
   try{
@@ -5836,9 +5857,9 @@ var USER_ROLES=['admin','supervisor','organizer','admin-team','coach','player','
                 'nt-director','nt-tadmin','nt-admin','nt-coach','nt-player'];
 /* admin-team = مدير الفرع/الفريق (كان «إداري فريق») — supervisor = مشرف فني فوق الفروع
    أدوار nt-* خاصة بمنتخب فارس: تُنشأ من صفحة الطاقم وتفتح نظام المنتخب وحده. */
-var RL={admin:'مدير النظام',supervisor:'مشرف فني',organizer:'منظم','admin-team':'مدير فرع',coach:'مدرب',player:'لاعب',media:'إعلامي',viewer:'ولي أمر',
+var RL={admin:'مدير النظام',supervisor:'مشرف فني',organizer:'منظم','admin-team':'مدير فرع',coach:'مدرب',player:'لاعب',media:'إعلامي',viewer:'ولي أمر',guardian:'ولي الأمر',
         'nt-director':'مدير منتخب','nt-tadmin':'إداري فني','nt-admin':'إداري منتخب','nt-coach':'مدرب منتخب','nt-player':'لاعب منتخب'};
-var RC={admin:'#DD1D45',supervisor:'#0e7490',organizer:'#0e7490','admin-team':'#5b2d8f',coach:'#1565c0',player:'#16a34a',media:'#d97706',viewer:'#8b92b0',
+var RC={guardian:'#16a34a',admin:'#DD1D45',supervisor:'#0e7490',organizer:'#0e7490','admin-team':'#5b2d8f',coach:'#1565c0',player:'#16a34a',media:'#d97706',viewer:'#8b92b0',
         'nt-director':'#b45309','nt-tadmin':'#a16207','nt-admin':'#7c3aed','nt-coach':'#0369a1','nt-player':'#15803d'};
 /* هل هذا الدور من أدوار المنتخب؟ */
 function isNTRole(r){return String(r||'').indexOf('nt-')===0;}
@@ -6038,7 +6059,10 @@ function openAccount(e){
   if(e)e.stopPropagation();
   if(!CU)return;
   var av='<span class="acc-av" style="background:'+(RC[CU.role]||'var(--red)')+'">'+ti(CU.name)+'</span>';
-  var h='<div class="acc-hd">'+av+'<div class="acc-i"><div class="acc-n">'+esc(CU.name)+'</div><div class="acc-r">'+esc(roleLabel(CU.role))+'</div></div></div>';
+  var h='<div class="acc-hd">'+av+'<div class="acc-i"><div class="acc-n">'+esc(CU.name)+'</div><div class="acc-r">'+esc(CU.gd?'ولي الأمر يتابع ابنه':roleLabel(CU.role))+'</div></div></div>';
+  if(CU.gd){
+    h+='<div class="acc-sec">'+ic('users',12)+' أبنائي</div><div class="acc-brsw" id="acc-kids"><small style="color:var(--gray)">جارٍ التحميل…</small></div>';
+  }
   /* معلومات الحساب */
   var rows=[];
   if(CU.phone)rows.push(['phone','رقم الجوال',phoneDisp(CU.phone)]);
@@ -6066,13 +6090,14 @@ function openAccount(e){
   h+='<div class="acc-notifs" id="acc-notifs">'+accNotifsHTML()+'</div>';
   /* أزرار */
   h+='<div class="acc-acts">'
-    +'<button class="btn btn-g" onclick="accClose();openProf()">'+ic('edit',13)+' تعديل ملفي الشخصي</button>'
+    +(CU.gd?'<button class="btn btn-g" onclick="gdPinOpen()">'+ic('shield',13)+' تغيير رمز ولي الأمر</button>':'<button class="btn btn-g" onclick="accClose();openProf()">'+ic('edit',13)+' تعديل ملفي الشخصي</button>')
     +'<button class="btn btn-g" onclick="accClose();openCont()">'+ic('phone',13)+' اتصل بنا</button>'
     +'<button class="btn btn-g" style="color:var(--red)" onclick="accClose();doLogout()">'+ic('logout',13)+' تسجيل الخروج</button>'
     +'</div>';
   g('accBody').innerHTML=h;
   g('accMod').classList.add('open');
   hydrateIcons(g('accMod'));
+  if(CU.gd)gdAccKids();
 }
 function accNotifsHTML(){
   if(!NOTIFS.length)return '<div class="ni-empty">لا توجد إشعارات</div>';
@@ -6766,6 +6791,7 @@ function pinForgot(){
     var pe=g('p-err');if(pe){pe.textContent='وصل طلبك للإدارة ✓ سيصلك رمز مؤقت على واتساب رقمك المسجّل';pe.style.color='var(--green)';fl('p-err');setTimeout(function(){pe.style.color='';},6000);}
   };
   if(!FA.enabled){goBack();askReset();return;}
+  if(LOGIN_ACC&&LOGIN_ACC.role==='guardian'){gdActivateOpen(LOGIN_ACC,true);return;}   /* ولي الأمر يستعيد رمزه بنفسه */
   var pr=LOGIN_ACC?FA.resetRequestAcc(LOGIN_ACC.id):FA.resetRequest(gv('l-name')||gv('l-id'));
   pr.then(done).catch(function(e){if(e&&e.message==='na'){FA.resetRequest(gv('l-id')||gv('l-name')).then(done).catch(function(){pinMsg('تعذّر الإرسال — تحقق من الإنترنت');});return;}pinMsg('تعذّر الإرسال — تحقق من الإنترنت');});
 }
@@ -6850,7 +6876,7 @@ function goIdent(){
     lsBusy(false);
     if(!res){nameErr('تعذّر التحقق — حاول مجدداً');return;}
     if(res.kind==='locked'){nameErr('محاولات كثيرة من هذا الجهاز — انتظر ١٥ دقيقة ثم أعد المحاولة');return;}
-    if(res.kind==='none'){nameErr('لا يوجد حساب بهذا الرقم. اللاعب يدخل برقم هويته، والموظف يطلب من الإدارة تسجيل جواله في حسابه.');return;}
+    if(res.kind==='none'){nameErr('لا يوجد حساب بهذا الرقم. اللاعب يدخل برقم هويته، وولي الأمر بالجوال المسجّل في ملف ابنه، والموظف يطلب من الإدارة تسجيل جواله في حسابه.');return;}
     if(res.kind!=='staff'||!(res.accounts||[]).length){nameErr('أدخل رقم جوال صحيح');return;}
     if(res.accounts.length===1)return pinStart(res.accounts[0]);
     lsChoose(res.accounts);
@@ -6866,7 +6892,7 @@ function lsChoose(list){
   var box=g('lf-acc');if(!box)return;
   var h='<label>هذا الرقم مرتبط بأكثر من حساب — اختر اسمك</label>';
   LS_ACCS.forEach(function(a,i){
-    h+='<button type="button" class="lacc" onclick="pinStart(LS_ACCS['+i+'])"><span class="av">'+esc(ti(a.name||''))+'</span><span>'+esc(a.name||'')+'<small>'+esc(roleLabel(a.role)||'')+'</small></span></button>';
+    h+='<button type="button" class="lacc" onclick="pinStart(LS_ACCS['+i+'])"><span class="av">'+esc(ti(a.name||''))+'</span><span>'+esc(a.name||'')+'<small>'+esc(a.role==='guardian'?('متابعة '+(a.kids>1?'أبنائك ('+a.kids+')':'ابنك')):(roleLabel(a.role)||''))+'</small></span></button>';
   });
   h+='<div class="lhint" style="margin-top:.6rem"><a href="#" class="lswap" onclick="event.preventDefault();lsMode(\'id\')">رقم آخر</a></div>';
   box.innerHTML=h;
@@ -6877,6 +6903,7 @@ function lsChoose(list){
 function pinStart(acc){
   if(!acc)return;
   LOGIN_ACC=acc;
+  if(acc.role==='guardian'&&!acc.active)return gdActivateOpen(acc,false);   /* ولي أمر أول مرة */
   setPinLen(acc.pin_len||4);
   var nEl=g('l-name');if(nEl)nEl.value=acc.name||'';
   g('pin-nm').textContent=acc.name||'';
@@ -6889,6 +6916,7 @@ function doLoginAcc(){
   if(LOGIN_BUSY)return;
   var pass=getPin();
   if(pass.length!==PIN_LEN){fl('p-err');return;}
+  if(LOGIN_ACC&&LOGIN_ACC.role==='guardian')return gdLoginPin(pass);
   LOGIN_BUSY=true;
   loadShow('جارٍ التحقق من الرمز…','أكاديمية فارس');
   FA.loginAcc(LOGIN_ACC.id,pass).then(function(res){
@@ -7228,9 +7256,10 @@ function nidPinPrompt(p){
   setTimeout(function(){var e=g('na-lpin');if(e)e.focus();},150);
 }
 /* دخول اللاعب بعد نجاح الخادم: رمز جلسة ← تحميل بياناته هو فقط ← الدخول */
-function playerSessionStart(res,nid,onErr,pin){
+function playerSessionStart(res,nid,onErr,pin,gd){
   FA.token=res.token||null;
   CU={id:res.id,name:res.name||'',username:res.username||nid,role:'player',pid:res.pid,team:res.team||'',nid:nid};
+  if(gd&&gd.tok)CU.gd={tok:gd.tok,name:gd.name||'',phone:gd.phone||''};   /* ولي الأمر داخل حساب ابنه */
   loadShow('جارٍ تحميل بياناتك…',res.name||'');
   var go0=function(){closeNidAct();try{sessSave();}catch(e){}loginOK();if(CEPUB&&CEPUB.resume){CEPUB.resume=false;setTimeout(function(){CEPUB.step=1;cePubOpen();},400);}};
   /* رمز قديم (٤ أرقام) أو مؤقت: رمز جديد من ٦ أرقام قبل الدخول */
@@ -7238,6 +7267,187 @@ function playerSessionStart(res,nid,onErr,pin){
   if(!FA.token){go();return;}
   FA.loadState().then(function(st){if(st&&st.tournaments)DB=migrate(st)||DB;go();})
     .catch(function(e){loadHide();if(onErr)onErr('تعذّر تحميل بياناتك — '+String(e&&e.message||e).slice(0,80));});
+}
+/* ================= حساب ولي الأمر =================
+   يدخل برقم جواله المسجّل في ملف ابنه. أول مرة (أو لو نسي رمزه): رقم هوية أحد أبنائه
+   وتاريخ ميلاده + رمز من ٦ أرقام. بعدها يختار أحد أبنائه ويدخل عليه بجلسة لاعب عادية،
+   وينتقل بينهم من قائمة الحساب. رمز ولي الأمر لا يفتح أي شيء غير قائمة أبنائه. */
+var GD=null,GD_KIDS=[];
+var GD_KEY='fa_gd';
+function gdSave(extra){try{if(GD)localStorage.setItem(GD_KEY,JSON.stringify(Object.assign({tok:GD.tok,name:GD.name||'',phone:GD.phone||'',nid:GD.nid||''},extra||{})));}catch(e){}}
+function gdLoad(){try{var v=JSON.parse(localStorage.getItem(GD_KEY)||'null');return (v&&v.tok)?v:null;}catch(e){return null;}}
+function gdClear(){GD=null;GD_KIDS=[];try{localStorage.removeItem(GD_KEY);}catch(e){}}
+function gdPhone(acc){var id=String((acc&&acc.id)||'');return id.indexOf('g:')===0?'0'+id.slice(2):'';}
+function gdSub(t){var s=g('na-sub');if(s)s.textContent=t||'لاعبو الأكاديمية';}
+function gdDobSelects(){
+  var dO='<option value="">اليوم</option>',mO='<option value="">الشهر</option>',yO='<option value="">السنة</option>';
+  for(var d=1;d<=31;d++)dO+='<option value="'+d+'">'+d+'</option>';
+  for(var m=1;m<=12;m++)mO+='<option value="'+m+'">'+MONTHS[m-1]+'</option>';
+  var yN=new Date().getFullYear();for(var y=yN;y>=yN-30;y--)yO+='<option value="'+y+'">'+y+'</option>';
+  return '<div style="display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:.45rem"><select id="gd-dd" aria-label="اليوم">'+dO+'</select><select id="gd-dm" aria-label="الشهر">'+mO+'</select><select id="gd-dy" aria-label="السنة">'+yO+'</select></div>';
+}
+var PINBOX='style="direction:ltr;text-align:center;letter-spacing:.6em;font-size:18px"';
+/* أول دخول (أو رمز جديد لمن نسي) */
+function gdActivateOpen(acc,reset){
+  LOGIN_ACC=acc;
+  g('na-av').textContent='👪';
+  g('na-nm').textContent=reset?'رمز جديد لولي الأمر':'حساب ولي الأمر — أول دخول';
+  gdSub('أولياء الأمور');
+  var n=acc&&acc.kids?acc.kids:0;
+  var h='<div class="ped-note free">'+ic('shield',14)+'<div><b>'+(reset?'نتحقق أنك ولي الأمر ثم تختار رمزاً جديداً':'حسابك جاهز لدى الأكاديمية')+'</b><br>'
+    +'رقمك '+esc(phoneDisp(gdPhone(acc)))+' مسجّل ولي أمر'+(n>1?' لـ '+n+' لاعبين':' للاعب')+'. للتأكد: اكتب رقم هوية أحد أبنائك وتاريخ ميلاده كما سُجّل لدى الأكاديمية.</div></div>';
+  h+='<div class="fg req"><label>رقم هوية أحد أبنائك *</label><input type="tel" id="gd-nid" inputmode="numeric" maxlength="10" autocomplete="off" placeholder="1XXXXXXXXX" style="direction:ltr;text-align:center"></div>';
+  h+='<div class="fg req"><label>تاريخ ميلاده *</label>'+gdDobSelects()+'</div>';
+  h+='<div class="fg"><label>'+(reset?'الرمز الجديد':'اختر رمزاً سرياً')+' (6 أرقام) *</label><input type="password" id="gd-pin" inputmode="numeric" maxlength="6" autocomplete="new-password" '+PINBOX+'></div>';
+  h+='<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="gd-pin2" inputmode="numeric" maxlength="6" autocomplete="new-password" '+PINBOX+' onkeydown="if(event.key===\'Enter\')gdActivate()"></div>';
+  h+='<button class="btn btn-r" id="gd-go" style="width:100%;min-height:48px" onclick="gdActivate()">'+ic('check',14)+' '+(reset?'حفظ الرمز والدخول':'دخول')+'</button>';
+  h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="closeNidAct()">رجوع</button>';
+  h+='<div class="msg err" id="gd-err" role="alert">تحقق من البيانات</div>';
+  g('na-body').innerHTML=h;hydrateIcons(g('na-body'));
+  g('naMod').classList.add('open');
+  setTimeout(function(){var e=g('gd-nid');if(e)e.focus();},150);
+}
+function gdErr(m){var e=g('gd-err');if(!e)return;e.textContent=m;e.style.color='';fl('gd-err');}
+function gdActivate(){
+  if(LOGIN_BUSY)return;
+  var nid=normNid(gv('gd-nid')),dd=gv('gd-dd'),dm=gv('gd-dm'),dy=gv('gd-dy'),pin=gv('gd-pin'),pin2=gv('gd-pin2');
+  if(!nidOK(nid)){gdErr('اكتب رقم هوية ابنك صحيحاً (١٠ أرقام)');return;}
+  if(!dd||!dm||!dy){gdErr('اختر يوم وشهر وسنة ميلاد ابنك');return;}
+  if(!validYMD(dy,dm,dd)){gdErr('التاريخ غير صحيح — هذا اليوم غير موجود في الشهر');return;}
+  if(!/^[0-9]{6}$/.test(pin)){gdErr('الرمز يجب أن يكون 6 أرقام');return;}
+  if(pin!==pin2){gdErr('الرمزان غير متطابقين');return;}
+  if(/^(\d)\1{5}$/.test(pin)||['123456','654321','012345','123123','112233'].indexOf(pin)>-1){gdErr('رمز سهل التخمين — اختر رمزاً آخر');return;}
+  LOGIN_BUSY=true;var b=g('gd-go');if(b)b.disabled=true;
+  FA.guardianActivate(gdPhone(LOGIN_ACC),nid,dy+'-'+dm+'-'+dd,pin).then(function(res){
+    LOGIN_BUSY=false;if(b)b.disabled=false;
+    if(!res||!res.ok){
+      var m={nokid:'رقم الهوية هذا غير مسجّل لأحد أبنائك بهذا الجوال — تأكد من الرقم',dob:'تاريخ الميلاد غير مطابق للمسجّل لدى الأكاديمية',
+             nodob:'تاريخ ميلاد ابنك غير مسجّل لدى الأكاديمية — جرّب ابناً آخر أو راجع الإدارة',locked:'محاولات كثيرة — انتظر ١٥ دقيقة (أو راجع الإدارة)',
+             weak:'رمز سهل التخمين — اختر رمزاً آخر',pin:'الرمز يجب أن يكون 6 أرقام',phone:'رقم الجوال غير مقبول'};
+      gdErr((res&&m[res.err])||'تعذّر الدخول — حاول مجدداً');return;
+    }
+    addN('أهلاً بك','في المرات القادمة ادخل برقم جوالك ورمزك السري','success');
+    gdStart(res);
+  }).catch(function(e){LOGIN_BUSY=false;if(b)b.disabled=false;gdErr(e&&e.message==='na'?'الخادم لم يُحدَّث بعد — أبلغ مدير النظام':'تعذّر الاتصال بالخادم — تحقق من الإنترنت');});
+}
+/* الدخول برمز ولي الأمر (من شاشة الرمز) */
+function gdLoginPin(pass){
+  LOGIN_BUSY=true;
+  loadShow('جارٍ التحقق من الرمز…','أكاديمية فارس');
+  FA.guardianLogin(gdPhone(LOGIN_ACC),pass).then(function(res){
+    LOGIN_BUSY=false;
+    if(!res||!res.ok){
+      loadHide();var er=res&&res.err;
+      if(er==='locked'){pinMsg('أُوقف الدخول ١٥ دقيقة بعد ٥ محاولات خاطئة — أو اضغط «نسيت الرمز السري؟»');return;}
+      if(er==='inactive'){gdActivateOpen(LOGIN_ACC,false);return;}
+      pinErr();
+      if(res&&res.left!=null&&res.left<=2){var pe=g('p-err');if(pe)pe.textContent='الرمز السري غير صحيح — '+(res.left?'بقيت '+res.left+' محاولة قبل الإيقاف المؤقت':'أُوقف الدخول ١٥ دقيقة');}
+      return;
+    }
+    gdStart(res);
+  }).catch(function(e){LOGIN_BUSY=false;loadHide();pinMsg(e&&e.message==='na'?'الخادم لم يُحدَّث بعد — أبلغ مدير النظام':'تعذّر الاتصال بالخادم — تحقق من الإنترنت ثم أعد المحاولة');});
+}
+function gdStart(res){
+  GD={tok:res.token,name:res.name||'',phone:res.phone||''};GD_KIDS=res.kids||[];
+  gdSave();
+  if(!GD_KIDS.length){loadHide();gdPick([]);return;}
+  if(GD_KIDS.length===1){gdEnter(GD_KIDS[0]);return;}
+  loadHide();gdPick(GD_KIDS);
+}
+/* اختيار الابن */
+function gdPick(kids){
+  g('na-av').textContent='👪';
+  g('na-nm').textContent=GD&&GD.name?'أهلاً '+GD.name:'أبنائي';
+  gdSub('اختر من تريد متابعته');
+  var h='';
+  if(!kids.length)h+='<div class="ped-note">'+ic('info',14)+'<div>لا يوجد لاعب مسجّل برقمك حالياً. إن كان ابنك مسجّلاً لدى الأكاديمية فاطلب من الإدارة إضافة جوالك في ملفه.</div></div>';
+  kids.forEach(function(k,i){
+    h+='<button type="button" class="gdk" onclick="gdEnter(GD_KIDS['+i+'])"><span class="av">'+esc(ti(k.name||''))+'</span><span><b>'+esc(k.name||'')+'</b><small>'+esc(k.team||'')+'</small></span>'+ic('chevron-left',14)+'</button>';
+  });
+  h+='<button class="btn btn-g" style="width:100%;margin-top:.8rem" onclick="gdClear();closeNidAct()">'+ic('logout',13)+' خروج</button>';
+  h+='<div class="msg err" id="gd-err" role="alert"></div>';
+  g('na-body').innerHTML=h;hydrateIcons(g('na-body'));
+  g('naMod').classList.add('open');
+}
+/* الدخول على ابن: جلسة لاعب عادية */
+function gdEnter(kid,onFail){
+  if(!GD||!kid)return;
+  loadShow('جارٍ فتح حساب '+(kid.name||'ابنك')+'…','ولي الأمر');
+  FA.guardianChild(GD.tok,kid.nid).then(function(res){
+    if(!res||!res.ok){loadHide();var m=(res&&res.err==='nokid')?'هذا اللاعب لم يعد مرتبطاً برقمك — راجع الإدارة':'تعذّر فتح حساب ابنك — حاول مجدداً';if(onFail)onFail(m);else{gdPick(GD_KIDS);gdErr(m);}return;}
+    GD.nid=kid.nid;gdSave();
+    playerSessionStart(res,kid.nid,function(m){if(onFail)onFail(m);else{gdPick(GD_KIDS);gdErr(m);}},null,GD);
+  }).catch(function(e){
+    loadHide();
+    if(/unauthorized/i.test(String(e&&e.message||''))){gdClear();var m1='انتهت جلسة ولي الأمر — سجّل الدخول برقم جوالك من جديد';if(onFail)onFail(m1);else{closeNidAct();showErrToast(m1,6000);}return;}
+    var m2='تعذّر الاتصال بالخادم — تحقق من الإنترنت';if(onFail)onFail(m2);else{gdPick(GD_KIDS);gdErr(m2);}
+  });
+}
+/* التبديل بين الأبناء (من قائمة الحساب) */
+function gdSwitch(nid){
+  if(!CU||!CU.gd)return;
+  var gd=Object.assign({},CU.gd),kid=(GD_KIDS||[]).find(function(k){return k.nid===nid;})||{nid:nid};
+  try{accClose();}catch(e){}
+  var kids=GD_KIDS;
+  doLogout();
+  GD=gd;GD_KIDS=kids;gdSave();
+  gdEnter(kid);
+}
+/* بعد انقطاع الجلسة أو فتح الموقع من جديد: يعود ولي الأمر لآخر ابن تلقائياً */
+function gdResume(onFail){
+  var v=gdLoad();if(!v||!v.nid){if(onFail)onFail();return false;}
+  GD={tok:v.tok,name:v.name||'',phone:v.phone||'',nid:v.nid};
+  FA.guardianKids(GD.tok).then(function(r){if(r&&r.kids)GD_KIDS=r.kids;}).catch(function(){});
+  gdEnter({nid:v.nid},function(m){loadHide();if(onFail)onFail(m);});
+  return true;
+}
+/* قائمة الأبناء داخل قائمة الحساب */
+function gdAccKids(){
+  var box=g('acc-kids');if(!box||!CU||!CU.gd)return;
+  var paint=function(){
+    if(!box.isConnected)return;
+    box.innerHTML=(GD_KIDS||[]).map(function(k){
+      var on=normNid(k.nid)===normNid(CU.nid||CU.username||'');
+      return '<button type="button" class="brsw-b'+(on?' on':'')+'"'+(on?' aria-current="true"':' onclick="gdSwitch(\''+esc(k.nid)+'\')"')+'>'+esc(k.name||'')+'</button>';
+    }).join('')||'<small style="color:var(--gray)">—</small>';
+  };
+  if(GD_KIDS&&GD_KIDS.length)paint();
+  FA.guardianKids(CU.gd.tok).then(function(r){if(r&&r.kids){GD_KIDS=r.kids;paint();}}).catch(function(e){
+    if(/unauthorized/i.test(String(e&&e.message||''))){box.innerHTML='<small style="color:var(--red)">انتهت جلسة ولي الأمر — سجّل الخروج ثم ادخل برقم جوالك</small>';}
+  });
+}
+/* تغيير رمز ولي الأمر */
+function gdPinOpen(){
+  if(!CU||!CU.gd)return;
+  try{accClose();}catch(e){}
+  g('na-av').textContent='👪';g('na-nm').textContent='تغيير رمز ولي الأمر';gdSub('أولياء الأمور');
+  var h='<div class="fg"><label>الرمز الحالي *</label><input type="password" id="gd-old" inputmode="numeric" maxlength="6" autocomplete="current-password" '+PINBOX+'></div>'
+    +'<div class="fg"><label>الرمز الجديد (6 أرقام) *</label><input type="password" id="gd-pin" inputmode="numeric" maxlength="6" autocomplete="new-password" '+PINBOX+'></div>'
+    +'<div class="fg"><label>تأكيد الرمز *</label><input type="password" id="gd-pin2" inputmode="numeric" maxlength="6" autocomplete="new-password" '+PINBOX+' onkeydown="if(event.key===\'Enter\')gdPinSave()"></div>'
+    +'<button class="btn btn-r" id="gd-go" style="width:100%;min-height:48px" onclick="gdPinSave()">'+ic('check',14)+' حفظ</button>'
+    +'<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="closeNidAct()">إلغاء</button>'
+    +'<div class="msg err" id="gd-err" role="alert"></div>';
+  g('na-body').innerHTML=h;hydrateIcons(g('na-body'));g('naMod').classList.add('open');
+  setTimeout(function(){var e=g('gd-old');if(e)e.focus();},150);
+}
+function gdPinSave(){
+  var o=gv('gd-old'),a=gv('gd-pin'),b2=gv('gd-pin2');
+  if(!/^[0-9]{6}$/.test(a)){gdErr('الرمز الجديد 6 أرقام');return;}
+  if(a!==b2){gdErr('الرمزان غير متطابقين');return;}
+  FA.guardianChangePin(CU.gd.tok,o,a).then(function(r){
+    if(r&&r.ok){closeNidAct();addN('تم تغيير رمز ولي الأمر','استخدم الرمز الجديد في المرات القادمة','success');return;}
+    var m={old:'الرمز الحالي غير صحيح',weak:'رمز سهل التخمين — اختر غيره',same:'الرمز الجديد مثل الحالي',len:'الرمز الجديد 6 أرقام',locked:'محاولات كثيرة — انتظر ١٥ دقيقة'};
+    gdErr((r&&m[r.err])||'تعذّر الحفظ');
+  }).catch(function(e){gdErr(/unauthorized/i.test(String(e&&e.message||''))?'انتهت جلسة ولي الأمر — سجّل الدخول من جديد':'تعذّر الاتصال بالخادم');});
+}
+/* «ولي أمر جديد؟» — لا تسجيل: الحساب جاهز برقم جواله في ملف ابنه */
+function gdHelp(){
+  g('na-av').textContent='👪';g('na-nm').textContent='حساب ولي الأمر';gdSub('أولياء الأمور');
+  var h='<div class="ped-note free">'+ic('check',14)+'<div><b>لا تحتاج إنشاء حساب</b><br>حسابك جاهز تلقائياً برقم الجوال المسجّل في ملف ابنك لدى الأكاديمية.</div></div>'
+    +'<ol style="margin:.8rem 1.1rem;line-height:2;font-size:13px"><li>اكتب رقم جوالك في شاشة الدخول واضغط «التالي».</li><li>اختر «ولي الأمر».</li><li>أول مرة: أكّد رقم هوية أحد أبنائك وتاريخ ميلاده واختر رمزاً من ٦ أرقام.</li><li>بعدها تتابع كل أبنائك وتنتقل بينهم بضغطة.</li></ol>'
+    +'<div class="jnote">'+ic('info',12)+' رقمك غير مسجّل؟ اطلب من إدارة الأكاديمية إضافته في ملف ابنك.</div>'
+    +'<button class="btn btn-r" style="width:100%;min-height:46px;margin-top:.8rem" onclick="closeNidAct();lsMode(\'id\');setTimeout(function(){var e=g(\'l-id\');if(e)e.focus();},150)">'+ic('phone',14)+' اكتب رقم جوالك</button>';
+  g('na-body').innerHTML=h;hydrateIcons(g('na-body'));g('naMod').classList.add('open');
 }
 function nidDoLogin(){
   var pin=gv('na-lpin');
@@ -7275,7 +7485,7 @@ function openNidActivate(p){
   g('na-body').innerHTML=h;hydrateIcons(g('na-body'));
   g('naMod').classList.add('open');
 }
-function closeNidAct(){g('naMod').classList.remove('open');NIDFLOW={pid:null,step:0};}
+function closeNidAct(){g('naMod').classList.remove('open');NIDFLOW={pid:null,step:0};try{gdSub('');}catch(e){}}
 function nidFinish(){
   var p=anyPlayer(NIDFLOW.pid)||NIDFLOW.p;if(!p){closeNidAct();return;}
   /* ١) تأكيد الميلاد — الخادم يعيد التحقق منه أيضاً، هذا فحص مبكر للمستخدم */
@@ -7566,7 +7776,7 @@ function sessSave(){
   try{
     if(!CU)return;
     localStorage.setItem(SESS_KEY,JSON.stringify({
-      uid:CU.id, token:FA.token||'', at:Date.now(),
+      uid:CU.id, token:FA.token||'', at:Date.now(), gd:CU.gd||null,
       sys:(g('TD')&&g('TD').style.display==='block')?'td':
           ((g('NT')&&g('NT').style.display==='block')?'nt':
           ((g('AD')&&g('AD').style.display==='block')?'ad':
@@ -7598,6 +7808,7 @@ function sessRestore(){
   if(me&&me.id===v.uid){u=Object.assign({},u||{},{id:me.id,name:me.name||(u&&u.name)||'',username:me.username||(u&&u.username)||'',role:me.role,team:me.team||'',coachId:me.coachId||(u&&u.coachId)||'',pid:me.pid||(u&&u.pid)||''});}
   if(!u){return false;}
   CU=Object.assign({},u);
+  if(v.gd&&v.gd.tok&&CU.role==='player'){CU.gd=v.gd;if(!CU.nid)CU.nid=CU.username;GD=Object.assign({},v.gd);}
   if(v.token)FA.token=v.token;
   if(v.at_id&&typeof AT!=='undefined')AT=v.at_id;
   splEnd();
@@ -7642,16 +7853,17 @@ function loginOK(){
   pinReset();
   try{var _lu=(DB.users||[]).find(function(x){return CU&&x.id===CU.id;});if(_lu){_lu.lastLogin=Date.now();_lu.logins=(_lu.logins||0)+1;}}catch(e){}
   FA._authLost=false;RR_SEEN=null;setTimeout(rrWatch,1500);
+  try{var _al=document.getElementById('auth-lost');if(_al)_al.remove();}catch(e){}
   logA('تسجيل دخول','user','#1565c0',true);
 }
-function doLogout(){try{FA._secBase=null;FA._secRev=null;}catch(e){}try{if(CQ.timer){clearTimeout(CQ.timer);CQ.timer=null;}if(CQ.dirty&&FA.loadOK&&FA.token&&CU){var _s=cloudState(DB);obWrite(_s,Math.round(JSON.stringify(_s).length/1024));}CQ.dirty=false;CQ.fails=0;var _sf=document.getElementById('sync-fail');if(_sf)_sf.remove();}catch(e){}try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';var ce=g('CE');if(ce)ce.style.display='none';var ad=g('AD');if(ad)ad.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
+function doLogout(){try{FA._secBase=null;FA._secRev=null;}catch(e){}try{if(CQ.timer){clearTimeout(CQ.timer);CQ.timer=null;}if(CQ.dirty&&FA.loadOK&&FA.token&&CU){var _s=cloudState(DB);obWrite(_s,Math.round(JSON.stringify(_s).length/1024));}CQ.dirty=false;CQ.fails=0;var _sf=document.getElementById('sync-fail');if(_sf)_sf.remove();}catch(e){}try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();gdClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';var ce=g('CE');if(ce)ce.style.display='none';var ad=g('AD');if(ad)ad.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
 function visibleTournaments(){
   return DB.tournaments.filter(function(t){return t.visible||(CU&&['admin','organizer'].indexOf(CU.role)>-1);});
 }
 function showTS(){
   setTimeout(function(){try{sessSave();}catch(e){}},400);
   g('TS').style.display='block';g('APP').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt2=g('NT');if(nt2)nt2.style.display='none';var ce2=g('CE');if(ce2)ce2.style.display='none';var ad2=g('AD');if(ad2)ad2.style.display='none';
-  g('ts-nm').textContent=CU.name;g('ts-rl').innerHTML=ic('shield',13)+' '+RL[CU.role];
+  g('ts-nm').textContent=CU.name;g('ts-rl').innerHTML=ic('shield',13)+' '+(CU.gd?'ولي الأمر':RL[CU.role]);
   try{acAutoUnify();}catch(e){}
   try{faServerAutoCheck();}catch(e){}
   tsSys();
@@ -9066,7 +9278,7 @@ var SBQ=null;
 
 /* ================= I18N ================= */
 var LANG='ar';
-var RLEN={admin:'System administrator',organizer:'Organizer','admin-team':'Team administrator',coach:'Coach',player:'Player',media:'Media',viewer:'Parent'};
+var RLEN={admin:'System administrator',organizer:'Organizer','admin-team':'Team administrator',coach:'Coach',player:'Player',media:'Media',viewer:'Parent',guardian:'Parent'};
 function roleLabel(r){return (LANG==='en'&&RLEN[r])?RLEN[r]:((typeof RL!=='undefined'&&RL[r])||'');}
 var TR={
 /* الشاشات العامة */
@@ -11558,6 +11770,8 @@ function mytCat(c){MYTCAT=c;rMyTeam();}
 /* ================= JOIN WIZARD ================= */
 var JR='';
 function openJoin(){
+  /* لا تسجيل لأولياء الأمور: الحساب جاهز برقم الجوال المسجّل في ملف الابن */
+  if(FA.enabled){gdHelp();return;}
   g('JM').style.display='flex';
   /* الحساب الجديد لولي الأمر وحده: اللاعب يدخل برقم هويته، والإداريون يُنشئهم مدير النظام */
   JR='viewer';g('j2t').textContent='حساب ولي أمر';
@@ -14235,6 +14449,7 @@ function lrHTML(){
   return h;
 }
 function lrLoad(){
+  FA.guardianStats().then(function(x){LR.gd=x||null;lrPaint();}).catch(function(){LR.gd=null;});
   FA.loginReadiness().then(function(l){LR.list=l||[];LR.err='';LR.na=false;lrPaint();})
     .catch(function(e){if(e&&e.message==='na')LR.na=true;else LR.err=(e&&e.message)||'خطأ';LR.list=LR.list||[];lrPaint();});
 }
@@ -14248,6 +14463,7 @@ function lrPaint(){
     +ceKpi('check','جاهزة للدخول بالجوال',ceN(c.ok+c.shared)+' / '+ceN(L.length),c.shared?ceN(c.shared)+' برقم مشترك (يختار اسمه)':'')
     +ceKpi('phone','تحتاج تصحيح',ceN(bad),bad?'بلا رقم أو رقم غير صالح/وهمي':'لا شيء')
     +ceKpi('shield','رمز من ٦ أرقام',ceN(p6)+' / '+ceN(L.length),Math.round(p6*100/tot)+'٪ انتقلوا')
+    +(LR.gd?ceKpi('users','أولياء أمور فعّلوا حساباتهم',ceN(LR.gd.activated)+' / '+ceN(LR.gd.phones),ceN(LR.gd.active7)+' دخلوا آخر ٧ أيام'):'')
     +'</div>';
   if(LR.err)h+='<div class="ce2-note warn" style="margin-bottom:.8rem">'+ic('info',13)+'<div>تعذّر الفحص: '+esc(LR.err)+'</div></div>';
   var rows=L.filter(function(a){return a.status!=='ok'&&!(a.status==='shared'&&(a.role==='viewer'));});
@@ -25409,6 +25625,8 @@ function faBoot(){
       /* استئناف الجلسة إن كانت سارية — قبل عرض شاشة الدخول */
       if(sessRestore()){if(_ceLink)setTimeout(cePubOpen,300);return;}
       if(_ceLink)return;
+      /* ولي الأمر: جلسة ابنه انتهت لكن جلسته هو سارية — يعود لآخر ابن تلقائياً */
+      if(FA.enabled&&(gdLoad()||{}).nid){gdResume(function(){gdClear();var w=g('WEL');if(w&&w.classList.contains('on'))rWel();});return;}
       var wel=g('WEL');
       if(wel&&wel.classList.contains('on'))rWel();
       else{var e=g('l-name');if(e)e.focus();}
@@ -26630,7 +26848,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-l2</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-l3</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
@@ -26640,7 +26858,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
       <button class="mclose" onclick="closeNidAct()" data-ic="x"></button>
       <div class="prof-av" id="na-av">؟</div>
       <div style="font-size:15px;font-weight:700" id="na-nm">تفعيل حساب</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5)">لاعبو الأكاديمية</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)" id="na-sub">لاعبو الأكاديمية</div>
     </div>
     <div class="mbody" id="na-body"></div>
   </div>
