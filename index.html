@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.27-m3">
+<meta name="build" content="2026.09.27-s1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3610,7 +3610,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">مستخدم جديد؟ <button onclick="openJoin()">إنشاء حساب</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-m3</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.27-s1</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4652,6 +4652,7 @@ var FA={
       var c=window.FA_CONFIG||{};
       if(c.SUPABASE_URL&&c.SUPABASE_ANON_KEY&&window.supabase&&window.supabase.createClient){
         this.sb=window.supabase.createClient(c.SUPABASE_URL,c.SUPABASE_ANON_KEY);
+        faWrapRpc(this.sb);
         this.enabled=true;
       }
     }catch(e){console.warn('FA init failed',e);this.enabled=false;}
@@ -5039,9 +5040,65 @@ var FA={
   }
 };
 /* strip secrets (PINs) before pushing the public state blob */
+/* ===== انتهاء الجلسة =====
+   الخادم يرد «unauthorized» حين لا يعود رمز الجلسة صالحاً (تغيّر رمز الحساب من الإدارة،
+   أو جلسة قديمة). كان الموقع يعيد محاولة الحفظ بلا نهاية بشريط أحمر غامض.
+   الآن: يتوقف الإرسال، ويُحفظ كل تعديل على الجهاز، ويُطلب الدخول — وبعده يُرسل تلقائياً. */
+function faWrapRpc(sb){
+  if(!sb||!sb.rpc||sb.__wrapped)return;
+  var orig=sb.rpc.bind(sb);sb.__wrapped=true;
+  sb.rpc=function(fn,args){
+    var b=orig(fn,args);
+    try{
+      var t=b.then.bind(b);
+      b.then=function(ok,bad){
+        return t(function(r){
+          try{
+            var m=r&&r.error&&String(r.error.message||'');
+            if(m&&/unauthorized/i.test(m)&&args&&args.p_token&&FA.token&&String(args.p_token)===String(FA.token))faAuthLost();
+          }catch(_){}
+          return r;
+        }).then(ok,bad);
+      };
+    }catch(_){}
+    return b;
+  };
+}
+function faAuthLost(){
+  if(FA._authLost)return;
+  FA._authLost=true;
+  var pend=false;
+  try{
+    if(CQ.timer){clearTimeout(CQ.timer);CQ.timer=null;}
+    pend=!!(CQ.dirty||CQ.fails);
+    if(pend&&CU&&FA.loadOK){var st=cloudState(DB),kb=0;try{kb=Math.round(JSON.stringify(st).length/1024);}catch(_){}obWrite(st,kb);}
+    CQ.dirty=false;CQ.fails=0;CQ.busy=false;
+  }catch(_){}
+  try{var sf=document.getElementById('sync-fail');if(sf)sf.remove();}catch(_){}
+  try{if(typeof FA_SYNC!=='undefined')FA_SYNC.lastErr='';cloudChip(false);}catch(_){}
+  FA.token=null;sessClear();
+  try{
+    var bn=document.getElementById('auth-lost');
+    if(!bn){bn=document.createElement('div');bn.id='auth-lost';document.body.appendChild(bn);}
+    bn.setAttribute('role','alertdialog');
+    bn.style.cssText='position:fixed;inset:0;z-index:100000;background:rgba(10,12,30,.72);display:flex;align-items:center;justify-content:center;padding:16px;direction:rtl';
+    bn.innerHTML='<div style="background:var(--card,#fff);color:var(--text,#181946);max-width:380px;width:100%;border-radius:18px;padding:22px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)">'
+      +'<div style="font-size:30px;line-height:1">🔒</div>'
+      +'<div style="font-weight:800;font-size:16px;margin:.6rem 0 .4rem">انتهت جلستك على هذا الجهاز</div>'
+      +'<div style="font-size:13px;line-height:1.8;opacity:.85">غالباً تغيّر الرمز السري لحسابك، أو انتهت صلاحية الجلسة. سجّل الدخول مرة أخرى للمتابعة.'
+      +(pend?'<br><b style="color:#16a34a">تعديلاتك الأخيرة محفوظة على هذا الجهاز وستُرسل تلقائياً بعد الدخول.</b>':'')+'</div>'
+      +'<button onclick="faAuthRelogin()" style="margin-top:1rem;width:100%;background:#DD1D45;color:#fff;border:none;border-radius:12px;padding:12px;font:800 14px inherit;cursor:pointer">تسجيل الدخول</button></div>';
+  }catch(_){}
+}
+function faAuthRelogin(){
+  try{var bn=document.getElementById('auth-lost');if(bn)bn.remove();}catch(_){}
+  FA._authLost=false;
+  try{doLogout();}catch(_){}
+  try{if(typeof welGo==='function')welGo();}catch(_){}
+}
 function cloudState(db){
   var c=JSON.parse(JSON.stringify(db));
-  delete c._me;delete c._public;   /* حقول يضيفها الخادم للقراءة فقط */
+  delete c._me;delete c._public;delete c._secrev;   /* حقول يضيفها الخادم للقراءة فقط */
   (c.users||[]).forEach(function(u){delete u.password;});
   (c.joinReqs||[]).forEach(function(r){delete r.pin;});
   (c.resetReqs||[]).forEach(function(r){delete r.code;});
@@ -5215,7 +5272,7 @@ function sv(){
   if(typeof tdSyncSchedule==='function')tdSyncSchedule();
   /* أدوار المنتخب تكتب أيضاً — بدونها كانت تجمعاتهم ومبارياتهم وتقييماتهم
      تُحفظ محلياً وتختفي بلا رسالة خطأ. اللاعب لا يكتب. */
-  if(FA.enabled&&FA.token&&CU&&['admin','supervisor','organizer','admin-team','coach',
+  if(FA.enabled&&(FA.token||FA._authLost)&&CU&&['admin','supervisor','organizer','admin-team','coach',
       'nt-director','nt-tadmin','nt-admin','nt-coach'].indexOf(CU.role)>-1)cloudQueue();
   /* الكتابة المزدوجة — معزولة تماماً عن الحفظ الأساسي أعلاه */
   try{dualWrite();}catch(e){console.warn('[FA] الكتابة المزدوجة',e&&e.message);}
@@ -5289,6 +5346,11 @@ function cloudQueue(delay){
     }).catch(function(){setTimeout(function(){cloudQueue(0);},8000);});
     return;
   }
+  if(FA._authLost){
+    /* الجلسة منتهية: لا إرسال — التعديل يُحفظ على الجهاز حتى يُسجَّل الدخول */
+    try{var _s0=cloudState(DB),_k0=Math.round(JSON.stringify(_s0).length/1024);obWrite(_s0,_k0);}catch(e){}
+    return;
+  }
   CQ.dirty=true;CQ.seq++;
   if(CQ.timer)clearTimeout(CQ.timer);
   CQ.timer=setTimeout(function(){
@@ -5303,12 +5365,14 @@ function cloudQueue(delay){
     CQ.busy=true;
     FA.saveState(_st).then(function(ok){
       CQ.busy=false;
+      if(FA._authLost)return;
       if(ok===false){faSyncLog(false,'الخادم رفض الحفظ (رقم النسخة) — تُعاد المحاولة',_kb,Date.now()-_t0);CQ.fails++;cloudQueue(Math.min(60000,4000*CQ.fails));return;}
       faSyncLog(true,'',_kb,Date.now()-_t0);
       CQ.fails=0;cloudChip(false);
       if(CQ.seq===mySeq){CQ.dirty=false;obClear();}   /* لا تعديل أحدث بالطريق */
     }).catch(function(e){
       CQ.busy=false;
+      if(FA._authLost)return;   /* الجلسة منتهية: نافذة الدخول تكفي، لا شريط ولا إعادة محاولة */
       var _msg=(e&&(e.message||e.code))||String(e);
       faSyncLog(false,_msg,_kb,Date.now()-_t0);
       if(/Failed to fetch|NetworkError|Load failed/i.test(_msg))faProbe(_kb);
@@ -5327,7 +5391,7 @@ window.addEventListener('online',function(){if(CQ.fails||CQ.dirty)cloudQueue(300
    الحل: الجهاز الخامل يجلب أحدث نسخة كل دقيقة بصمت — بشروط صارمة حتى لا
    يقاطع المستخدم: لا تعديل معلّق، لا نافذة مفتوحة، لا كتابة جارية في حقل. */
 function cloudPoll(){
-  if(!FA.enabled||!FA.token||!CU)return;
+  if(!FA.enabled||!FA.token||!CU||FA._authLost)return;
   if(CQ.dirty||CQ.fails||CQ.timer||CQ.busy)return;     /* عنده تعديل بالطريق — لا نلمس */
   if(FA_SYNC.lastErr)return;                           /* آخر حفظ فشل: لا نستبدل نسختنا بنسخة الخادم القديمة */
   if(document.visibilityState!=='visible')return;
@@ -7019,7 +7083,7 @@ function sessRestore(){
     else if(v.sys==='app'&&AT)selT(AT);
     else showTS();
   }catch(e){showTS();}
-  logA('استئناف الجلسة','user','#1565c0');
+  logA('استئناف الجلسة','user','#1565c0',true);   /* بلا رفع للبيانات عند كل فتح للصفحة */
   return true;
 }
 function loginOK(){
@@ -7031,9 +7095,10 @@ function loginOK(){
   g('LS').style.display='none';showTS();
   pinReset();
   try{var _lu=(DB.users||[]).find(function(x){return CU&&x.id===CU.id;});if(_lu){_lu.lastLogin=Date.now();_lu.logins=(_lu.logins||0)+1;}}catch(e){}
-  logA('تسجيل دخول','user','#1565c0');
+  FA._authLost=false;
+  logA('تسجيل دخول','user','#1565c0',true);
 }
-function doLogout(){try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';var ce=g('CE');if(ce)ce.style.display='none';var ad=g('AD');if(ad)ad.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
+function doLogout(){try{if(CQ.timer){clearTimeout(CQ.timer);CQ.timer=null;}if(CQ.dirty&&FA.loadOK&&FA.token&&CU){var _s=cloudState(DB);obWrite(_s,Math.round(JSON.stringify(_s).length/1024));}CQ.dirty=false;CQ.fails=0;var _sf=document.getElementById('sync-fail');if(_sf)_sf.remove();}catch(e){}try{var _na=g('naMod');if(_na)_na.classList.remove('open');NIDFLOW={pid:null,step:0};}catch(e){}ACTBR='';try{sessionStorage.removeItem('fa_actbr');}catch(e){}faWarnClear();sessClear();loadHide();LOGIN_BUSY=false;CU=null;NOTIFS=[];FA.token=null;NTTEAM='';document.body.classList.remove('nt-pick');g('APP').style.display='none';g('TS').style.display='none';var td=g('TD');if(td)td.style.display='none';var nt=g('NT');if(nt)nt.style.display='none';var ce=g('CE');if(ce)ce.style.display='none';var ad=g('AD');if(ad)ad.style.display='none';g('LS').style.display='flex';goBack();g('l-name').value='';welShow();}
 function visibleTournaments(){
   return DB.tournaments.filter(function(t){return t.visible||(CU&&['admin','organizer'].indexOf(CU.role)>-1);});
 }
@@ -25764,7 +25829,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-m3</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.27-s1</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
