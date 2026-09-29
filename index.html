@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.28-l3">
+<meta name="build" content="2026.09.29-x2">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -140,6 +140,40 @@ svg{display:block;flex-shrink:0}
 .lacc{display:flex;align-items:center;gap:.7rem;width:100%;padding:.75rem .9rem;margin-top:.45rem;border-radius:12px;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff;font:600 14px inherit;cursor:pointer;text-align:start}
 .lacc:hover,.lacc:focus{border-color:var(--red);outline:none}
 .lacc .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(221,29,69,.18);color:#fff;font-weight:800;flex:none}
+.sb-cat{margin:2px 0 6px;border:1px dashed rgba(255,255,255,.18)!important}
+.sb-cat .sb-t{display:flex;flex-direction:column;line-height:1.25;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-cat .sb-t small{display:block;font-size:10px;opacity:.6;font-weight:600}
+#td-sbar .sb-cat .sb-t{display:block!important;text-align:start}
+.sb-cat.act{border-style:solid!important;border-color:rgba(221,29,69,.55)!important;color:#fff}
+.sb-cat>svg:last-child{width:12px!important;height:12px!important;opacity:.6;margin-inline-start:auto}
+.tdcat-nl.act{color:var(--red)!important}
+.tdcat-mm b{color:var(--red)}
+.tdcat-chip{display:inline-flex;align-items:center;gap:.35rem;margin-top:.45rem;padding:4px 6px 4px 10px;border-radius:99px;border:1px solid rgba(221,29,69,.4);background:rgba(221,29,69,.08);color:var(--txt);font:600 11.5px inherit;cursor:pointer}
+.tdcat-chip b{color:var(--red)}
+.tdcat-x{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:rgba(221,29,69,.15);color:var(--red)}
+.tdcat-ov{position:fixed;inset:0;z-index:9000;background:rgba(10,12,30,.66);display:flex;align-items:center;justify-content:center;padding:16px;direction:rtl}
+.tdcat-box{background:var(--sur);color:var(--txt);width:100%;max-width:400px;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);max-height:86vh;display:flex;flex-direction:column}
+.tdcat-hd{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.9rem 1rem;background:var(--navy);color:#fff}
+.tdcat-hd b{display:flex;align-items:center;gap:.4rem;font-size:14px}.tdcat-hd small{display:block;color:rgba(255,255,255,.6);font-size:11px;margin-top:2px}
+.tdcat-bd{padding:.6rem;overflow:auto}
+.tdcat-i{display:flex;align-items:center;gap:.7rem;width:100%;padding:.7rem .75rem;margin:.2rem 0;border-radius:12px;border:1.5px solid var(--brd);background:var(--bg);color:var(--txt);font:inherit;text-align:start;cursor:pointer}
+.tdcat-i:hover,.tdcat-i:focus{border-color:var(--red);outline:none}
+.tdcat-i.on{border-color:var(--red);background:rgba(221,29,69,.08)}
+.tdcat-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(221,29,69,.12);color:var(--red);flex:none}
+.tdcat-t{flex:1;min-width:0}.tdcat-t b{display:block;font-size:13.5px}.tdcat-t small{display:block;color:var(--gray);font-size:11px}
+.tdcat-ck{color:var(--red);flex:none}
+.rx-box{background:var(--sur);color:var(--txt);overflow:hidden;width:100%;max-width:640px;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.4);margin:auto 0}
+.rx-hd{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:1rem 1.1rem;background:var(--navy);color:#fff}
+.rx-hd .mclose{position:static;flex:none}
+.rx-hd b{display:flex;align-items:center;gap:.4rem;font-size:15px}.rx-hd small{display:block;color:rgba(255,255,255,.6);font-size:11.5px;margin-top:2px}
+.rx-bd label{color:var(--txt)}
+bdi.ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.rx-bd{padding:1rem 1.1rem 1.2rem}
+.rx-det{border:1px solid var(--brd);border-radius:12px;margin:.5rem 0;background:var(--bg)}
+.rx-det summary{cursor:pointer;padding:.65rem .8rem;font-size:12.5px;font-weight:700;list-style-position:inside}
+.rx-det summary b{background:var(--red);color:#fff;border-radius:99px;padding:0 .5rem;font-size:11px;margin-inline-start:.3rem}
+.rx-list{max-height:260px;overflow:auto;padding:0 .8rem .7rem;font-size:12px;line-height:1.9}
+.rx-list>div{border-top:1px dashed var(--brd);padding:.15rem 0}
 .gdk{display:flex;align-items:center;gap:.7rem;width:100%;padding:.8rem .9rem;margin-top:.5rem;border-radius:12px;border:1.5px solid var(--brd);background:var(--bg);color:var(--txt);font:inherit;text-align:start;cursor:pointer}
 .gdk:hover,.gdk:focus{border-color:var(--red);outline:none}
 .gdk .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#16a34a;color:#fff;font-weight:800;flex:none}
@@ -3622,7 +3656,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.28-l3</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.29-x2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4712,6 +4746,9 @@ function faServerHTML(){
 var FA_SRV_DONE=false;
 function faServerAutoCheck(){
   if(FA_SRV_DONE||!FA.enabled||!CU||CU.role!=='admin')return;FA_SRV_DONE=true;
+  /* الفحص التلقائي مرة كل ٧ أيام لكل جهاز — كل فحص يستدعي الدوال بقيم فارغة فيملأ سجل الأخطاء بالرفض المتوقع.
+     الفحص اليدوي («فحص الآن») متاح دائماً. */
+  try{var _lc=+localStorage.getItem('fa_srvchk')||0;if(Date.now()-_lc<7*86400000)return;localStorage.setItem('fa_srvchk',String(Date.now()));}catch(e){}
   setTimeout(function(){faServerCheck().then(function(rows){
     if(!rows)return;
     var bad=rows.filter(function(r){return r.crit&&r.checked&&r.src==='probe'&&!r.ok;});
@@ -15328,8 +15365,17 @@ var ACL=(function(){
   function players(){
     var r=role(),ps=TDX().players;
     if(r==='admin')return ps;
-    var ids=groups().map(function(x){return x.id;});
-    return ps.filter(function(x){return ids.indexOf(x.groupId)>-1;});
+    var gs=groups(),ids=gs.map(function(x){return x.id;}),keys={},p=me();
+    gs.forEach(function(gp){keys[(gp.catId||'')+'|'+(gp.periodId||'')]=1;});
+    return ps.filter(function(x){
+      if(ids.indexOf(x.groupId)>-1)return true;
+      if(x.groupId&&tdGroup(x.groupId))return false;
+      /* لاعب بلا حصة (من الاستقبال مثلاً): يراه المشرف في فرعه، ومن يغطي فئته في نفس الفترة، أو صاحب الفئة */
+      if(r==='staff'&&p&&inAuthBranch(p,x.branch))return true;
+      if(x.catId&&keys[x.catId+'|'+(x.periodId||'')])return true;
+      if(x.catId&&p&&ownsCat(p,tdCat(x.catId)))return true;
+      return false;
+    });
   }
   function coaches(){
     var r=role(),cs=TDX().coaches;
@@ -15407,16 +15453,25 @@ var ACL=(function(){
   /* ---------- الفرع النشط: كل النطاق يُحصر فيه بعد اختياره ---------- */
   function act(){var a=(typeof TDACT!=='undefined')?TDACT:'';return a&&branches().indexOf(a)>-1?a:'';}
   function branchesA(){var a=act();return a?[a]:branches();}
-  function groupsA(){var a=act(),gs=groups();return a?gs.filter(function(x){return x.branch===a;}):gs;}
-  function catsA(){var a=act(),cs=cats();return a?cs.filter(function(x){return x.branch===a;}):cs;}
-  function playersA(){var a=act(),ps=players();return a?ps.filter(function(x){return x.branch===a;}):ps;}
+  /* النطاق داخل الفرع النشط (قبل فرز الفئة) */
+  function groupsB(){var a=act(),gs=groups();return a?gs.filter(function(x){return x.branch===a;}):gs;}
+  function catsB(){var a=act(),cs=cats();return a?cs.filter(function(x){return x.branch===a;}):cs;}
+  function playersB(){var a=act(),ps=players();return a?ps.filter(function(x){return x.branch===a;}):ps;}
+  /* ---------- الفئة النشطة: فرز كل صفحات النظام على فئة واحدة (أو الكل) ---------- */
+  function actCat(){var c=(typeof TDCATF!=='undefined')?TDCATF:'';if(!c||role()==='player')return '';return catsB().some(function(x){return x.id===c;})?c:'';}
+  function plCat(x){var gp=x.groupId?tdGroup(x.groupId):null;return (gp&&gp.catId)||x.catId||'';}
+  function groupsA(){var c=actCat(),gs=groupsB();return c?gs.filter(function(x){return x.catId===c;}):gs;}
+  function catsA(){var c=actCat(),cs=catsB();return c?cs.filter(function(x){return x.id===c;}):cs;}
+  function playersA(){var c=actCat(),ps=playersB();return c?ps.filter(function(x){return plCat(x)===c;}):ps;}
   function coachesA(){var a=act(),cs=coaches();return a?cs.filter(function(c){return authBranches(c).indexOf(a)>-1||(role()==='coach');}):cs;}
-  function byBranchA(p){var a=act(),o=byBranch(p);return a?o.filter(function(x){return x.branch===a;}):o;}
+  function byBranchA(p){var a=act(),c=actCat(),o=byBranch(p);if(a)o=o.filter(function(x){return x.branch===a;});
+    if(c)o=o.map(function(m){return {branch:m.branch,cats:m.cats.filter(function(x){return x.id===c;}),groups:m.groups.filter(function(x){return x.catId===c;}),players:m.players.filter(function(x){return plCat(x)===c;})};});
+    return o;}
   return {role:role,me:me,can:can,canManage:canManage,
           authBranches:authBranches,allBranches:allBranches,inAuthBranch:inAuthBranch,
           ownsCat:ownsCat,ownsGroup:ownsGroup,
           branches:branchesA,cats:catsA,groups:groupsA,players:playersA,coaches:coachesA,
-          branches0:branches,
+          branches0:branches,cats0:catsB,players0:playersB,catCur:actCat,
           byBranch:byBranchA,seesPlayer:seesPlayer,seesGroup:seesGroup,seesBranch:seesBranch,
           audit:audit,CAPS:CAPS};
 })();
@@ -15691,6 +15746,7 @@ function tdPickBranch(bn){
   if(tdMyBranches().indexOf(bn)<0)return;
   TDACT=bn;TDPICK.force=false;
   try{sessionStorage.setItem('fa_tdbr',bn);}catch(e){}
+  if(TDCATF){var _c=tdCat(TDCATF);if(!_c||_c.branch!==bn){TDCATF='';try{sessionStorage.removeItem('fa_tdcat');}catch(e){}}}
   document.body.classList.remove('td-pick');
   tdApplyHead();
   buildTDNav();tdP(tdRole()==='player'?'plans':'home');
@@ -15806,12 +15862,54 @@ function tdSecOf(pg){
   if(pg==='player'||pg==='coacheval'||pg==='fix')found='data';
   return found;
 }
+/* ================= فرز النظام على فئة (للمدرب/المشرف الذي يغطي أكثر من فئة) ================= */
+var TDCATF='';try{TDCATF=sessionStorage.getItem('fa_tdcat')||'';}catch(e){}
+function tdCatChoices(){
+  var cs=(ACL.cats0?ACL.cats0():tdScopeCats()).slice();
+  return cs.sort(function(a,b){var ya=parseInt(a.year,10)||9999,yb=parseInt(b.year,10)||9999;return ya-yb||String(a.name||'').localeCompare(String(b.name||''),'ar',{numeric:true});});
+}
+function tdCatCur(){var id=ACL.catCur?ACL.catCur():'';return id?tdCat(id):null;}
+function tdCatFLbl(){var c=tdCatCur();return c?tdCatFull(c):'جميع الفئات';}
+function tdCatNavOn(){return tdRole()!=='player'&&tdCatChoices().length>1;}
+function tdCatMenu(ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var cs=tdCatChoices(),cur=ACL.catCur?ACL.catCur():'',ps=ACL.players0?ACL.players0():tdScopePlayers();
+  var cnt=function(id){return ps.filter(function(x){return !id||tdPlCatId(x)===id;}).length;};
+  var bn=g('tdCatPop');
+  if(!bn){bn=document.createElement('div');bn.id='tdCatPop';document.body.appendChild(bn);}
+  bn.setAttribute('role','dialog');bn.setAttribute('aria-modal','true');bn.setAttribute('aria-label','اختيار الفئة');
+  bn.className='tdcat-ov';
+  bn.onclick=function(e){if(e.target===bn)tdCatClose();};
+  var row=function(id,label,sub,on){
+    return '<button type="button" class="tdcat-i'+(on?' on':'')+'" onclick="tdCatSet(\''+id+'\')"'+(on?' aria-current="true"':'')+'>'
+      +'<span class="tdcat-ic">'+ic(id?'list':'grid',15)+'</span><span class="tdcat-t"><b>'+esc(label)+'</b><small>'+sub+'</small></span>'
+      +(on?'<span class="tdcat-ck">'+ic('check',15)+'</span>':'')+'</button>';
+  };
+  var h='<div class="tdcat-box"><div class="tdcat-hd"><div><b>'+ic('filter',15)+' عرض النظام حسب الفئة</b><small>'+esc(tdActLabel())+' — تُفرز كل الصفحات على اختيارك</small></div>'
+    +'<button class="mclose" style="position:static" onclick="tdCatClose()" aria-label="إغلاق">'+ic('x',16)+'</button></div><div class="tdcat-bd">';
+  h+=row('','جميع الفئات',ceN(cs.length)+' فئة • '+ceN(cnt(''))+' لاعب',!cur);
+  cs.forEach(function(c){h+=row(c.id,tdCatFull(c),ceN(cnt(c.id))+' لاعب',cur===c.id);});
+  bn.innerHTML=h+'</div></div>';
+  hydrateIcons(bn);
+  setTimeout(function(){var e=bn.querySelector('.tdcat-i.on')||bn.querySelector('.tdcat-i');if(e)e.focus();},50);
+}
+function tdCatClose(){var m=g('tdCatPop');if(m)m.remove();}
+function tdCatSet(id){
+  TDCATF=id||'';
+  try{if(TDCATF)sessionStorage.setItem('fa_tdcat',TDCATF);else sessionStorage.removeItem('fa_tdcat');}catch(e){}
+  tdCatClose();
+  try{TDPF.cat='';TDPF.group='';}catch(e){}
+  buildTDNav();
+  tdP(TDPAGE==='player'?'players':TDPAGE);
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&g('tdCatPop'))tdCatClose();});
 function buildTDNav(){
   var secs=tdVisibleSections();
   var cur=tdSecOf(TDPAGE);
   g('td-links').innerHTML=secs.map(function(s){
     var on=(s.id===cur)?' on':'';
-    if(s.page)return '<button class="nl'+on+'" data-tdsec="'+s.id+'" onclick="tdP(\''+s.page+'\')">'+s.label+'</button>';
+    if(s.page)return '<button class="nl'+on+'" data-tdsec="'+s.id+'" onclick="tdP(\''+s.page+'\')">'+s.label+'</button>'
+      +(s.page==='home'&&tdCatNavOn()?'<button class="nl tdcat-nl'+(tdCatCur()?' act':'')+'" onclick="tdCatMenu(event)">'+ic('filter',12)+' '+esc(tdCatFLbl())+'</button>':'');
     var items=tdSecItems(s);
     return '<div class="ddw" data-tdsec="'+s.id+'">'
       +'<button class="nl'+on+'" onclick="tdToggleDD(this,event)">'+s.label+' '+ic('chev-d',11)+'</button>'
@@ -15825,6 +15923,7 @@ function buildTDNav(){
     secs.forEach(function(s){
       if(s.page){
         out+='<button class="sb-l'+(TDPAGE===s.page?' on':'')+'" data-pg="'+s.page+'" onclick="tdP(\''+s.page+'\')" title="'+s.label+'"><span class="sb-ic">'+ic(s.ic||'info',17)+'</span><span class="sb-t">'+s.label+'</span></button>';
+        if(s.page==='home'&&tdCatNavOn())out+='<button class="sb-l sb-cat'+(tdCatCur()?' act':'')+'" onclick="tdCatMenu(event)" title="الفئة: '+esc(tdCatFLbl())+'" aria-haspopup="dialog"><span class="sb-ic">'+ic('filter',16)+'</span><span class="sb-t"><small>الفئة</small>'+esc(tdCatFLbl())+'</span>'+ic('chev-d',12)+'</button>';
       }else{
         out+='<div class="sb-g" title="'+s.label+'"><span class="sb-ic">'+ic(s.ic||'info',13)+'</span><span class="sb-t">'+s.label+'</span></div>';
         tdSecItems(s).forEach(function(x){
@@ -15837,7 +15936,8 @@ function buildTDNav(){
   }
   var mm=[];
   secs.forEach(function(s){
-    if(s.page){mm.push('<button class="nl" onclick="tdMP(\''+s.page+'\')">'+s.label+'</button>');}
+    if(s.page){mm.push('<button class="nl" onclick="tdMP(\''+s.page+'\')">'+s.label+'</button>');
+      if(s.page==='home'&&tdCatNavOn())mm.push('<button class="nl tdcat-mm" onclick="g(\'tdmm\').classList.remove(\'open\');tdCatMenu(event)">'+ic('filter',13)+' الفئة: <b>'+esc(tdCatFLbl())+'</b></button>');}
     else{
       mm.push('<div class="mob-sec">'+s.label+'</div>');
       tdSecItems(s).forEach(function(x){mm.push('<button class="nl" style="padding-inline-start:1.4rem" onclick="tdMP(\''+x[0]+'\')">'+x[1]+'</button>');});
@@ -16737,8 +16837,12 @@ function tdPlayerCard(p){
   return '<div class="tdp-card" onclick="tdOpenPlayer(\''+p.id+'\')">'
     +'<div class="tdp-av">'+(p.img?'<img src="'+srcOK(p.img)+'">':esc(ti(p.name)))+'</div>'
     +'<div style="font-weight:700;font-size:13px">'+esc(p.name)+playerBadge(p)+'</div>'
-    +'<div style="font-size:10.5px;color:var(--gray);margin:2px 0 6px">'+esc(p.branch)+' • '+esc(gg?(gg.cat||tdCatName(gg.catId)):(p.cat||'—'))+'</div>'
-    +'<span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span>'
+    +'<div style="font-size:10.5px;color:var(--gray);margin:2px 0 2px">'+esc(p.branch)+' • '+esc(tdPlCatName(p)||'—')+'</div>'
+    +(function(){var pr=tdPlPeriod(p);return pr?'<div style="font-size:10px;color:var(--gray);margin-bottom:5px">'+esc(pr.name)+' • <bdi class="ltr">'+esc(tdPeriodTime(pr))+'</bdi></div>':'<div style="margin-bottom:4px"></div>';})()
+    +'<div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;align-items:center">'
+    +(tdSubChip(p)||'<span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span>')
+    +(tdSubRemain(p)!=null?'<span style="font-size:10px;color:var(--gray)">متبقي <b>'+ceN(tdSubRemain(p))+'</b></span>':'')
+    +'</div>'
   +'</div>';
 }
 /* نموذج إضافة/تعديل لاعب — يُستخدم في الإدارة الفنية وفي الإدارة والمتابعة */
@@ -16748,7 +16852,7 @@ function tdPlayerFormHTML(){
   var fgs=TDPF.edit&&ed?gs:gs;
   h+='<div class="rform" style="max-width:640px;margin-bottom:1.4rem" data-fpg="'+(ed?'تعديل لاعب':'لاعب جديد')+'" data-fpg-ic="user-plus" data-fpg-sub="بيانات اللاعب وتسجيله في الفئة">';
   var edG0=ed?tdGroup(ed.groupId):null;
-  var edCat=edG0?edG0.catId:'';
+  var edCat=edG0?edG0.catId:((ed&&ed.catId)||'');
   var _n=splitName(ed);
   /* شرح أعلى النموذج — ما المطلوب ولماذا */
   var _r=ed?issuesPlayerRanked(ed):null;
@@ -16829,15 +16933,17 @@ function tdPlayerFormWire(){
 function rTDPlayers(){
   var ps=tdScopePlayers(),gs=tdScopeGroups(),brs=tdScopeBranchNames(),m=tdMonthKey();
   if(TDPF.branch)ps=ps.filter(function(x){return x.branch===TDPF.branch;});
-  if(TDPF.cat)ps=ps.filter(function(x){var gg=tdGroup(x.groupId);return gg&&gg.catId===TDPF.cat;});
-  if(TDPF.group)ps=ps.filter(function(x){return x.groupId===TDPF.group;});
+  if(TDPF.cat)ps=ps.filter(function(x){return tdPlCatId(x)===TDPF.cat;});
+  /* «الفترة»: فترة اللاعب الفعلية (من حصته أو من ملفه) */
+  if(TDPF.group)ps=ps.filter(function(x){var pr=tdPlPeriod(x);return pr&&pr.id===TDPF.group;});
   var h=tdHead('users','اللاعبون','الملفات الفنية للاعبين وتصنيف حالاتهم',
-    (tdCanManage()?'<button class="btn btn-r btn-sm" onclick="TDPF.showForm=!TDPF.showForm;TDPF.edit=\'\';rTDPlayers()">'+ic(TDPF.showForm?'x':'plus',13)+' '+(TDPF.showForm?'إغلاق النموذج':'إضافة لاعب')+'</button>':'')
+    (tdRole()==='admin'&&FA.enabled?'<button class="btn btn-o btn-sm" onclick="rxOpen()">'+ic('doc',13)+' استيراد من Excel</button>':'')
+    +(tdCanManage()?'<button class="btn btn-r btn-sm" onclick="TDPF.showForm=!TDPF.showForm;TDPF.edit=\'\';rTDPlayers()">'+ic(TDPF.showForm?'x':'plus',13)+' '+(TDPF.showForm?'إغلاق النموذج':'إضافة لاعب')+'</button>':'')
     +'<span class="pg-chip">'+ps.length+' لاعب</span>');
   /* نموذج إضافة/تعديل */
   if(TDPF.showForm&&tdCanManage())h+=tdPlayerFormHTML();
   /* فلاتر */
-  h+='<div class="frow" style="max-width:760px;margin-bottom:.8rem;grid-template-columns:1fr 1fr 1fr"><div class="fg" style="margin-bottom:0"><label>الفرع</label>'+tdSel('tdpf-branch',brs,TDPF.branch,'كل الفروع')+'</div><div class="fg" style="margin-bottom:0"><label>الفئة</label>'+tdSel('tdpf-cat',tdScopeCats().filter(function(c){return !TDPF.branch||c.branch===TDPF.branch;}).map(function(c){return [c.id,tdCatFull(c)];}),TDPF.cat,'كل الفئات')+'</div><div class="fg" style="margin-bottom:0"><label>الفترة</label>'+tdSel('tdpf-group',gs.filter(function(x){return !TDPF.cat||x.catId===TDPF.cat;}).map(function(x){return [x.id,x.name];}),TDPF.group,'كل الفترات')+'</div></div>';
+  h+='<div class="frow" style="max-width:760px;margin-bottom:.8rem;grid-template-columns:1fr 1fr 1fr"><div class="fg" style="margin-bottom:0"><label>الفرع</label>'+tdSel('tdpf-branch',brs,TDPF.branch,'كل الفروع')+'</div><div class="fg" style="margin-bottom:0"><label>الفئة</label>'+tdSel('tdpf-cat',tdScopeCats().filter(function(c){return !TDPF.branch||c.branch===TDPF.branch;}).map(function(c){return [c.id,tdCatFull(c)];}),TDPF.cat,'كل الفئات')+'</div><div class="fg" style="margin-bottom:0"><label>الفترة</label>'+tdSel('tdpf-group',(function(){var seen={},out=[];tdScopePlayers().forEach(function(x){if(TDPF.branch&&x.branch!==TDPF.branch)return;if(TDPF.cat&&tdPlCatId(x)!==TDPF.cat)return;var pr=tdPlPeriod(x);if(pr&&!seen[pr.id]){seen[pr.id]=1;out.push(pr);}});return out.sort(function(a,b){return tpMin(a.t1)-tpMin(b.t1)||String(a.days||'').localeCompare(String(b.days||''));}).map(function(pr){return [pr.id,tdPeriodName(pr)+' — '+tdPeriodTime(pr)+(TDPF.branch?'':' • '+pr.branch)];});})(),TDPF.group,'كل الفترات')+'</div></div>';
   /* طريقة العرض */
   h+='<div style="margin-bottom:1.1rem">'+tdViewToggle()+'</div>';
   /* الشبكة أو الجدول */
@@ -16859,7 +16965,7 @@ function rTDPlayers(){
       var bp=ps.filter(function(p){return p.branch===b;});
       if(!bp.length)return;
       var bcats=[];
-      bp.forEach(function(p){var gg=tdGroup(p.groupId),cn=gg?(gg.cat||tdCatName(gg.catId)):(p.cat||'');if(cn&&bcats.indexOf(cn)<0)bcats.push(cn);});
+      bp.forEach(function(p){var cn=tdPlCatName(p);if(cn&&bcats.indexOf(cn)<0)bcats.push(cn);});
       h+='<div class="tdbr-sec">'
         +'<div class="tdbr-hd">'+ic('pin',13)+' <span class="tdbr-nm">'+esc(b)+'</span>'
         +'<span class="tdbr-meta">'+bcats.join(' • ')+'</span>'
@@ -16899,7 +17005,9 @@ function tdPlayerIdent(){
 function tdSavePlayer(){
   var id=tdPlayerIdent(),name=id.name,branch=gv('tdp-branch'),cid=gv('tdp-cat');
   /* الحصة هي المرجع: تحمل الفترة والملعب والمدرب. الفئة وحدها لا تكفي. */
-  var gid=gv('tdp-group')||(cid?tdEnsureGroup(cid):'');
+  /* لاعب من الاستقبال له فترة: لا يُسند لحصة فترة أخرى تلقائياً */
+  var _edp=TDPF.edit?tdPlayer(TDPF.edit):null,_ep=(_edp&&_edp.periodId&&tdPlCatId(_edp)===cid)?_edp.periodId:'';
+  var gid=gv('tdp-group')||(cid?(_ep?((TDX().groups.find(function(x){return x.catId===cid&&x.periodId===_ep;})||{}).id||''):tdEnsureGroup(cid)):'');
   if(!name||!branch||!cid){g('tdp-err').textContent='أكمل: اسم اللاعب، الفرع، والفئة';fl('tdp-err');return;}
   var gp=phoneVal('tdp-gphone');
   if(gp&&!phoneOK(gp)){g('tdp-err').textContent='رقم جوال ولي الأمر غير صحيح';fl('tdp-err');return;}
@@ -16918,8 +17026,11 @@ function tdSavePlayer(){
   if(TDPF.edit){
     var p=tdPlayer(TDPF.edit);if(!p)return;
     Object.assign(p,id);
-    p.branch=branch;p.groupId=gid;p.catId=gg?gg.catId:'';p.cat=gg?gg.cat:'';p.pos=gv('tdp-pos');p.foot=gv('tdp-foot');p.dob=gv('tdp-dob');p.status=gv('tdp-status')||'active';p.img=gv('tdp-img');
-    p.sub=tdSubRead();
+    p.branch=branch;p.groupId=gid;p.catId=gg?gg.catId:cid;p.cat=gg?gg.cat:tdCatName(cid);p.pos=gv('tdp-pos');p.foot=gv('tdp-foot');p.dob=gv('tdp-dob');p.status=gv('tdp-status')||'active';p.img=gv('tdp-img');
+    var _ns=tdSubRead();
+    /* اشتراك من الاستقبال: تبقى حالته وتمارينه، ويُحدَّث ما عُدّل في النموذج فقط */
+    p.sub=(p.sub&&p.sub.src)?Object.assign({},p.sub,_ns||{}):_ns;
+    if(gg&&gg.periodId)p.periodId=gg.periodId;
     try{plPushTD(p);}catch(e){console.warn('plPushTD',e);}
     logA('تعديل لاعب (إدارة فنية): '+name,'edit','#1565c0');
   }else{
@@ -16931,6 +17042,479 @@ function tdSavePlayer(){
   sv();TDPF.showForm=false;TDPF.edit='';
   if(TDPF.host==='ad'){TDPF.host='';ADPL.form=false;fpgHide();rADPlayers();addN('تم الحفظ',name,'success');return;}
   rTDPlayers();fl('tdp-ok');
+}
+/* ==========================================================================
+   استيراد اللاعبين من Excel — برنامج التسجيل في الاستقبال
+   --------------------------------------------------------------------------
+   • يقرأ الأعمدة بأسمائها (لا بترتيبها) ويعرض معاينة كاملة قبل أي تغيير.
+   • اللاعب المكرر في الملف (اشتراك قديم + جديد) يُدمج في لاعب واحد بالاشتراك الحالي،
+     ورقم الجوال من الاشتراك الحالي.
+   • الموجود في الموقع (بالجوال + الاسم الأول، أو بالاسم في نفس الفرع) يُحدَّث اشتراكه وفترته وفئته
+     فقط — لا تُمس الهوية ولا الميلاد ولا التقييمات ولا الحضور ولا الحساب.
+   • الاسم الرباعي يُعرض ثلاثياً (بلا اسم الجد)، ويُحفظ الاسم الكامل للمطابقة.
+   • الفترات والفئات الناقصة في الفرع تُنشأ بوقتها وأيامها، والحصة تُسند إن وُجدت حصة واحدة مطابقة.
+   • نسخة احتياطية في الخادم قبل التنفيذ.
+   ========================================================================== */
+var RX={rows:null,file:'',map:{},plan:null,busy:false,err:'',done:null};
+var RX_RANK={'نشط':0,'لم يبدأ بعد':1,'مجمّد':2,'منتهي':3,'ملغي':4};
+var RX_COL={'نشط':'#16a34a','لم يبدأ بعد':'#1565c0','مجمّد':'#d97706','منتهي':'#DD1D45','ملغي':'#8b92b0'};
+function rxKey(s){return coachKey(s).replace(/\s+/g,'');}
+function rxPad(n){return ('0'+n).slice(-2);}
+function rxDigits(v){
+  var t=String(v==null?'':v),ar='٠١٢٣٤٥٦٧٨٩',fa='۰۱۲۳۴۵۶۷۸۹',o='';
+  for(var i=0;i<t.length;i++){var c=t[i],k=ar.indexOf(c);if(k<0)k=fa.indexOf(c);o+=(k>-1?String(k):c);}
+  return o;
+}
+/* حالة الاشتراك بمسمياتها في برنامج الاستقبال */
+function rxStatus(s){
+  var k=rxKey(s);
+  return {'نشط':'نشط','لميبدابعد':'لم يبدأ بعد','مجمد':'مجمّد','منتهي':'منتهي','ملغي':'ملغي'}[k]||'';
+}
+/* الاسم: يُضم «عبد/أبو/بن/آل…» لما بعده و«الله/الدين…» لما قبله، ثم الرباعي فأكثر ← الأول + الأب + العائلة */
+function rxNameParts(full){
+  var raw=String(full||'').replace(/\s+/g,' ').trim().split(' ').filter(Boolean),out=[];
+  var pre=['عبد','ابو','أبو','ابا','أبا','بن','ابن','آل','ال','بو'],suf=['الله','الدين','الرحمن','الرحيم'];
+  for(var i=0;i<raw.length;i++){
+    var w=raw[i];
+    if(pre.indexOf(w)>-1&&i+1<raw.length){out.push(w+' '+raw[i+1]);i++;continue;}
+    if(suf.indexOf(w)>-1&&out.length){out[out.length-1]+=' '+w;continue;}
+    out.push(w);
+  }
+  return out;
+}
+/* الاسم: حروف فقط (تُحذف النقاط والرموز والأرقام الشاردة) */
+function rxCleanName(v){return String(v==null?'':v).replace(/[^\u0621-\u063A\u0641-\u064Aa-zA-Z\s]/g,' ').replace(/\s+/g,' ').trim();}
+function rxShort(full){
+  var p=rxNameParts(full),n=p.length;
+  if(n>=4)return {fn:p[0],mn:p[1],ln:p[n-1],name:[p[0],p[1],p[n-1]].join(' '),cut:true};
+  if(n===3)return {fn:p[0],mn:p[1],ln:p[2],name:p.join(' '),cut:false};
+  if(n===2)return {fn:p[0],mn:'',ln:p[1],name:p.join(' '),cut:false};
+  return {fn:p[0]||'',mn:'',ln:'',name:p[0]||'',cut:false};
+}
+function rxFirstKey(name){var p=rxNameParts(name);return p.length?rxKey(p[0]):'';}
+function rxTriKey(name){var s=rxShort(name);return rxKey(s.name);}
+function rxP9(v){var d=rxDigits(v).replace(/[^0-9]/g,'');d=d.slice(-9);return /^5[0-9]{8}$/.test(d)?d:'';}
+/* التاريخ: رقم Excel التسلسلي أو نص (سنة-شهر-يوم / يوم/شهر/سنة) */
+function rxDate(v,X){
+  if(v===''||v==null)return '';
+  if(typeof v==='number'&&X&&X.SSF){var d=X.SSF.parse_date_code(v);if(!d||!d.y)return '';return d.y+'-'+rxPad(d.m)+'-'+rxPad(d.d);}
+  if(v instanceof Date&&!isNaN(v))return calISO(v);
+  var s=rxDigits(v).trim(),m;
+  if((m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/))){if(validYMD(m[1],m[2],m[3]))return m[1]+'-'+rxPad(+m[2])+'-'+rxPad(+m[3]);return '';}
+  if((m=s.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/))){if(validYMD(m[3],m[2],m[1]))return m[3]+'-'+rxPad(+m[2])+'-'+rxPad(+m[1]);return '';}
+  return '';
+}
+function rxNum(v){if(v===''||v==null)return null;var n=parseInt(rxDigits(v).replace(/[^0-9\-]/g,''),10);return isNaN(n)?null:n;}
+/* الوقت «17:00 - 18:30» أو «5:00 م - 6:30 م» ← 17:00 و 18:30 */
+function rxTimes(s){
+  var t=rxDigits(s).replace(/\s+/g,' '),re=/(\d{1,2}):(\d{2})\s*(ص|م|am|pm|AM|PM)?/g,m,out=[];
+  while((m=re.exec(t))&&out.length<2){
+    var h=+m[1],ap=(m[3]||'').toLowerCase();
+    if((ap==='م'||ap==='pm')&&h<12)h+=12;
+    if((ap==='ص'||ap==='am')&&h===12)h=0;
+    if(h>23||+m[2]>59)continue;
+    out.push(rxPad(h)+':'+m[2]);
+  }
+  return {t1:out[0]||'',t2:out[1]||''};
+}
+/* «الفترة الثالثة ( السبت ، الاثنين ، الاربعاء )» ← الاسم + الأيام */
+function rxPeriod(s){
+  var raw=String(s||'').replace(/\s+/g,' ').trim(),m=raw.match(/^(.*?)\s*\((.*)\)\s*$/);
+  var nm=(m?m[1]:raw).trim(),k=rxKey(raw);
+  nm=nm.replace(/الفتره/g,'الفترة').replace(/الاولى|الأولي|الاولي/g,'الأولى').replace(/\s+/g,' ').trim();
+  var days=/السبت|الاثنين|الاربعاء/.test(k)?'smw':(/الاحد|الثلاثاء|الخميس/.test(k)?'stt':'');
+  return {name:nm,days:days};
+}
+function rxYear(v){var d=rxDigits(v).match(/(19|20)\d\d/);return d?d[0]:'';}
+/* نوع الاشتراك من مدته */
+function rxType(st,en){
+  if(!st||!en)return '';
+  var d=(new Date(en+'T00:00:00')-new Date(st+'T00:00:00'))/86400000,mo=Math.round(d/30.4);
+  return {1:'m',3:'q',6:'h',12:'y'}[mo]||'';
+}
+/* تحميل قارئ Excel عند الحاجة فقط */
+function rxLib(){
+  if(window.XLSX&&window.XLSX.read)return Promise.resolve(window.XLSX);
+  var urls=['https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js','https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'];
+  return new Promise(function(res,rej){
+    var i=0;
+    (function next(){
+      if(i>=urls.length){rej(new Error('تعذّر تحميل قارئ ملفات Excel — تحقق من الإنترنت'));return;}
+      var s=document.createElement('script');s.src=urls[i++];s.async=true;
+      s.onload=function(){if(window.XLSX&&window.XLSX.read)res(window.XLSX);else next();};
+      s.onerror=next;document.head.appendChild(s);
+    })();
+  });
+}
+/* قراءة الملف ← صفوف بأسماء الحقول */
+var RX_HEAD=[
+  ['name',function(k){return k==='اسماللاعب'||k==='الاسم'||k==='اسمالطالب';}],
+  ['phone',function(k){return /^(رقمالجوال|الجوال|جوالوليالامر|رقمجوالوليالامر|رقمالجوالوليالامر)$/.test(k);}],
+  ['branch',function(k){return k==='الفرع';}],
+  ['cat',function(k){return k==='الفيه'||k==='الفئه'||k==='المواليد'||k==='سنهالميلاد';}],
+  ['period',function(k){return k==='الفتره';}],
+  ['time',function(k){return k==='الوقت'||k==='وقتالفتره';}],
+  ['status',function(k){return k==='الاشتراك'||k==='حالهالاشتراك';}],
+  ['start',function(k){return k==='تاريخالبدايه'||k==='بدايهالاشتراك'||k==='تاريخبدايهالاشتراك';}],
+  ['end',function(k){return k==='تاريخالنهايه'||k==='نهايهالاشتراك'||k==='تاريخنهايهالاشتراك';}],
+  ['total',function(k){return k==='اجماليالتمارين';}],
+  ['used',function(k){return k==='التمارينالمستهلكه';}],
+  ['remain',function(k){return k==='التمارينالمتبقيه';}],
+  ['extra',function(k){return /^(التمرين|التمارين)الاضافي/.test(k);}]
+];
+var RX_NEED={name:'اسم اللاعب',phone:'رقم الجوال',branch:'الفرع',cat:'الفئة',period:'الفترة',status:'الاشتراك'};
+function rxParse(wb,X){
+  var ws=wb.Sheets[wb.SheetNames[0]];
+  var a=X.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
+  var hr=-1;
+  for(var i=0;i<Math.min(a.length,15);i++){if((a[i]||[]).some(function(c){return rxKey(c)==='اسماللاعب';})){hr=i;break;}}
+  if(hr<0)throw new Error('لم أجد صف العناوين — تأكد أن في الملف عموداً اسمه «اسم اللاعب»');
+  var col={},head=a[hr];
+  head.forEach(function(c,j){
+    var k=rxKey(c);if(!k)return;
+    RX_HEAD.forEach(function(d){
+      if(!d[1](k))return;
+      if(d[0]==='period'&&col.period!=null){if(col.time==null)col.time=j;return;}   /* عمود «الفترة» الثاني = الوقت */
+      if(col[d[0]]==null)col[d[0]]=j;
+    });
+  });
+  var miss=Object.keys(RX_NEED).filter(function(k){return col[k]==null;}).map(function(k){return RX_NEED[k];});
+  if(miss.length)throw new Error('أعمدة ناقصة في الملف: '+miss.join('، '));
+  var rows=[];
+  for(var r=hr+1;r<a.length;r++){
+    var row=a[r]||[];
+    var v=function(k){return col[k]==null?'':row[col[k]];};
+    if(!String(v('name')||'').trim()&&!String(v('phone')||'').trim())continue;
+    var per=v('period'),tm=col.time!=null?v('time'):per;
+    rows.push({line:r+1,full:rxCleanName(v('name')),phoneRaw:String(v('phone')==null?'':v('phone')).trim(),
+      branchRaw:String(v('branch')||'').replace(/\s+/g,' ').trim(),year:rxYear(v('cat')),catRaw:String(v('cat')||''),
+      per:rxPeriod(per),tm:rxTimes(tm),statusRaw:String(v('status')||'').trim(),
+      start:rxDate(v('start'),X),end:rxDate(v('end'),X),startRaw:v('start'),endRaw:v('end'),
+      total:rxNum(v('total')),used:rxNum(v('used')),remain:rxNum(v('remain')),extra:rxNum(v('extra'))});
+  }
+  if(!rows.length)throw new Error('الملف لا يحتوي صفوف لاعبين');
+  return rows;
+}
+/* ربط اسم الفرع في الملف بفرع الموقع */
+function rxGuessBranch(raw){
+  var k=rxKey(raw),bs=(TDX().branches||[]).map(function(b){return b.name;});
+  var hit=bs.find(function(b){return rxKey(b)===k;});
+  if(hit)return hit;
+  var part=bs.filter(function(b){var bk=rxKey(b);return bk&&(bk.indexOf(k)>-1||k.indexOf(bk)>-1);});
+  if(part.length===1)return part[0];
+  var kk=k.replace(/^فارس/,'');
+  part=bs.filter(function(b){var bk=rxKey(b).replace(/^فارس/,'');return bk&&kk&&(bk===kk||bk.indexOf(kk)>-1||kk.indexOf(bk)>-1);});
+  return part.length===1?part[0]:'';
+}
+/* المعاينة: كل ما سيحدث — بلا أي تغيير على البيانات */
+function rxBuild(){
+  var t=TDX(),rows=RX.rows||[],P={errors:[],warns:[],creates:[],updates:[],merged:[],catsNew:[],periodsNew:[],periodDiff:[],noGroup:0,cut:[],nameMatch:[],phoneKept:[],blocked:false,total:rows.length};
+  /* ١) تحقق كل صف */
+  var good=[];
+  rows.forEach(function(r){
+    var w=[];
+    if(!r.full){P.errors.push('سطر '+r.line+': بلا اسم — تُرك');return;}
+    if(!r.year){P.errors.push('سطر '+r.line+' ('+r.full+'): الفئة غير مفهومة «'+r.catRaw+'» — تُرك');return;}
+    r.status=rxStatus(r.statusRaw);
+    if(!r.status)w.push('حالة الاشتراك غير معروفة «'+r.statusRaw+'»');
+    r.p9=rxP9(r.phoneRaw);
+    if(!r.p9)w.push('رقم الجوال غير صالح «'+r.phoneRaw+'» — يُترك فارغاً');
+    else if(phoneFake('966'+r.p9))w.push('رقم الجوال يبدو وهمياً');
+    if(!r.per.name)w.push('الفترة فارغة');
+    else if(!r.per.days)w.push('أيام الفترة غير مفهومة');
+    if(r.per.name&&!r.tm.t1)w.push('وقت الفترة غير مفهوم');
+    if(String(r.startRaw||'')!==''&&!r.start)w.push('تاريخ البداية غير صحيح');
+    if(String(r.endRaw||'')!==''&&!r.end)w.push('تاريخ النهاية غير صحيح');
+    if(r.start&&r.end&&r.start>r.end)w.push('تاريخ البداية بعد النهاية');
+    if(r.total!=null&&r.used!=null&&r.remain!=null&&r.total!==r.used+r.remain)w.push('التمارين غير متسقة: الإجمالي '+r.total+' ≠ المستهلكة '+r.used+' + المتبقية '+r.remain+' (تُحفظ كما في الملف)');
+    if(w.length)P.warns.push({line:r.line,name:r.full,msgs:w});
+    good.push(r);
+  });
+  /* ٢) دمج المكرر: نفس الاسم الكامل ← لاعب واحد بالاشتراك الحالي */
+  /* نفس اللاعب: نفس الاسم الكامل، أو نفس الجوال + نفس الاسم الثلاثي (مرة كُتب رباعياً ومرة ثلاثياً) */
+  var par=good.map(function(_,i){return i;}),seen={};
+  var root=function(i){while(par[i]!==i){par[i]=par[par[i]];i=par[i];}return i;};
+  good.forEach(function(r,i){
+    [ 'n:'+rxKey(r.full), r.p9?'p:'+r.p9+'|'+rxTriKey(r.full):'' ].forEach(function(k){
+      if(!k)return;
+      if(seen[k]==null)seen[k]=i;else{var a=root(seen[k]),b=root(i);if(a!==b)par[b]=a;}
+    });
+  });
+  var grp={},order=[];
+  good.forEach(function(r,i){var k=root(i);if(!grp[k]){grp[k]=[];order.push(k);}grp[k].push(r);});
+  var recs=order.map(function(k){
+    var list=grp[k].slice().sort(function(a,b){
+      var ra=RX_RANK[a.status]!=null?RX_RANK[a.status]:9,rb=RX_RANK[b.status]!=null?RX_RANK[b.status]:9;
+      if(ra!==rb)return ra-rb;return String(b.start||'').localeCompare(String(a.start||''));
+    });
+    var cur=list[0],rec=Object.assign({},cur);
+    rec.others=list.slice(1);
+    if(rec.others.length)P.merged.push({name:cur.full,keep:cur,drop:rec.others});
+    /* اشتراك قادم: الحالي «نشط» وفي الملف اشتراك «لم يبدأ بعد» بعده */
+    if(cur.status==='نشط'){var nx=rec.others.find(function(o){return o.status==='لم يبدأ بعد'&&o.start&&(!cur.end||o.start>=cur.start);});if(nx)rec.next=nx;}
+    return rec;
+  });
+  /* ٣) الفروع */
+  var braw={};recs.forEach(function(r){braw[r.branchRaw]=1;});
+  P.branches=Object.keys(braw).map(function(b){
+    if(RX.map[b]===undefined)RX.map[b]=rxGuessBranch(b);
+    return {raw:b,to:RX.map[b]||'',n:recs.filter(function(r){return r.branchRaw===b;}).length};
+  });
+  if(P.branches.some(function(b){return !b.to;}))P.blocked=true;
+  /* ٤) الفئات والفترات والحصص — تخطيط فقط */
+  var catPlan={},perPlan={};
+  var catFor=function(bn,y){
+    var key=bn+'|'+y;if(catPlan[key])return catPlan[key];
+    var cs=(t.cats||[]).filter(function(c){return c.branch===bn&&(String(c.year||'')===y||(c.years||[]).map(String).indexOf(y)>-1||(!c.year&&String(c.name||'').indexOf(y)>-1));});
+    var c=cs.find(function(x){return !x.label;})||cs[0];
+    var r=c?{id:c.id,name:c.name,exists:true}:{id:'',name:'مواليد '+y,exists:false,branch:bn,year:y};
+    if(!c)P.catsNew.push(r);
+    catPlan[key]=r;return r;
+  };
+  var perFor=function(bn,pr,tm){
+    if(!pr.name)return null;
+    var key=bn+'|'+rxKey(pr.name)+'|'+pr.days;if(perPlan[key])return perPlan[key];
+    var ex=(t.periods||[]).find(function(p){return p.branch===bn&&rxKey(p.name)===rxKey(pr.name)&&(p.days||'')===pr.days;});
+    var r=ex?{id:ex.id,name:ex.name,days:ex.days,t1:ex.t1,t2:ex.t2,exists:true}:{id:'',name:pr.name,days:pr.days,t1:tm.t1,t2:tm.t2,exists:false,branch:bn};
+    if(ex&&tm.t1&&(ex.t1!==tm.t1||(tm.t2&&ex.t2!==tm.t2)))P.periodDiff.push({branch:bn,name:tdPeriodName(ex),site:tdPeriodTime(ex),file:fmtRange12(tm.t1,tm.t2)});
+    if(!ex)P.periodsNew.push(r);
+    perPlan[key]=r;return r;
+  };
+  /* ٥) المطابقة مع لاعبي الموقع */
+  var used={};
+  recs.forEach(function(r){
+    var bn=RX.map[r.branchRaw]||'';
+    var sh=rxShort(r.full);r.sh=sh;
+    if(sh.cut)P.cut.push({full:r.full,short:sh.name});
+    if(!bn)return;
+    r.bn=bn;r.cat=catFor(bn,r.year);r.per=perFor(bn,r.per,r.tm);
+    var fk=rxFirstKey(r.full),tk=rxKey(sh.name),kk=rxKey(r.full)+'|'+(r.p9||'');
+    var ps=t.players||[],m=null,how='';
+    m=ps.find(function(p){return !used[p.id]&&p.rxKey===kk;});if(m)how='prev';
+    if(!m&&r.p9){
+      var ph=ps.filter(function(p){return !used[p.id]&&(rxP9(p.guardPhone)===r.p9||rxP9(p.guard)===r.p9)&&rxFirstKey(p.name)===fk;});
+      m=ph.find(function(p){return p.branch===bn;})||ph[0]||null;if(m)how='phone';
+    }
+    if(!m){
+      var nm=ps.filter(function(p){return !used[p.id]&&p.branch===bn&&rxTriKey(p.name)===tk;});
+      if(nm.length===1){m=nm[0];how='name';}
+    }
+    if(m){used[m.id]=1;r.match=m;r.how=how;
+      if(how==='name')P.nameMatch.push({file:r.full,site:m.name,phone:m.guardPhone||''});
+      if(r.p9&&rxP9(m.guardPhone)&&rxP9(m.guardPhone)!==r.p9)P.phoneKept.push({name:m.name,site:m.guardPhone,file:'0'+r.p9});
+      P.updates.push(r);
+    }else P.creates.push(r);
+  });
+  /* ٦) الحصة: حصة واحدة مطابقة للفئة والفترة في الفرع */
+  recs.forEach(function(r){
+    if(!r.bn)return;
+    r.groupId='';
+    if(r.cat.id&&r.per&&r.per.id){
+      var gs=(t.groups||[]).filter(function(gp){return gp.branch===r.bn&&gp.catId===r.cat.id&&gp.periodId===r.per.id;});
+      if(gs.length===1)r.groupId=gs[0].id;
+    }
+    if(!r.groupId)P.noGroup++;
+  });
+  P.recs=recs;
+  P.fileRows=rows.length;
+  return P;
+}
+/* اشتراك اللاعب من صف الملف */
+function rxSub(r,at){
+  var s=function(x){return {type:rxType(x.start,x.end),start:x.start||'',end:x.end||'',status:x.status||'',total:x.total,used:x.used,remain:x.remain,extra:x.extra};};
+  var o=s(r);o.src='reception';o.at=at;
+  if(r.next)o.next=s(r.next);
+  return o;
+}
+/* ---------- الواجهة ---------- */
+function rxOpen(){
+  if(tdRole()!=='admin'){alert('الاستيراد متاح لمدير النظام');return;}
+  RX={rows:null,file:'',map:{},plan:null,busy:false,err:'',done:null};
+  var bn=g('rxMod');
+  if(!bn){bn=document.createElement('div');bn.id='rxMod';document.body.appendChild(bn);}
+  bn.setAttribute('role','dialog');bn.setAttribute('aria-modal','true');
+  bn.style.cssText='position:fixed;inset:0;z-index:9000;background:rgba(10,12,30,.72);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto;direction:rtl';
+  rxPaint();
+}
+function rxClose(){var m=g('rxMod');if(m)m.remove();if(RX.done){try{rTDPlayers();}catch(e){}}}
+function rxRow(k,v,col){return '<div class="td-info-row"><span class="k">'+k+'</span><span class="v"'+(col?' style="color:'+col+';font-weight:800"':'')+'>'+v+'</span></div>';}
+function rxList(title,items,open){
+  if(!items.length)return '';
+  return '<details class="rx-det"'+(open?' open':'')+'><summary>'+title+' <b>'+ceN(items.length)+'</b></summary><div class="rx-list">'+items.join('')+'</div></details>';
+}
+function rxPaint(){
+  var bn=g('rxMod');if(!bn)return;
+  var h='<div class="rx-box"><div class="rx-hd"><div><b>'+ic('users',15)+' استيراد لاعبين من Excel</b><small>من برنامج التسجيل في الاستقبال</small></div><button class="mclose" style="position:static" onclick="rxClose()" aria-label="إغلاق">'+ic('x',16)+'</button></div><div class="rx-bd">';
+  if(RX.done){
+    var d=RX.done;
+    h+='<div class="ce2-note ok">'+ic('check',14)+'<div><b>تم الاستيراد</b><br>أُضيف '+ceN(d.created)+' لاعب، وحُدّث '+ceN(d.updated)+' لاعب'
+      +(d.cats?' • فئات جديدة: '+ceN(d.cats):'')+(d.periods?' • فترات جديدة: '+ceN(d.periods):'')+'.'
+      +(d.backup?'<br><small>أُخذت نسخة احتياطية في الخادم قبل الاستيراد.</small>':'')+'</div></div>'
+      +'<button class="btn btn-r" style="width:100%;margin-top:1rem" onclick="rxClose()">عرض اللاعبين</button>';
+    bn.innerHTML=h+'</div></div>';hydrateIcons(bn);return;
+  }
+  if(!RX.rows){
+    h+='<div class="jnote" style="line-height:1.9">'+ic('info',12)+' صدّر الملف من برنامج الاستقبال بصيغة Excel. الأعمدة المطلوبة: <b>اسم اللاعب، رقم الجوال، الفرع، الفئة، الفترة، الاشتراك</b> — والباقي اختياري: الوقت، تاريخ البداية والنهاية، إجمالي التمارين، المستهلكة، المتبقية، الإضافية.<br>لن يتغيّر شيء قبل أن تراجع المعاينة وتضغط «استيراد».</div>'
+      +'<label class="btn btn-r" style="width:100%;margin-top:1rem;min-height:48px;display:flex;align-items:center;justify-content:center;gap:.5rem;cursor:pointer">'+ic('doc',15)+' اختر ملف Excel<input type="file" id="rx-file" accept=".xlsx,.xls,.csv" style="display:none" onchange="rxPick(this)"></label>'
+      +(RX.busy?'<div class="jnote" style="margin-top:.8rem">'+ic('load',12)+' جارٍ قراءة الملف…</div>':'')
+      +(RX.err?'<div class="ce2-note warn" style="margin-top:.8rem">'+ic('info',13)+'<div>'+esc(RX.err)+'</div></div>':'');
+    bn.innerHTML=h+'</div></div>';hydrateIcons(bn);return;
+  }
+  var P=RX.plan=rxBuild();
+  h+='<div style="font-size:12px;color:var(--gray);margin-bottom:.6rem">'+ic('doc',12)+' <bdi>'+esc(RX.file)+'</bdi> — '+ceN(P.fileRows)+' سطر</div>';
+  h+='<div class="ce2-kpis" style="margin-bottom:.9rem">'
+    +ceKpi('users','لاعبون في الملف',ceN(P.recs.length),P.merged.length?ceN(P.merged.length)+' مكرر دُمج':'')
+    +ceKpi('user-plus','جدد',ceN(P.creates.length),'')
+    +ceKpi('refresh','موجودون يُحدَّثون',ceN(P.updates.length),P.nameMatch.length?ceN(P.nameMatch.length)+' منها بالاسم':'')
+    +'</div>';
+  /* الفروع */
+  h+='<div class="sub-head" style="margin:.4rem 0 .5rem"><span class="sh-line"></span><h2 style="font-size:12px">الفرع</h2></div>';
+  var brs=(TDX().branches||[]).map(function(b){return b.name;});
+  P.branches.forEach(function(b,i){
+    h+='<div class="fg"><label>«'+esc(b.raw)+'» في الملف ('+ceN(b.n)+' لاعب) ← فرع الموقع *</label><select onchange="rxMap('+i+',this.value)">'
+      +'<option value="">— اختر الفرع —</option>'+brs.map(function(x){return '<option'+(x===b.to?' selected':'')+'>'+esc(x)+'</option>';}).join('')+'</select></div>';
+  });
+  if(!brs.length)h+='<div class="ce2-note warn">'+ic('info',13)+'<div>لا توجد فروع في الإدارة الفنية — أضف الفرع أولاً.</div></div>';
+  if(!P.blocked){
+    /* الهيكل */
+    var it=[];
+    P.periodsNew.forEach(function(p){it.push('<div>'+ic('clock',11)+' فترة جديدة: <b>'+esc(p.name)+'</b> ('+esc(TDDAYS[p.days]||'أيام غير محددة')+') — <bdi class="ltr">'+esc(fmtRange12(p.t1,p.t2))+'</bdi></div>');});
+    P.catsNew.forEach(function(c){it.push('<div>'+ic('list',11)+' فئة جديدة: <b>'+esc(c.name)+'</b> — '+esc(c.branch)+'</div>');});
+    h+=rxList('يُنشأ في الفرع',it,true);
+    h+=rxList('فترات موجودة بوقت مختلف عن الملف (يبقى وقت الموقع)',P.periodDiff.map(function(x){return '<div><b>'+esc(x.name)+'</b>: الموقع <bdi class="ltr">'+esc(x.site)+'</bdi> • الملف <bdi class="ltr">'+esc(x.file)+'</bdi></div>';}),true);
+    if(P.noGroup)h+='<div class="jnote" style="margin:.6rem 0">'+ic('info',12)+' <b>'+ceN(P.noGroup)+'</b> لاعب بلا حصة (لا توجد حصة واحدة مطابقة لفئته وفترته) — يظهرون في فرعهم وفئتهم وفترتهم، ويراهم مدرب الفئة والمشرف، ويُسندون لحصة لاحقاً.</div>';
+    h+=rxList('أسماء اختُصرت (حُذف اسم الجد)',P.cut.map(function(x){return '<div>'+esc(x.full)+' ← <b>'+esc(x.short)+'</b></div>';}),false);
+    h+=rxList('مكرر في الملف دُمج (بقي الاشتراك الحالي ورقمه)',P.merged.map(function(x){return '<div><b>'+esc(x.name)+'</b>: بقي '+esc(x.keep.status||'—')+' 0'+esc(x.keep.p9||'')+' • دُمج '+x.drop.map(function(o){return esc(o.status||'—')+' 0'+esc(o.p9||'');}).join('، ')+'</div>';}),false);
+    h+=rxList('مطابقة بالاسم فقط (نفس الفرع) — راجعها',P.nameMatch.map(function(x){return '<div>'+esc(x.file)+' ← '+esc(x.site)+(x.phone?' <small dir="ltr">'+esc(phoneDisp(x.phone))+'</small>':'')+'</div>';}),true);
+    h+=rxList('جوال ولي الأمر في الموقع مختلف — بقي رقم الموقع',P.phoneKept.map(function(x){return '<div><b>'+esc(x.name)+'</b>: الموقع <span dir="ltr">'+esc(phoneDisp(x.site))+'</span> • الملف <span dir="ltr">'+esc(x.file)+'</span></div>';}),false);
+    h+=rxList('تنبيهات',P.warns.map(function(w){return '<div>سطر '+w.line+' — <b>'+esc(w.name)+'</b>: '+esc(w.msgs.join(' • '))+'</div>';}),false);
+    h+=rxList('صفوف تُركت',P.errors.map(function(e){return '<div>'+esc(e)+'</div>';}),true);
+    h+='<div class="jnote" style="margin:.8rem 0">'+ic('shield',12)+' رقم الهوية وتاريخ الميلاد ليسا في الملف: يظهر اللاعب بعلامة «بيانات ناقصة» حتى يضيفها المدرب — وقبلها لا يستطيع هو ولا ولي أمره الدخول. الموجودون لا تُمس هوياتهم ولا تقييماتهم ولا حضورهم.</div>';
+  }
+  h+='<button class="btn btn-r" id="rx-go" style="width:100%;min-height:48px" '+(P.blocked||RX.busy||!P.recs.length?'disabled':'')+' onclick="rxApply()">'+ic('check',14)+' '+(RX.busy?'جارٍ الاستيراد…':(P.blocked?'اختر الفرع أولاً':'استيراد '+ceN(P.recs.length)+' لاعب'))+'</button>';
+  h+='<button class="btn btn-g" style="width:100%;margin-top:.5rem" onclick="RX.rows=null;RX.err=\'\';rxPaint()">اختيار ملف آخر</button>';
+  if(RX.err)h+='<div class="ce2-note warn" style="margin-top:.8rem">'+ic('info',13)+'<div>'+esc(RX.err)+'</div></div>';
+  bn.innerHTML=h+'</div></div>';hydrateIcons(bn);
+}
+function rxMap(i,v){var b=RX.plan&&RX.plan.branches[i];if(!b)return;RX.map[b.raw]=v;rxPaint();}
+function rxPick(inp){
+  var f=inp&&inp.files&&inp.files[0];if(!f)return;
+  RX.busy=true;RX.err='';RX.file=f.name;rxPaint();
+  rxLib().then(function(X){
+    return new Promise(function(res,rej){
+      var fr=new FileReader();
+      fr.onerror=function(){rej(new Error('تعذّرت قراءة الملف'));};
+      fr.onload=function(){
+        try{var wb=X.read(new Uint8Array(fr.result),{type:'array'});res(rxParse(wb,X));}
+        catch(e){rej(e&&e.message&&/[؀-ۿ]/.test(e.message)?e:new Error('الملف ليس Excel صالحاً'));}
+      };
+      fr.readAsArrayBuffer(f);
+    });
+  }).then(function(rows){RX.busy=false;RX.rows=rows;rxPaint();})
+    .catch(function(e){RX.busy=false;RX.rows=null;RX.err=(e&&e.message)||'تعذّرت قراءة الملف';rxPaint();});
+}
+function rxApply(){
+  if(RX.busy||!RX.rows)return;
+  if(tdRole()!=='admin')return;
+  RX.busy=true;RX.err='';rxPaint();
+  var go=function(backup){
+    try{
+      var P=rxBuild();   /* يُعاد البناء على أحدث بيانات قبل التنفيذ مباشرة */
+      if(P.blocked){RX.busy=false;RX.err='اختر الفرع أولاً';rxPaint();return;}
+      var t=TDX(),at=Date.now(),catIds={},perIds={},nc=0,np=0;
+      if(!t.periods)t.periods=[];
+      P.catsNew.forEach(function(c){
+        var y=parseInt(c.year,10),id=uid();
+        t.cats.push({id:id,name:c.name,branch:c.branch,year:String(c.year),label:'',grade:'',years:[y,y+1],days:'',coachId:'',color:tdPickColor(c.branch,''),at:at,src:'reception'});
+        c.id=id;nc++;
+      });
+      P.periodsNew.forEach(function(p){
+        var id=uid();
+        t.periods.push({id:id,branch:p.branch,name:p.name,days:p.days,t1:p.t1||'',t2:p.t2||'',active:true,at:at,src:'reception'});
+        p.id=id;np++;
+      });
+      /* الحصة بعد إنشاء الفئات والفترات */
+      P.recs.forEach(function(r){
+        if(!r.bn)return;
+        if(!r.groupId&&r.cat.id&&r.per&&r.per.id){
+          var gs=(t.groups||[]).filter(function(gp){return gp.branch===r.bn&&gp.catId===r.cat.id&&gp.periodId===r.per.id;});
+          if(gs.length===1)r.groupId=gs[0].id;
+        }
+      });
+      var nNew=0,nUp=0;
+      P.recs.forEach(function(r){
+        if(!r.bn)return;
+        var sub=rxSub(r,at),kk=rxKey(r.full)+'|'+(r.p9||''),gph=r.p9?normPhone('0'+r.p9):'';
+        if(r.match){
+          var p=r.match;
+          p.branch=r.bn;p.catId=r.cat.id;p.cat=r.cat.name;p.periodId=r.per?r.per.id:'';
+          if(r.groupId)p.groupId=r.groupId;
+          else if(p.groupId){var og=tdGroup(p.groupId);if(!og||og.catId!==p.catId||(og.periodId&&og.periodId!==p.periodId))p.groupId='';}
+          p.sub=sub;p.fullName=r.full;p.rxKey=kk;p.rxAt=at;
+          if(!rxP9(p.guardPhone)&&gph)p.guardPhone=gph;
+          nUp++;
+        }else{
+          var sh=r.sh;
+          t.players.push({id:uid(),name:sh.name,fullName:r.full,fn:sh.fn,mn:sh.mn,ln:sh.ln,nid:'',nat:'',phone:'',guardPhone:gph,guardName:sh.mn||'',
+            branch:r.bn,groupId:r.groupId||'',catId:r.cat.id,cat:r.cat.name,periodId:r.per?r.per.id:'',pos:'',number:'',foot:'',dob:'',status:'active',dev:'',img:'',idImg:'',
+            sub:sub,notes:[],src:'reception',rxKey:kk,rxAt:at,at:at});
+          nNew++;
+        }
+      });
+      logA('استيراد لاعبين من Excel ('+RX.file+'): '+nNew+' جديد، '+nUp+' تحديث','users','#16a34a');
+      sv();
+      RX.busy=false;RX.done={created:nNew,updated:nUp,cats:nc,periods:np,backup:!!backup};
+      addN('تم الاستيراد',nNew+' لاعب جديد • '+nUp+' تحديث','success');
+      rxPaint();
+    }catch(e){RX.busy=false;RX.err='تعذّر الاستيراد: '+((e&&e.message)||e);rxPaint();}
+  };
+  /* نسخة احتياطية في الخادم أولاً — بدونها لا استيراد */
+  if(!FA.enabled){go(false);return;}
+  var snap=function(){FA.backupNow('قبل استيراد Excel: '+RX.file).then(function(){go(true);})
+    .catch(function(e){RX.busy=false;RX.err='تعذّر أخذ نسخة احتياطية قبل الاستيراد، فلم يُستورد شيء: '+((e&&e.message)||'خطأ');rxPaint();});};
+  if(CQ.dirty||CQ.timer||CQ.busy){cloudQueue(0);setTimeout(snap,2500);}else snap();
+}
+
+/* ---------- عرض الاشتراك والفترة للاعب ---------- */
+function tdPlCatId(p){var gg=p?tdGroup(p.groupId):null;return (gg&&gg.catId)||(p&&p.catId)||'';}
+function tdPlCatName(p){var gg=p?tdGroup(p.groupId):null;if(gg)return gg.cat||tdCatName(gg.catId);var c=p&&p.catId?tdCat(p.catId):null;return c?c.name:((p&&p.cat)||'');}
+function tdPlPeriod(p){var gg=p?tdGroup(p.groupId):null;var id=(gg&&gg.periodId)||(p&&p.periodId)||'';return id?tdPeriod(id):null;}
+/* الحالة بمسميات الاستقبال — وتتقدّم بالتاريخ: «لم يبدأ بعد» ← «نشط» ← «منتهي»؛ «مجمّد» و«ملغي» تبقى */
+function tdSubState(p){
+  var s=p&&p.sub;if(!s||(!s.start&&!s.end&&!s.status))return null;
+  var today=calISO(new Date()),cur=s,nx=s.next||null;
+  if(nx&&nx.start&&today>=nx.start&&s.status!=='ملغي'){cur=nx;nx=null;}
+  var st=cur.status||'';
+  if(!st)st=cur.start&&today<cur.start?'لم يبدأ بعد':(cur.end&&today>cur.end?'منتهي':'نشط');
+  else if(st==='لم يبدأ بعد'&&cur.start&&today>=cur.start)st=(cur.end&&today>cur.end)?'منتهي':'نشط';
+  else if(st==='نشط'&&cur.end&&today>cur.end)st='منتهي';
+  return {status:st,cur:cur,next:nx,src:s.src||'',at:s.at||0};
+}
+function tdSubChip(p){
+  var s=tdSubState(p);if(!s)return '';
+  return '<span class="tdsub" style="--sc:'+(RX_COL[s.status]||'var(--gray)')+'">'+esc(s.status)+'</span>';
+}
+function tdSubRemain(p){var s=tdSubState(p);return s&&s.cur.remain!=null?s.cur.remain:null;}
+function tdSubRowsHTML(p){
+  var s=tdSubState(p);
+  if(!s)return rxRow('الاشتراك','—');
+  var c=s.cur,d=function(x){return x?'<span style="direction:ltr;display:inline-block">'+esc(x)+'</span>':'—';},n=function(x){return x==null?'—':ceN(x);};
+  var h=rxRow('حالة الاشتراك',tdSubChip(p)+(s.status==='نشط'?' '+tdSubBadge({sub:c}):''));
+  if(c.type&&TDSUB[c.type])h+=rxRow('نوع الاشتراك',esc(TDSUB[c.type]));
+  h+=rxRow('تاريخ البداية',d(c.start))+rxRow('تاريخ النهاية',d(c.end));
+  if(c.total!=null||c.remain!=null){
+    h+=rxRow('التمارين المتبقية','<b>'+n(c.remain)+'</b>');
+    h+=rxRow('إجمالي التمارين',n(c.total))+rxRow('التمارين المستهلكة',n(c.used))+rxRow('التمرين الإضافي',n(c.extra));
+  }
+  if(s.next)h+=rxRow('الاشتراك القادم',d(s.next.start)+' ← '+d(s.next.end)+(s.next.total!=null?' • '+ceN(s.next.total)+' تمرين':''));
+  if(s.src==='reception')h+='<div style="font-size:10.5px;color:var(--gray);padding:.35rem 0">'+ic('info',10)+' من برنامج الاستقبال — آخر تحديث '+(s.at?new Date(s.at).toLocaleDateString(locale()):'—')+'</div>';
+  return h;
+}
+function tdMissingNote(p){
+  if(!p)return '';
+  var m=[];if(!normNid(p.nid))m.push('رقم الهوية');if(!p.dob)m.push('تاريخ الميلاد');
+  if(!m.length)return '';
+  return '<div class="ce2-note warn" style="margin:.8rem 0 0">'+ic('info',13)+'<div><b>بيانات ناقصة: '+m.join(' • ')+'</b><br><small>بدونها لا يستطيع اللاعب ولا ولي أمره الدخول. أضفها من «تعديل».</small></div></div>';
 }
 function tdOpenPlayer(id){TDPV=id;tdP('player');}
 function tdEditPlayer(id){TDPF.showForm=true;TDPF.edit=id;tdP('players');}
@@ -16976,15 +17560,20 @@ function rTDPlayerProfile(){
       +ic('trophy',13)+' البطولات'+(tl.length?' <b>'+tl.length+'</b>':'')+'</button>';
   })();
   h+='<div style="margin:.35rem 0"><span class="pstat '+(p.status||'active')+'">'+TDPST[p.status||'active']+'</span></div>';
-  h+='<div style="font-size:11.5px;color:var(--gray)">'+esc(p.branch)+' • '+esc(gg?(gg.cat||tdCatName(gg.catId)):'—')+' • '+esc(gg?gg.name:'—')+'</div></div>';
+  var _pr=tdPlPeriod(p);
+  h+='<div style="font-size:11.5px;color:var(--gray)">'+esc(p.branch)+' • '+esc(tdPlCatName(p)||'—')+' • '+esc(_pr?_pr.name:(gg?gg.name:'—'))+'</div></div>';
   if(tdCanManage())h+='<div style="display:flex;gap:.4rem;flex-wrap:wrap"><button class="btn btn-o btn-sm" onclick="tdEditPlayer(\''+p.id+'\')">'+ic('edit',12)+' تعديل</button>'+(tdRole()==='admin'?'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="tdDelPlayer(\''+p.id+'\')">'+ic('trash',12)+' حذف</button>':'')+'</div>';
   h+='</div>';
   h+='<div style="margin-top:1rem">';
   h+='<div class="td-info-row"><span class="k">المدرب المسؤول</span><span class="v">'+esc(coach?coach.name:'—')+'</span></div>';
+  h+='<div class="td-info-row"><span class="k">جوال ولي الأمر</span><span class="v" style="direction:ltr">'+esc(p.guardPhone?phoneDisp(p.guardPhone):'—')+'</span></div>';
+  h+='<div class="td-info-row"><span class="k">الفترة</span><span class="v">'+(_pr?esc(tdPeriodName(_pr))+' <small style="color:var(--gray)"><bdi class="ltr">'+esc(tdPeriodTime(_pr))+'</bdi></small>':'—')+'</span></div>';
   h+='<div class="td-info-row"><span class="k">المركز</span><span class="v">'+esc(p.pos||'—')+'</span></div>';
   h+='<div class="td-info-row"><span class="k">القدم المفضلة</span><span class="v">'+esc(p.foot||'—')+'</span></div>';
   h+='<div class="td-info-row"><span class="k">تاريخ الميلاد</span><span class="v" style="direction:ltr">'+esc(p.dob||'—')+'</span></div>';
-  h+='<div class="td-info-row"><span class="k">أيام التدريب</span><span class="v">'+(gg?TDDAYS[gg.days]||'—':'—')+'</span></div>';
+  h+='<div class="td-info-row"><span class="k">أيام التدريب</span><span class="v">'+((_pr&&TDDAYS[_pr.days])||(gg&&TDDAYS[tdSlotDays(gg)])||'—')+'</span></div>';
+  h+='<div class="sub-head" style="margin:.9rem 0 .3rem"><span class="sh-line"></span><h2 style="font-size:12px">الاشتراك</h2></div>'+tdSubRowsHTML(p);
+  h+=tdMissingNote(p);
   h+='<div class="td-info-row" style="border-bottom:none"><span class="k">مستوى التطور</span><span class="v">'+esc(p.dev||'—')+' '+(tdRole()!=='staff'?'<button class="btn btn-g btn-sm" style="padding:3px 9px;font-size:10px" onclick="tdSetDev(\''+p.id+'\')">تحديث</button>':'')+'</span></div>';
   h+='</div>';
   if(tdCanManage()){
@@ -18312,8 +18901,11 @@ var TD_EB={home:'الإدارة الفنية',branches:'البيانات الأ�
 function tdHead(icn,title,sub,actions){
   var inNT=(g('NT')&&g('NT').style.display==='block');
   var eb=inNT?(NT_EB[NTPAGE]||'منتخب فارس'):(TD_EB[TDPAGE]||'');
+  var _cf=(!inNT&&typeof tdCatCur==='function'&&tdRole()!=='player')?tdCatCur():null;
   return '<div class="pg-head"><div class="pg-ic">'+ic(icn,21)+'</div>'
-    +'<div class="pg-tx">'+(eb?'<div class="pg-eb">'+esc(eb)+'</div>':'')+'<h1>'+title+'</h1>'+(sub?'<p>'+sub+'</p>':'')+'</div>'
+    +'<div class="pg-tx">'+(eb?'<div class="pg-eb">'+esc(eb)+'</div>':'')+'<h1>'+title+'</h1>'+(sub?'<p>'+sub+'</p>':'')
+    +(_cf?'<button type="button" class="tdcat-chip" onclick="tdCatMenu(event)" title="تغيير الفئة">'+ic('filter',11)+' تعرض فئة: <b>'+esc(tdCatFull(_cf))+'</b><span class="tdcat-x" role="button" aria-label="عرض جميع الفئات" onclick="event.stopPropagation();tdCatSet(\'\')">'+ic('x',11)+'</span></button>':'')
+    +'</div>'
     +(actions?'<div class="pg-act">'+actions+'</div>':'')+'</div>';
 }
 function tdSubHead(title,extra){
@@ -23268,23 +23860,21 @@ function tdViewToggle(){
 }
 function tdPlayersTable(list){
   var h='<div class="at-wrap"><table class="at"><thead><tr>'
-    +'<th>اللاعب</th><th>الفئة</th><th>الفترة</th><th>المدرب</th><th>الأيام والوقت</th><th>الملعب</th><th>الاشتراك</th><th>الحالة</th>'
+    +'<th>اللاعب</th><th>جوال ولي الأمر</th><th>الفئة</th><th>الفترة</th><th>الاشتراك</th><th>التمارين المتبقية</th><th>المدرب</th><th>الملعب</th><th>الحالة</th>'
     +'</tr></thead><tbody>';
   list.forEach(function(p){
-    var gg=tdGroup(p.groupId),co=gg?tdCoach(gg.coachId):null,c=gg?tdCat(gg.catId):null;
-    var dt=[];
-    var _d=gg?tdSlotDays(gg):'';
-    if(_d&&TDDAYS[_d])dt.push(TDDAYS[_d]);
-    var _tm=gg?tdSlotTime(gg):'—';
-    if(_tm&&_tm!=='—')dt.push(_tm);
+    var gg=tdGroup(p.groupId),co=gg?tdCoach(gg.coachId):null,c=tdCat(tdPlCatId(p)),pr=tdPlPeriod(p);
+    var st=tdSubState(p),rm=tdSubRemain(p);
+    var prDays=pr?(TDDAYS[pr.days]||''):(gg?(TDDAYS[tdSlotDays(gg)]||''):''),prTime=pr?tdPeriodTime(pr):(gg?tdSlotTime(gg):'');
     h+='<tr style="cursor:pointer" onclick="tdOpenPlayer(\''+p.id+'\')">';
     h+='<td style="font-weight:700">'+esc(p.name)+playerBadge(p)+'</td>';
+    h+='<td style="direction:ltr;font-size:11px;white-space:nowrap">'+esc(p.guardPhone?phoneDisp(p.guardPhone):'—')+'</td>';
     h+='<td>'+esc(c?tdCatFull(c):(p.cat||'—'))+'</td>';
-    h+='<td>'+esc(gg?gg.name:'—')+'</td>';
+    h+='<td>'+esc(pr?pr.name:(gg?gg.name:'—'))+((prDays||prTime)&&prTime!=='—'?'<div style="font-size:10px;color:var(--gray)">'+esc(prDays)+(prDays&&prTime?' • ':'')+(prTime?'<bdi class="ltr">'+esc(prTime)+'</bdi>':'')+'</div>':'')+'</td>';
+    h+='<td>'+(st?tdSubChip(p)+(st.status==='نشط'?' '+tdSubBadge({sub:st.cur}):''):'<span style="color:var(--gray);font-size:10.5px">—</span>')+'</td>';
+    h+='<td style="text-align:center;font-weight:700">'+(rm!=null?ceN(rm):'<span style="color:var(--gray);font-weight:400">—</span>')+'</td>';
     h+='<td>'+esc(co?co.name:'—')+'</td>';
-    h+='<td style="font-size:10.5px">'+esc(dt.join(' • ')||'—')+'</td>';
     h+='<td style="font-size:10.5px">'+esc(gg&&gg.pitchId?tdPitchLabel(gg.branch,gg.pitchId):'—')+'</td>';
-    h+='<td>'+(tdSubBadge(p)||'<span style="color:var(--gray);font-size:10.5px">—</span>')+'</td>';
     h+='<td><span class="pstat '+(p.status||'active')+'">'+(TDPST[p.status||'active']||'')+'</span></td>';
     h+='</tr>';
   });
@@ -24997,7 +25587,7 @@ function adPlayerProfileHTML(id){
   h+='<div class="adpl-hero"><div class="adpl-hero-av"'+(p.img?' onclick="adPlImg(\''+p.id+'\',\'img\')" style="cursor:zoom-in"':'')+'>'+(p.img?'<img src="'+srcOK(p.img)+'">':esc(ti(p.name||'؟')))+'</div>';
   h+='<div class="adpl-hero-tx"><h2>'+esc(p.name||'—')+' '+playerBadge(p)+'</h2>';
   h+='<div class="adpl-hero-meta">'+(br?ic('pin',12)+' '+esc(br):'<span class="badge rejected">بدون فرع</span>')+(gg?' • '+esc(gg.cat||tdCatName(gg.catId))+' • '+esc(gg.name):'')+(adPlYear(p)?' • مواليد '+esc(adPlYear(p)):'')+'</div>';
-  h+='<div class="adpl-hero-badges"><span class="pstat '+(p.status||'active')+'">'+(TDPST[p.status||'active']||'')+'</span>'+adPlAccBadge(p)+(p.sub&&p.sub.type?tdSubBadge(p):'')+'</div></div>';
+  h+='<div class="adpl-hero-badges"><span class="pstat '+(p.status||'active')+'">'+(TDPST[p.status||'active']||'')+'</span>'+adPlAccBadge(p)+tdSubChip(p)+'</div></div>';
   h+='<div class="adpl-hero-acts"><button class="btn btn-r btn-sm" onclick="adEditPlayer(\''+p.id+'\')">'+ic('edit',12)+' تعديل</button>'
     +'<button class="btn btn-o btn-sm" onclick="ptOpen(\''+p.id+'\',\'td\')">'+ic('trophy',12)+' البطولات'+(function(){var tl=playerTournaments(p);return tl.length?' <b>'+ceN(tl.length)+'</b>':'';})()+'</button>'
     +'<button class="btn btn-g btn-sm" onclick="adPlToTD(\''+p.id+'\')">'+ic('external',12)+' في الإدارة الفنية</button></div></div>';
@@ -25040,7 +25630,7 @@ function adPlayerProfileHTML(id){
   h+='<div class="td-info-row"><span class="k">المركز</span><span class="v">'+esc(p.pos||'—')+(p.number?' • رقم '+esc(p.number):'')+'</span></div>';
   h+='<div class="td-info-row"><span class="k">القدم المفضلة</span><span class="v">'+esc(p.foot||'—')+'</span></div>';
   h+='<div class="td-info-row"><span class="k">منتخب فارس</span><span class="v">'+(nm?'<span class="badge approved">'+esc(ntSqName(nm.squadId))+'</span>':(p.status==='nom'?'<span class="badge pending">مرشح</span>':'—'))+'</span></div>';
-  h+='<div class="td-info-row"><span class="k">الاشتراك</span><span class="v">'+(p.sub&&p.sub.type?(TDSUB[p.sub.type]||'')+' '+tdSubBadge(p):'—')+'</span></div>';
+  h+=tdSubRowsHTML(p);
   h+='<div class="td-info-row" style="border-bottom:none"><span class="k">مستوى التطور</span><span class="v">'+esc(p.dev||'—')+'</span></div>';
   h+='</div>';
   h+='</div>';
@@ -26848,7 +27438,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.28-l3</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.29-x2</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
