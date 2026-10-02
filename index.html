@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.09.30-n2">
+<meta name="build" content="2026.10.02-r1">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3545,6 +3545,33 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
   .at-wrap{overflow:visible!important}
   body{background:#fff!important;color:#000!important}
 }
+
+/* ===== التقارير الفنية ===== */
+.ntr-tabs{display:flex;gap:.4rem;margin:-.2rem 0 1rem;flex-wrap:wrap}
+.ntr-tab{background:var(--sur2);border:1px solid var(--brd);color:var(--txt);padding:.45rem .9rem;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.ntr-tab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ntr-list{display:flex;flex-direction:column;gap:.55rem}
+.ntr-card{display:flex;gap:.7rem;align-items:center;background:var(--sur);border:1px solid var(--brd);border-radius:14px;padding:.75rem .9rem;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.ntr-card:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(24,25,70,.08)}
+.ntr-card.late{border-color:rgba(221,29,69,.45)}
+.ntr-ic{width:38px;height:38px;border-radius:11px;background:rgba(21,101,192,.1);color:#1565c0;display:flex;align-items:center;justify-content:center;flex:none}
+.ntr-main{flex:1;min-width:0}.ntr-main b{display:block;font-size:13px}
+.ntr-sub{font-size:11px;color:var(--gray);margin-top:2px}
+.ntr-side{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}.ntr-side small{font-size:10.5px;color:var(--gray);display:flex;gap:3px;align-items:center}
+.ntr-secs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.7rem;margin-top:.9rem}
+.ntr-sec{background:var(--sur2);border-radius:12px;padding:.7rem .85rem}
+.ntr-sec-t{font-size:11.5px;font-weight:800;color:var(--txt);opacity:.8;display:flex;align-items:center;gap:5px}.ntr-sec-t svg{color:var(--red)}
+.ntr-sec-b{font-size:12.5px;line-height:1.8;margin-top:.3rem;white-space:normal}
+.ntr-fl{display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0 .7rem}
+.ntr-f{display:flex;align-items:center;gap:.5rem;background:var(--sur2);border:1px solid var(--brd);border-radius:10px;padding:.35rem .55rem;font-size:11.5px;color:var(--txt);text-decoration:none;max-width:260px}
+.ntr-f img{width:36px;height:36px;object-fit:cover;border-radius:7px}
+.ntr-fic{width:36px;height:36px;border-radius:7px;background:rgba(221,29,69,.1);color:var(--red);display:flex;align-items:center;justify-content:center;flex:none}
+.ntr-fn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;unicode-bidi:isolate}
+.ntr-tl{display:flex;flex-direction:column;gap:.5rem;position:relative;padding-inline-start:.2rem}
+.ntr-tli{display:flex;gap:.6rem;align-items:flex-start;font-size:12px}.ntr-tli small{display:block;color:var(--gray);font-size:10.5px}
+.ntr-tld{width:22px;height:22px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;margin-top:1px}
+.tdpf-row{grid-template-columns:repeat(4,1fr)}
+@media(max-width:760px){.tdpf-row{grid-template-columns:1fr 1fr}.ntr-card{flex-wrap:wrap}.ntr-side{flex-direction:row;width:100%;justify-content:space-between}}
 </style>
 <script>
 /* ===== شبكة أمان مبكرة: تعمل حتى لو فشل السكربت الرئيسي ===== */
@@ -3683,7 +3710,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.09.30-n2</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.02-r1</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4855,6 +4882,23 @@ var FA={
   },
   /* ===== تخزين الصور خارج قاعدة البيانات ===== */
   BUCKET:'images',
+  /* يرفع ملفاً (PDF مثلاً) كبايتات ويُرجع رابطه العام */
+  uploadFile:function(bytes,folder,fname,mime){
+    var self=this;
+    if(!self.enabled||!self.sb)return Promise.reject(new Error('no-cloud'));
+    if(!bytes||!bytes.length)return Promise.reject(new Error('empty'));
+    var ext=(String(fname||'').match(/\.([a-z0-9]{1,5})$/i)||[])[1]||'bin';
+    var name=(folder||'files')+'/'+Date.now().toString(36)+Math.random().toString(36).slice(2,10)+'.'+ext.toLowerCase();
+    return self.sb.storage.from(self.BUCKET)
+      .upload(name,bytes,{contentType:mime||'application/octet-stream',cacheControl:'31536000',upsert:false})
+      .then(function(r){
+        if(r.error)throw r.error;
+        var u=self.sb.storage.from(self.BUCKET).getPublicUrl(name);
+        var url=u&&u.data&&u.data.publicUrl;
+        if(!url)throw new Error('no-url');
+        return url;
+      });
+  },
   /* يرفع صورة base64 ويُرجع رابطها العام */
   uploadImage:function(dataUrl,folder){
     var self=this;
@@ -16296,7 +16340,7 @@ function tdAlerts(){
   });
   return out;
 }
-function tdAlertHTML(a){return '<div class="alert-item"><div class="aic" style="color:'+a.cl+'">'+ic(a.ic,15)+'</div><div style="flex:1">'+esc(a.txt)+'</div></div>';}
+function tdAlertHTML(a){return '<div class="alert-item"'+(a.page?' style="cursor:pointer" onclick="ntP(\''+a.page+'\')"':'')+'><div class="aic" style="color:'+a.cl+'">'+ic(a.ic,15)+'</div><div style="flex:1">'+esc(a.txt)+'</div>'+(a.page?ic('chev-l',12):'')+'</div>';}
 function tdStat(n,label,page,color){
   var go=page&&tdAllowed(page);
   return '<div class="astat'+(go?' click':'')+'"'+(go?' onclick="tdP(\''+page+'\')" title="فتح صفحة '+label+'"':'')+'><div class="n"'+(color?' style="color:'+color+'"':'')+'>'+n+'</div><div class="l">'+label+'</div></div>';
@@ -16717,7 +16761,7 @@ function tdBrPDF(b){
 }
 
 /* ================= اللاعبون ================= */
-var TDPF={branch:'',cat:'',group:'',showForm:false,edit:'',host:''};
+var TDPF={branch:'',cat:'',group:'',sub:'',showForm:false,edit:'',host:''};
 /* ================= إكمال بيانات اللاعبين =================
    جدول بتحرير مباشر في الصف — لتصحيح الأرقام والهويات بسرعة.
    لا يحذف أي لاعب ولا يخفيه؛ يعرض النقص ويسمح بإصلاحه في مكانه. */
@@ -16970,6 +17014,7 @@ function rTDPlayers(){
   if(TDPF.cat)ps=ps.filter(function(x){return tdPlCatId(x)===TDPF.cat;});
   /* «الفترة»: فترة اللاعب الفعلية (من حصته أو من ملفه) */
   if(TDPF.group)ps=ps.filter(function(x){var pr=tdPlPeriod(x);return pr&&pr.id===TDPF.group;});
+  if(TDPF.sub)ps=ps.filter(function(x){return tdSubFilterOK(x,TDPF.sub);});
   var h=tdHead('users','اللاعبون','الملفات الفنية للاعبين وتصنيف حالاتهم',
     (tdRole()==='admin'&&FA.enabled?'<button class="btn btn-o btn-sm" onclick="rxOpen()">'+ic('doc',13)+' استيراد من Excel</button>':'')
     +(tdCanManage()?'<button class="btn btn-r btn-sm" onclick="TDPF.showForm=!TDPF.showForm;TDPF.edit=\'\';rTDPlayers()">'+ic(TDPF.showForm?'x':'plus',13)+' '+(TDPF.showForm?'إغلاق النموذج':'إضافة لاعب')+'</button>':'')
@@ -16977,7 +17022,7 @@ function rTDPlayers(){
   /* نموذج إضافة/تعديل */
   if(TDPF.showForm&&tdCanManage())h+=tdPlayerFormHTML();
   /* فلاتر */
-  h+='<div class="frow" style="max-width:760px;margin-bottom:.8rem;grid-template-columns:1fr 1fr 1fr"><div class="fg" style="margin-bottom:0"><label>الفرع</label>'+tdSel('tdpf-branch',brs,TDPF.branch,'كل الفروع')+'</div><div class="fg" style="margin-bottom:0"><label>الفئة</label>'+tdSel('tdpf-cat',tdScopeCats().filter(function(c){return !TDPF.branch||c.branch===TDPF.branch;}).map(function(c){return [c.id,tdCatFull(c)];}),TDPF.cat,'كل الفئات')+'</div><div class="fg" style="margin-bottom:0"><label>الفترة</label>'+tdSel('tdpf-group',(function(){var seen={},out=[];tdScopePlayers().forEach(function(x){if(TDPF.branch&&x.branch!==TDPF.branch)return;if(TDPF.cat&&tdPlCatId(x)!==TDPF.cat)return;var pr=tdPlPeriod(x);if(pr&&!seen[pr.id]){seen[pr.id]=1;out.push(pr);}});return out.sort(function(a,b){return tpMin(a.t1)-tpMin(b.t1)||String(a.days||'').localeCompare(String(b.days||''));}).map(function(pr){return [pr.id,tdPeriodName(pr)+' — '+tdPeriodTime(pr)+(TDPF.branch?'':' • '+pr.branch)];});})(),TDPF.group,'كل الفترات')+'</div></div>';
+  h+='<div class="frow tdpf-row" style="max-width:1000px;margin-bottom:.8rem"><div class="fg" style="margin-bottom:0"><label>الفرع</label>'+tdSel('tdpf-branch',brs,TDPF.branch,'كل الفروع')+'</div><div class="fg" style="margin-bottom:0"><label>الفئة</label>'+tdSel('tdpf-cat',tdScopeCats().filter(function(c){return !TDPF.branch||c.branch===TDPF.branch;}).map(function(c){return [c.id,tdCatFull(c)];}),TDPF.cat,'كل الفئات')+'</div><div class="fg" style="margin-bottom:0"><label>الفترة</label>'+tdSel('tdpf-group',(function(){var seen={},out=[];tdScopePlayers().forEach(function(x){if(TDPF.branch&&x.branch!==TDPF.branch)return;if(TDPF.cat&&tdPlCatId(x)!==TDPF.cat)return;var pr=tdPlPeriod(x);if(pr&&!seen[pr.id]){seen[pr.id]=1;out.push(pr);}});return out.sort(function(a,b){return tpMin(a.t1)-tpMin(b.t1)||String(a.days||'').localeCompare(String(b.days||''));}).map(function(pr){return [pr.id,tdPeriodName(pr)+' — '+tdPeriodTime(pr)+(TDPF.branch?'':' • '+pr.branch)];});})(),TDPF.group,'كل الفترات')+'</div>'+tdSubFilterSel('tdpf-sub',TDPF.sub)+'</div>';
   /* طريقة العرض */
   h+='<div style="margin-bottom:1.1rem">'+tdViewToggle()+'</div>';
   /* الشبكة أو الجدول */
@@ -17019,6 +17064,7 @@ function rTDPlayers(){
   var fb=g('tdpf-branch');if(fb)fb.onchange=function(){TDPF.branch=this.value;TDPF.cat='';TDPF.group='';rTDPlayers();};
   var fc=g('tdpf-cat');if(fc)fc.onchange=function(){TDPF.cat=this.value;TDPF.group='';rTDPlayers();};
   var fg2=g('tdpf-group');if(fg2)fg2.onchange=function(){TDPF.group=this.value;rTDPlayers();};
+  var fs2=g('tdpf-sub');if(fs2)fs2.onchange=function(){TDPF.sub=this.value;rTDPlayers();};
   hydrateIcons(g('tdc-players'));
   /* النموذج يُنقل لصفحة مستقلة */
   fpgAdopt(g('tdc-players'),function(){TDPF.showForm=false;TDPF.edit='';rTDPlayers();});
@@ -17650,6 +17696,11 @@ function tdSubChip(p){
   return '<span class="tdsub" style="--sc:'+(RX_COL[s.status]||'var(--gray)')+'">'+esc(s.status)+'</span>';
 }
 function tdSubRemain(p){var s=tdSubState(p);return s&&s.cur.remain!=null?s.cur.remain:null;}
+/* فرز الاشتراك — يرافق أي فرز للاعبين في الإدارة الفنية والمنتخب */
+var SUBF_OPTS=[['نشط','نشط'],['لم يبدأ بعد','لم يبدأ بعد'],['مجمّد','مجمّد'],['منتهي','منتهي'],['ملغي','ملغي'],['none','بلا اشتراك']];
+function tdSubKey(p){var s=tdSubState(p);return s?s.status:'none';}
+function tdSubFilterOK(p,v){return !v||tdSubKey(p)===v;}
+function tdSubFilterSel(id,cur){return '<div class="fg" style="margin-bottom:0"><label>الاشتراك</label>'+tdSel(id,SUBF_OPTS,cur||'','كل الاشتراكات')+'</div>';}
 function tdSubRowsHTML(p){
   var s=tdSubState(p);
   if(!s)return rxRow('الاشتراك','—');
@@ -19571,7 +19622,7 @@ var NTNAV=[
  ['evals','تقييم اللاعبين','star'],
  ['follow','متابعة الجهاز الفني','bell'],
  ['requests','الطلبات والاعتمادات','check'],
- ['reports','التقارير','table'],
+ ['reports','التقارير الفنية','doc'],
  ['settings','الإعدادات','gear']
 ];
 var NTROLES={director:'مدير منتخب',tadmin:'إداري فني',sadmin:'إداري منتخب',coach:'مدرب منتخب'};
@@ -19874,6 +19925,7 @@ function ntAlerts(){
     (c.invited||[]).forEach(function(mid){if(!((c.resp||{})[mid]))noResp++;});
   });
   if(noResp)out.push({ic:'inbox',txt:ceN(noResp)+' استدعاء بلا رد من اللاعبين',cl:'#1565c0'});
+  try{if(ntAllowed('reports'))out=ntRepAlerts().concat(out);}catch(e){}
   return out;
 }
 function ntStat(n,label,page,color){
@@ -19997,7 +20049,7 @@ function rNTHome(){
 }
 
 /* ================= المرشحون والقائمة ================= */
-var NTSQ={view:'',q:''};
+var NTSQ={view:'',q:'',sub:''};
 /* إنشاء عضوية في قائمة المنتخب — المصدر الواحد لكل طرق الإضافة (ترشيح، فروع، لاعب جديد) */
 function ntAddMemberRec(pid,sid,extra){
   var n=NTX(),p=tdPlayer(pid);
@@ -20019,7 +20071,7 @@ function ntSquadStats(sid){
 }
 function rNTSquad(){
   var n=NTX(),sq=ntScopeSquads(),cands=ntCandidates();
-  var canAdd=ntCanManage()||ntRole()==='coach';
+  var canAdd=ntCanManage()||ntRole()==='coach'||ntRole()==='sadmin';
   var h=tdHead('inbox','قائمة المنتخب','لاعبو كل فئة، وترشيحات الإدارة الفنية، وإضافة اللاعبين من الفروع أو من خارجها',
     (canAdd&&sq.length?'<button class="btn btn-r btn-sm" onclick="ntAddOpen()">'+ic('user-plus',13)+' إضافة لاعب</button>':''));
   /* ===== المرشحون ===== */
@@ -20080,18 +20132,18 @@ function rNTSquad(){
         /* توزيع المراكز + بحث */
         h+='<div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.7rem">';
         h+='<div style="display:flex;gap:.3rem;flex-wrap:wrap">'+Object.keys(st.byPos).map(function(k){return '<span class="badge" style="background:var(--bg);color:var(--txt)">'+esc(k)+' <b>'+ceN(st.byPos[k])+'</b></span>';}).join('')+'</div>';
-        if(mem.length>8)h+='<input type="text" id="ntsq-q" placeholder="ابحث باسم اللاعب…" value="'+esc(NTSQ.q)+'" style="margin-inline-start:auto;max-width:220px;padding:.4rem .7rem;font-size:12px" oninput="NTSQ.q=this.value;ntSqFilter()">';
+        h+='<div style="display:flex;gap:.4rem;align-items:center;margin-inline-start:auto;flex-wrap:wrap">'+(mem.length>8?'<input type="text" id="ntsq-q" placeholder="ابحث باسم اللاعب…" value="'+esc(NTSQ.q)+'" style="max-width:200px;padding:.4rem .7rem;font-size:12px" oninput="NTSQ.q=this.value;ntSqFilter()">':'')+'<select id="ntsq-sub" style="max-width:170px;padding:.4rem .6rem;font-size:12px" onchange="NTSQ.sub=this.value;ntSqFilter()"><option value="">كل الاشتراكات</option>'+SUBF_OPTS.map(function(o){return '<option value="'+esc(o[0])+'"'+(NTSQ.sub===o[0]?' selected':'')+'>'+esc(o[1])+'</option>';}).join('')+'</select></div>';
         h+='</div>';
         var rows=mem.slice().sort(function(a,b){var ja=+a.jersey||999,jb=+b.jersey||999;return ja-jb||ntPName(a).localeCompare(ntPName(b),'ar');});
-        h+='<div class="at-wrap"><table class="at" id="ntsq-tbl"><thead><tr><th>#</th><th>اللاعب</th><th>الفرع</th><th>المركز</th><th>المواليد</th><th>الحضور</th><th>مباريات</th><th>أهداف</th><th>التقييم</th><th>الحالة</th><th>الإجراءات</th><th></th></tr></thead><tbody>';
+        h+='<div class="at-wrap"><table class="at" id="ntsq-tbl"><thead><tr><th>#</th><th>اللاعب</th><th>الفرع</th><th>الاشتراك</th><th>المركز</th><th>المواليد</th><th>الحضور</th><th>مباريات</th><th>أهداف</th><th>التقييم</th><th>الحالة</th><th>الإجراءات</th><th></th></tr></thead><tbody>';
         rows.forEach(function(m){
           var p=ntPlayerInfo(m);
           var mev=n.evals.filter(function(e){return e.mid===m.id;});
           var last=mev.length?tdEvalOf5(mev[mev.length-1])+' / 5':'—';
           var stx=ntMemStats(m),ok=ntMemAvailable(m.id);
-          h+='<tr data-nm="'+esc(ntPName(m))+'" style="cursor:pointer" onclick="if(!event.target.closest(\'.uacts\'))ntOpenPlayer(\''+m.id+'\')">';
+          h+='<tr data-nm="'+esc(ntPName(m))+'" data-sub="'+esc(tdSubKey(p))+'" style="cursor:pointer" onclick="if(!event.target.closest(\'.uacts\'))ntOpenPlayer(\''+m.id+'\')">';
           h+='<td style="font-weight:700;color:var(--amber)">'+esc(m.jersey||'—')+'</td>';
-          h+='<td style="font-weight:700">'+esc(ntPName(m))+(p.src==='nt'||!p.branch?'':'')+'</td><td>'+esc(p.branch||(p.src==='nt'?'خارج الفروع':'—'))+'</td>';
+          h+='<td style="font-weight:700">'+esc(ntPName(m))+(p.src==='nt'||!p.branch?'':'')+'</td><td>'+esc(p.branch||(p.src==='nt'?'خارج الفروع':'—'))+'</td><td style="white-space:nowrap">'+(tdSubChip(p)||'<span style="color:var(--gray);font-size:10.5px">بلا اشتراك</span>')+'</td>';
           h+='<td>'+esc(m.pos||p.pos||'—')+'</td><td>'+esc(ntBirthYear(p)||'—')+'</td>';
           h+='<td>'+(stx.pct===null?'—':ceN(stx.pct)+'%')+'</td><td>'+ceN(stx.played)+'</td><td>'+ceN(stx.goals)+'</td>';
           h+='<td>'+last+'</td>';
@@ -20118,11 +20170,11 @@ function rNTSquad(){
   });
   g('ntc-squad').innerHTML=h;
   hydrateIcons(g('ntc-squad'));
-  if(NTSQ.q)ntSqFilter();
+  if(NTSQ.q||NTSQ.sub)ntSqFilter();
 }
 function ntSqFilter(){
-  var q=ntNorm(NTSQ.q||'');
-  document.querySelectorAll('#ntsq-tbl tbody tr').forEach(function(tr){tr.style.display=(!q||ntNorm(tr.getAttribute('data-nm')||'').indexOf(q)>-1)?'':'none';});
+  var q=ntNorm(NTSQ.q||''),sb=NTSQ.sub||'';
+  document.querySelectorAll('#ntsq-tbl tbody tr').forEach(function(tr){var ok=(!q||ntNorm(tr.getAttribute('data-nm')||'').indexOf(q)>-1)&&(!sb||(tr.getAttribute('data-sub')||'none')===sb);tr.style.display=ok?'':'none';});
 }
 var NTCAND_BUSY={};
 function ntApproveCand(pid){
@@ -21412,22 +21464,6 @@ function ntReportData(){
   }
   return{title:title,head:head,rows:rows};
 }
-function rNTReports(){
-  var h=tdHead('table','التقارير','تقارير المنتخب جاهزة للتصدير PDF أو Excel');
-  h+='<div class="fg" style="max-width:280px"><label>نوع التقرير</label>'+tdSel('ntrp-type',NTRT,NTRP.type,'اختر')+'</div>';
-  var d=ntReportData();
-  h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem"><button class="btn btn-n btn-sm" onclick="ntRepPDF()">'+ic('doc',13)+' تصدير PDF</button><button class="btn btn-g btn-sm" onclick="ntRepCSV()">'+ic('table',13)+' تصدير Excel (CSV)</button></div>';
-  h+=tdSubHead(esc(d.title)+' ('+d.rows.length+')');
-  if(!d.rows.length)h+=emptyBox('table','لا توجد بيانات لهذا التقرير');
-  else{
-    h+='<div class="at-wrap"><table class="at"><thead><tr>'+d.head.map(function(x){return '<th>'+esc(x)+'</th>';}).join('')+'</tr></thead><tbody>';
-    d.rows.forEach(function(r){h+='<tr>'+r.map(function(c,i){return '<td'+(i===0?' style="font-weight:700"':'')+'>'+esc(c)+'</td>';}).join('')+'</tr>';});
-    h+='</tbody></table></div>';
-  }
-  g('ntc-reports').innerHTML=h;
-  var st=g('ntrp-type');if(st)st.onchange=function(){NTRP.type=this.value;rNTReports();};
-  hydrateIcons(g('ntc-reports'));
-}
 function ntRepCSV(){
   var d=ntReportData();
   var lines=[d.head].concat(d.rows).map(function(r){return r.map(function(c){return csvCell(c);}).join(',');});
@@ -21456,6 +21492,291 @@ function ntRepPDF(){
   document.body.appendChild(ifr);
   ifr.srcdoc=html;
   ifr.onload=function(){setTimeout(function(){try{ifr.contentWindow.print();}catch(e){}setTimeout(function(){ifr.remove();},60000);},350);};
+}
+/* ==========================================================================
+   التقارير الفنية — منتخب فارس
+   --------------------------------------------------------------------------
+   • يكتبها أي عضو في طاقم المنتخب (الإداري الفني في الأصل)، ويراجعها ويعتمدها
+     مدير النظام ومدير المنتخب: توجيه + مسؤول تنفيذ + موعد.
+   • الحالة: مسودة ← بانتظار المراجعة ← قيد التنفيذ ← مغلق — مع إعادة للتعديل.
+   • المرفقات: صور وملفات PDF تُرفع للتخزين. الطاقم كله يرى التقارير.
+   ========================================================================== */
+var NTR_KIND={visit:'زيارة ميدانية',train:'تدريب',match:'مباراة',eval:'تقييم',period:'تقرير دوري'};
+var NTR_ST={draft:['مسودة','var(--gray)','edit'],review:['بانتظار المراجعة','var(--amber)','clock'],exec:['قيد التنفيذ','#1565c0','refresh'],closed:['مغلق','#16a34a','check']};
+var NTR={tab:'tech',view:'',edit:'',st:'',kind:'',files:[],busy:0};
+function ntReports(){var n=NTX();if(!n.reports)n.reports=[];return n.reports.filter(function(r){return r.teamId===NTTEAM;}).sort(function(a,b){return (b.date||'')<(a.date||'')?-1:((b.date||'')>(a.date||'')?1:(b.at||0)-(a.at||0));});}
+function ntReport(id){return (NTX().reports||[]).find(function(r){return r.id===id;})||null;}
+function ntCanReview(){var r=ntRole();return r==='admin'||r==='director';}
+function ntCanWriteReport(){var r=ntRole();return !!r&&r!=='player';}
+function ntRepMine(r){return !!(r&&CU&&(r.byId===CU.id||(r.dir&&r.dir.ownerId&&ntStaffIsMe(r.dir.ownerId))));}
+function ntStaffIsMe(sid){var me=ntStaffMe();return !!(me&&me.id===sid);}
+function ntRepCanEdit(r){return r&&(r.status==='draft'&&(r.byId===CU.id||ntCanReview()))||(ntCanReview()&&r.status!=='closed');}
+function ntRepBadge(r){var s=NTR_ST[r.status]||NTR_ST.draft;return '<span class="badge" style="background:'+s[1]+'1a;color:'+s[1]+';border:1px solid '+s[1]+'55">'+ic(s[2],10)+' '+s[0]+'</span>';}
+function ntRepTarget(r){
+  var t=r.target||{};
+  if(t.kind==='br')return [t.branch,t.cat,t.coach].filter(Boolean).join(' • ')||'فرع';
+  return ['منتخب فارس',t.squad,t.coach].filter(Boolean).join(' • ');
+}
+function ntRepOverdue(r){return r.status==='exec'&&r.dir&&r.dir.due&&r.dir.due<calISO(new Date());}
+function ntRepPush(r,st,note){r.hist=r.hist||[];r.hist.push({st:st,by:CU.name,at:Date.now(),note:note||''});r.status=st;}
+/* ---------- الصفحة ---------- */
+function rNTReports(){
+  var el=g('ntc-reports');
+  var h=tdHead('doc','التقارير الفنية','ملاحظات وتوصيات الجهاز الفني — تُراجع وتُعتمد ويُتابع تنفيذها',
+    '<div class="pg-acts">'+(ntCanWriteReport()&&NTR.tab==='tech'?'<button class="btn btn-r btn-sm" onclick="ntRepNew()">'+ic('plus',13)+' إضافة تقرير فني</button>':'')+'</div>');
+  h+='<div class="ntr-tabs"><button class="ntr-tab'+(NTR.tab==='tech'?' on':'')+'" onclick="NTR.tab=\'tech\';NTR.view=\'\';rNTReports()">'+ic('doc',13)+' التقارير الفنية</button><button class="ntr-tab'+(NTR.tab==='tables'?' on':'')+'" onclick="NTR.tab=\'tables\';rNTReports()">'+ic('table',13)+' الجداول والإحصاءات</button></div>';
+  if(NTR.tab==='tables'){el.innerHTML=h+ntTablesHTML();var st=g('ntrp-type');if(st)st.onchange=function(){NTRP.type=this.value;rNTReports();};hydrateIcons(el);return;}
+  if(NTR.view){var r=ntReport(NTR.view);if(r){el.innerHTML=h+ntRepDetailHTML(r);hydrateIcons(el);return;}NTR.view='';}
+  var list=ntReports();
+  var cnt={draft:0,review:0,exec:0,closed:0};list.forEach(function(r){cnt[r.status]=(cnt[r.status]||0)+1;});
+  var over=list.filter(ntRepOverdue).length;
+  h+='<div class="ce2-kpis" style="margin-bottom:.8rem">'+ceKpi('clock','بانتظار المراجعة',ceN(cnt.review),ntCanReview()&&cnt.review?'تحتاج قرارك':'')+ceKpi('refresh','قيد التنفيذ',ceN(cnt.exec),over?ceN(over)+' متأخر':'')+ceKpi('check','مغلق',ceN(cnt.closed),'')+'</div>';
+  h+='<div class="frow" style="max-width:640px;margin-bottom:.8rem;grid-template-columns:1fr 1fr"><div class="fg" style="margin-bottom:0"><label>الحالة</label>'+tdSel('ntr-fst',Object.keys(NTR_ST).map(function(k){return [k,NTR_ST[k][0]];}),NTR.st,'كل الحالات')+'</div><div class="fg" style="margin-bottom:0"><label>النوع</label>'+tdSel('ntr-fkind',Object.keys(NTR_KIND).map(function(k){return [k,NTR_KIND[k]];}),NTR.kind,'كل الأنواع')+'</div></div>';
+  var shown=list.filter(function(r){return (!NTR.st||r.status===NTR.st)&&(!NTR.kind||r.kind===NTR.kind);});
+  if(!shown.length)h+=emptyBox('doc',list.length?'لا توجد تقارير بهذا الفرز':'لا توجد تقارير فنية بعد',ntCanWriteReport()&&!list.length?'ابدأ بـ «إضافة تقرير فني»':'');
+  else{
+    h+='<div class="ntr-list">';
+    shown.forEach(function(r){
+      var od=ntRepOverdue(r);
+      h+='<div class="ntr-card'+(od?' late':'')+'" onclick="NTR.view=\''+r.id+'\';rNTReports();window.scrollTo({top:0})">'
+        +'<div class="ntr-ic">'+ic({visit:'pin',train:'whistle',match:'ball',eval:'star',period:'doc'}[r.kind]||'doc',16)+'</div>'
+        +'<div class="ntr-main"><b>'+esc(r.title)+'</b><div class="ntr-sub">'+esc(NTR_KIND[r.kind]||'')+' • <bdi class="ltr">'+esc(r.date||'')+'</bdi> • '+esc(ntRepTarget(r))+'</div>'
+        +'<div class="ntr-sub">'+esc(r.by||'')+(r.dir&&r.dir.ownerName?' ← التنفيذ: <b>'+esc(r.dir.ownerName)+'</b>':'')+(r.dir&&r.dir.due?' • الموعد <bdi class="ltr">'+esc(r.dir.due)+'</bdi>':'')+(od?' <span style="color:var(--red);font-weight:700">متأخر</span>':'')+'</div></div>'
+        +'<div class="ntr-side">'+ntRepBadge(r)+((r.files||[]).length?'<small>'+ic('image',10)+' '+ceN(r.files.length)+'</small>':'')+'</div></div>';
+    });
+    h+='</div>';
+  }
+  el.innerHTML=h;hydrateIcons(el);
+  var f1=g('ntr-fst');if(f1)f1.onchange=function(){NTR.st=this.value;rNTReports();};
+  var f2=g('ntr-fkind');if(f2)f2.onchange=function(){NTR.kind=this.value;rNTReports();};
+}
+/* الجداول القديمة كما هي */
+function ntTablesHTML(){
+  var h='<div class="fg" style="max-width:280px"><label>نوع الجدول</label>'+tdSel('ntrp-type',NTRT,NTRP.type,'اختر')+'</div>';
+  var d=ntReportData();
+  h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem"><button class="btn btn-n btn-sm" onclick="ntRepPDF()">'+ic('doc',13)+' تصدير PDF</button><button class="btn btn-g btn-sm" onclick="ntRepCSV()">'+ic('table',13)+' تصدير Excel (CSV)</button></div>';
+  h+=tdSubHead(esc(d.title)+' ('+d.rows.length+')');
+  if(!d.rows.length)h+=emptyBox('table','لا توجد بيانات لهذا الجدول');
+  else{
+    h+='<div class="at-wrap"><table class="at"><thead><tr>'+d.head.map(function(x){return '<th>'+esc(x)+'</th>';}).join('')+'</tr></thead><tbody>';
+    d.rows.forEach(function(r){h+='<tr>'+r.map(function(c,i){return '<td'+(i===0?' style="font-weight:700"':'')+'>'+esc(c)+'</td>';}).join('')+'</tr>';});
+    h+='</tbody></table></div>';
+  }
+  return h;
+}
+/* ---------- النموذج ---------- */
+function ntRepNew(){NTR.edit='';NTR.files=[];ntRepForm(null);}
+function ntRepEdit(id){var r=ntReport(id);if(!r||!ntRepCanEdit(r))return;NTR.edit=id;NTR.files=(r.files||[]).slice();ntRepForm(r);}
+function ntRepForm(r){
+  var t=(r&&r.target)||{kind:'nt'};
+  var h='';
+  h+='<div class="sub-head" style="margin:.2rem 0 .6rem"><span class="sh-line"></span><h2 style="font-size:12px">أساسيات التقرير</h2></div>';
+  h+='<div class="fg req"><label>عنوان التقرير *</label><input type="text" id="ntr-title" value="'+esc(r?r.title:'')+'" placeholder="عنوان مختصر يوضح الموضوع"></div>';
+  h+='<div class="frow"><div class="fg req"><label>نوع التقرير *</label>'+tdSel('ntr-kind',Object.keys(NTR_KIND).map(function(k){return [k,NTR_KIND[k]];}),r?r.kind:'visit','اختر النوع')+'</div>';
+  h+='<div class="fg req"><label>تاريخ التقرير *</label><input type="date" id="ntr-date" style="direction:ltr" value="'+esc(r?r.date:calISO(new Date()))+'"></div></div>';
+  h+='<div class="sub-head" style="margin:.9rem 0 .6rem"><span class="sh-line"></span><h2 style="font-size:12px">الجهة المعنية</h2></div>';
+  h+='<div class="frow" style="grid-template-columns:1fr 1fr"><div class="fg"><label>الجهة *</label>'+tdSel('ntr-tk',[['nt','منتخب فارس'],['br','فرع']],t.kind||'nt','')+'</div><div class="fg" id="ntr-brw"><label>الفرع</label>'+tdSel('ntr-br',(TDX().branches||[]).map(function(b){return b.name;}),t.branch||'','اختر الفرع')+'</div></div>';
+  h+='<div class="frow" style="grid-template-columns:1fr 1fr"><div class="fg"><label>الفئة</label><select id="ntr-cat"></select></div><div class="fg"><label>المدرب</label><select id="ntr-coach"></select></div></div>';
+  h+='<div class="sub-head" style="margin:.9rem 0 .6rem"><span class="sh-line"></span><h2 style="font-size:12px">المحتوى</h2></div>';
+  h+='<div class="fg req"><label>الملاحظات الفنية *</label><textarea id="ntr-obs" rows="4" placeholder="ما تمت ملاحظته أثناء المتابعة">'+esc(r?r.obs:'')+'</textarea></div>';
+  h+='<div class="fg"><label>نقاط القوة</label><textarea id="ntr-str" rows="3" placeholder="الجوانب الإيجابية">'+esc(r?r.strengths:'')+'</textarea></div>';
+  h+='<div class="fg"><label>جوانب التحسين</label><textarea id="ntr-imp" rows="3" placeholder="الجوانب التي تحتاج إلى تطوير">'+esc(r?r.improve:'')+'</textarea></div>';
+  h+='<div class="fg"><label>التوصيات والإجراءات المقترحة</label><textarea id="ntr-rec" rows="3" placeholder="ما يقترحه الإداري الفني لمعالجة الملاحظات">'+esc(r?r.recs:'')+'</textarea></div>';
+  h+='<div class="sub-head" style="margin:.9rem 0 .6rem"><span class="sh-line"></span><h2 style="font-size:12px">المرفقات <small style="color:var(--gray);font-weight:500">(صور أو PDF — حتى ٢٥ م.ب للملف)</small></h2></div>';
+  h+='<div id="ntr-files"></div>';
+  h+='<label class="btn btn-g btn-sm" style="cursor:pointer;display:inline-flex;align-items:center;gap:.4rem">'+ic('plus',12)+' إضافة مرفق<input type="file" accept="image/*,application/pdf" multiple style="display:none" onchange="ntRepAddFiles(this)"></label>';
+  h+='<div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap">'
+    +'<button class="btn btn-g" style="flex:1;min-height:46px" onclick="ntRepSave(\'draft\')">'+ic('doc',14)+' حفظ كمسودة</button>'
+    +'<button class="btn btn-r" style="flex:1;min-height:46px" onclick="ntRepSave(\'review\')">'+ic('check',14)+' إرسال للمراجعة</button>'
+    +'<button class="btn btn-g" onclick="fpgHide();rNTReports()">إلغاء</button></div>';
+  h+='<div class="msg err" id="ntr-err">أكمل: العنوان، النوع، التاريخ، والملاحظات</div>';
+  fpgHTML(r?'تعديل تقرير فني':'تقرير فني جديد','doc',r?r.title:'ملاحظات وتوصيات الجهاز الفني',h,function(){rNTReports();});
+  var tk=g('ntr-tk'),br=g('ntr-br');
+  var fill=function(){
+    var kind=tk.value,cat=g('ntr-cat'),co=g('ntr-coach');
+    g('ntr-brw').style.display=kind==='br'?'':'none';
+    var cats=[],cos=[];
+    if(kind==='br'){var bn=br.value;cats=(TDX().cats||[]).filter(function(c){return c.branch===bn;}).map(function(c){return [c.id,c.name];});cos=(TDX().coaches||[]).filter(function(c){return rxCoachIn(c,bn);}).map(function(c){return [c.id,c.name];});}
+    else{cats=ntTeamSquads().map(function(s){return [s.id,s.name];});cos=ntTeamStaff().filter(function(s){return s.role==='coach';}).map(function(s){return [s.id,s.name];});}
+    cat.innerHTML='<option value="">— بلا تحديد —</option>'+cats.map(function(x){return '<option value="'+esc(x[0])+'"'+(t.catId===x[0]||t.squadId===x[0]?' selected':'')+'>'+esc(x[1])+'</option>';}).join('');
+    co.innerHTML='<option value="">— بلا تحديد —</option>'+cos.map(function(x){return '<option value="'+esc(x[0])+'"'+(t.coachId===x[0]?' selected':'')+'>'+esc(x[1])+'</option>';}).join('');
+  };
+  tk.onchange=fill;br.onchange=fill;fill();
+  ntRepFilesPaint();
+}
+function ntRepFilesPaint(){
+  var el=g('ntr-files');if(!el)return;
+  if(!NTR.files.length&&!NTR.busy){el.innerHTML='<div style="font-size:11.5px;color:var(--gray);margin-bottom:.5rem">لا توجد مرفقات</div>';return;}
+  var h='<div class="ntr-fl">';
+  NTR.files.forEach(function(f,i){
+    h+='<div class="ntr-f">'+(f.type==='pdf'?'<span class="ntr-fic">'+ic('doc',16)+'</span>':'<img src="'+srcOK(f.url)+'" alt="">')+'<span class="ntr-fn">'+esc(f.name||'مرفق')+'</span><button type="button" class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="NTR.files.splice('+i+',1);ntRepFilesPaint()" title="إزالة">'+ic('x',11)+'</button></div>';
+  });
+  if(NTR.busy)h+='<div class="ntr-f"><span class="ntr-fic">'+ic('refresh',16)+'</span><span class="ntr-fn">جارٍ رفع '+ceN(NTR.busy)+' ملف…</span></div>';
+  el.innerHTML=h+'</div>';hydrateIcons(el);
+}
+function ntRepAddFiles(inp){
+  var fs=Array.prototype.slice.call(inp.files||[]);inp.value='';
+  fs.forEach(function(f){
+    if(f.size>25*1024*1024){addN('ملف كبير','«'+f.name+'» أكبر من ٢٥ م.ب','warn');return;}
+    var isPdf=/pdf$/i.test(f.type)||/\.pdf$/i.test(f.name);
+    if(!isPdf&&!/^image\//.test(f.type)){addN('نوع غير مدعوم','«'+f.name+'» — صور أو PDF فقط','warn');return;}
+    NTR.busy++;ntRepFilesPaint();
+    var done=function(){NTR.busy--;ntRepFilesPaint();};
+    if(isPdf){
+      if(!FA.enabled){addN('تعذّر الرفع','رفع الملفات يحتاج اتصالاً بالخادم','warn');done();return;}
+      var rd=new FileReader();
+      rd.onload=function(){FA.uploadFile(new Uint8Array(rd.result),'reports',f.name,'application/pdf').then(function(url){NTR.files.push({name:f.name,url:url,type:'pdf',size:f.size});}).catch(function(e){addN('تعذّر رفع الملف',(e&&e.message)||'','warn');}).then(done);};
+      rd.onerror=done;rd.readAsArrayBuffer(f);
+    }else{
+      var img=new Image(),r2=new FileReader();
+      r2.onload=function(){img.onload=function(){
+        var mx=1600,w=img.width,hh=img.height,k=Math.min(1,mx/Math.max(w,hh));
+        var cv=document.createElement('canvas');cv.width=Math.round(w*k);cv.height=Math.round(hh*k);
+        var cx=cv.getContext('2d');cx.imageSmoothingEnabled=true;cx.imageSmoothingQuality='high';cx.drawImage(img,0,0,cv.width,cv.height);
+        var d=cv.toDataURL('image/jpeg',.88);
+        var put=function(url){NTR.files.push({name:f.name,url:url,type:'img'});};
+        if(FA.enabled)FA.uploadImage(d,'reports').then(put).catch(function(){put(d);}).then(done);
+        else{put(d);done();}
+      };img.onerror=done;img.src=r2.result;};
+      r2.onerror=done;r2.readAsDataURL(f);
+    }
+  });
+}
+function ntRepSave(st){
+  var err=function(t){var e=g('ntr-err');if(e){e.textContent=t;fl('ntr-err');}};
+  if(NTR.busy)return err('انتظر اكتمال رفع المرفقات');
+  var title=gv('ntr-title'),kind=gv('ntr-kind'),date=gv('ntr-date'),obs=gv('ntr-obs');
+  if(!title||!kind||!date||!obs)return err('أكمل: العنوان، النوع، التاريخ، والملاحظات الفنية');
+  var tk=gv('ntr-tk'),catId=gv('ntr-cat'),coachId=gv('ntr-coach'),target={kind:tk};
+  if(tk==='br'){var bn=gv('ntr-br');if(!bn)return err('اختر الفرع');target.branch=bn;var c=catId?tdCat(catId):null;target.catId=catId;target.cat=c?c.name:'';var co=coachId?tdCoach(coachId):null;target.coachId=coachId;target.coach=co?co.name:'';}
+  else{var sq=catId?ntSquad(catId):null;target.squadId=catId;target.squad=sq?sq.name:'';var s=coachId?ntStaff(coachId):null;target.coachId=coachId;target.coach=s?s.name:'';}
+  var n=NTX();if(!n.reports)n.reports=[];
+  var r=NTR.edit?ntReport(NTR.edit):null,isNew=!r;
+  if(!r){r={id:uid(),teamId:NTTEAM,by:CU.name,byId:CU.id,at:Date.now(),status:'draft',hist:[]};n.reports.push(r);}
+  r.title=title;r.kind=kind;r.date=date;r.target=target;r.obs=obs;r.strengths=gv('ntr-str');r.improve=gv('ntr-imp');r.recs=gv('ntr-rec');r.files=NTR.files.slice();r.upd=Date.now();
+  if(st==='review'&&r.status!=='exec'&&r.status!=='closed')ntRepPush(r,'review','');
+  else if(isNew)ntRepPush(r,'draft','');
+  logA((isNew?'تقرير فني جديد: ':'تعديل تقرير فني: ')+title+(st==='review'?' — أُرسل للمراجعة':''),'doc','#1565c0');
+  sv();fpgHide();NTR.view=r.id;rNTReports();
+  addN(st==='review'?'أُرسل التقرير للمراجعة':'حُفظ التقرير',title,'success');
+}
+/* ---------- التفاصيل ---------- */
+function ntRepDetailHTML(r){
+  var h='<button class="btn btn-g btn-sm" onclick="NTR.view=\'\';rNTReports()" style="margin-bottom:1rem">'+ic('swap',12)+' رجوع للتقارير</button>';
+  var od=ntRepOverdue(r);
+  h+='<div class="rform" style="margin-bottom:1rem">';
+  h+='<div style="display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;align-items:flex-start"><div><div style="font-size:1.1rem;font-weight:800">'+esc(r.title)+'</div>'
+    +'<div style="font-size:12px;color:var(--gray);margin-top:.2rem">'+esc(NTR_KIND[r.kind]||'')+' • <bdi class="ltr">'+esc(r.date||'')+'</bdi> • '+esc(ntRepTarget(r))+'</div>'
+    +'<div style="font-size:11.5px;color:var(--gray)">أعدّه: '+esc(r.by||'')+' • '+new Date(r.at||0).toLocaleDateString(locale())+'</div></div>'
+    +'<div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center">'+ntRepBadge(r)+(od?'<span class="badge rejected">متأخر</span>':'')
+    +(ntRepCanEdit(r)?'<button class="btn btn-o btn-sm" onclick="ntRepEdit(\''+r.id+'\')">'+ic('edit',12)+' تعديل</button>':'')
+    +'<button class="btn btn-g btn-sm" onclick="ntRepPrint(\''+r.id+'\')">'+ic('doc',12)+' PDF</button>'
+    +(ntCanReview()?'<button class="btn btn-g btn-sm" style="color:var(--red)" onclick="ntRepDel(\''+r.id+'\')">'+ic('trash',12)+'</button>':'')+'</div></div>';
+  var sec=function(t,v,icn){if(!v)return '';return '<div class="ntr-sec"><div class="ntr-sec-t">'+ic(icn,13)+' '+t+'</div><div class="ntr-sec-b">'+esc(v).replace(/\n/g,'<br>')+'</div></div>';};
+  h+='<div class="ntr-secs">'+sec('الملاحظات الفنية',r.obs,'eye')+sec('نقاط القوة',r.strengths,'check')+sec('جوانب التحسين',r.improve,'target')+sec('التوصيات والإجراءات المقترحة',r.recs,'list')+'</div>';
+  if((r.files||[]).length){
+    h+='<div class="ntr-sec-t" style="margin-top:.8rem">'+ic('image',13)+' المرفقات ('+ceN(r.files.length)+')</div><div class="ntr-fl">';
+    r.files.forEach(function(f){
+      if(f.type==='pdf')h+='<a class="ntr-f" href="'+esc(f.url)+'" target="_blank" rel="noopener"><span class="ntr-fic">'+ic('doc',16)+'</span><span class="ntr-fn">'+esc(f.name||'PDF')+'</span></a>';
+      else h+='<div class="ntr-f" style="cursor:pointer" onclick="lbxOpen(\''+esc(f.url).replace(/'/g,'%27')+'\',\''+esc(f.name||'').replace(/'/g,'')+'\')"><img src="'+srcOK(f.url)+'" alt=""><span class="ntr-fn">'+esc(f.name||'صورة')+'</span></div>';
+    });
+    h+='</div>';
+  }
+  h+='</div>';
+  /* التوجيه والتنفيذ */
+  var d=r.dir;
+  if(d&&(d.text||d.ownerName||d.due)){
+    h+='<div class="rform" style="margin-bottom:1rem;border-color:rgba(21,101,192,.4)"><div class="ntr-sec-t">'+ic('shield',13)+' توجيه الإدارة</div>';
+    if(d.text)h+='<div class="ntr-sec-b" style="margin:.3rem 0 .6rem">'+esc(d.text).replace(/\n/g,'<br>')+'</div>';
+    h+='<div style="display:flex;gap:1rem;flex-wrap:wrap;font-size:12px"><span>مسؤول التنفيذ: <b>'+esc(d.ownerName||'—')+'</b></span><span>الموعد المطلوب: <b><bdi class="ltr">'+esc(d.due||'—')+'</bdi></b></span><span style="color:var(--gray)">'+esc(d.by||'')+' • '+(d.at?new Date(d.at).toLocaleDateString(locale()):'')+'</span></div>';
+    if(r.done&&r.done.text)h+='<div class="ntr-sec-t" style="margin-top:.7rem">'+ic('check',13)+' ما تم تنفيذه</div><div class="ntr-sec-b">'+esc(r.done.text).replace(/\n/g,'<br>')+'<div style="font-size:11px;color:var(--gray);margin-top:.3rem">'+esc(r.done.by||'')+' • '+(r.done.at?new Date(r.done.at).toLocaleDateString(locale()):'')+'</div></div>';
+    h+='</div>';
+  }
+  /* الإجراءات حسب الحالة */
+  h+=ntRepActionsHTML(r);
+  /* السجل */
+  var hist=(r.hist||[]).slice().reverse();
+  if(hist.length){
+    h+=tdSubHead('سجل الحالة','');
+    h+='<div class="ntr-tl">'+hist.map(function(x){var s=NTR_ST[x.st]||NTR_ST.draft;return '<div class="ntr-tli"><span class="ntr-tld" style="background:'+s[1]+'">'+ic(s[2],10)+'</span><div><b>'+s[0]+'</b>'+(x.note?' — '+esc(x.note):'')+'<small>'+esc(x.by||'')+' • '+new Date(x.at||0).toLocaleString(locale())+'</small></div></div>';}).join('')+'</div>';
+  }
+  return h;
+}
+function ntRepActionsHTML(r){
+  var h='',rev=ntCanReview(),mine=r.byId===CU.id,owner=r.dir&&r.dir.ownerId&&ntStaffIsMe(r.dir.ownerId);
+  if(r.status==='draft'&&(mine||rev)){
+    h+='<div class="rform" style="margin-bottom:1rem"><div style="font-size:12.5px;margin-bottom:.6rem">التقرير مسودة — أرسله للمراجعة عندما يكتمل.</div><button class="btn btn-r" onclick="ntRepSetStatus(\''+r.id+'\',\'review\')">'+ic('check',13)+' إرسال للمراجعة</button></div>';
+  }
+  if(r.status==='review'){
+    if(rev){
+      var staff=ntTeamStaff().map(function(s){return [s.id,s.name+' — '+(NTROLES[s.role]||'')];});
+      if(r.target&&r.target.kind==='br'&&r.target.coachId){var co=tdCoach(r.target.coachId);if(co)staff.push(['td:'+co.id,co.name+' — مدرب '+(r.target.branch||'')]);}
+      h+='<div class="rform" style="margin-bottom:1rem;border-color:rgba(217,119,6,.45)"><div class="ntr-sec-t">'+ic('shield',13)+' مراجعة التقرير واعتماد الإجراء</div>';
+      h+='<div class="fg" style="margin-top:.5rem"><label>توجيه الإدارة</label><textarea id="ntr-dtext" rows="3" placeholder="التوجيه أو القرار">'+esc((r.dir&&r.dir.text)||'')+'</textarea></div>';
+      h+='<div class="frow"><div class="fg"><label>مسؤول التنفيذ *</label>'+tdSel('ntr-downer',staff,(r.dir&&r.dir.ownerId)||'','اختر المسؤول')+'</div><div class="fg"><label>الموعد المطلوب *</label><input type="date" id="ntr-ddue" style="direction:ltr" value="'+esc((r.dir&&r.dir.due)||'')+'"></div></div>';
+      h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-r" style="flex:1" onclick="ntRepApprove(\''+r.id+'\')">'+ic('check',13)+' اعتماد وبدء التنفيذ</button><button class="btn btn-o" onclick="ntRepReturn(\''+r.id+'\')">'+ic('swap',13)+' إعادة للتعديل</button></div>';
+      h+='<div class="msg err" id="ntr-derr">حدد مسؤول التنفيذ والموعد</div></div>';
+    }else h+='<div class="jnote" style="margin-bottom:1rem">'+ic('clock',12)+' التقرير بانتظار مراجعة الإدارة.</div>';
+  }
+  if(r.status==='exec'){
+    if(owner||rev||mine){
+      h+='<div class="rform" style="margin-bottom:1rem"><div class="ntr-sec-t">'+ic('refresh',13)+' التنفيذ</div>';
+      h+='<div class="fg" style="margin-top:.5rem"><label>ما تم تنفيذه</label><textarea id="ntr-done" rows="3" placeholder="اكتب ما تم">'+esc((r.done&&r.done.text)||'')+'</textarea></div>';
+      h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-o" onclick="ntRepDone(\''+r.id+'\',false)">'+ic('check',13)+' حفظ ما تم</button>'+(rev?'<button class="btn btn-r" onclick="ntRepDone(\''+r.id+'\',true)">'+ic('check',13)+' إغلاق التقرير</button><button class="btn btn-g" onclick="ntRepReturn(\''+r.id+'\')">إعادة للتعديل</button>':'')+'</div></div>';
+    }
+  }
+  if(r.status==='closed'&&rev)h+='<div style="margin-bottom:1rem"><button class="btn btn-g btn-sm" onclick="ntRepSetStatus(\''+r.id+'\',\'exec\',\'أُعيد فتحه\')">'+ic('refresh',12)+' إعادة فتح</button></div>';
+  return h;
+}
+function ntRepSetStatus(id,st,note){var r=ntReport(id);if(!r)return;ntRepPush(r,st,note||'');logA('تقرير فني «'+r.title+'»: '+NTR_ST[st][0],'doc','#1565c0');sv();rNTReports();}
+function ntRepApprove(id){
+  var r=ntReport(id);if(!r||!ntCanReview())return;
+  var oid=gv('ntr-downer'),due=gv('ntr-ddue');
+  if(!oid||!due){fl('ntr-derr');return;}
+  var nm='';if(oid.indexOf('td:')===0){var co=tdCoach(oid.slice(3));nm=co?co.name:'';}else{var s=ntStaff(oid);nm=s?s.name:'';}
+  r.dir={text:gv('ntr-dtext'),ownerId:oid,ownerName:nm,due:due,by:CU.name,at:Date.now()};
+  ntRepPush(r,'exec','مسؤول التنفيذ: '+nm+' — الموعد '+due);
+  logA('اعتماد تقرير فني «'+r.title+'» — التنفيذ: '+nm,'check','#16a34a');
+  sv();rNTReports();addN('اعتُمد التقرير','التنفيذ: '+nm+' • الموعد '+due,'success');
+}
+function ntRepReturn(id){
+  var r=ntReport(id);if(!r||!ntCanReview())return;
+  var note=prompt('سبب الإعادة للتعديل (يظهر لصاحب التقرير):','');if(note===null)return;
+  ntRepPush(r,'draft',note||'أُعيد للتعديل');logA('إعادة تقرير فني للتعديل: '+r.title,'swap','#d97706');sv();rNTReports();
+}
+function ntRepDone(id,close){
+  var r=ntReport(id);if(!r)return;
+  var txt=gv('ntr-done');
+  if(txt||r.done)r.done={text:txt,by:CU.name,at:Date.now()};
+  if(close){if(!ntCanReview())return;ntRepPush(r,'closed',txt?'':'');logA('إغلاق تقرير فني: '+r.title,'check','#16a34a');}
+  else logA('تحديث تنفيذ تقرير فني: '+r.title,'refresh','#1565c0',true);
+  sv();rNTReports();
+}
+function ntRepDel(id){var r=ntReport(id);if(!r||!ntCanReview())return;askConfirm('حذف التقرير «'+r.title+'» نهائياً؟',function(){NTX().reports=(NTX().reports||[]).filter(function(x){return x.id!==id;});logA('حذف تقرير فني: '+r.title,'trash','#DD1D45');sv();NTR.view='';rNTReports();});}
+function ntRepPrint(id){
+  var r=ntReport(id);if(!r)return;
+  var sec=function(t,v){return v?'<h2>'+esc(t)+'</h2><p>'+esc(v).replace(/\n/g,'<br>')+'</p>':'';};
+  var html='<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>'+esc(r.title)+'</title><style>body{font-family:"IBM Plex Sans Arabic",Tahoma,sans-serif;direction:rtl;padding:28px;color:#181946;max-width:820px;margin:auto}h1{font-size:20px;border-bottom:3px solid #DD1D45;padding-bottom:10px;margin-bottom:4px}.sub{color:#6b7280;font-size:12px;margin-bottom:16px}h2{font-size:13.5px;margin:16px 0 4px;color:#DD1D45}p{font-size:12.5px;line-height:1.9;margin:0}.box{border:1px solid #e4e8f4;border-radius:10px;padding:10px 14px;margin-top:14px;font-size:12.5px}img{max-width:220px;max-height:160px;border-radius:8px;margin:6px 6px 0 0}@media print{button{display:none}}</style></head><body>'
+    +'<h1>'+esc(r.title)+'</h1><div class="sub">تقرير فني — '+esc(NTR_KIND[r.kind]||'')+' • '+esc(r.date||'')+' • '+esc(ntRepTarget(r))+'<br>أعدّه: '+esc(r.by||'')+' • الحالة: '+esc((NTR_ST[r.status]||NTR_ST.draft)[0])+'</div>'
+    +sec('الملاحظات الفنية',r.obs)+sec('نقاط القوة',r.strengths)+sec('جوانب التحسين',r.improve)+sec('التوصيات والإجراءات المقترحة',r.recs)
+    +(r.dir&&(r.dir.text||r.dir.ownerName)?'<div class="box"><b>توجيه الإدارة:</b> '+esc(r.dir.text||'—').replace(/\n/g,'<br>')+'<br>مسؤول التنفيذ: <b>'+esc(r.dir.ownerName||'—')+'</b> • الموعد: '+esc(r.dir.due||'—')+(r.done&&r.done.text?'<br><b>ما تم:</b> '+esc(r.done.text):'')+'</div>':'')
+    +((r.files||[]).filter(function(f){return f.type!=='pdf';}).length?'<h2>المرفقات</h2>'+r.files.filter(function(f){return f.type!=='pdf';}).map(function(f){return '<img src="'+esc(f.url)+'">';}).join(''):'')
+    +((r.files||[]).filter(function(f){return f.type==='pdf';}).length?'<p>ملفات PDF مرفقة: '+r.files.filter(function(f){return f.type==='pdf';}).map(function(f){return esc(f.name);}).join('، ')+'</p>':'')
+    +'<button onclick="window.print()" style="margin-top:20px;background:#DD1D45;color:#fff;padding:9px 22px;border:none;border-radius:8px;font-weight:700;cursor:pointer">طباعة / حفظ PDF</button></body></html>';
+  var ifr=document.createElement('iframe');ifr.style.cssText='position:fixed;width:0;height:0;border:0;visibility:hidden';document.body.appendChild(ifr);ifr.srcdoc=html;
+  ifr.onload=function(){setTimeout(function(){try{ifr.contentWindow.print();}catch(e){}setTimeout(function(){ifr.remove();},60000);},350);};
+}
+/* تنبيهات التقارير للرئيسية */
+function ntRepAlerts(){
+  var out=[],list=ntReports(),today=calISO(new Date());
+  if(ntCanReview()){var rv=list.filter(function(r){return r.status==='review';}).length;if(rv)out.push({ic:'doc',txt:ceN(rv)+' تقرير فني بانتظار مراجعتك',cl:'var(--amber)',page:'reports'});}
+  var mineBack=list.filter(function(r){return r.status==='draft'&&r.byId===CU.id&&(r.hist||[]).length>1;}).length;
+  if(mineBack)out.push({ic:'swap',txt:ceN(mineBack)+' تقرير أُعيد إليك للتعديل',cl:'var(--amber)',page:'reports'});
+  var me=ntStaffMe();
+  var mineExec=list.filter(function(r){return r.status==='exec'&&r.dir&&me&&r.dir.ownerId===me.id;});
+  mineExec.forEach(function(r){out.push({ic:'refresh',txt:'مطلوب منك تنفيذ «'+r.title+'»'+(r.dir.due?' قبل '+r.dir.due:''),cl:r.dir.due&&r.dir.due<today?'var(--red)':'#1565c0',page:'reports'});});
+  if(ntCanReview()){var od=list.filter(ntRepOverdue).length;if(od)out.push({ic:'clock',txt:ceN(od)+' تقرير تجاوز موعد التنفيذ',cl:'var(--red)',page:'reports'});}
+  return out;
 }
 
 /* ================= الإعدادات ================= */
@@ -27959,7 +28280,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.09.30-n2</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.02-r1</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
