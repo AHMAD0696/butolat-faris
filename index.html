@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.10.02-r1">
+<meta name="build" content="2026.10.02-r2">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3710,7 +3710,7 @@ footer small{display:block;font-size:10px;opacity:.5;margin-top:4px}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.02-r1</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.02-r2</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -22123,6 +22123,15 @@ function ntStaffAcc(s){
 function ntSyncAcc(s,pin,un){
   un=(un||s.user||'').trim();
   var acc=ntStaffAcc(s);
+  /* اسم مستخدم لحساب قائم (مدرب في البطولات مثلاً)؟ نربطه بالسجل بدل رفضه كـ«مستخدم في حساب آخر» */
+  if(!acc&&un){
+    var ex=(DB.users||[]).find(function(u){return u.username&&normName(u.username)===normName(un)&&!isPlayerRole(u.role);});
+    if(ex){
+      var other=NTX().staff.find(function(x){return x.id!==s.id&&x.teamId===s.teamId&&x.userId===ex.id;});
+      if(other)return 'الحساب «'+un+'» مرتبط بعضو آخر في الطاقم: '+other.name;
+      acc=ex;
+    }
+  }
   if(!acc&&!pin&&!un)return '';
   if(!un)return 'اكتب اسم المستخدم أو اترك الرمز فارغاً بلا حساب';
   if(!acc&&!pin)return 'الرمز السري مطلوب لإنشاء الحساب (٦ أرقام)';
@@ -22212,7 +22221,7 @@ function rNTStaff(){
     h+='<div class="cat-wrap"><div class="cw-t">'+ic('shield',12)+' حساب الدخول'
       +(acc?' <small style="font-weight:500;color:#16a34a">(حساب قائم — صلاحيته '+esc(RL[acc.role]||acc.role)+')</small>'
            :' <small style="font-weight:500;color:var(--gray)">(اتركه فارغاً إن كنت لا تريد حساباً الآن)</small>')+'</div>';
-    h+='<div class="frow"><div class="fg"><label>اسم المستخدم</label><input type="text" id="ntst-user" value="'+esc((acc&&acc.username)||(ed&&ed.user)||'')+'" placeholder="يُقترح من الاسم"></div>';
+    h+='<div class="frow"><div class="fg"><label>اسم المستخدم <small style="color:var(--gray);font-weight:500">(اكتب اسم مستخدم حسابه الحالي لربطه بلا تغيير رمزه)</small></label><input type="text" id="ntst-user" value="'+esc((acc&&acc.username)||(ed&&ed.user)||'')+'" placeholder="يُقترح من الاسم"></div>';
     h+='<div class="fg"><label>الرمز السري (٦ أرقام)</label><input type="tel" inputmode="numeric" id="ntst-pin" maxlength="6" style="direction:ltr;letter-spacing:6px;text-align:center" placeholder="'+(acc?'إبقاء الرمز الحالي':'1234')+'"></div></div>';
     h+='</div>';
     h+='<div class="xacts"><button class="btn btn-r" onclick="ntSaveStaff()">'
@@ -28280,7 +28289,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.02-r1</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.02-r2</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
