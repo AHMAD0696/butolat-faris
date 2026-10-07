@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.10.07-r17">
+<meta name="build" content="2026.10.07-r18">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -4155,6 +4155,56 @@ body.wb-on #WB{display:block}
   .ntdoc.none small,.ts-open,.nav-logo-t small,.chip-role,.id-it .lb,.id-qr small,.rl-nm small,.rl-coach .nm small,.rank-val .l,.ntmt-hd,.sb-brand .nav-logo-t small,.sb-g,.dvs-m small,.dlead-p span,.mc-sc small,.ms-sec small,.ms-g,.ms-tag,.pt-g span,.acc-notifs .ni small,.ce-hb-l,.pg-eb,.adx-m small,.cal-hd div,.adb-st span,.wl-ev-d small,.ag-more{font-size:10.5px}
   .ntev-k small,.sb-cat .sb-t small,.tpick-t small,.hs-hint,.hs-ov .hs-ttl,.hs-ov .hs-lnk,.por .ptag .l,.tcard .tstats .l,.vs,.rd-mvp .tag,.coach-ban .cb-s,.astat .l,.nt-call-s,.ntmt-nm i,.act-time,.gleg-i small,.gleg-i b,.sb-hd,.dlead-s,.dsplit span,.ms-list li b,.ms-mvpbar .s,.pt-tag,.mt-d,.st-more,.fx-live,.evc-by,.ntw-st b,.ntw-ch small,.xtl-d span,.ntpd-img.none small,.adb-ib,.ntt2-role,.ntt2-ir small,.ntt2-sq em,.wl-mc-b small,.ts2-mode,.adpl-nm small,.adpl-img label,.ts2-reg,.att-file-by,.ce2-ks,.ce2-ss,.ce2-rvs small,.ad-rg span,.tdsub,footer small,.acc2-foot small,.att-subf .brsw-b small,.jr-k small,.jr-ax,.jr-d,.ce2-auto-i small,.ag-st,.agd-row small{font-size:11px}
 }
+
+/* ================= r18 — وضع الملعب: الإضافة من خارج الحصة، حصص اليوم، ألوان الفئات ================= */
+.fm-guest{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:#7c3aed;background:rgba(124,58,237,.12);border-radius:999px;padding:1px 8px}
+.fm-gw{display:flex;gap:.4rem;align-items:stretch}.fm-gw .fm-p{flex:1;min-width:0}
+.fm-grm{width:46px;flex:none;border-radius:14px;border:1.5px solid var(--brd);background:var(--sur);color:var(--red);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.fm-sec{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#7c3aed;margin:1rem 0 .5rem}.fm-sec b{background:rgba(124,58,237,.14);border-radius:999px;padding:0 8px}
+.xpick{margin-top:1rem;background:var(--sur);border:1.5px dashed var(--brd);border-radius:16px;padding:.8rem}
+.xpick-hd{display:flex;align-items:flex-start;gap:.55rem;margin-bottom:.6rem;color:var(--txt)}.xpick-hd svg{color:#7c3aed;flex:none;margin-top:2px}
+.xpick-hd b{display:block;font-size:13px}.xpick-hd small{display:block;font-size:11px;color:var(--gray);margin-top:1px}
+.xpick-q{width:100%;min-height:44px;padding:.55rem .85rem;border-radius:12px;border:1.5px solid var(--brd);background:var(--bg);color:var(--txt);font-family:inherit;font-size:14px}
+.xpick-q:focus{outline:none;border-color:#7c3aed}
+.xpick-res{display:flex;flex-direction:column;gap:.35rem;margin-top:.45rem}
+.xpick-it{display:flex;align-items:center;gap:.6rem;width:100%;text-align:start;background:var(--bg);border:1px solid var(--brd);border-radius:12px;padding:.5rem .65rem;color:var(--txt);font-family:inherit;cursor:pointer;min-height:50px}
+.xpick-it:hover{border-color:#7c3aed}
+.xpick-av{width:34px;height:34px;border-radius:50%;background:rgba(124,58,237,.14);color:#7c3aed;display:flex;align-items:center;justify-content:center;font-weight:800;flex:none}
+.xpick-tx{flex:1;min-width:0}.xpick-tx b{display:block;font-size:13px}.xpick-tx small{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:11px;color:var(--gray)}
+.xpick-add{width:30px;height:30px;border-radius:50%;background:#7c3aed;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.xpick-none{font-size:11.5px;color:var(--gray);padding:.3rem .2rem}
+#ntc-attend .xpick,.att-t~.xpick,#tdc-attend .xpick{max-width:640px}
+/* حصص اليوم أيقونات صغيرة داخل بطاقة «الحصة القادمة» */
+.fm-home.fm-mini{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:.6rem .65rem;margin:0}
+.fm-mini-hd{display:flex;align-items:center;gap:.5rem;justify-content:space-between;flex-wrap:wrap;margin-bottom:.5rem;font-size:12px}.fm-mini-hd b{display:inline-flex;align-items:center;gap:5px}
+.fm-mini-l{display:flex;flex-wrap:wrap;gap:.4rem}
+.fm-mini .fm-home-g{position:relative;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:0;width:auto;min-width:62px;padding:.4rem .45rem .35rem;border-radius:12px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.16);border-top:3px solid var(--c);color:#fff;text-align:center;line-height:1.2}
+.fm-mini .fm-home-g b{font-size:12.5px;font-weight:800}.fm-mini .fm-home-g small{font-size:10.5px;opacity:.85;max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fm-mini .fm-home-g.done{background:rgba(22,163,74,.2);border-color:rgba(74,222,128,.55);border-top-color:var(--c)}
+.fm-mini .fm-home-g.todo{border-inline-start-width:1.5px}
+.fm-mini .fm-home-g.next{background:rgba(221,29,69,.22);border-color:rgba(255,255,255,.55);box-shadow:0 0 0 2px rgba(221,29,69,.45)}
+.fm-hc-st{position:absolute;top:-7px;inset-inline-end:-6px;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#d97706;color:#fff;border:2px solid #1d1f52}
+.fm-home-g.done .fm-hc-st{background:#16a34a}
+.fm-mini-lg{display:flex;flex-wrap:wrap;gap:.7rem;font-size:10.5px;opacity:.8;margin-top:.55rem}.fm-mini-lg span{display:inline-flex;align-items:center;gap:3px}.fm-mini-lg .ok{color:#4ade80}.fm-mini-lg .no{color:#fbbf24}
+.fm-nt-strip{background:linear-gradient(135deg,var(--navy),#33163f);color:#fff;border-radius:16px;padding:.8rem;margin-bottom:1.1rem;display:flex;flex-direction:column;gap:.6rem}
+.fm-nt-strip .fm-home.fm-mini{background:none;border:none;padding:0}
+.fm-nt-strip .dc-cta{background:rgba(255,255,255,.14)}
+/* ألوان الفئات في التقويم */
+.ag-cats{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;margin:-.3rem 0 .8rem}
+.ag-cats-l{font-size:11px;color:var(--gray);font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.ag-cat{display:inline-flex;align-items:center;gap:5px;background:var(--sur);border:1.5px solid var(--brd);border-radius:999px;padding:.22rem .65rem;font-size:11.5px;font-weight:700;color:var(--txt);cursor:pointer;font-family:inherit}
+.ag-cat i{width:10px;height:10px;border-radius:3px;background:var(--c);display:inline-block}
+.ag-cat.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent)}
+.ag-cat.all{color:var(--red)}
+@media(max-width:600px){
+  .ag-cat{min-height:32px;font-size:12px}
+  .fm-mini .fm-home-g{min-width:58px}
+  .xpick-q{font-size:16px}
+}
+/* لون الفئة أوضح في خانات الشهر، والمنجز يحتفظ بلون فئته مع علامة ✓ */
+.ag-ev{background:color-mix(in srgb,var(--c) 20%,transparent);border-inline-start-width:4px}
+.ag-ev.done{background:color-mix(in srgb,var(--c) 20%,transparent);border-color:var(--c);opacity:.85}
+.ag-ev.done svg{color:#16a34a;flex:none}
 </style>
 <script>
 /* ===== شبكة أمان مبكرة: تعمل حتى لو فشل السكربت الرئيسي ===== */
@@ -4305,7 +4355,7 @@ body.wb-on #WB{display:block}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.07-r17</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.07-r18</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -17136,6 +17186,8 @@ function tdDashHTML(ps,gs,late,up,openTasks){
     .filter(function(p){var dt=tdPlanDate(p);return dt&&new Date(dt+'T23:59').getTime()>=now-864e5;})
     .sort(function(a,b){return tdPlanDate(a)<tdPlanDate(b)?-1:1;});
   var np=plans[0];
+  var _ns='';try{_ns=tdNextSessCard();}catch(e){_ns='';}
+  if(_ns)cards+=_ns;else
   cards+=dashCard({tone:'dc-primary',icon:'doc',title:'الحصة القادمة',sub:np?esc(tdGName(np.groupId)):'',
     body: np
       ? '<div class="dlead"><span class="dlead-av dlead-av-i" style="background:'+tdGroupColor(np.groupId)+'">'+ic('doc',20)+'</span>'
@@ -17193,7 +17245,6 @@ function rTDHome(){
   var h=welcomeHTML(r==='coach'?'هذه نظرة سريعة على مجموعاتك ولاعبيك':(r==='staff'?'هذه نظرة سريعة على فرعك':'هذه نظرة سريعة على العمل الفني في الأكاديمية'));
   h+=tdHeroHTML();
   h+=tdHead('chart','الرئيسية','نظرة عامة على العمل الفني — '+tdMonthLabel(m),'<span class="pg-chip">'+ic('cal',12)+' '+tdMonthLabel(m)+'</span>');
-  try{h+=fmHomeCardHTML();}catch(e){}
   h+=tdDashHTML(ps,gs,late,up,openTasks);
   /* أزرار سريعة */
   h+='<div class="qa">';
@@ -17765,6 +17816,7 @@ function rTDPlayers(){
   /* «الفترة»: فترة اللاعب الفعلية (من حصته أو من ملفه) */
   if(TDPF.group)ps=ps.filter(function(x){var pr=tdPlPeriod(x);return pr&&pr.id===TDPF.group;});
   if(TDPF.sub)ps=ps.filter(function(x){return tdSubFilterOK(x,TDPF.sub);});
+  ps=ps.slice().sort(tdSubCmp);   /* الأولوية للاشتراك النشط */
   var h=tdHead('users','اللاعبون','الملفات الفنية للاعبين وتصنيف حالاتهم',
     (tdRole()==='admin'&&FA.enabled?'<button class="btn btn-o btn-sm" onclick="rxOpen()">'+ic('doc',13)+' استيراد من Excel</button>':'')
     +(tdCanManage()?'<button class="btn btn-r btn-sm" onclick="TDPF.showForm=!TDPF.showForm;TDPF.edit=\'\';rTDPlayers()">'+ic(TDPF.showForm?'x':'plus',13)+' '+(TDPF.showForm?'إغلاق النموذج':'إضافة لاعب')+'</button>':'')
@@ -18970,6 +19022,32 @@ function agHolidays(scope,branch){
 function agInHoliday(hs,iso){return hs.some(function(e){return e.from<=iso&&(e.to||e.from)>=iso;});}
 function agDates(from,to){var out=[],d=from,n=0;while(d<=to&&n<400){out.push(d);d=agAdd(d,1);n++;}return out;}
 /* ---------- المصادر ---------- */
+/* لون ثابت لكل فئة في التقويم — فئات الفرع الواحد بألوان مختلفة (بعيدة عن ألوان المباراة والتجمع والفعالية) */
+var AG_TRAIN_PAL=['#1565c0','#0891b2','#0d9488','#c026d3','#4f46e5','#db2777','#65a30d','#0369a1','#a16207','#7c3aed','#0e7490','#be185d'];
+function agHashCol(k){var h=0,str=String(k||'');for(var i=0;i<str.length;i++)h=((h<<5)-h)+str.charCodeAt(i);return AG_TRAIN_PAL[Math.abs(h)%AG_TRAIN_PAL.length];}
+function agCatKey(c){var y=(c.years||[]).map(function(x){return +x||0;}).filter(Boolean);return (y.length?Math.min.apply(null,y):9999)+'|'+(c.name||'');}
+function tdCatColor(catId,fb){
+  var c=catId?tdCat(catId):null;if(!c)return agHashCol(fb||catId||'');
+  var sib=(TDX().cats||[]).filter(function(x){return x.branch===c.branch;}).sort(function(a,b){return agCatKey(a)<agCatKey(b)?-1:(agCatKey(a)>agCatKey(b)?1:0);});
+  var i=sib.indexOf(c);return AG_TRAIN_PAL[(i<0?0:i)%AG_TRAIN_PAL.length];
+}
+function ntTrainColor(sid){
+  var sq=ntSquad(sid);if(!sq)return AG_TRAIN_PAL[0];
+  var all=ntTeamSquads().slice().sort(function(a,b){return (+a.year||9999)-(+b.year||9999)||String(a.name).localeCompare(String(b.name),'ar');});
+  var i=all.indexOf(sq);return AG_TRAIN_PAL[(i<0?0:i)%AG_TRAIN_PAL.length];
+}
+/* دليل ألوان الفئات تحت الفرز — والضغط عليه يعرض فئة واحدة */
+function agCatLegendHTML(evs){
+  if(AG.ctx==='ad')return '';
+  var s=agS(),seen={},out=[];
+  evs.forEach(function(e){if(e.kind!=='train'||!e.scope||seen[e.scope])return;seen[e.scope]=1;
+    var lbl=AG.ctx==='nt'?ntSqName(e.scope):(function(){var c=tdCat(e.scope);return c?c.name:(e.scopeLbl||e.title);})();
+    out.push([e.scope,lbl,e.color]);});
+  if(out.length<2&&!s.scope)return '';
+  if(out.length>14)return '';
+  out.sort(function(a,b){return String(a[1]).localeCompare(String(b[1]),'ar');});
+  return '<div class="ag-cats"><span class="ag-cats-l">'+ic('clock',11)+' ألوان الفئات:</span>'+out.map(function(x){return '<button type="button" class="ag-cat'+(s.scope===x[0]?' on':'')+'" style="--c:'+x[2]+'" onclick="agSet(\'scope\',agS().scope===\''+x[0]+'\'?\'\':\''+x[0]+'\')"><i></i>'+esc(x[1])+'</button>';}).join('')+(s.scope?'<button type="button" class="ag-cat all" onclick="agSet(\'scope\',\'\')">'+ic('x',10)+' كل الفئات</button>':'')+'</div>';
+}
 function agEventsTD(from,to,branch){
   var t=TDX(),out=[],today=calISO(new Date()),bn=branch||TDACT||'';
   if(!t.sessOv)t.sessOv={};
@@ -18988,7 +19066,7 @@ function agEventsTD(from,to,branch){
       var st=ov&&ov.cancel?'cancel':(done?'done':(iso<today?'missed':'sched'));
       out.push({key:key,kind:'train',date:iso,t1:(ov&&ov.t1)||pr.t1||'',t2:(ov&&ov.t2)||pr.t2||'',title:gg.cat||tdCatName(gg.catId),
         sub:[tdPeriodName(pr),gg.pitchId?tdPitchLabel(gg.branch,gg.pitchId):'',co?co.name:'بلا مدرب'].filter(Boolean).join(' • '),
-        scope:gg.catId,scopeLbl:gg.cat||'',color:agKind('train')[1],status:st,plan:plan||null,note:ov&&ov.note||'',
+        scope:gg.catId,scopeLbl:gg.cat||'',color:tdCatColor(gg.catId,gg.cat),status:st,plan:plan||null,note:ov&&ov.note||'',
         src:{type:'sess',gid:gg.id,pid:pr.id,ov:ov,branch:gg.branch,n:(t.players||[]).filter(function(p){return p.groupId===gg.id;}).length}});
     });
   });
@@ -18997,7 +19075,7 @@ function agEventsTD(from,to,branch){
     if(x.date<from||x.date>to)return;var gg=tdGroup(x.groupId);if(!gg||gg.branch!==bn&&AG.ctx==='ad')return;
     if(AG.ctx!=='ad'&&!tdScopeGroups().some(function(q){return q.id===x.groupId;}))return;
     var done=!!tdSessionFind(x.groupId,x.date);
-    out.push({key:'x|'+x.id,kind:'train',date:x.date,t1:x.t1||'',t2:x.t2||'',title:x.title||('تمرين إضافي — '+(gg.cat||'')),sub:[gg.name,x.note].filter(Boolean).join(' • '),scope:gg.catId,color:agKind('train')[1],status:x.cancel?'cancel':(done?'done':(x.date<today?'missed':'sched')),src:{type:'xsess',id:x.id,gid:gg.id,branch:gg.branch,n:(t.players||[]).filter(function(p){return p.groupId===gg.id;}).length}});
+    out.push({key:'x|'+x.id,kind:'train',date:x.date,t1:x.t1||'',t2:x.t2||'',title:x.title||('تمرين إضافي — '+(gg.cat||'')),sub:[gg.name,x.note].filter(Boolean).join(' • '),scope:gg.catId,color:tdCatColor(gg.catId,gg.cat),status:x.cancel?'cancel':(done?'done':(x.date<today?'missed':'sched')),src:{type:'xsess',id:x.id,gid:gg.id,branch:gg.branch,n:(t.players||[]).filter(function(p){return p.groupId===gg.id;}).length}});
   });
   /* الوديات */
   (t.friendlies||[]).forEach(function(f){
@@ -19013,7 +19091,7 @@ function agEventsTD(from,to,branch){
     if(!p.date||p.date<from||p.date>to||sessKeys[p.groupId+'|'+p.date])return;
     var gg=tdGroup(p.groupId);if(!gg)return;
     if(AG.ctx==='ad'?gg.branch!==bn:!tdScopeGroups().some(function(q){return q.id===p.groupId;}))return;
-    out.push({key:'p|'+p.id,kind:'train',date:p.date,t1:'',t2:'',title:p.title||'تمرين',sub:gg.cat||'',scope:gg.catId,color:agKind('train')[1],status:p.date<today?'done':'sched',plan:p,src:{type:'plan',id:p.id,gid:gg.id}});
+    out.push({key:'p|'+p.id,kind:'train',date:p.date,t1:'',t2:'',title:p.title||'تمرين',sub:gg.cat||'',scope:gg.catId,color:tdCatColor(gg.catId,gg.cat),status:p.date<today?'done':'sched',plan:p,src:{type:'plan',id:p.id,gid:gg.id}});
   });
   /* فعاليات الفرع */
   (t.events||[]).forEach(function(x){
@@ -19038,13 +19116,13 @@ function agEventsNT(from,to){
       var key='s|'+s.id+'|'+iso,ov=n.sessOv[key]||null;if(ov&&ov.matchId)return;
       var done=!!ntAttFind(s.id,iso),st=ov&&ov.cancel?'cancel':(done?'done':(iso<today?'missed':'sched'));
       var co=s.coachId?(n.staff||[]).find(function(x){return x.id===s.coachId;}):null;
-      out.push({key:key,kind:'train',date:iso,t1:(ov&&ov.t1)||sc.t1||'',t2:(ov&&ov.t2)||sc.t2||'',title:s.name,sub:[sc.loc||'',co?co.name:'بلا مدرب'].filter(Boolean).join(' • '),scope:s.id,color:xSqColor(s.id),status:st,plan:drillsBy[s.id+'|'+iso]||null,note:ov&&ov.note||'',src:{type:'ntsess',sid:s.id,ov:ov,n:ntSqActive(s.id).length}});
+      out.push({key:key,kind:'train',date:iso,t1:(ov&&ov.t1)||sc.t1||'',t2:(ov&&ov.t2)||sc.t2||'',title:s.name,sub:[sc.loc||'',co?co.name:'بلا مدرب'].filter(Boolean).join(' • '),scope:s.id,color:ntTrainColor(s.id),status:st,plan:drillsBy[s.id+'|'+iso]||null,note:ov&&ov.note||'',src:{type:'ntsess',sid:s.id,ov:ov,n:ntSqActive(s.id).length}});
     });
   });
   (n.sessExtra||[]).forEach(function(x){
     if(x.date<from||x.date>to||!sqs.some(function(s){return s.id===x.squadId;}))return;
     var done=!!ntAttFind(x.squadId,x.date);
-    out.push({key:'x|'+x.id,kind:'train',date:x.date,t1:x.t1||'',t2:x.t2||'',title:x.title||('تمرين إضافي — '+ntSqName(x.squadId)),sub:[ntSqName(x.squadId),x.loc,x.note].filter(Boolean).join(' • '),scope:x.squadId,color:xSqColor(x.squadId),status:x.cancel?'cancel':(done?'done':(x.date<today?'missed':'sched')),src:{type:'ntxsess',id:x.id,sid:x.squadId}});
+    out.push({key:'x|'+x.id,kind:'train',date:x.date,t1:x.t1||'',t2:x.t2||'',title:x.title||('تمرين إضافي — '+ntSqName(x.squadId)),sub:[ntSqName(x.squadId),x.loc,x.note].filter(Boolean).join(' • '),scope:x.squadId,color:ntTrainColor(x.squadId),status:x.cancel?'cancel':(done?'done':(x.date<today?'missed':'sched')),src:{type:'ntxsess',id:x.id,sid:x.squadId}});
   });
   (n.matches||[]).forEach(function(m){
     if(m.teamId!==NTTEAM||!sqs.some(function(s){return s.id===m.squadId;}))return;
@@ -19062,7 +19140,7 @@ function agEventsNT(from,to){
   var sessKeys={};out.forEach(function(e){if(e.src&&e.src.sid&&e.kind==='train')sessKeys[e.src.sid+'|'+e.date]=1;});
   (n.drills||[]).forEach(function(d){
     if(!d.date||d.date<from||d.date>to||sessKeys[d.scope+'|'+d.date]||!sqs.some(function(s){return s.id===d.scope;}))return;
-    out.push({key:'d|'+d.id,kind:'train',date:d.date,t1:'',t2:'',title:d.title||'تمرين',sub:ntSqName(d.scope),scope:d.scope,color:xSqColor(d.scope),status:d.date<today?'done':'sched',plan:d,src:{type:'drill',id:d.id,sid:d.scope}});
+    out.push({key:'d|'+d.id,kind:'train',date:d.date,t1:'',t2:'',title:d.title||'تمرين',sub:ntSqName(d.scope),scope:d.scope,color:ntTrainColor(d.scope),status:d.date<today?'done':'sched',plan:d,src:{type:'drill',id:d.id,sid:d.scope}});
   });
   out=out.concat(agCalEvents('nt','',from,to));
   return out;
@@ -19114,6 +19192,7 @@ function agRender(){
   var allK=Object.keys(AG_KIND).filter(function(k){return kindsHere[k]||s.kinds.indexOf(k)>-1;});
   h+='<div class="ag-kinds">'+allK.map(function(k){var kk=agKind(k),off=s.kinds.indexOf(k)>-1;return '<button type="button" class="ag-kind'+(off?' off':' on')+'" style="--c:'+kk[1]+'" onclick="agToggleKind(\''+k+'\')"><i></i>'+kk[0]+(kindsHere[k]?' <b>'+ceN(kindsHere[k])+'</b>':'')+'</button>';}).join('')+'</div>';
   h+='</div>';
+  h+=agCatLegendHTML(evs);
   /* المحتوى */
   if(s.view==='list')h+=agListHTML(evs,R,today);
   else if(s.period==='month')h+=agMonthHTML(evs,R,today);
@@ -19132,7 +19211,7 @@ function agScopes(){
 }
 function agEvHTML(e,compact){
   var kk=agKind(e.kind);
-  if(compact)return '<div class="ag-ev'+(e.status==='cancel'?' cancel':'')+(e.status==='done'?' done':'')+'" style="--c:'+e.color+'" onclick="event.stopPropagation();agOpen(\''+esc(e.key)+'\')" title="'+esc(e.title)+'">'+(e.t1?'<bdi>'+esc(fmt12(e.t1))+'</bdi> ':'')+esc(e.title)+'</div>';
+  if(compact)return '<div class="ag-ev'+(e.status==='cancel'?' cancel':'')+(e.status==='done'?' done':'')+'" style="--c:'+e.color+'" onclick="event.stopPropagation();agOpen(\''+esc(e.key)+'\')" title="'+esc(e.title)+(e.status==='done'?' — تم':'')+'">'+(e.status==='done'?ic('check',9)+' ':'')+(e.t1?'<bdi>'+esc(fmt12(e.t1))+'</bdi> ':'')+esc(e.title)+'</div>';
   return '<div class="ag-card'+(e.status==='cancel'?' cancel':'')+'" style="--c:'+e.color+'" onclick="agOpen(\''+esc(e.key)+'\')">'
     +'<div class="ag-tm">'+(e.t1?'<bdi>'+esc(fmt12(e.t1))+'</bdi>'+(e.t2?'<small><bdi>'+esc(fmt12(e.t2))+'</bdi></small>':''):(e.multi?'<small>عدة أيام</small>':'<small>—</small>'))+'</div>'
     +'<div class="ag-bar2"></div><div class="ag-main"><div class="ag-t">'+esc(e.title)+'</div><div class="ag-s"><span>'+esc(kk[0])+'</span>'+(e.sub?'<span>•</span><span>'+esc(e.sub)+'</span>':'')+(e.plan?'<span>•</span><span style="color:#1565c0">'+ic('image',10)+' تمرين مُعدّ</span>':'')+'</div></div>'
@@ -19258,7 +19337,8 @@ function agActionsHTML(e){
       act(e.status==='cancel'?'':'danger',e.status==='cancel'?'refresh':'x',e.status==='cancel'?'إعادة الحصة':'إلغاء الحصة',"agCancel('"+k+"')");
       if(t==='xsess')act('danger wide','trash','حذف التمرين الإضافي',"agDelX('"+k+"')");}
   }else if(t==='ntsess'||t==='ntxsess'){
-    if(e.status!=='cancel'&&ntCanAttend())act('pri','check',e.status==='done'?'عرض / تعديل التحضير':'تحضير الحصة',"agClose();NTAT.date='"+e.date+"';NTAT.squad='"+e.src.sid+"';NTAT.mode='day';ntP('attend')");
+    if(e.status!=='cancel'&&ntCanAttend()){act('pri','whistle',e.status==='done'?'وضع الملعب — عرض / تعديل':'وضع الملعب — تحضير الحصة',"agClose();fmOpen('"+e.src.sid+"','"+e.date+"','nt')");
+      act('','check','صفحة التحضير',"agClose();NTAT.date='"+e.date+"';NTAT.squad='"+e.src.sid+"';NTAT.mode='day';ntP('attend')");}
     if(e.plan||can)act('','image',e.plan?'عرض تفاصيل التمرين':'إضافة تفاصيل التمرين',"agPlan('"+k+"')");
     if(can){act('','clock','تعديل الوقت',"agS().form='time';agDrawer(agFind('"+k+"'))");
       act('','ball','تحويل إلى مباراة',"agS().form='tomatch';agDrawer(agFind('"+k+"'))");
@@ -19908,7 +19988,7 @@ function tdJourneyPrint(pid){
    ========================================================================== */
 var FM_ST={p:['حاضر','#16a34a','check'],l:['متأخر','#d97706','clock'],a:['غائب','#DD1D45','x'],e:['معتذر','#8b92b0','info']};
 var FM_ORDER=['p','l','a','e'];
-var FM={open:false,gid:'',date:'',sid:'',rows:{},notes:[],tab:'att',q:'',rec:null,recOn:false,dirty:false};
+var FM={open:false,ctx:'td',gid:'',date:'',sid:'',rows:{},notes:[],guests:[],tab:'att',q:'',rec:null,recOn:false,dirty:false};
 function tdSessLog(){var t=TDX();if(!t.sessions)t.sessions=[];return t.sessions;}
 function tdSession(id){return tdSessLog().find(function(s){return s.id===id;})||null;}
 function tdSessionFind(gid,date){return tdSessLog().find(function(s){return s.groupId===gid&&s.date===date;})||null;}
@@ -19937,61 +20017,57 @@ function fmHomeCardHTML(){
   h+='</div></div>';
   return h;
 }
-function fmStats(rows){var o={present:0,late:0,absent:0,excused:0,total:0};Object.keys(rows||{}).forEach(function(k){o.total++;var v=rows[k];if(v==='p')o.present++;else if(v==='l'){o.present++;o.late++;}else if(v==='a')o.absent++;else if(v==='e')o.excused++;});return o;}
-/* ---------- فتح الوضع ---------- */
-function fmOpen(gid,date){
-  if(!fmCan())return;
-  var gg=tdGroup(gid);if(!gg)return;
-  FM.gid=gid;FM.date=date||calISO(new Date());FM.tab='att';FM.q='';FM.dirty=false;
-  var s=tdSessionFind(gid,FM.date);
-  var ps=TDX().players.filter(function(p){return p.groupId===gid;});
-  FM.sid=s?s.id:'';FM.rows={};FM.notes=s?(s.notes||[]).slice():[];FM.gnote=s?(s.note||''):'';
-  ps.forEach(function(p){FM.rows[p.id]=s&&s.rows&&s.rows[p.id]?s.rows[p.id]:(s?'a':'p');});
-  /* مسودة غير محفوظة على هذا الجهاز؟ */
-  try{var d=JSON.parse(localStorage.getItem('fa_fm_draft')||'null');if(d&&d.gid===gid&&d.date===FM.date&&!s){FM.rows=d.rows||FM.rows;FM.notes=d.notes||[];FM.gnote=d.gnote||'';FM.dirty=true;}}catch(e){}
-  FM.open=true;document.body.classList.add('fm-on');
-  fmRender();
+/* حصص اليوم من محرك التقويم نفسه (يحترم تعديل الوقت والإلغاء والإجازات والتمارين الإضافية) */
+function fmTodaySess(ctx){
+  var keep=AG.ctx,today=calISO(new Date()),ev=[];
+  AG.ctx=ctx;try{ev=ctx==='nt'?agEventsNT(today,today):agEventsTD(today,today);}catch(e){ev=[];}AG.ctx=keep;
+  return ev.filter(function(e){return e.kind==='train'&&e.src&&['sess','xsess','ntsess','ntxsess'].indexOf(e.src.type)>-1&&e.status!=='cancel'&&(e.src.n==null||e.src.n>0);})
+    .map(function(e){var id=ctx==='nt'?e.src.sid:e.src.gid;return {id:id,ctx:ctx,t1:e.t1||'',name:ctx==='nt'?ntSqName(id):tdGName(id),lbl:e.title||'',done:e.status==='done',color:e.color,n:e.src.n,plan:e.plan||null};})
+    .sort(function(a,b){return tpMin(a.t1||'99:99')-tpMin(b.t1||'99:99')||String(a.name).localeCompare(String(b.name),'ar');});
 }
-function fmClose(force){
-  if(FM.dirty&&!force){askConfirm('لديك تغييرات غير محفوظة — الخروج بدون حفظ؟ (تبقى مسودة على هذا الجهاز)',function(){fmClose(true);},'خروج');return;}
-  fmStopRec();FM.open=false;document.body.classList.remove('fm-on');
-  var el=g('FM');if(el)el.innerHTML='';
-  if(!force)try{localStorage.removeItem('fa_fm_draft');}catch(e){}
-  try{if(g('TD').style.display==='block')tdP(TDPAGE||'home');}catch(e){}
+function fmNextOf(list){
+  var now=new Date(),mins=now.getHours()*60+now.getMinutes();
+  var todo=list.filter(function(x){return !x.done;});
+  return todo.find(function(x){return !x.t1||tpMin(x.t1)>=mins-75;})||todo[0]||null;
 }
-function fmDraft(){FM.dirty=true;try{localStorage.setItem('fa_fm_draft',JSON.stringify({gid:FM.gid,date:FM.date,rows:FM.rows,notes:FM.notes,gnote:FM.gnote,at:Date.now()}));}catch(e){}fmFoot();}
-function fmPlayers(){
-  var ps=TDX().players.filter(function(p){return p.groupId===FM.gid;}).sort(function(a,b){return a.name.localeCompare(b.name,'ar');});
-  var q=FM.q?normName(FM.q):'';
-  return q?ps.filter(function(p){return normName(p.name).indexOf(q)>-1;}):ps;
-}
-function fmRender(){
-  var el=g('FM');if(!el){el=document.createElement('div');el.id='FM';document.body.appendChild(el);}
-  var gg=tdGroup(FM.gid),pr=gg&&gg.periodId?tdPeriod(gg.periodId):null;
-  var s=FM.sid?tdSession(FM.sid):null;
-  var h='<div class="fm-wrap">';
-  h+='<div class="fm-hd"><button type="button" class="fm-x" onclick="fmClose()">'+ic('x',16)+'</button><div class="fm-hd-t"><b>'+esc(gg?gg.name:'')+'</b><small>'+esc(gg?gg.branch:'')+(pr&&pr.t1?' • <bdi class="ltr">'+esc(pr.t1)+'</bdi>':'')+'</small></div><input type="date" class="fm-date" value="'+esc(FM.date)+'" onchange="fmOpen(FM.gid,this.value)"></div>';
-  h+='<div class="fm-tabs"><button type="button" class="'+(FM.tab==='att'?'on':'')+'" onclick="FM.tab=\'att\';fmRender()">'+ic('check',14)+' التحضير</button><button type="button" class="'+(FM.tab==='notes'?'on':'')+'" onclick="FM.tab=\'notes\';fmRender()">'+ic('edit',14)+' الملاحظات'+(FM.notes.length?' <i>'+ceN(FM.notes.length)+'</i>':'')+'</button></div>';
-  h+='<div class="fm-body" id="fm-body">'+(FM.tab==='att'?fmAttHTML():fmNotesHTML())+'</div>';
-  h+='<div class="fm-foot" id="fm-foot"></div>';
-  h+='</div>';
-  el.innerHTML=h;hydrateIcons(el);fmFoot();
-}
-function fmAttHTML(){
-  var ps=fmPlayers(),all=TDX().players.filter(function(p){return p.groupId===FM.gid;});
-  var h='';
-  if(all.length>14)h+='<input type="search" class="fm-q" placeholder="ابحث باسم اللاعب…" value="'+esc(FM.q)+'" oninput="FM.q=this.value;g(\'fm-body\').innerHTML=fmAttHTML();hydrateIcons(g(\'fm-body\'))">';
-  h+='<div class="fm-quick"><button type="button" onclick="fmSetAll(\'p\')">'+ic('check',12)+' الكل حاضر</button><button type="button" onclick="fmSetAll(\'a\')">'+ic('x',12)+' الكل غائب</button><span>اضغط اللاعب لتغيير حالته</span></div>';
-  if(!ps.length)h+=emptyBox('users',FM.q?'لا نتائج':'لا يوجد لاعبون في هذه المجموعة');
-  h+='<div class="fm-list">';
-  ps.forEach(function(p){
-    var v=FM.rows[p.id]||'a',st=FM_ST[v],sub=tdSubState(p),subk=sub?sub.status:'',rem=tdSubRemain(p);
-    var warn=subk==='منتهي'||subk==='ملغي'||subk==='مجمّد'||(rem!=null&&rem<=0);
-    h+='<button type="button" class="fm-p st-'+v+'" onclick="fmCycle(\''+p.id+'\')"><span class="fm-p-st" style="--c:'+st[1]+'">'+ic(st[2],16)+'</span><span class="fm-p-nm"><b>'+esc(p.name)+'</b><small>'+(sub?'<span class="tdsub" style="--sc:'+(RX_COL[subk]||'var(--gray)')+'">'+esc(subk)+'</span>':'<span class="tdsub" style="--sc:var(--gray)">بلا اشتراك</span>')+(rem!=null?' <bdi class="ltr">'+ceN(rem)+'</bdi> متبقٍ':'')+(warn?' <em class="fm-warn">'+ic('info',10)+' يحتاج متابعة الاشتراك</em>':'')+'</small></span><span class="fm-p-lbl" style="color:'+st[1]+'">'+st[0]+'</span></button>';
+function fmShortLbl(x){var m=String(x.lbl||x.name||'').match(/\d{4}(\s*[-–]\s*\d{2,4})?/);return m?m[0].replace(/\s+/g,''):String(x.lbl||x.name||'').split(' ').slice(0,2).join(' ');}
+function fmChipsHTML(list,next){
+  var done=list.filter(function(x){return x.done;}).length;
+  var h='<div class="fm-home fm-mini"><div class="fm-mini-hd"><b>'+ic('whistle',12)+' حصص اليوم</b><span class="fm-home-prog'+(done===list.length?' all':'')+'">'+(done===list.length?ic('check',10)+' اكتمل تحضير كل الحصص':ceN(done)+' من '+ceN(list.length)+' حُضّرت')+'</span></div>';
+  h+='<div class="fm-mini-l">';
+  list.forEach(function(x){
+    var cls=x.done?'done':(next&&next.id===x.id?'todo next':'todo');
+    h+='<button type="button" class="fm-home-g '+cls+'" style="--c:'+esc(x.color||'#1565c0')+'" onclick="event.stopPropagation();fmOpen(\''+x.id+'\',\'\',\''+x.ctx+'\')" title="'+esc(x.name+(x.t1?' — '+x.t1:'')+' — '+(x.done?'تم التحضير':'لم يُحضَّر بعد'))+'">'
+      +'<span class="fm-hc-st">'+ic(x.done?'check':'clock',10)+'</span><b><bdi class="ltr">'+esc(x.t1||'—')+'</bdi></b><small>'+esc(fmShortLbl(x))+'</small></button>';
   });
-  h+='</div>';
+  h+='</div><div class="fm-mini-lg"><span class="ok">'+ic('check',9)+' تم التحضير</span><span class="no">'+ic('clock',9)+' لم يُحضَّر بعد</span><span>اضغط الحصة لفتح وضع الملعب</span></div></div>';
   return h;
 }
+/* بطاقة «الحصة القادمة» في رئيسية الإدارة الفنية — وبداخلها حصص اليوم أيقونات صغيرة */
+function tdNextSessCard(){
+  if(!fmCan())return '';
+  var list=fmTodaySess('td');if(!list.length)return '';
+  var nx=fmNextOf(list),done=list.filter(function(x){return x.done;}).length;
+  var body;
+  if(nx){
+    var co=tdGroupCoachName(nx.id);
+    body='<div class="dlead"><span class="dlead-av dlead-av-i" style="background:'+esc(nx.color||tdGroupColor(nx.id))+'">'+ic('whistle',20)+'</span>'
+      +'<div><div class="dlead-n">'+esc(nx.name)+'</div><div class="dlead-s">اليوم'+(nx.t1?' • <bdi class="ltr">'+esc(nx.t1)+'</bdi>':'')+(nx.n?' • '+ceN(nx.n)+' لاعباً':'')+(co?' • '+esc(co):'')+'</div>'
+      +(nx.plan?'<div class="dlead-s" style="opacity:.9">'+ic('image',10)+' '+esc(nx.plan.title||'تمرين مُعدّ')+'</div>':'')+'</div></div>';
+  }else body='<div class="dlead"><span class="dlead-av dlead-av-i" style="background:#16a34a">'+ic('check',20)+'</span><div><div class="dlead-n">اكتمل تحضير حصص اليوم</div><div class="dlead-s">'+ceN(list.length)+' حصة — أحسنت</div></div></div>';
+  body+=fmChipsHTML(list,nx);
+  return dashCard({tone:'dc-primary',icon:'whistle',title:'الحصة القادمة',sub:esc(new Date().toLocaleDateString(locale(),{weekday:'long',day:'numeric',month:'long'})),body:body,
+    cta:nx?['وضع الملعب — '+fmShortLbl(nx),"fmOpen('"+nx.id+"')"]:['التمارين والمباريات',"tdP('agenda')"]});
+}
+/* شريط حصص اليوم في رئيسية المنتخب */
+function ntTodayStripHTML(){
+  if(!ntCanAttend())return '';
+  var list=fmTodaySess('nt');if(!list.length)return '';
+  var nx=fmNextOf(list);
+  return '<div class="fm-nt-strip">'+fmChipsHTML(list,nx)+(nx?'<button type="button" class="dc-cta" onclick="fmOpen(\''+nx.id+'\',\'\',\'nt\')">'+ic('whistle',13)+' وضع الملعب — '+esc(nx.name)+'</button>':'')+'</div>';
+}
+function fmStats(rows){var o={present:0,late:0,absent:0,excused:0,total:0};Object.keys(rows||{}).forEach(function(k){o.total++;var v=rows[k];if(v==='p')o.present++;else if(v==='l'){o.present++;o.late++;}else if(v==='a')o.absent++;else if(v==='e')o.excused++;});return o;}
+/* ---------- فتح الوضع ---------- */
 function fmCycle(pid){var v=FM.rows[pid]||'p';var i=FM_ORDER.indexOf(v);FM.rows[pid]=FM_ORDER[(i+1)%FM_ORDER.length];var b=g('fm-body');if(b){b.innerHTML=fmAttHTML();hydrateIcons(b);}fmDraft();}
 function fmSetAll(v){Object.keys(FM.rows).forEach(function(k){FM.rows[k]=v;});var b=g('fm-body');if(b){b.innerHTML=fmAttHTML();hydrateIcons(b);}fmDraft();}
 function fmFoot(){
@@ -20001,41 +20077,7 @@ function fmFoot(){
   hydrateIcons(f);
 }
 /* ---------- الملاحظات ---------- */
-function fmNotesHTML(){
-  var ps=TDX().players.filter(function(p){return p.groupId===FM.gid;}).sort(function(a,b){return a.name.localeCompare(b.name,'ar');});
-  var sr=('webkitSpeechRecognition' in window)||('SpeechRecognition' in window);
-  var h='<div class="fm-note-box">';
-  h+='<div class="fm-note-top">'+(sr?'<button type="button" class="fm-mic'+(FM.recOn?' on':'')+'" onclick="fmToggleRec()">'+ic('mic',22)+'<span>'+(FM.recOn?'جارٍ الاستماع… اضغط للإيقاف':'اضغط وتكلّم')+'</span></button>':'<div class="jnote">'+ic('info',12)+' التعرف الصوتي غير متاح في هذا المتصفح — اكتب الملاحظة.</div>')+'</div>';
-  h+='<textarea id="fm-note" rows="3" placeholder="مثال: يوسف تحسّن في التمرير، خالد يحتاج تمارين توازن" oninput="fmGuess()"></textarea>';
-  h+='<div class="fm-note-who"><small>اربط باللاعبين:</small><div class="fm-chips" id="fm-chips">'+ps.map(function(p){return '<button type="button" class="fm-chip" data-pid="'+p.id+'" onclick="this.classList.toggle(\'on\')">'+esc((p.name||'').split(' ')[0]+' '+((p.name||'').split(' ')[2]||(p.name||'').split(' ')[1]||''))+'</button>';}).join('')+'</div></div>';
-  h+='<label class="fm-par"><input type="checkbox" id="fm-par"> تظهر لولي الأمر</label>';
-  h+='<button type="button" class="btn btn-r" style="width:100%;min-height:46px" onclick="fmAddNote()">'+ic('plus',14)+' إضافة الملاحظة</button>';
-  h+='</div>';
-  h+='<div class="fg" style="margin-top:.9rem"><label>ملاحظة عامة عن الحصة</label><textarea id="fm-gnote" rows="2" oninput="FM.gnote=this.value;fmDraft()">'+esc(FM.gnote||'')+'</textarea></div>';
-  if(FM.notes.length){
-    h+='<div class="sub-head" style="margin:.8rem 0 .4rem"><span class="sh-line"></span><h2 style="font-size:12px">ملاحظات الحصة ('+ceN(FM.notes.length)+')</h2></div><div class="fm-notes">';
-    FM.notes.slice().reverse().forEach(function(n,i){
-      var idx=FM.notes.length-1-i;
-      h+='<div class="fm-nt"><div><div>'+esc(n.text)+'</div><small>'+(n.pids||[]).map(function(id){var p=tdPlayer(id);return p?esc(p.name.split(' ')[0]):'';}).filter(Boolean).join('، ')+(n.par?' • <span style="color:#16a34a">لولي الأمر</span>':'')+'</small></div><button type="button" class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="FM.notes.splice('+idx+',1);fmDraft();fmRender()">'+ic('trash',11)+'</button></div>';
-    });
-    h+='</div>';
-  }
-  return h;
-}
 /* تخمين اللاعبين المذكورين في النص */
-function fmGuess(){
-  var t=normName(gv('fm-note'));if(!t)return;
-  var ps=TDX().players.filter(function(p){return p.groupId===FM.gid;});
-  var cnt={};ps.forEach(function(p){var f=(p.name||'').split(' ')[0];cnt[f]=(cnt[f]||0)+1;});
-  document.querySelectorAll('#fm-chips .fm-chip').forEach(function(ch){
-    var p=tdPlayer(ch.dataset.pid);if(!p||ch.dataset.auto)return;
-    var parts=(p.name||'').split(' '),first=parts[0]||'';
-    if(!first||first.length<3)return;
-    /* الاسم الأول وحده يكفي إن كان فريداً في المجموعة، وإلا نطلب الاسم الثاني معه */
-    var hit=cnt[first]===1?t.indexOf(first)>-1:(parts[1]&&t.indexOf(first+' '+parts[1])>-1);
-    if(hit){ch.classList.add('on');ch.dataset.auto='1';}
-  });
-}
 function fmAddNote(){
   var txt=gv('fm-note');if(!txt){addN('اكتب الملاحظة أولاً','','warn');return;}
   var pids=[].slice.call(document.querySelectorAll('#fm-chips .fm-chip.on')).map(function(c){return c.dataset.pid;});
@@ -20056,13 +20098,157 @@ function fmToggleRec(){
 }
 function fmStopRec(){FM.recOn=false;if(FM.rec){try{FM.rec.onend=null;FM.rec.stop();}catch(e){}FM.rec=null;}}
 /* ---------- الحفظ ---------- */
+function fmOpen(gid,date,ctx){
+  ctx=ctx||'td';
+  if(ctx==='nt'?!ntCanAttend():!fmCan())return;
+  var base;
+  if(ctx==='nt'){if(!ntSquad(gid))return;}else if(!tdGroup(gid))return;
+  FM.ctx=ctx;FM.gid=gid;FM.date=date||calISO(new Date());FM.tab='att';FM.q='';FM.dirty=false;FM.guests=[];
+  var s=ctx==='nt'?ntAttFind(gid,FM.date):tdSessionFind(gid,FM.date);
+  FM.sid=s?s.id:'';FM.rows={};FM.notes=s?((ctx==='nt'?s.fmNotes:s.notes)||[]).slice():[];FM.gnote=s?(s.note||''):'';
+  base=fmBase();var inBase={};
+  base.forEach(function(o){inBase[o.id]=1;FM.rows[o.id]=s&&s.rows&&s.rows[o.id]?s.rows[o.id]:(s?'a':'p');});
+  /* اللاعبون المضافون من خارج الحصة يُستعادون من سجلها */
+  if(s&&s.rows)Object.keys(s.rows).forEach(function(id){if(!inBase[id]&&fmGuestObj(id)){FM.guests.push(id);FM.rows[id]=s.rows[id];}});
+  /* مسودة غير محفوظة على هذا الجهاز؟ */
+  try{var d=JSON.parse(localStorage.getItem('fa_fm_draft')||'null');if(d&&(d.ctx||'td')===ctx&&d.gid===gid&&d.date===FM.date&&!s){FM.rows=d.rows||FM.rows;FM.notes=d.notes||[];FM.gnote=d.gnote||'';FM.guests=(d.guests||[]).filter(function(id){return !!fmGuestObj(id);});FM.dirty=true;}}catch(e){}
+  FM.open=true;document.body.classList.add('fm-on');
+  fmRender();
+}
+function fmClose(force){
+  if(FM.dirty&&!force){askConfirm('لديك تغييرات غير محفوظة — الخروج بدون حفظ؟ (تبقى مسودة على هذا الجهاز)',function(){fmClose(true);},'خروج');return;}
+  fmStopRec();FM.open=false;document.body.classList.remove('fm-on');
+  var el=g('FM');if(el)el.innerHTML='';
+  if(!force)try{localStorage.removeItem('fa_fm_draft');}catch(e){}
+  try{if(g('TD').style.display==='block')tdP(TDPAGE||'home');}catch(e){}
+  try{if(g('NT')&&g('NT').style.display==='block')ntP(NTPAGE||'home');}catch(e){}
+}
+/* ---------- قائمة الحصة: لاعبو المجموعة/الفئة + المضافون ---------- */
+function fmWrapNT(m,guest){var p=ntPlayerInfo(m)||{};return {id:m.id,name:ntPName(m),sp:p.id?p:null,guest:!!guest,from:guest?ntSqName(m.squadId):'',meta:[m.jersey?'#'+m.jersey:'',m.pos||p.pos||''].filter(Boolean).join(' • '),phone:p.guardPhone||p.guard||m.phone||''};}
+function fmWrapTD(p,guest){return {id:p.id,name:p.name,sp:p,guest:!!guest,from:guest?(tdGName(p.groupId)||p.branch||''):'',meta:'',phone:p.guardPhone||p.guard||''};}
+function fmBase(){
+  if(FM.ctx==='nt')return ntSqActive(FM.gid).map(function(m){return fmWrapNT(m,false);});
+  return TDX().players.filter(function(p){return p.groupId===FM.gid;}).map(function(p){return fmWrapTD(p,false);});
+}
+function fmGuestObj(id){
+  if(FM.ctx==='nt'){var m=ntMember(id);return m?fmWrapNT(m,true):null;}
+  var p=tdPlayer(id);return p?fmWrapTD(p,true):null;
+}
+function fmAll(){
+  var out=fmBase(),ids={};out.forEach(function(o){ids[o.id]=1;});
+  (FM.guests||[]).forEach(function(id){if(ids[id])return;var o=fmGuestObj(id);if(o){out.push(o);ids[id]=1;}});
+  return out;
+}
+function fmObj(id){return fmAll().find(function(o){return o.id===id;})||null;}
+function fmCmp(a,b){return (a.sp?tdSubRank(a.sp):4)-(b.sp?tdSubRank(b.sp):4)||String(a.name||'').localeCompare(String(b.name||''),'ar');}
+function fmPlayers(){
+  var ps=fmAll().sort(fmCmp);
+  var q=FM.q?normName(FM.q):'';
+  return q?ps.filter(function(p){return normName(p.name).indexOf(q)>-1;}):ps;
+}
+function fmHead(){
+  if(FM.ctx==='nt'){
+    var s=ntSquad(FM.gid),sc=(s&&s.sched)||{},ov=(NTX().sessOv||{})['s|'+FM.gid+'|'+FM.date]||null,t1=(ov&&ov.t1)||sc.t1||'';
+    return {name:s?s.name:'',sub:'منتخب فارس'+(sc.loc?' • '+sc.loc:''),t1:t1};
+  }
+  var gg=tdGroup(FM.gid),pr=gg&&gg.periodId?tdPeriod(gg.periodId):null;
+  return {name:gg?gg.name:'',sub:gg?gg.branch:'',t1:pr&&pr.t1||''};
+}
+function fmRender(){
+  var el=g('FM');if(!el){el=document.createElement('div');el.id='FM';document.body.appendChild(el);}
+  var hd=fmHead();
+  var h='<div class="fm-wrap">';
+  h+='<div class="fm-hd"><button type="button" class="fm-x" onclick="fmClose()">'+ic('x',16)+'</button><div class="fm-hd-t"><b>'+esc(hd.name)+'</b><small>'+esc(hd.sub)+(hd.t1?' • <bdi class="ltr">'+esc(hd.t1)+'</bdi>':'')+'</small></div><input type="date" class="fm-date" value="'+esc(FM.date)+'" onchange="fmOpen(FM.gid,this.value,FM.ctx)"></div>';
+  h+='<div class="fm-tabs"><button type="button" class="'+(FM.tab==='att'?'on':'')+'" onclick="FM.tab=\'att\';fmRender()">'+ic('check',14)+' التحضير</button><button type="button" class="'+(FM.tab==='notes'?'on':'')+'" onclick="FM.tab=\'notes\';fmRender()">'+ic('edit',14)+' الملاحظات'+(FM.notes.length?' <i>'+ceN(FM.notes.length)+'</i>':'')+'</button></div>';
+  h+='<div class="fm-body" id="fm-body">'+(FM.tab==='att'?fmAttHTML():fmNotesHTML())+'</div>';
+  h+='<div class="fm-foot" id="fm-foot"></div>';
+  h+='</div>';
+  el.innerHTML=h;hydrateIcons(el);fmFoot();
+}
+function fmRowHTML(o){
+  var v=FM.rows[o.id]||'a',st=FM_ST[v],sub=o.sp?tdSubState(o.sp):null,subk=sub?sub.status:'',rem=o.sp?tdSubRemain(o.sp):null;
+  var warn=subk==='منتهي'||subk==='ملغي'||subk==='مجمّد'||(rem!=null&&rem<=0);
+  var info=sub?'<span class="tdsub" style="--sc:'+(RX_COL[subk]||'var(--gray)')+'">'+esc(subk)+'</span>':(FM.ctx==='nt'?'':'<span class="tdsub" style="--sc:var(--gray)">بلا اشتراك</span>');
+  if(o.meta)info+=' <span>'+esc(o.meta)+'</span>';
+  if(rem!=null)info+=' <bdi class="ltr">'+ceN(rem)+'</bdi> متبقٍ';
+  if(warn)info+=' <em class="fm-warn">'+ic('info',10)+' يحتاج متابعة الاشتراك</em>';
+  if(o.guest)info='<span class="fm-guest">'+ic('user-plus',10)+' مضاف'+(o.from?' — من '+esc(o.from):'')+'</span> '+info;
+  var btn='<button type="button" class="fm-p st-'+v+'" onclick="fmCycle(\''+o.id+'\')"><span class="fm-p-st" style="--c:'+st[1]+'">'+ic(st[2],16)+'</span><span class="fm-p-nm"><b>'+esc(o.name)+'</b><small>'+info+'</small></span><span class="fm-p-lbl" style="color:'+st[1]+'">'+st[0]+'</span></button>';
+  return o.guest?'<div class="fm-gw">'+btn+'<button type="button" class="fm-grm" title="إزالة من الحصة" onclick="fmRmGuest(\''+o.id+'\')">'+ic('x',14)+'</button></div>':btn;
+}
+function fmAttHTML(){
+  var ps=fmPlayers(),all=fmAll();
+  var h='';
+  if(all.length>14)h+='<input type="search" class="fm-q" placeholder="ابحث باسم اللاعب…" value="'+esc(FM.q)+'" oninput="FM.q=this.value;g(\'fm-body\').innerHTML=fmAttHTML();hydrateIcons(g(\'fm-body\'))">';
+  h+='<div class="fm-quick"><button type="button" onclick="fmSetAll(\'p\')">'+ic('check',12)+' الكل حاضر</button><button type="button" onclick="fmSetAll(\'a\')">'+ic('x',12)+' الكل غائب</button><span>اضغط اللاعب لتغيير حالته</span></div>';
+  var mine=ps.filter(function(o){return !o.guest;}),gs=ps.filter(function(o){return o.guest;});
+  if(!mine.length&&!gs.length)h+=emptyBox('users',FM.q?'لا نتائج':(FM.ctx==='nt'?'لا يوجد لاعبون في هذه الفئة':'لا يوجد لاعبون في هذه المجموعة'));
+  h+='<div class="fm-list">'+mine.map(fmRowHTML).join('')+'</div>';
+  if(gs.length)h+='<div class="fm-sec">'+ic('user-plus',13)+' لاعبون مضافون لهذه الحصة <b>'+ceN(gs.length)+'</b></div><div class="fm-list">'+gs.map(fmRowHTML).join('')+'</div>';
+  h+=xpickHTML('fm-xp',{title:'إضافة لاعب من خارج '+(FM.ctx==='nt'?'الفئة':'المجموعة'),hint:'يحضر معهم هذه الحصة فقط — لا يُنقل من مجموعته',cands:function(){var ids={};fmAll().forEach(function(o){ids[o.id]=1;});return fmGuestCands().filter(function(c){return !ids[c.id];});},pick:fmAddGuest});
+  return h;
+}
+/* المرشحون للإضافة: لاعبو فروع نطاقي (الإدارة الفنية) أو لاعبو باقي فئات المنتخب */
+function fmGuestCands(){
+  if(FM.ctx==='nt')return ntScopeMembers().filter(function(m){return m.squadId!==FM.gid;}).map(function(m){var o=fmWrapNT(m,true);return {id:m.id,name:o.name,sub:ntSqName(m.squadId),sp:o.sp};});
+  var brs=tdScopeBranchNames();
+  return TDX().players.filter(function(p){return brs.indexOf(p.branch)>-1&&p.status!=='left';}).map(function(p){return {id:p.id,name:p.name,sub:[tdGName(p.groupId)||tdPlCatName(p),brs.length>1?p.branch:''].filter(Boolean).join(' — '),sp:p,nid:p.nid||''};});
+}
+function fmAddGuest(id){
+  if(!id||fmBase().some(function(o){return o.id===id;}))return;
+  if((FM.guests||[]).indexOf(id)<0)FM.guests.push(id);
+  FM.rows[id]='p';FM.q='';
+  var b=g('fm-body');if(b){b.innerHTML=fmAttHTML();hydrateIcons(b);}
+  fmDraft();
+  var o=fmGuestObj(id);addN('أُضيف للحصة',o?o.name:'','success');
+}
+function fmRmGuest(id){
+  FM.guests=(FM.guests||[]).filter(function(x){return x!==id;});delete FM.rows[id];
+  var b=g('fm-body');if(b){b.innerHTML=fmAttHTML();hydrateIcons(b);}
+  fmDraft();
+}
+function fmDraft(){FM.dirty=true;try{localStorage.setItem('fa_fm_draft',JSON.stringify({ctx:FM.ctx||'td',gid:FM.gid,date:FM.date,rows:FM.rows,notes:FM.notes,gnote:FM.gnote,guests:FM.guests||[],at:Date.now()}));}catch(e){}fmFoot();}
+function fmNotesHTML(){
+  var ps=fmAll().sort(fmCmp);
+  var sr=('webkitSpeechRecognition' in window)||('SpeechRecognition' in window);
+  var h='<div class="fm-note-box">';
+  h+='<div class="fm-note-top">'+(sr?'<button type="button" class="fm-mic'+(FM.recOn?' on':'')+'" onclick="fmToggleRec()">'+ic('mic',22)+'<span>'+(FM.recOn?'جارٍ الاستماع… اضغط للإيقاف':'اضغط وتكلّم')+'</span></button>':'<div class="jnote">'+ic('info',12)+' التعرف الصوتي غير متاح في هذا المتصفح — اكتب الملاحظة.</div>')+'</div>';
+  h+='<textarea id="fm-note" rows="3" placeholder="مثال: يوسف تحسّن في التمرير، خالد يحتاج تمارين توازن" oninput="fmGuess()"></textarea>';
+  h+='<div class="fm-note-who"><small>اربط باللاعبين:</small><div class="fm-chips" id="fm-chips">'+ps.map(function(p){var nm=String(p.name||'').split(' ');return '<button type="button" class="fm-chip" data-pid="'+p.id+'" onclick="this.classList.toggle(\'on\')">'+esc(nm[0]+' '+(nm[2]||nm[1]||''))+'</button>';}).join('')+'</div></div>';
+  h+='<label class="fm-par"><input type="checkbox" id="fm-par"> تظهر لولي الأمر</label>';
+  h+='<button type="button" class="btn btn-r" style="width:100%;min-height:46px" onclick="fmAddNote()">'+ic('plus',14)+' إضافة الملاحظة</button>';
+  h+='</div>';
+  h+='<div class="fg" style="margin-top:.9rem"><label>ملاحظة عامة عن الحصة</label><textarea id="fm-gnote" rows="2" oninput="FM.gnote=this.value;fmDraft()">'+esc(FM.gnote||'')+'</textarea></div>';
+  if(FM.notes.length){
+    h+='<div class="sub-head" style="margin:.8rem 0 .4rem"><span class="sh-line"></span><h2 style="font-size:12px">ملاحظات الحصة ('+ceN(FM.notes.length)+')</h2></div><div class="fm-notes">';
+    FM.notes.slice().reverse().forEach(function(n,i){
+      var idx=FM.notes.length-1-i;
+      h+='<div class="fm-nt"><div><div>'+esc(n.text)+'</div><small>'+(n.pids||[]).map(function(id){var p=fmObj(id);return p?esc(String(p.name).split(' ')[0]):'';}).filter(Boolean).join('، ')+(n.par?' • <span style="color:#16a34a">لولي الأمر</span>':'')+'</small></div><button type="button" class="ab" style="background:rgba(221,29,69,.08);color:var(--red)" onclick="FM.notes.splice('+idx+',1);fmDraft();fmRender()">'+ic('trash',11)+'</button></div>';
+    });
+    h+='</div>';
+  }
+  return h;
+}
+function fmGuess(){
+  var t=normName(gv('fm-note'));if(!t)return;
+  var ps=fmAll();
+  var cnt={};ps.forEach(function(p){var f=String(p.name||'').split(' ')[0];cnt[f]=(cnt[f]||0)+1;});
+  document.querySelectorAll('#fm-chips .fm-chip').forEach(function(ch){
+    var p=ps.find(function(x){return x.id===ch.dataset.pid;});if(!p||ch.dataset.auto)return;
+    var parts=String(p.name||'').split(' '),first=parts[0]||'';
+    if(!first||first.length<3)return;
+    /* الاسم الأول وحده يكفي إن كان فريداً في الحصة، وإلا نطلب الاسم الثاني معه */
+    var hit=cnt[first]===1?t.indexOf(first)>-1:(parts[1]&&t.indexOf(first+' '+parts[1])>-1);
+    if(hit){ch.classList.add('on');ch.dataset.auto='1';}
+  });
+}
 function fmFinish(){
-  var st=fmStats(FM.rows),gg=tdGroup(FM.gid);
-  var abs=Object.keys(FM.rows).filter(function(k){return FM.rows[k]==='a';}).map(function(k){return tdPlayer(k);}).filter(Boolean);
+  var st=fmStats(FM.rows),hd=fmHead();
+  var abs=Object.keys(FM.rows).filter(function(k){return FM.rows[k]==='a';}).map(fmObj).filter(Boolean);
   var h='<div class="fm-sum"><div class="fm-sum-g"><div><b style="color:#16a34a">'+ceN(st.present)+'</b><small>حاضر</small></div><div><b style="color:#d97706">'+ceN(st.late)+'</b><small>متأخر</small></div><div><b style="color:#DD1D45">'+ceN(st.absent)+'</b><small>غائب</small></div><div><b style="color:#8b92b0">'+ceN(st.excused)+'</b><small>معتذر</small></div><div><b>'+ceN(FM.notes.length)+'</b><small>ملاحظات</small></div></div>';
   if(abs.length){
     h+='<div class="sub-head" style="margin:.8rem 0 .4rem"><span class="sh-line"></span><h2 style="font-size:12px">الغائبون — رسالة واتساب لولي الأمر</h2></div><div class="fm-abs">';
-    abs.forEach(function(p){var ph=normPhone(p.guardPhone||p.guard||'');var msg='السلام عليكم، نفيدكم بأن اللاعب '+p.name+' لم يحضر حصة اليوم ('+FM.date+') — '+(gg?gg.name:'')+'. نتمنى سلامته. أكاديمية فارس';
+    abs.forEach(function(p){var ph=normPhone(p.phone||'');var msg='السلام عليكم، نفيدكم بأن اللاعب '+p.name+' لم يحضر حصة اليوم ('+FM.date+') — '+hd.name+'. نتمنى سلامته. أكاديمية فارس';
       h+='<div class="fm-ab"><span>'+esc(p.name)+'</span>'+(ph?'<a class="btn btn-g btn-sm" href="https://wa.me/'+esc(ph)+'?text='+encodeURIComponent(msg)+'" target="_blank" rel="noopener">'+ic('whatsapp',12)+' واتساب</a>':'<small style="color:var(--gray)">بلا جوال</small>')+'</div>';});
     h+='</div>';
   }
@@ -20071,27 +20257,75 @@ function fmFinish(){
   var box=document.createElement('div');box.id='fm-sumbox';box.className='fm-sumbox';box.innerHTML=h;g('FM').appendChild(box);hydrateIcons(box);
 }
 function fmSave(){
+  if(FM.ctx==='nt')return fmSaveNT();
   var t=TDX(),gg=tdGroup(FM.gid);if(!gg)return;
   var s=FM.sid?tdSession(FM.sid):null,isNew=!s;
   if(!s){s={id:uid(),groupId:FM.gid,branch:gg.branch||'',date:FM.date,periodId:gg.periodId||'',by:CU.name,at:Date.now(),rows:{},ded:{}};tdSessLog().push(s);}
   var prev=s.rows||{};s.ded=s.ded||{};
-  /* خصم/إرجاع رصيد الاشتراك حسب تغيّر الحالة */
-  Object.keys(FM.rows).forEach(function(pid){
+  /* خصم/إرجاع رصيد الاشتراك حسب تغيّر الحالة — ويشمل من أُزيل من الحصة */
+  var ids={};Object.keys(FM.rows).concat(Object.keys(s.ded)).forEach(function(k){ids[k]=1;});
+  Object.keys(ids).forEach(function(pid){
     var v=FM.rows[pid],p=tdPlayer(pid);if(!p)return;
     var wasIn=!!s.ded[pid],nowIn=(v==='p'||v==='l');
     if(nowIn&&!wasIn&&p.sub){p.sub.used=(+p.sub.used||0)+1;if(p.sub.remain!=null&&p.sub.remain!=='')p.sub.remain=Math.max(0,(+p.sub.remain||0)-1);s.ded[pid]=1;}
     if(!nowIn&&wasIn&&p.sub){p.sub.used=Math.max(0,(+p.sub.used||0)-1);if(p.sub.remain!=null&&p.sub.remain!=='')p.sub.remain=(+p.sub.remain||0)+1;delete s.ded[pid];}
   });
-  s.rows=JSON.parse(JSON.stringify(FM.rows));s.notes=FM.notes.slice();s.note=FM.gnote||'';s.editedBy=CU.name;s.editedAt=Date.now();
+  s.rows=JSON.parse(JSON.stringify(FM.rows));s.guests=(FM.guests||[]).slice();s.notes=FM.notes.slice();s.note=FM.gnote||'';s.editedBy=CU.name;s.editedAt=Date.now();
   /* ملف التحضير الشهري يُحدَّث من الحصص تلقائياً (لا يلمس ملفاً أُدخل يدوياً) */
   fmSyncMonthly(FM.gid,FM.date.slice(0,7));
   var st=fmStats(s.rows);
-  logA((isNew?'تحضير حصة':'تعديل تحضير حصة')+' '+FM.date+' — '+gg.name+' ('+ceN(st.present)+' حاضر من '+ceN(st.total)+')','check','#16a34a');
+  logA((isNew?'تحضير حصة':'تعديل تحضير حصة')+' '+FM.date+' — '+gg.name+' ('+ceN(st.present)+' حاضر من '+ceN(st.total)+(s.guests.length?' • '+ceN(s.guests.length)+' مضاف':'')+')','check','#16a34a');
   sv();FM.sid=s.id;FM.dirty=false;
   try{localStorage.removeItem('fa_fm_draft');}catch(e){}
   addN('حُفظت الحصة',gg.name+' — '+FM.date,'success');
   fmClose(true);
 }
+/* وضع الملعب للمنتخب: يُحفظ في ملف التحضير اليومي للفئة نفسه */
+function fmSaveNT(){
+  var sid=FM.gid,date=FM.date,sq=ntSquad(sid);if(!sq)return;
+  var rows=JSON.parse(JSON.stringify(FM.rows)),n=Object.keys(rows).length;
+  var sheet=ntAttFind(sid,date),isNew=!sheet;
+  if(!sheet){sheet={id:uid(),teamId:NTTEAM,squadId:sid,date:date,rows:{},by:CU.name,at:Date.now()};ntAttSheets().push(sheet);}
+  sheet.rows=rows;sheet.note=FM.gnote||'';sheet.fmNotes=FM.notes.slice();sheet.guests=(FM.guests||[]).slice();sheet.by=CU.name;sheet.at=Date.now();sheet.src='fm';
+  var st=fmStats(rows);
+  logA('تحضير المنتخب (وضع الملعب): '+sq.name+' — '+date+' ('+ceN(st.present)+' حاضر من '+ceN(n)+')','check','#16a34a',true);
+  sv();FM.sid=sheet.id;FM.dirty=false;
+  try{localStorage.removeItem('fa_fm_draft');}catch(e){}
+  addN(isNew?'حُفظ التحضير':'حُدّث التحضير',sq.name+' — '+date,'success');
+  fmClose(true);
+}
+/* ===== منتقي «إضافة لاعب من خارج القائمة» — يُستخدم في وضع الملعب والتحضير بكل الأنظمة =====
+   opts: {title, hint, cands:fn→[{id,name,sub,sp,nid}], pick:fn(id)} */
+var XPK={};
+function xpickHTML(id,opts){
+  XPK[id]=opts;
+  return '<div class="xpick" id="'+id+'"><div class="xpick-hd">'+ic('user-plus',15)+'<div><b>'+esc(opts.title||'إضافة لاعب')+'</b>'+(opts.hint?'<small>'+esc(opts.hint)+'</small>':'')+'</div></div>'
+    +'<input type="search" class="xpick-q" id="'+id+'-q" placeholder="اكتب اسم اللاعب أو رقم هويته…" autocomplete="off" oninput="xpickSearch(\''+id+'\')" onfocus="xpickSearch(\''+id+'\')">'
+    +'<div class="xpick-res" id="'+id+'-res"></div></div>';
+}
+function xpickSearch(id){
+  var o=XPK[id],q=g(id+'-q'),box=g(id+'-res');if(!o||!q||!box)return;
+  var t=ntNorm(q.value||'');
+  if(t.length<2){box.innerHTML=q.value?'<div class="xpick-none">اكتب حرفين على الأقل</div>':'';return;}
+  var list=[];try{list=o.cands()||[];}catch(e){list=[];}
+  var hits=list.filter(function(c){return ntNorm(c.name).indexOf(t)>-1||(c.nid&&String(c.nid).indexOf(q.value.trim())>-1);});
+  hits.sort(function(a,b){var ra=a.sp?tdSubRank(a.sp):4,rb=b.sp?tdSubRank(b.sp):4;var sa=ntNorm(a.name).indexOf(t)===0?0:1,sb=ntNorm(b.name).indexOf(t)===0?0:1;return sa-sb||ra-rb||String(a.name).localeCompare(String(b.name),'ar');});
+  if(!hits.length){box.innerHTML='<div class="xpick-none">لا يوجد لاعب بهذا الاسم</div>';return;}
+  box.innerHTML=hits.slice(0,8).map(function(c){
+    var chip=c.sp?tdSubChip(c.sp):'';
+    return '<button type="button" class="xpick-it" onclick="xpickDo(\''+id+'\',\''+esc(c.id)+'\')"><span class="xpick-av">'+esc(ti(c.name))+'</span><span class="xpick-tx"><b>'+esc(c.name)+'</b><small>'+esc(c.sub||'')+(chip?' '+chip:'')+'</small></span><span class="xpick-add">'+ic('plus',14)+'</span></button>';
+  }).join('')+(hits.length>8?'<div class="xpick-none">'+ceN(hits.length-8)+' نتيجة أخرى — دقّق البحث</div>':'');
+  hydrateIcons(box);
+}
+function xpickDo(id,pid){var o=XPK[id];if(!o)return;var q=g(id+'-q');if(q)q.value='';var box=g(id+'-res');if(box)box.innerHTML='';o.pick(pid);}
+/* أولوية الاشتراك: النشط أولاً ثم من لم يبدأ، ثم المجمّد، ثم بلا اشتراك، ثم المنتهي والملغي */
+function tdSubRank(p){
+  var s=tdSubState(p);if(!s)return 4;
+  if(s.status==='نشط'){var r=s.cur&&s.cur.remain;return (r!=null&&r!==''&&+r<=0)?1:0;}
+  var m={'لم يبدأ بعد':2,'مجمّد':3,'منتهي':5,'ملغي':6};
+  return m[s.status]!=null?m[s.status]:4;
+}
+function tdSubCmp(a,b){return tdSubRank(a)-tdSubRank(b)||String(a.name||'').localeCompare(String(b.name||''),'ar');}
 function fmSyncMonthly(gid,period){
   var sess=tdSessLog().filter(function(x){return x.groupId===gid&&x.date.slice(0,7)===period;});
   var sh=tdAttFind(gid,period);
@@ -20211,21 +20445,32 @@ function tdAttFormHTML(sh){
       +SUBF_OPTS.filter(function(o){return cnt[o[0]];}).map(function(o){return '<button type="button" class="brsw-b'+(TDAT.subs.indexOf(o[0])>-1?' on':'')+'" data-k="'+esc(o[0])+'" style="--sc:'+(RX_COL[o[0]]||'var(--gray)')+'" onclick="tdAttSubToggle(\''+esc(o[0])+'\')"><i></i>'+esc(o[1])+' <small>'+ceN(cnt[o[0]])+'</small></button>';}).join('')
       +'<span class="pg-chip" id="tdat-cnt" style="margin-inline-start:auto">'+ceN(ps.length)+' لاعباً</span></div>';
     h+='<div class="at-wrap" style="margin-top:.6rem"><table class="at att-t"><thead><tr><th>اللاعب</th><th style="width:150px">الحضور من '+ceN(of)+'</th><th>النسبة</th><th>ملاحظة المدرب</th></tr></thead><tbody>';
-    ps.forEach(function(p){
-      var r=(sh&&sh.rows&&sh.rows[p.id])||{},n=(r.n!=null&&r.n!=='')?r.n:'',note=r.note||'';
-      var pcn=n===''?null:Math.round(n/of*100),pct=pcn==null?'—':pcn+'%',pcol=pcn==null?'var(--gray)':(pcn>=75?'#16a34a':(pcn>=50?'var(--amber)':'var(--red)'));
-      h+='<tr data-att-pid="'+p.id+'"'+(tdAttSubOK(p)?'':' style="display:none"')+'><td style="font-weight:700">'+esc(p.name)+' '+(tdSubChip(p)||'<span class="tdsub" style="--sc:var(--gray)">بلا اشتراك</span>')+'</td>'
-        +'<td><div class="att-in"><button type="button" class="att-b" onclick="tdAttStep(\''+p.id+'\',-1)">−</button><input type="number" id="tdat-n-'+p.id+'" min="0" max="'+of+'" value="'+n+'" inputmode="numeric" oninput="tdAttPct(\''+p.id+'\')"><button type="button" class="att-b" onclick="tdAttStep(\''+p.id+'\',1)">+</button></div></td>'
-        +'<td id="tdat-p-'+p.id+'" style="font-weight:700;color:'+pcol+'">'+pct+'</td>'
-        +'<td><input type="text" id="tdat-x-'+p.id+'" value="'+esc(note)+'" placeholder="ملاحظة (اختياري)"></td></tr>';
-    });
+    /* الأولوية للاشتراك النشط، والمضافون من خارج المجموعة في آخر القائمة */
+    ps.sort(function(a,b){var ga=a.groupId!==gid?1:0,gb=b.groupId!==gid?1:0;return ga-gb||tdSubCmp(a,b);});
+    ps.forEach(function(p){h+=tdAttRowHTML(p,sh,p.groupId!==gid);});
     h+='</tbody></table></div><div id="tdat-empty" class="jnote" style="display:none;margin-top:.5rem">'+ic('info',12)+' لا يوجد لاعب بحالة الاشتراك المختارة في هذه المجموعة.</div>';
+    h+=xpickHTML('tdat-xp',{title:'إضافة لاعب من خارج المجموعة',hint:'يُسجَّل حضوره في هذا الملف دون نقله من مجموعته',cands:function(){var have={};document.querySelectorAll('[data-att-pid]').forEach(function(tr){have[tr.getAttribute('data-att-pid')]=1;});var brs=tdScopeBranchNames();return TDX().players.filter(function(p){return !have[p.id]&&brs.indexOf(p.branch)>-1;}).map(function(p){return {id:p.id,name:p.name,sub:[tdGName(p.groupId),brs.length>1?p.branch:''].filter(Boolean).join(' — '),sp:p,nid:p.nid||''};});},pick:tdAttAddGuest});
     h+='<div style="display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap;align-items:center"><button class="btn btn-r" style="flex:1;min-width:200px" onclick="tdSaveAtt(\''+(sh?sh.id:'')+'\')">'+ic('check',13)+' '+(sh?'حفظ التعديلات':'إغلاق التحضير وحفظ الملف')+' ('+ceN(ps.length)+' لاعباً)</button>'
       +'<button class="btn btn-g" onclick="tdAttFill('+of+')">الكل حضر '+ceN(of)+'/'+ceN(of)+'</button><button class="btn btn-g" onclick="tdAttSet(\'list\')">إلغاء</button></div>';
     h+='<div class="msg err" id="tdat-err">اختر المجموعة والشهر وسجّل حضور لاعب واحد على الأقل</div>';
   }
   h+='</div>';
   return h;
+}
+function tdAttRowHTML(p,sh,guest){
+  var of=ATT_OF,r=(sh&&sh.rows&&sh.rows[p.id])||{},n=(r.n!=null&&r.n!=='')?r.n:'',note=r.note||'';
+  var pcn=n===''?null:Math.round(n/of*100),pct=pcn==null?'—':pcn+'%',pcol=pcn==null?'var(--gray)':(pcn>=75?'#16a34a':(pcn>=50?'var(--amber)':'var(--red)'));
+  return '<tr data-att-pid="'+p.id+'"'+(tdAttSubOK(p)?'':' style="display:none"')+'><td style="font-weight:700">'+esc(p.name)+' '+(tdSubChip(p)||'<span class="tdsub" style="--sc:var(--gray)">بلا اشتراك</span>')+(guest?' <span class="fm-guest">'+ic('user-plus',10)+' مضاف — '+esc(tdGName(p.groupId))+'</span>':'')+'</td>'
+    +'<td><div class="att-in"><button type="button" class="att-b" onclick="tdAttStep(\''+p.id+'\',-1)">−</button><input type="number" id="tdat-n-'+p.id+'" min="0" max="'+of+'" value="'+n+'" inputmode="numeric" oninput="tdAttPct(\''+p.id+'\')"><button type="button" class="att-b" onclick="tdAttStep(\''+p.id+'\',1)">+</button></div></td>'
+    +'<td id="tdat-p-'+p.id+'" style="font-weight:700;color:'+pcol+'">'+pct+'</td>'
+    +'<td><input type="text" id="tdat-x-'+p.id+'" value="'+esc(note)+'" placeholder="ملاحظة (اختياري)"></td></tr>';
+}
+function tdAttAddGuest(pid){
+  var p=tdPlayer(pid),any=document.querySelector('[id^="tdat-n-"]'),tb=any?any.closest('tbody'):null;if(!p||!tb||g('tdat-n-'+pid))return;
+  var tmp=document.createElement('tbody');tmp.innerHTML=tdAttRowHTML(p,null,true);var tr=tmp.firstChild;tr.style.display='';tb.appendChild(tr);hydrateIcons(tr);
+  var i=g('tdat-n-'+pid);if(i){i.value=1;tdAttPct(pid);i.focus();}
+  var c=g('tdat-cnt');if(c)c.textContent=ceN(tb.querySelectorAll('tr').length)+' لاعباً';
+  addN('أُضيف للتحضير',p.name,'success');
 }
 function tdAttPct(pid){var i=g('tdat-n-'+pid),c=g('tdat-p-'+pid);if(!i||!c)return;var v=i.value;if(v==='')c.textContent='—';else{var n=Math.max(0,Math.min(ATT_OF,+v||0));i.value=n;var pc=Math.round(n/ATT_OF*100);c.textContent=pc+'%';c.style.color=pc>=75?'#16a34a':(pc>=50?'var(--amber)':'var(--red)');}}
 function tdAttStep(pid,d){var i=g('tdat-n-'+pid);if(!i)return;var v=i.value===''?(d>0?0:1):+i.value;i.value=Math.max(0,Math.min(ATT_OF,v+d));tdAttPct(pid);}
@@ -22253,6 +22498,7 @@ function rNTHome(){
   var camps=n.camps.filter(function(c){return sqIds.indexOf(c.squadId)>-1;});
   var cands=ntCandidates();
   var h=welcomeHTML('هذه نظرة سريعة على منتخب فارس')+tdHead('crown','منتخب فارس','نخبة لاعبي الأكاديمية عبر فئات المواليد','<span class="pg-chip">'+ic('shield',12)+' '+esc(ntRoleLabel())+'</span>');
+  try{h+=ntTodayStripHTML();}catch(e){}
   h+=ntDashHTML(sq,mem,cands,camps,ms);
   try{var _cu=calUpcomingAll('nt',[],60);if(_cu.length)h+='<div class="sub-head"><span class="sh-line"></span><h2>الفعاليات القادمة ('+ceN(_cu.length)+')</h2></div>'+calCardsHTML(_cu,{max:5});}catch(e){}
   h+='<div class="astats">'
@@ -23407,7 +23653,7 @@ function ntAttOf(mid,from,to){
   var out={n:0,p:0,l:0,a:0,e:0,camp:0};
   var m=ntMember(mid);if(!m)return out;
   ntAttSheets().forEach(function(s){
-    if(s.squadId!==m.squadId)return;
+    if(s.squadId!==m.squadId&&!(s.rows||{})[mid])return;   /* حضوره ضيفاً مع فئة أخرى يُحسب له */
     if(from&&s.date<from)return;if(to&&s.date>to)return;
     var v=(s.rows||{})[mid];if(!v)return;
     out.n++;if(out[v]!=null)out[v]++;
@@ -23450,8 +23696,8 @@ function rNTAttend(){
   if(!NTAT.date)NTAT.date=calISO(new Date());
   if(!NTAT.squad||!sqs.some(function(s){return s.id===NTAT.squad;}))NTAT.squad=sqs.length?sqs[0].id:'';
   if(!NTAT.month)NTAT.month=NTAT.date.slice(0,7);
-  var h=tdHead('check','التحضير','تحضير يومي لكل فئة — أيام المنتخب: الأحد • الثلاثاء • الخميس',
-    '<div class="pg-acts"><button class="btn '+(NTAT.mode==='day'?'btn-r':'btn-g')+' btn-sm" onclick="NTAT.mode=\'day\';rNTAttend()">'+ic('check',12)+' تحضير اليوم</button><button class="btn '+(NTAT.mode==='month'?'btn-r':'btn-g')+' btn-sm" onclick="NTAT.mode=\'month\';rNTAttend()">'+ic('table',12)+' سجل الشهر</button></div>');
+  var h=tdHead('check','التحضير','تحضير يومي لكل فئة حسب جدولها الأسبوعي — أو من «وضع الملعب» بالجوال',
+    '<div class="pg-acts">'+(can?'<button class="btn btn-o btn-sm" onclick="fmOpen(NTAT.squad,NTAT.date,\'nt\')">'+ic('whistle',12)+' وضع الملعب</button>':'')+'<button class="btn '+(NTAT.mode==='day'?'btn-r':'btn-g')+' btn-sm" onclick="NTAT.mode=\'day\';rNTAttend()">'+ic('check',12)+' تحضير اليوم</button><button class="btn '+(NTAT.mode==='month'?'btn-r':'btn-g')+' btn-sm" onclick="NTAT.mode=\'month\';rNTAttend()">'+ic('table',12)+' سجل الشهر</button></div>');
   if(!sqs.length){el.innerHTML=h+emptyBox('users','لا توجد فئات في نطاقك');hydrateIcons(el);return;}
   h+='<div class="frow" style="max-width:640px;margin-bottom:.9rem;grid-template-columns:1fr 1fr"><div class="fg" style="margin-bottom:0"><label>الفئة</label>'+tdSel('ntat-sq',sqs.map(function(s){return [s.id,s.name];}),NTAT.squad,'')+'</div>';
   if(NTAT.mode==='day')h+='<div class="fg" style="margin-bottom:0"><label>اليوم</label><input type="date" id="ntat-date" style="direction:ltr" value="'+esc(NTAT.date)+'"></div></div>';
@@ -23463,9 +23709,23 @@ function rNTAttend(){
   var mo=g('ntat-month');if(mo)mo.onchange=function(){if(this.value){NTAT.month=this.value;rNTAttend();}};
 }
 function ntAttShift(days){var d=new Date(NTAT.date+'T00:00:00');d.setDate(d.getDate()+days);NTAT.date=calISO(d);NTAT.month=NTAT.date.slice(0,7);rNTAttend();}
+function ntMemRank(m){var p=ntPlayerInfo(m);return p&&p.id?tdSubRank(p):4;}
+function ntMemCmp(a,b){var ja=+a.jersey||999,jb=+b.jersey||999;return ntMemRank(a)-ntMemRank(b)||ja-jb||ntPName(a).localeCompare(ntPName(b),'ar');}
+function ntAttRowHTML(m,v,can,guest){
+  var p=ntPlayerInfo(m),chip=p&&p.id?tdSubChip(p):'';
+  return '<div class="ntat-row" data-mid="'+m.id+'"><div class="ntat-av">'+(p.img?'<img src="'+srcOK(driveImg(p.img))+'">':esc(ti(ntPName(m))))+'</div>'
+    +'<div class="ntat-nm"><b>'+esc(ntPName(m))+'</b><small>'+(m.jersey?'#'+esc(m.jersey)+' • ':'')+esc(m.pos||p.pos||'')+(chip?' '+chip:'')+(guest?' <span class="fm-guest">'+ic('user-plus',10)+' مضاف — '+esc(ntSqName(m.squadId))+'</span>':'')+'</small></div>'
+    +'<div class="ntat-btns">'+Object.keys(NTATT_ST).map(function(k){var s=NTATT_ST[k];return '<button type="button" class="ntat-b'+(v===k?' on':'')+'" style="--c:'+s[1]+'" '+(can?'onclick="ntAttPick(this,\''+k+'\')"':'disabled')+' title="'+s[0]+'">'+ic(s[2],12)+'<span>'+s[0]+'</span></button>';}).join('')+'</div></div>';
+}
+function ntAttAddGuest(mid){
+  var m=ntMember(mid),list=document.querySelector('#ntc-attend .ntat-list');if(!m||!list||list.querySelector('[data-mid="'+mid+'"]'))return;
+  var tmp=document.createElement('div');tmp.innerHTML=ntAttRowHTML(m,'p',true,true);var row=tmp.firstChild;row.dataset.v='p';list.appendChild(row);hydrateIcons(row);
+  addN('أُضيف للتحضير',ntPName(m),'success');
+}
 function ntAttDayHTML(sid,date,can){
-  var sheet=ntAttFind(sid,date),mem=ntSqActive(sid).slice().sort(function(a,b){var ja=+a.jersey||999,jb=+b.jersey||999;return ja-jb||ntPName(a).localeCompare(ntPName(b),'ar');});
-  var train=ntIsTrainDay(date),rows=(sheet&&sheet.rows)||{};
+  var sheet=ntAttFind(sid,date),mem=ntSqActive(sid).slice().sort(ntMemCmp);
+  var _sq=ntSquad(sid),_dw=(_sq&&_sq.sched&&(_sq.sched.days||[]).length)?_sq.sched.days:NTATT_DAYS;
+  var train=_dw.indexOf(new Date(date+'T00:00:00').getDay())>-1,rows=(sheet&&sheet.rows)||{};
   var h='<div class="rform" style="margin-bottom:1rem">';
   h+='<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem">'
     +'<button class="btn btn-g btn-sm" onclick="ntAttShift(-1)" title="اليوم السابق">'+ic('chev-r',12)+'</button>'
@@ -23478,13 +23738,12 @@ function ntAttDayHTML(sid,date,can){
   h+='<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.7rem">'+Object.keys(NTATT_ST).map(function(k){return '<span class="badge" style="background:'+NTATT_ST[k][1]+'1a;color:'+NTATT_ST[k][1]+'">'+NTATT_ST[k][0]+' <b>'+ceN(cnt[k])+'</b></span>';}).join('')+'<span class="badge" style="background:var(--bg);color:var(--txt)">لم يُحدد <b>'+ceN(mem.length-cnt.p-cnt.l-cnt.a-cnt.e)+'</b></span></div>';
   if(can)h+='<div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.7rem"><button class="btn btn-o btn-sm" onclick="ntAttAll(\'p\')">'+ic('check',11)+' الكل حاضر</button><button class="btn btn-o btn-sm" onclick="ntAttAll(\'\')">مسح</button></div>';
   h+='<div class="ntat-list">';
-  mem.forEach(function(m){
-    var v=rows[m.id]||'',p=ntPlayerInfo(m);
-    h+='<div class="ntat-row" data-mid="'+m.id+'"><div class="ntat-av">'+(p.img?'<img src="'+srcOK(driveImg(p.img))+'">':esc(ti(ntPName(m))))+'</div>'
-      +'<div class="ntat-nm"><b>'+esc(ntPName(m))+'</b><small>'+(m.jersey?'#'+esc(m.jersey)+' • ':'')+esc(m.pos||p.pos||'')+'</small></div>'
-      +'<div class="ntat-btns">'+Object.keys(NTATT_ST).map(function(k){var s=NTATT_ST[k];return '<button type="button" class="ntat-b'+(v===k?' on':'')+'" style="--c:'+s[1]+'" '+(can?'onclick="ntAttPick(this,\''+k+'\')"':'disabled')+' title="'+s[0]+'">'+ic(s[2],12)+'<span>'+s[0]+'</span></button>';}).join('')+'</div></div>';
-  });
+  mem.forEach(function(m){h+=ntAttRowHTML(m,rows[m.id]||'',can,false);});
+  /* لاعبون أُضيفوا لهذا اليوم من فئات أخرى */
+  var inMem={};mem.forEach(function(m){inMem[m.id]=1;});
+  Object.keys(rows).forEach(function(mid){if(inMem[mid])return;var gm=ntMember(mid);if(gm)h+=ntAttRowHTML(gm,rows[mid],can,true);});
   h+='</div>';
+  if(can)h+=xpickHTML('ntat-xp',{title:'إضافة لاعب من فئة أخرى',hint:'يحضر مع هذه الفئة اليوم ويُحسب حضوره له',cands:function(){var have={};document.querySelectorAll('#ntc-attend .ntat-row').forEach(function(r){have[r.dataset.mid]=1;});return ntScopeMembers().filter(function(m){return !have[m.id];}).map(function(m){var p=ntPlayerInfo(m);return {id:m.id,name:ntPName(m),sub:ntSqName(m.squadId),sp:p&&p.id?p:null,nid:p.nid||''};});},pick:ntAttAddGuest});
   h+='<div class="fg" style="margin-top:.8rem"><label>ملاحظة اليوم</label><input type="text" id="ntat-note" value="'+esc((sheet&&sheet.note)||'')+'" placeholder="اختياري"'+(can?'':' disabled')+'></div>';
   if(can)h+='<button class="btn btn-r" style="width:100%;min-height:46px" onclick="ntAttSave()">'+ic('check',14)+' '+(sheet?'حفظ التعديلات':'حفظ التحضير')+'</button><div class="msg ok" id="ntat-ok">تم الحفظ</div><div class="msg err" id="ntat-err">حدد حالة لاعب واحد على الأقل</div>';
   return h+'</div>';
@@ -23521,7 +23780,9 @@ function ntAttSave(){
 }
 function ntAttMonthHTML(sid,month){
   var sheets=ntAttSquadSheets(sid).filter(function(s){return s.date.slice(0,7)===month;}).sort(function(a,b){return a.date<b.date?-1:1;});
-  var mem=ntSqActive(sid).slice().sort(function(a,b){var ja=+a.jersey||999,jb=+b.jersey||999;return ja-jb||ntPName(a).localeCompare(ntPName(b),'ar');});
+  var mem=ntSqActive(sid).slice().sort(ntMemCmp);
+  var _in={};mem.forEach(function(m){_in[m.id]=1;});
+  sheets.forEach(function(s){Object.keys(s.rows||{}).forEach(function(mid){if(_in[mid])return;var gm=ntMember(mid);if(gm){_in[mid]=1;gm=Object.assign({},gm,{_guest:true});mem.push(gm);}});});
   var h='<div class="rform" style="margin-bottom:1rem">';
   h+='<div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:.7rem"><b>'+tdMonthLabel(month)+'</b><span class="pg-chip">'+ceN(sheets.length)+' يوم تحضير</span>'
     +(sheets.length<12?'<small style="color:var(--amber)">التقييم الشهري يحتاج ١٢ حصة أو أكثر</small>':'<small style="color:#16a34a">يكفي للتقييم الشهري</small>')+'</div>';
@@ -23532,7 +23793,7 @@ function ntAttMonthHTML(sid,month){
   h+='<th>حضور</th><th>%</th></tr></thead><tbody>';
   mem.forEach(function(m){
     var a=ntAttOf(m.id,r.from,r.to);
-    h+='<tr><td style="font-weight:700;white-space:nowrap;position:sticky;right:0;background:var(--sur)">'+esc(ntPName(m))+'</td>';
+    h+='<tr><td style="font-weight:700;white-space:nowrap;position:sticky;right:0;background:var(--sur)">'+esc(ntPName(m))+(m._guest?' <span class="fm-guest">مضاف</span>':'')+'</td>';
     sheets.forEach(function(s){var v=(s.rows||{})[m.id];var st=v?NTATT_ST[v]:null;h+='<td style="text-align:center">'+(st?'<span class="ntat-dot" style="--c:'+st[1]+'" title="'+st[0]+'">'+ic(st[2],10)+'</span>':'<span style="color:var(--brd)">·</span>')+'</td>';});
     h+='<td style="text-align:center">'+ceN(a.p+a.l)+' / '+ceN(a.n)+'</td><td style="text-align:center;font-weight:700;color:'+(a.pct==null?'var(--gray)':(a.pct>=75?'#16a34a':(a.pct>=50?'var(--amber)':'var(--red)')))+'">'+(a.pct==null?'—':ceN(a.pct)+'%')+'</td></tr>';
   });
@@ -28987,7 +29248,7 @@ function rWel(){
   }
 
   /* ===== دعوة أخيرة ===== */
-  h+='<section class="wl-cta2 wl-rv"><div class="wl-cta2-bg"></div><div class="wl-cta2-in"><div><h3>جاهز يا فارس؟</h3><p>ادخل برقم هويتك وابدأ رحلتك — أو تواصل مع أقرب فرع وسنرحّب بك في عائلة فارس.</p></div><div class="wl-cta"><button class="wl-b pri" onclick="welJoin()">'+ic('user-plus',15)+' سجّل الآن يا فارس</button>'+(so.whatsapp?'<a class="wl-b sec" href="'+srcOK(welSocialLinks()[0][2])+'" target="_blank" rel="noopener">'+ic('whatsapp',15)+' تواصل واتساب</a>':'<button class="wl-b sec" onclick="welGo()">'+ic('logout',15)+' تسجيل الدخول</button>')+'</div></div></section>';
+  h+='<section class="wl-cta2 wl-rv"><div class="wl-cta2-bg"></div><div class="wl-cta2-in"><div><h3>جاهز يا فارس؟</h3><p>ادخل برقم هويتك وابدأ رحلتك — أو تواصل مع أقرب فرع وسنرحّب بك في عائلة فارس.</p></div><div class="wl-cta"><button class="wl-b pri" onclick="welJoin()">'+ic('user-plus',15)+' سجّل الآن يا فارس</button></div></div></section>';
 
   /* ===== التذييل ===== */
   var links=welSocialLinks();
@@ -31055,7 +31316,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.07-r17</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.07-r18</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
