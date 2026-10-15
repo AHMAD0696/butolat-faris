@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.10.10-r21">
+<meta name="build" content="2026.10.15-r22">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -4277,6 +4277,20 @@ body.wb-on #WB{display:block}
   .evd-mod{align-items:flex-end;padding:0}
   .evd-box{max-width:none;border-radius:22px 22px 0 0;max-height:88vh}
 }
+/* ===== الدخول بالوجه / البصمة ===== */
+.ts-bio{margin:1rem var(--ts-gx) 0}
+.bio-card{display:flex;align-items:center;gap:.8rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:.85rem 1rem;color:#fff}
+.bio-card.on{border-color:rgba(74,222,128,.45);background:rgba(22,163,74,.12)}
+.bio-ic{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex:none;color:#fff}
+.bio-card.on .bio-ic{background:#16a34a}
+.bio-tx{flex:1;min-width:0}.bio-tx b{display:block;font-size:13.5px}.bio-tx small{display:block;font-size:11px;opacity:.7;margin-top:2px;line-height:1.5}
+.bio-en,.bio-off{border:none;border-radius:12px;padding:.6rem 1.1rem;font-family:inherit;font-weight:800;font-size:12.5px;cursor:pointer;min-height:42px;flex:none}
+.bio-en{background:var(--red);color:#fff}.bio-en.busy{opacity:.6;pointer-events:none}
+.bio-off{background:rgba(255,255,255,.12);color:#fff}
+.ls-bio{margin-top:.6rem;display:flex;flex-direction:column;gap:.5rem}
+.ls-bio:empty{display:none}
+.bio-lbtn{display:flex;align-items:center;justify-content:center;gap:.6rem;background:rgba(255,255,255,.1)!important;border:1.5px solid rgba(255,255,255,.22)!important;color:#fff}
+.bio-lbtn span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}.bio-lbtn small{font-size:10.5px;opacity:.7;font-weight:500}
 </style>
 <script>
 /* ===== شبكة أمان مبكرة: تعمل حتى لو فشل السكربت الرئيسي ===== */
@@ -4424,10 +4438,11 @@ body.wb-on #WB{display:block}
       <div class="lhint"><a href="#" class="lswap" onclick="event.preventDefault();lsMode('id')">الرجوع للدخول برقم الجوال أو الهوية</a></div>
     </div>
     <button class="lbtn" id="l-next" onclick="lsNext()"><span>التالي</span><i class="lbtn-ar" data-ic="chev-r"></i></button>
+    <div id="ls-bio" class="ls-bio"></div>
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.10-r21</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.15-r22</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -5178,6 +5193,7 @@ body.wb-on #WB{display:block}
 'use strict';
 /* ================= ICONS (SVG, no emoji) ================= */
 var IC={
+  faceid:'<path d="M7 3H5a2 2 0 0 0-2 2v2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M17 21h2a2 2 0 0 0 2-2v-2"/><path d="M9 9v1"/><path d="M15 9v1"/><path d="M12 9v4h-1"/><path d="M9 15.5c.8.9 1.8 1.5 3 1.5s2.2-.6 3-1.5"/>',
   link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
   save:'<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>',
   load:'<path d="M21 12a9 9 0 1 1-6.22-8.56"/>',
@@ -7766,7 +7782,116 @@ function tmpCodeCopy(c){try{navigator.clipboard.writeText(c).then(function(){add
 function tmpCodeSent(){setTimeout(function(){var m=g('tmpCodeMod');if(m)m.remove();},1200);}
 function pinUpgradeQuit(){var bn=g('pinUpMod');if(bn)bn.remove();PINUP={old:'',done:null};try{doLogout();}catch(e){}}
 function faLoginPhoneOnly(){return !!(DB&&DB.settings&&DB.settings.loginPhoneOnly);}
+/* ==========================================================================
+   الدخول بالوجه / البصمة (WebAuthn — Face ID / Touch ID / بصمة أندرويد / Windows Hello)
+   --------------------------------------------------------------------------
+   • يفعّله كل حساب بنفسه بعد الدخول من شاشة الأنظمة — لكل جهاز على حدة.
+   • التفعيل: الجهاز ينشئ مفتاح دخول محمياً بالوجه/البصمة، والخادم يصدر لهذا الجهاز
+     مفتاحاً سرياً (يُحفظ في الخادم مُشفّراً بالتجزئة فقط).
+   • الدخول: يطلب الجهاز الوجه/البصمة أولاً، وبعد نجاحها يُرسل المفتاح للخادم فيفتح الجلسة.
+   • الإيقاف من الجهاز نفسه يلغي المفتاح في الخادم فوراً. يتوقف تلقائياً بعد ١٨٠ يوماً بلا استخدام.
+   ========================================================================== */
+var BIO_KEY='fa_bio_v1';
+var BIO={ok:null};
+function bioList(){try{var a=JSON.parse(localStorage.getItem(BIO_KEY)||'[]');return Array.isArray(a)?a.filter(function(x){return x&&x.dev&&x.sec&&x.cred;}):[];}catch(e){return [];}}
+function bioSave(a){try{localStorage.setItem(BIO_KEY,JSON.stringify(a));}catch(e){}}
+function bioMine(){return CU?bioList().find(function(x){return x.uid===CU.id;})||null:null;}
+function b64u(buf){var s='',b=new Uint8Array(buf);for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function b64uDec(str){str=String(str).replace(/-/g,'+').replace(/_/g,'/');while(str.length%4)str+='=';var s=atob(str),b=new Uint8Array(s.length);for(var i=0;i<s.length;i++)b[i]=s.charCodeAt(i);return b;}
+function bioRand(n){var b=new Uint8Array(n||32);(window.crypto||{}).getRandomValues(b);return b;}
+/* هل الجهاز يدعم الوجه/البصمة؟ */
+function bioSupported(){
+  if(BIO.ok!==null)return Promise.resolve(BIO.ok);
+  try{
+    if(!window.isSecureContext||!window.PublicKeyCredential||!navigator.credentials||!PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable){BIO.ok=false;return Promise.resolve(false);}
+    return PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function(v){BIO.ok=!!v;return BIO.ok;}).catch(function(){BIO.ok=false;return false;});
+  }catch(e){BIO.ok=false;return Promise.resolve(false);}
+}
+/* الحسابات المسموح لها: حسابات الموظفين (ليس اللاعب ولا ولي الأمر — لهما دخول مختلف) */
+function bioEligible(){return !!(CU&&!CU.gd&&CU.role!=='player'&&FA.enabled&&FA.token);}
+function bioErrMsg(e){
+  var n=e&&e.name||'',m=String(e&&e.message||e||'');
+  if(n==='NotAllowedError'||/not allowed|cancel/i.test(m))return 'أُلغي التحقق أو انتهت مهلته — أعد المحاولة';
+  if(n==='InvalidStateError')return 'هذا الجهاز مسجّل مسبقاً';
+  if(n==='SecurityError')return 'المتصفح منع الطلب — افتح الموقع من رابطه الرسمي';
+  if(/na$/.test(m))return 'الميزة تحتاج تحديث قاعدة البيانات (fa_biometric.sql)';
+  return m.slice(0,90)||'تعذّر الإكمال';
+}
+function bioDevLabel(){var u=navigator.userAgent||'';return /iPhone/.test(u)?'iPhone':(/iPad/.test(u)?'iPad':(/Android/.test(u)?'Android':(/Mac/.test(u)?'Mac':(/Windows/.test(u)?'Windows':'جهاز'))));}
+/* التفعيل (من شاشة الأنظمة) */
+function bioEnable(){
+  if(!bioEligible())return;
+  var btn=g('bio-en');if(btn){btn.disabled=true;btn.classList.add('busy');}
+  var done=function(){if(btn){btn.disabled=false;btn.classList.remove('busy');}};
+  var pk={challenge:bioRand(32),rp:{name:'أكاديمية فارس',id:location.hostname},
+    user:{id:new TextEncoder().encode(String(CU.id)).slice(0,64),name:String(CU.phone||CU.username||CU.id),displayName:String(CU.name||'')},
+    pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
+    authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required',residentKey:'preferred'},
+    timeout:60000,attestation:'none',
+    excludeCredentials:bioList().filter(function(x){return x.uid===CU.id;}).map(function(x){return {type:'public-key',id:b64uDec(x.cred)};})};
+  navigator.credentials.create({publicKey:pk}).then(function(cred){
+    var credId=b64u(cred.rawId);
+    return FA._auth('fa_device_add',{p_token:FA.token,p_cred:credId,p_label:bioDevLabel()}).then(function(r){
+      if(!r||!r.ok)throw new Error(r&&r.err||'تعذّر التسجيل في الخادم');
+      var a=bioList().filter(function(x){return x.uid!==CU.id;});
+      a.unshift({uid:CU.id,name:CU.name||'',dev:r.id,sec:r.secret,cred:credId,at:Date.now()});
+      bioSave(a.slice(0,4));
+      logA('تفعيل الدخول بالوجه/البصمة على '+bioDevLabel(),'shield','#16a34a',true);
+      addN('تم تفعيل الدخول بالوجه / البصمة','من الآن ادخل من شاشة الدخول بضغطة واحدة','success');
+    });
+  }).catch(function(e){addN('لم يكتمل التفعيل',bioErrMsg(e),'warning');}).then(function(){done();bioTsPaint();});
+}
+function bioDisable(){
+  var me=bioMine();if(!me)return;
+  askConfirm('إيقاف الدخول بالوجه / البصمة على هذا الجهاز؟',function(){
+    var rm=function(){bioSave(bioList().filter(function(x){return x.uid!==me.uid;}));bioTsPaint();addN('أُوقف الدخول بالوجه / البصمة','يمكنك تفعيله مجدداً في أي وقت','info');};
+    if(FA.enabled&&FA.token)FA._auth('fa_device_revoke',{p_token:FA.token,p_id:me.dev}).then(rm,rm);else rm();
+  },'إيقاف');
+}
+/* بطاقة شاشة الأنظمة */
+function bioTsPaint(){
+  var el=g('ts-bio');if(!el)return;
+  if(!bioEligible()){el.innerHTML='';return;}
+  bioSupported().then(function(ok){
+    if(!ok){el.innerHTML='';return;}
+    var me=bioMine();
+    el.innerHTML=me
+      ?'<div class="bio-card on"><span class="bio-ic">'+ic('faceid',22)+'</span><div class="bio-tx"><b>الدخول بالوجه / البصمة مفعّل</b><small>على هذا الجهاز ('+esc(bioDevLabel())+') — ادخل من شاشة الدخول بضغطة</small></div><button type="button" class="bio-off" onclick="bioDisable()">إيقاف</button></div>'
+      :'<div class="bio-card"><span class="bio-ic">'+ic('faceid',22)+'</span><div class="bio-tx"><b>الدخول بالوجه / البصمة</b><small>فعّله على هذا الجهاز وادخل المرة القادمة بلا رمز</small></div><button type="button" class="bio-en" id="bio-en" onclick="bioEnable()">تفعيل</button></div>';
+    hydrateIcons(el);
+  });
+}
+/* زر شاشة الدخول */
+function bioLsPaint(){
+  var el=g('ls-bio');if(!el)return;
+  var a=bioList();if(!a.length){el.innerHTML='';return;}
+  bioSupported().then(function(ok){
+    if(!ok||!FA.enabled){el.innerHTML='';return;}
+    el.innerHTML=a.map(function(x,i){return '<button type="button" class="lbtn bio-lbtn" onclick="bioLogin('+i+')">'+ic('faceid',18)+'<span>الدخول بالوجه / البصمة'+(a.length>1||x.name?'<small>'+esc(x.name||'')+'</small>':'')+'</span></button>';}).join('');
+    hydrateIcons(el);
+  });
+}
+function bioLogin(i){
+  var x=bioList()[i];if(!x||LOGIN_BUSY)return;
+  var opt={publicKey:{challenge:bioRand(32),rpId:location.hostname,allowCredentials:[{type:'public-key',id:b64uDec(x.cred)}],userVerification:'required',timeout:60000}};
+  navigator.credentials.get(opt).then(function(){
+    LOGIN_BUSY=true;
+    loadShow('جارٍ التحقق…','أكاديمية فارس');
+    return FA._auth('fa_device_login',{p_id:x.dev,p_secret:x.sec}).then(function(res){
+      if(!res||!res.ok){
+        LOGIN_BUSY=false;loadHide();
+        var er=res&&res.err;
+        if(er==='revoked'||er==='nodev'||er==='expired'){bioSave(bioList().filter(function(y){return y.dev!==x.dev;}));bioLsPaint();}
+        var msg={revoked:'أُوقف الدخول بالبصمة لهذا الحساب — ادخل برقم جوالك والرمز ثم فعّله من جديد',nodev:'هذا الجهاز غير مسجّل — ادخل برقم جوالك والرمز',expired:'انتهت صلاحية الدخول بالبصمة (١٨٠ يوماً بلا استخدام) — ادخل بالرمز وفعّله من جديد',must_change:'لديك رمز مؤقت — ادخل برقم جوالك والرمز المؤقت أولاً',locked:'محاولات كثيرة — انتظر ١٥ دقيقة'}[er]||'تعذّر الدخول بالبصمة — ادخل بالرمز';
+        nameErr(msg);return;
+      }
+      res.pin_len=6;res.must_change=false;
+      faLoginSuccess(res,'');
+    });
+  }).catch(function(e){LOGIN_BUSY=false;try{loadHide();}catch(_){}nameErr(bioErrMsg(e));});
+}
 function lsMode(m){
+  try{setTimeout(bioLsPaint,0);}catch(e){}
   /* خانة واحدة للجوال أو الهوية؛ «الاسم» مسار قديم يبقى حتى يفعّل المدير الدخول بالجوال فقط */
   if(m!=='name'||faLoginPhoneOnly())m='id';
   LSMODE=m;LOGIN_ACC=null;
@@ -9634,8 +9759,10 @@ function tsSys(){
   });
   h+='</div>';
   /* ===== شريط أسفل ===== */
+  h+='<div id="ts-bio" class="ts-bio"></div>';
   h+='<div class="ts2-foot"><button class="out" onclick="doLogout()" title="تسجيل الخروج">'+ic('logout',16)+' تسجيل الخروج</button></div>';
   g('ts-sys').innerHTML=h;
+  try{bioTsPaint();}catch(e){}
   /* خلفية الهيرو نفسها إن وُجدت */
   var bg=g('ts-bg');if(bg){var ws=DB.settings||{};bg.style.backgroundImage=ws.welPoster?'url("'+ws.welPoster+'")':'';}
   hydrateIcons(g('TS'));
@@ -30001,6 +30128,7 @@ function welGo(){
   document.body.style.overflow='';
   g('LS').style.display='';
   try{lsMode(LSMODE==='name'?'name':'id');}catch(e){}
+  try{bioLsPaint();}catch(e){}
 }
 function welJoin(){welGo();try{lsMode('nid');}catch(e){}setTimeout(function(){try{lsMode('nid');}catch(e){}},130);}
 /* حساب جديد = ولي أمر فقط */
@@ -31606,7 +31734,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.10-r21</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.15-r22</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
