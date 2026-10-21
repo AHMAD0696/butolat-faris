@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.10.15-r22">
+<meta name="build" content="2026.10.21-r23">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -4442,7 +4442,7 @@ body.wb-on #WB{display:block}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.15-r22</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.21-r23</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -19337,7 +19337,7 @@ function agEventsTD(from,to,branch){
   var hs=agHolidays('td',bn),dates=agDates(from,to);
   var plansBy={};(t.plans||[]).forEach(function(p){if(p.groupId&&p.date)plansBy[p.groupId+'|'+p.date]=p;});
   /* الفئات بنفس الفترة ونفس الملعب = حصة واحدة (حدث واحد) */
-  var bundles=tdBundlesOf(groups),pcnt={};
+  var bundles=agAutoOn('td')?tdBundlesOf(groups):[],pcnt={};
   (t.players||[]).forEach(function(p){if(p.groupId)pcnt[p.groupId]=(pcnt[p.groupId]||0)+1;});
   dates.forEach(function(iso){
     var code=agDayCode(iso),hol=agInHoliday(hs,iso);
@@ -19363,7 +19363,7 @@ function agEventsTD(from,to,branch){
     if(x.date<from||x.date>to)return;var gg=tdGroup(x.groupId);if(!gg||gg.branch!==bn&&AG.ctx==='ad')return;
     if(AG.ctx!=='ad'&&!tdScopeGroups().some(function(q){return q.id===x.groupId;}))return;
     var done=!!tdSessionFind(x.groupId,x.date);
-    out.push({key:'x|'+x.id,kind:'train',date:x.date,t1:x.t1||'',t2:x.t2||'',title:x.title||('تمرين إضافي — '+(gg.cat||'')),sub:[gg.name,x.note].filter(Boolean).join(' • '),scope:gg.catId,color:tdCatColor(gg.catId,gg.cat),status:x.cancel?'cancel':(done?'done':(x.date<today?'missed':'sched')),src:{type:'xsess',id:x.id,gid:gg.id,branch:gg.branch,n:(t.players||[]).filter(function(p){return p.groupId===gg.id;}).length}});
+    out.push({key:'x|'+x.id,kind:'train',date:x.date,t1:x.t1||'',t2:x.t2||'',title:x.title||((agAutoOn('td')?'تمرين إضافي — ':'تمرين — ')+(gg.cat||'')),sub:[gg.name,x.note].filter(Boolean).join(' • '),scope:gg.catId,color:tdCatColor(gg.catId,gg.cat),status:x.cancel?'cancel':(done?'done':(x.date<today?'missed':'sched')),src:{type:'xsess',id:x.id,gid:gg.id,branch:gg.branch,n:(t.players||[]).filter(function(p){return p.groupId===gg.id;}).length}});
   });
   /* الوديات */
   (t.friendlies||[]).forEach(function(f){
@@ -19397,7 +19397,7 @@ function agEventsNT(from,to){
   if(!n.sessOv)n.sessOv={};
   var sqs=ntScopeSquads(),hs=agHolidays('nt',''),dates=agDates(from,to);
   var drillsBy={};(n.drills||[]).forEach(function(d){if(d.scope&&d.date)drillsBy[d.scope+'|'+d.date]=d;});
-  dates.forEach(function(iso){
+  if(agAutoOn('nt'))dates.forEach(function(iso){
     var w=calD(iso+'T12:00:00').getDay(),hol=agInHoliday(hs,iso);
     sqs.forEach(function(s){
       var sc=s.sched;if(!sc||!(sc.days||[]).length||(sc.days||[]).indexOf(w)<0||hol)return;
@@ -19558,12 +19558,15 @@ function agCanAdd(){
   if(AG.ctx==='nt')return ntCanManage()||ntRole()==='coach';
   return fmCan();
 }
+/* الحصص التلقائية (من جدول الفترات / الجدول الأسبوعي): يفعّلها مدير النظام من إعدادات الأنظمة.
+   مطفأة = التقويم فارغ ويضيف المدرب تمارينه بنفسه من «إضافة نشاط ← إضافة تمرين». */
+function agAutoOn(ctx){var a=(DB.settings||{}).autoSess;if(!a||typeof a!=='object')return ctx==='nt';return !!a[ctx];}
 function agAddBtnHTML(){
   if(!agCanAdd())return '';
   var s=agS(),items;
   if(AG.ctx==='ad')items=[['cal','فعالية في التقويم','مباراة بطولة، بطولة، إجازة، فعالية — تختار النوع ومكان الظهور','#d97706','agAddCal()']];
   else if(AG.ctx==='nt')items=[['ball','مباراة','ودية أو بطولة لفئة من المنتخب',agKind('match')[1],'agAddMatch()'],['clock','تمرين','حصة إضافية خارج الجدول الأسبوعي',agKind('train')[1],'agAddSess()'],['cal','تجمّع','معسكر أو تجمّع من يوم إلى يوم',agKind('camp')[1],'agAddCamp()']];
-  else items=[['ball','مباراة ودية','لحصة من حصص الفرع',agKind('match')[1],'agAddMatch()'],['clock','تمرين إضافي','حصة خارج أيام الفترة',agKind('train')[1],'agAddSess()'],['star','فعالية فرع','تجمّع أو نشاط يظهر في أجندة الفرع',agKind('camp')[1],'agAddCamp()']];
+  else items=[['clock',agAutoOn('td')?'تمرين إضافي':'إضافة تمرين',agAutoOn('td')?'حصة خارج أيام الفترة':'تمرين لحصة من حصصك في يوم ووقت تحدده',agKind('train')[1],'agAddSess()'],['ball','مباراة ودية','لحصة من حصص الفرع',agKind('match')[1],'agAddMatch()'],['star','فعالية فرع','تجمّع أو نشاط يظهر في أجندة الفرع',agKind('camp')[1],'agAddCamp()']];
   if(AG.ctx==='nt'&&ntCanManage())items.push(['list','جدول التمارين الأسبوعي','أيام وأوقات تمارين كل فئة — تتولد الحصص منها','#5b2d8f','agSchedOpen()']);
   return '<div class="ag-add"><button type="button" class="btn btn-r btn-sm" onclick="event.stopPropagation();agMenu()">'+ic('plus',13)+' إضافة نشاط</button><div class="ag-menu'+(s.menu?' open':'')+'" id="ag-menu" onclick="event.stopPropagation()">'
     +items.map(function(x){return '<button type="button" style="--c:'+x[3]+'" onclick="agS().menu=false;'+x[4]+'"><i>'+ic(x[0],15)+'</i><span>'+x[1]+'<small>'+x[2]+'</small></span></button>';}).join('')+'</div></div>';
@@ -19581,7 +19584,7 @@ function agAddCamp(){
   if(AG.ctx==='nt'){NTCP.showForm=true;ntP('camps');setTimeout(function(){var e=g('ntcp-from');if(e&&!e.value)e.value=agDefDate();},80);return;}
   agS().form='bev';agS().sel='';agDrawer({kind:'camp',title:'فعالية فرع جديدة',color:agKind('camp')[1],newForm:true});
 }
-function agAddSess(){agS().form='xsess';agS().sel='';agDrawer({kind:'train',title:'تمرين إضافي',color:agKind('train')[1],newForm:true});}
+function agAddSess(){agS().form='xsess';agS().sel='';agDrawer({kind:'train',title:agAutoOn(AG.ctx==='nt'?'nt':'td')?'تمرين إضافي':'إضافة تمرين',color:agKind('train')[1],newForm:true});}
 /* ---------- لوحة التفاصيل ---------- */
 function agFind(key){var R=agRange();return agEvents(R.from,R.to).find(function(e){return e.key===key;})||null;}
 function agOpen(key){var e=agFind(key);if(!e)return;agS().sel=key;agS().form='';agDrawer(e);}
@@ -19623,7 +19626,7 @@ function agActionsHTML(e){
     if(can){act('','clock','تعديل الوقت',"agS().form='time';agDrawer(agFind('"+k+"'))");
       act('','ball','تحويل إلى مباراة',"agS().form='tomatch';agDrawer(agFind('"+k+"'))");
       act(e.status==='cancel'?'':'danger',e.status==='cancel'?'refresh':'x',e.status==='cancel'?'إعادة الحصة':'إلغاء الحصة',"agCancel('"+k+"')");
-      if(t==='xsess')act('danger wide','trash','حذف التمرين الإضافي',"agDelX('"+k+"')");}
+      if(t==='xsess')act('danger wide','trash','حذف التمرين',"agDelX('"+k+"')");}
   }else if(t==='ntsess'||t==='ntxsess'){
     if(e.status!=='cancel'&&ntCanAttend()){act('pri','whistle',e.status==='done'?'وضع الملعب — عرض / تعديل':'وضع الملعب — تحضير الحصة',"agClose();fmOpen('"+e.src.sid+"','"+e.date+"','nt')");
       act('','check','صفحة التحضير',"agClose();NTAT.date='"+e.date+"';NTAT.squad='"+e.src.sid+"';NTAT.mode='day';ntP('attend')");}
@@ -19631,7 +19634,7 @@ function agActionsHTML(e){
     if(can){act('','clock','تعديل الوقت',"agS().form='time';agDrawer(agFind('"+k+"'))");
       act('','ball','تحويل إلى مباراة',"agS().form='tomatch';agDrawer(agFind('"+k+"'))");
       act(e.status==='cancel'?'':'danger',e.status==='cancel'?'refresh':'x',e.status==='cancel'?'إعادة الحصة':'إلغاء الحصة',"agCancel('"+k+"')");
-      if(t==='ntxsess')act('danger wide','trash','حذف التمرين الإضافي',"agDelX('"+k+"')");}
+      if(t==='ntxsess')act('danger wide','trash','حذف التمرين',"agDelX('"+k+"')");}
   }else if(t==='friendly'){
     act('pri','ball','فتح المباراة',"agClose();tdP('friendly');tdFrFocus('"+e.src.id+"')");
     if(e.status!=='cancel')act('','star',e.status==='done'?'النتيجة والتفاصيل':'تسجيل النتيجة',"agClose();tdP('friendly');TDFR.view='list';tdFrRes('"+e.src.id+"')");
@@ -19712,9 +19715,11 @@ function agSaveToMatch(key){
 /* تمرين إضافي */
 function agXSessForm(){
   var iso=agDefDate(),opts=AG.ctx==='nt'?ntScopeSquads().map(function(s){return [s.id,s.name];}):tdScopeGroups().map(function(gg){return [gg.id,gg.name];});
-  return '<div class="agd-form"><div class="fg"><label>'+(AG.ctx==='nt'?'الفئة':'الحصة')+' *</label>'+tdSel('ag-x-sc',opts,'',AG.ctx==='nt'?'اختر الفئة':'اختر الحصة')+'</div>'
-    +'<div class="frow"><div class="fg"><label>التاريخ *</label><input type="date" id="ag-x-d" value="'+esc(iso)+'" style="direction:ltr"></div><div class="fg"><label>العنوان</label><input type="text" id="ag-x-t" placeholder="تمرين إضافي"></div></div>'
-    +'<div class="frow"><div class="fg"><label>من *</label><input type="time" id="ag-x-t1" value="17:00" style="direction:ltr"></div><div class="fg"><label>إلى</label><input type="time" id="ag-x-t2" value="18:30" style="direction:ltr"></div></div>'
+  var one=opts.length===1?opts[0][0]:'',t1='17:00',t2='18:30';
+  if(AG.ctx!=='nt'&&one){var pr0=tdPeriod((tdGroup(one)||{}).periodId);if(pr0&&pr0.t1){t1=pr0.t1;t2=pr0.t2||t2;}}
+  return '<div class="agd-form"><div class="fg"><label>'+(AG.ctx==='nt'?'الفئة':'الحصة')+' *</label>'+tdSel('ag-x-sc',opts,one,AG.ctx==='nt'?'اختر الفئة':'اختر الحصة')+'</div>'
+    +'<div class="frow"><div class="fg"><label>التاريخ *</label><input type="date" id="ag-x-d" value="'+esc(iso)+'" style="direction:ltr"></div><div class="fg"><label>العنوان</label><input type="text" id="ag-x-t" placeholder="'+(agAutoOn(AG.ctx==='nt'?'nt':'td')?'تمرين إضافي':'مثال: تمرير وتحكم')+'"></div></div>'
+    +'<div class="frow"><div class="fg"><label>من *</label><input type="time" id="ag-x-t1" value="'+esc(t1)+'" style="direction:ltr"></div><div class="fg"><label>إلى</label><input type="time" id="ag-x-t2" value="'+esc(t2)+'" style="direction:ltr"></div></div>'
     +'<div class="fg"><label>'+(AG.ctx==='nt'?'المكان':'ملاحظة')+'</label><input type="text" id="ag-x-n"></div>'
     +'<div style="display:flex;gap:.5rem"><button type="button" class="btn btn-r" style="flex:1" onclick="agSaveX()">'+ic('check',13)+' إضافة</button><button type="button" class="btn btn-g" onclick="agClose()">إلغاء</button></div></div>';
 }
@@ -19724,7 +19729,7 @@ function agSaveX(){
   var rec={id:uid(),date:d,t1:t1,t2:gv('ag-x-t2'),title:gv('ag-x-t'),by:CU.name,at:Date.now()};
   if(AG.ctx==='nt'){rec.squadId=sc;rec.loc=gv('ag-x-n');}else{rec.groupId=sc;rec.note=gv('ag-x-n');}
   agXStore().push(rec);
-  logA('تمرين إضافي يوم '+d+' — '+(AG.ctx==='nt'?ntSqName(sc):(tdGroup(sc)||{}).name||''),'clock','#1565c0');
+  logA((agAutoOn(AG.ctx==='nt'?'nt':'td')?'تمرين إضافي':'إضافة تمرين')+' يوم '+d+' — '+(AG.ctx==='nt'?ntSqName(sc):(tdGroup(sc)||{}).name||''),'clock','#1565c0');
   var s=agS();s.day=d;if(s.period!=='month')s.ref=d;
   sv();agClose();agRender();addN('أُضيف التمرين',tdDayLabel(d)+' — '+fmtRange12(t1,rec.t2),'success');
 }
@@ -20334,7 +20339,14 @@ function fmChipsHTML(list,next){
 /* بطاقة «الحصة القادمة» في رئيسية الإدارة الفنية — وبداخلها حصص اليوم أيقونات صغيرة */
 function tdNextSessCard(){
   if(!fmCan())return '';
-  var list=fmTodaySess('td');if(!list.length)return '';
+  var list=fmTodaySess('td');
+  if(!list.length){
+    if(agAutoOn('td'))return '';
+    /* التمارين يدوية ولا تمرين اليوم: دعوة لإضافته */
+    return dashCard({tone:'dc-primary',icon:'whistle',title:'تمارين اليوم',sub:esc(new Date().toLocaleDateString(locale(),{weekday:'long',day:'numeric',month:'long'})),
+      body:'<div class="dc-empty">'+ic('clock',22)+'<span>لا تمارين مضافة لليوم</span></div>',
+      cta:['إضافة تمرين',"tdP('agenda');setTimeout(function(){try{agAddSess();}catch(e){}},80)"]});
+  }
   var nx=fmNextOf(list),done=list.filter(function(x){return x.done;}).length;
   var body;
   if(nx){
@@ -27886,6 +27898,14 @@ function rADSettings(){
 
   h+=adAccessHTML();
 
+  /* الحصص التلقائية في التقويم */
+  var _as=(DB.settings||{}).autoSess,_td=agAutoOn('td'),_nt=agAutoOn('nt');
+  h+='<div style="height:1.5rem"></div>'+tdSubHead('التمارين في التقويم','<span class="pg-chip">'+ic('clock',11)+' '+(_td?'تلقائية':'يدوية')+'</span>');
+  h+='<div class="rform" style="max-width:640px"><div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div><b>يدوية:</b> التقويم فارغ، والمدرب يضيف تمارينه بنفسه من «إضافة نشاط ← إضافة تمرين». <b>تلقائية:</b> تُولَّد حصة لكل فئة من جدول الفترات (الإدارة الفنية) أو الجدول الأسبوعي (المنتخب) في أيامها. التبديل لا يحذف شيئاً.</div></div>';
+  h+='<label class="ntsw'+(_td?' on':'')+'" style="margin-bottom:.6rem"><input type="checkbox" id="ads-auto-td"'+(_td?' checked':'')+' onchange="this.closest(\'.ntsw\').classList.toggle(\'on\',this.checked)"><span class="ntsw-dot"></span><span class="ntsw-tx"><b>الإدارة الفنية — حصص تلقائية من جدول الفترات</b><small>مطفأة = المدرب يضيف تمارينه يدوياً في التقويم</small></span></label>';
+  h+='<label class="ntsw'+(_nt?' on':'')+'"><input type="checkbox" id="ads-auto-nt"'+(_nt?' checked':'')+' onchange="this.closest(\'.ntsw\').classList.toggle(\'on\',this.checked)"><span class="ntsw-dot"></span><span class="ntsw-tx"><b>منتخب فارس — حصص تلقائية من الجدول الأسبوعي</b><small>مطفأة = طاقم المنتخب يضيف التمارين يدوياً</small></span></label>';
+  h+='<button class="btn btn-r" style="width:100%;margin-top:.8rem" onclick="adSaveAutoSess()">'+ic('check',14)+' حفظ</button><div class="msg ok" id="ads-auto-ok">تم الحفظ</div></div>';
+
   /* صور القوالب */
   h+='<div style="height:1.5rem"></div>';
   h+='<div class="ad-wrap">'+admPostersHTML()+'</div>';
@@ -27927,6 +27947,11 @@ function adSaveWel(){
   s.welVideoOn=!!(g('adw-on')&&g('adw-on').checked);s.welVideoMobile=!!(g('adw-mob')&&g('adw-mob').checked);
   logA('تعديل الصفحة الترحيبية','image','#1565c0');
   sv();fl('adw-ok');
+}
+function adSaveAutoSess(){
+  DB.settings=DB.settings||{};DB.settings.autoSess={td:!!(g('ads-auto-td')&&g('ads-auto-td').checked),nt:!!(g('ads-auto-nt')&&g('ads-auto-nt').checked)};
+  logA('التمارين في التقويم: الإدارة الفنية '+(DB.settings.autoSess.td?'تلقائية':'يدوية')+' • المنتخب '+(DB.settings.autoSess.nt?'تلقائية':'يدوية'),'clock','#1565c0');
+  sv();fl('ads-auto-ok');rADSettings();
 }
 function adSaveHub(){
   DB.settings=DB.settings||{};DB.settings.hubImg=gv('adhub-img');
@@ -31734,7 +31759,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.15-r22</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.21-r23</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
