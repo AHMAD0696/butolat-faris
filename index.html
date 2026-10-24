@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.10.22-r26">
+<meta name="build" content="2026.10.23-r27">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3876,6 +3876,7 @@ body.wb-on #WB{display:block}
 .ag-ghd.today::after{background:color-mix(in srgb,var(--red) 40%,transparent)}
 .ag-empty{text-align:center;color:var(--gray);font-size:12px;padding:1.4rem .5rem}
 /* لوحة التفاصيل */
+#cfMod.modal{z-index:99990}
 #AGD{position:fixed;inset:0;z-index:905;display:flex;align-items:flex-end;justify-content:center;background:rgba(10,12,30,.55);backdrop-filter:blur(2px)}
 .agd{background:var(--card,var(--sur));color:var(--txt);width:100%;max-width:560px;border-radius:22px 22px 0 0;box-shadow:0 -20px 60px rgba(0,0,0,.35);max-height:92vh;display:flex;flex-direction:column;animation:agdUp .22s ease-out}
 @keyframes agdUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
@@ -4458,7 +4459,7 @@ body.wb-on #WB{display:block}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.22-r26</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.23-r27</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -15733,7 +15734,8 @@ function bkPaint(){
           +(b.kind!=='auto'&&b.note?'<div style="font-size:11.5px;color:var(--gray);margin-top:.2rem">'+esc(b.note)+(b.by?' — '+esc(b.by):'')+'</div>':'')
           +'<div style="font-size:11.5px;color:var(--gray);margin-top:.2rem">'+ceN(sm.players||0)+' لاعب • '+ceN(sm.attend||0)+' حصة حضور • '+ceN(sm.tours||0)+' بطولة • '+ceN(sm.teams||0)+' فريق • '+kb(b.bytes)+'</div>'
         +'</div>'
-        +'<div style="display:flex;gap:.4rem"><button class="btn btn-o btn-sm" onclick="bkDownload('+(+b.id)+')">'+ic('doc',12)+' تنزيل</button>'
+        +'<div style="display:flex;gap:.4rem;flex-wrap:wrap"><button class="btn btn-o btn-sm" onclick="bkDownload('+(+b.id)+')">'+ic('doc',12)+' تنزيل</button>'
+        +'<button class="btn btn-g btn-sm" title="يعيد التمارين والوديات الموجودة في هذه النسخة وغير الموجودة الآن — بلا المساس بأي بيانات حالية" onclick="bkRecoverLost('+(+b.id)+')">'+ic('image',12)+' استرجاع التمارين المفقودة</button>'
         +'<button class="btn btn-sm" style="background:rgba(221,29,69,.12);color:var(--red)" onclick="bkRestore('+(+b.id)+')">'+ic('refresh',12)+' استعادة</button></div>'
         +'</div>';
     });
@@ -15759,6 +15761,42 @@ function bkDownload(id){
     var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='faris-server-backup-'+stamp+'.json';
     document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
   }).catch(function(e){alert('تعذّر التنزيل: '+((e&&e.message)||e));});
+}
+/* استرجاع انتقائي: التمارين والوديات التي في النسخة وليست في البيانات الحالية — تُضاف فقط، ولا يُستبدل شيء */
+function bkRecoverLost(id){
+  var b=(BK.list||[]).find(function(x){return +x.id===+id;});if(!b)return;
+  var when=new Date(b.at).toLocaleString(locale());
+  loadShow&&loadShow('جارٍ فحص النسخة…','');
+  FA.backupGet(id).then(function(d){
+    loadHide&&loadHide();
+    var bt=d&&d.td;if(!bt){alert('النسخة بلا بيانات إدارة فنية');return;}
+    var t=TDX(),have={};
+    (t.plans||[]).forEach(function(x){have['p'+x.id]=1;});(t.friendlies||[]).forEach(function(x){have['f'+x.id]=1;});
+    var pls=(bt.plans||[]).filter(function(x){return x&&x.id&&!have['p'+x.id];}),frs=(bt.friendlies||[]).filter(function(x){return x&&x.id&&!have['f'+x.id];});
+    if(!pls.length&&!frs.length){alert('لا يوجد في نسخة '+when+' تمارين أو وديات ناقصة عن البيانات الحالية.');return;}
+    /* الحصة المرجعية: نفسها إن بقيت، وإلا حصة من نفس الفئة (نفس الفترة أولاً)، وإلا تُعاد الحصة كما كانت */
+    var bg={};(bt.groups||[]).forEach(function(gg){bg[gg.id]=gg;});
+    var mapG={},newG=[];
+    var target=function(gid){
+      if(mapG[gid])return mapG[gid];
+      if(tdGroup(gid))return (mapG[gid]=gid);
+      var og=bg[gid];if(!og)return '';
+      var same=(t.groups||[]).filter(function(x){return x.catId===og.catId&&x.branch===og.branch;});
+      var pick=same.find(function(x){return og.periodId&&x.periodId===og.periodId;})||same.find(function(x){return x.periodId;})||same[0];
+      if(pick)return (mapG[gid]=pick.id);
+      if(!tdCat(og.catId)){var oc=(bt.cats||[]).find(function(c){return c.id===og.catId;});if(oc){t.cats.push(JSON.parse(JSON.stringify(oc)));}}
+      var copy=JSON.parse(JSON.stringify(og));t.groups.push(copy);newG.push(copy.name);return (mapG[gid]=copy.id);
+    };
+    var sample=pls.slice(0,5).map(function(x){return x.title||'';}).concat(frs.slice(0,3).map(function(x){return 'ودية ضد '+(x.opp||'');})).filter(Boolean);
+    askConfirm('استرجاع من نسخة '+when+':\n• '+ceN(pls.length)+' تمريناً\n• '+ceN(frs.length)+' مباراة ودية\n'+(sample.length?'مثال: '+sample.join('، ')+'\n':'')+'\nتُضاف فقط ولا يُستبدل أي شيء من البيانات الحالية.',function(){
+      var np=0,nf=0;
+      pls.forEach(function(x){var gid=target(x.groupId);if(!gid)return;var c=JSON.parse(JSON.stringify(x));c.groupId=gid;c.restoredAt=Date.now();t.plans.push(c);np++;});
+      frs.forEach(function(x){var gid=target(x.groupId);if(!gid)return;var c=JSON.parse(JSON.stringify(x));c.groupId=gid;c.restoredAt=Date.now();t.friendlies.push(c);nf++;});
+      logA('استرجاع من نسخة '+when+': '+ceN(np)+' تمريناً، '+ceN(nf)+' ودية'+(newG.length?'، وأُعيدت حصص: '+newG.join('، '):''),'refresh','#16a34a');
+      sv();try{rAllSoft();}catch(e){}
+      addN('تم الاسترجاع',ceN(np)+' تمريناً • '+ceN(nf)+' ودية','success');
+    },'استرجاع');
+  }).catch(function(e){loadHide&&loadHide();alert('تعذّر جلب النسخة: '+((e&&e.message)||e));});
 }
 function bkRestore(id){
   var b=(BK.list||[]).find(function(x){return +x.id===+id;});if(!b)return;
@@ -16907,6 +16945,7 @@ function enterTD(){
   g('td-av').textContent=ti(CU.name);g('td-av').style.background=RC[CU.role]||'var(--red)';
   try{plAutoSync();}catch(e){}
   try{tdPurgeJunkGroups();}catch(e){}
+  try{tdDelSweep();}catch(e){}
   /* أكثر من فرع؟ اختر أولاً — وإلا دخول مباشر إلى فرعه */
   var _brs=tdMyBranches();
   if(_brs.length>1){TDACT='';TDPICK.force=true;rTDPick();return;}
@@ -18189,7 +18228,7 @@ function tdSavePlayer(){
     logA('تعديل لاعب (إدارة فنية): '+name,'edit','#1565c0');
   }else{
     var _tp=Object.assign({id:uid(),name:name,branch:branch,groupId:gid,catId:gg?gg.catId:'',cat:gg?gg.cat:'',pos:gv('tdp-pos'),foot:gv('tdp-foot'),dob:gv('tdp-dob'),status:gv('tdp-status')||'active',dev:'',img:gv('tdp-img'),sub:tdSubRead(),notes:[],at:Date.now()},tdPlayerIdent());
-    t.players.push(_tp);
+    t.players.push(_tp);try{tdDelUnmark(_tp);}catch(e){}
     try{plPushTD(_tp);}catch(e){console.warn('plPushTD',e);}
     logA('إضافة لاعب (إدارة فنية): '+name,'user-plus','#16a34a');
   }
@@ -19597,7 +19636,7 @@ function agCanAdd(){
 /* الحصص التلقائية (من جدول الفترات / الجدول الأسبوعي): يفعّلها مدير النظام من إعدادات الأنظمة.
    مطفأة = التقويم فارغ ويضيف المدرب تمارينه بنفسه من «إضافة نشاط ← إضافة تمرين». */
 /* تمرين تغطية: المدرب يضيف تمريناً لمجموعة ليست من مجموعاته (يغطي عن زميله) — ويبقى يراه ويحضّره هو */
-function agCoverMine(x){var c=tdMyCoach();return !!(x&&x.cover&&c&&x.coverBy===c.id);}
+function agCoverMine(x){if(!x||!x.cover||!x.coverBy)return false;var c=tdMyCoach();return !!((c&&x.coverBy===c.id)||(CU&&x.coverBy===CU.id));}
 function agGroupInScope(gid,x){return tdScopeGroups().some(function(q){return q.id===gid;})||agCoverMine(x);}
 /* كل حصص فرع المستخدم (لنموذج التغطية): مجموعاته أولاً ثم بقية الفرع */
 function agCoverGroups(){
@@ -19799,8 +19838,8 @@ function agSaveX(){
     rec.groupId=sc;rec.note=gv('ag-x-n');
     var meC=tdMyCoach();
     if(!tdScopeGroups().some(function(q){return q.id===sc;})){
-      if(!meC){alert('هذه الحصة خارج نطاقك');return;}
-      rec.cover=true;rec.coverBy=meC.id;rec.coverName=meC.name;
+      /* تغطية: أي حصة عرضها النموذج مسموحة — بلا سجل مدرب تُنسب للحساب نفسه */
+      rec.cover=true;rec.coverBy=meC?meC.id:(CU?CU.id:'');rec.coverName=meC?meC.name:(CU?CU.name:'');
     }
   }
   agXStore().push(rec);
@@ -19925,6 +19964,17 @@ function tdDelMark(p){
   if(t.delPlayers.length>3000)t.delPlayers=t.delPlayers.slice(-3000);
 }
 function tdDelMarked(p){var t=TDX(),k=tdDelKey(p);if(!k||!t.delPlayers||!t.delPlayers.length)return false;return t.delPlayers.some(function(x){return x.k===k;});}
+/* إضافة يدوية جديدة لنفس اللاعب تلغي علامة الحذف */
+function tdDelUnmark(p){var t=TDX(),k=tdDelKey(p);if(!k||!t.delPlayers)return;t.delPlayers=t.delPlayers.filter(function(x){return x.k!==k;});}
+/* شبكة أمان عند دخول مدير النظام: لاعب يحمل علامة حذف (بالهوية) وعاد بأي طريق قبل أن تُلغى العلامة — يُحذف مجدداً */
+function tdDelSweep(){
+  var t=TDX();if(tdRole()!=='admin'||!t.delPlayers||!t.delPlayers.length)return 0;
+  var tomb={};t.delPlayers.forEach(function(x){if(/^\d{6,}$/.test(x.k))tomb[x.k]=x;});
+  var gone=[];
+  t.players=(t.players||[]).filter(function(p){var k=normNid(p.nid||''),x=k&&tomb[k];if(!x)return true;if(p.at&&p.at>x.at)return true;gone.push(p.name||k);return false;});
+  if(gone.length){logA('حذف لاعبين عادوا بعد حذفهم ('+ceN(gone.length)+'): '+gone.slice(0,5).join('، ')+(gone.length>5?'…':''),'trash','#DD1D45');sv();}
+  return gone.length;
+}
 function tdDelPlayer(id){
   var p0=tdPlayer(id);
   askConfirm('حذف اللاعب نهائياً مع كل بياناته؟'+(p0?'\n'+p0.name:'')+'\nلن يُعاد إنشاؤه تلقائياً من قوائم البطولات.',function(){
@@ -22391,28 +22441,40 @@ function tdEnsureGroup(catId){
   var gs=t.groups.filter(function(x){return x.catId===catId;});
   return gs.length===1?gs[0].id:'';
 }
-/* حصة مهملة: بلا فترة ولا ملعب ولا لاعبين ولا أي بيانات مرتبطة */
+/* بيانات مرتبطة بحصة: تمارين، وديات، تمارين يدوية، تحضير، حصص مسجّلة */
+var TD_GROUP_DATA=['plans','friendlies','sessExtra','attend','sessions'];
+function tdGroupHasData(id){var t=TDX();return TD_GROUP_DATA.some(function(k){return (t[k]||[]).some(function(x){return x.groupId===id;});});}
+function tdGroupMoveData(from,to){
+  var t=TDX(),n=0;if(!from||!to||from===to)return 0;
+  TD_GROUP_DATA.forEach(function(k){(t[k]||[]).forEach(function(x){if(x.groupId===from){x.groupId=to;n++;}});});
+  return n;
+}
+/* حصة مهملة: بلا فترة ولا ملعب ولا لاعبين */
 function tdGroupIsJunk(gg){
   if(!gg||gg.periodId||gg.pitchId)return false;
-  var t=TDX(),id=gg.id;
-  if((t.players||[]).some(function(p){return p.groupId===id;}))return false;
-  if((t.plans||[]).some(function(x){return x.groupId===id;})||(t.friendlies||[]).some(function(x){return x.groupId===id;}))return false;
-  if((t.sessExtra||[]).some(function(x){return x.groupId===id;})||(t.attend||[]).some(function(x){return x.groupId===id;}))return false;
-  if((t.sessions||[]).some(function(x){return x.groupId===id;}))return false;
-  return true;
+  return !(TDX().players||[]).some(function(p){return p.groupId===gg.id;});
 }
 var TD_JUNK_DONE=false;
-/* تنظيف الحصص المهملة مرة في الجلسة (مدير النظام) */
+/* تنظيف الحصص المهملة مرة في الجلسة (مدير النظام):
+   بياناتها — إن وُجدت — تنتقل إلى حصة حقيقية من نفس الفئة، وإلا تبقى الحصة حتى تُعطى فترة وملعباً */
 function tdPurgeJunkGroups(){
   if(TD_JUNK_DONE||tdRole()!=='admin')return 0;
   TD_JUNK_DONE=true;
-  var t=TDX(),junk=(t.groups||[]).filter(tdGroupIsJunk);
-  if(!junk.length)return 0;
-  var ids={};junk.forEach(function(gg){ids[gg.id]=1;});
+  var t=TDX(),gone=[],moved=0;
+  (t.groups||[]).filter(tdGroupIsJunk).forEach(function(gg){
+    if(tdGroupHasData(gg.id)){
+      var real=(t.groups||[]).filter(function(x){return x.catId===gg.catId&&x.id!==gg.id&&x.periodId;});
+      if(!real.length)return;
+      moved+=tdGroupMoveData(gg.id,real[0].id);
+    }
+    gone.push(gg);
+  });
+  if(!gone.length)return 0;
+  var ids={};gone.forEach(function(gg){ids[gg.id]=1;});
   t.groups=t.groups.filter(function(gg){return !ids[gg.id];});
-  logA('حذف حصص بلا فترة ولا لاعبين تلقائياً ('+ceN(junk.length)+'): '+junk.slice(0,6).map(function(gg){return gg.name+' — '+gg.branch;}).join('، ')+(junk.length>6?'…':''),'trash','#DD1D45');
+  logA('حذف حصص بلا فترة ولا لاعبين تلقائياً ('+ceN(gone.length)+')'+(moved?' ونُقل '+ceN(moved)+' سجلاً إلى حصص الفئة':'')+': '+gone.slice(0,6).map(function(gg){return gg.name+' — '+gg.branch;}).join('، ')+(gone.length>6?'…':''),'trash','#DD1D45');
   sv();
-  return junk.length;
+  return gone.length;
 }
 function tdCatGroupId(catId){var gg=TDX().groups.find(function(x){return x.catId===catId;});return gg?gg.id:'';}
 /* دمج أي مجموعات قديمة داخل الفئة في مجموعة واحدة */
@@ -29454,7 +29516,13 @@ function adbSaveCat(bn){
     });
     /* حصص أُزيلت من النموذج: تُحذف إن كانت بلا لاعبين */
     var removed=0;
-    t.groups=(t.groups||[]).filter(function(gg){if(gg.catId!==c.id||keep[gg.id])return true;if((t.players||[]).some(function(p){return p.groupId===gg.id;}))return true;t.friendlies=(t.friendlies||[]).filter(function(x){return x.groupId!==gg.id;});t.plans=(t.plans||[]).filter(function(x){return x.groupId!==gg.id;});removed++;return false;});
+    var keptIds=Object.keys(keep);
+    t.groups=(t.groups||[]).filter(function(gg){
+      if(gg.catId!==c.id||keep[gg.id])return true;
+      if((t.players||[]).some(function(p){return p.groupId===gg.id;}))return true;
+      /* بياناتها (تمارين، وديات، تحضير…) لا تُحذف: تنتقل إلى حصة باقية من الفئة، وإلا تبقى الحصة */
+      if(tdGroupHasData(gg.id)){if(!keptIds.length)return true;tdGroupMoveData(gg.id,keptIds[0]);}
+      removed++;return false;});
     if(added||changed||removed)logA('حصص فئة '+name+': '+[added?ceN(added)+' جديدة':'',changed?ceN(changed)+' معدّلة':'',removed?ceN(removed)+' محذوفة':''].filter(Boolean).join('، ')+' — '+bn,'cal','#16a34a');
   }
   sv();ADBR.edit='';ADBR.add=false;adbRender();
@@ -31955,7 +32023,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.22-r26</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.23-r27</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
