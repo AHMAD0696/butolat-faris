@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.10.24-r28">
+<meta name="build" content="2026.10.26-r29">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -4478,7 +4478,7 @@ body.wb-on #WB{display:block}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.24-r28</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.10.26-r29</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -6986,7 +6986,8 @@ function rdN(id){NOTIFS=NOTIFS.map(function(n){return n.id===id?Object.assign({}
 var N_GO={
   adUsers:function(tab){enterAD();adP('users');if(tab)adUTab(tab);},
   appAdmin:function(tab){if(!g('APP')||g('APP').style.display==='none'){var t=AT||((DB.tournaments||[])[0]||{}).id;if(!t)return;selT(t);}gP('admin');if(tab)aTab(tab);},
-  appPage:function(pg){if(!g('APP')||g('APP').style.display==='none'){var t=AT||((DB.tournaments||[])[0]||{}).id;if(!t)return;selT(t);}gP(pg);}
+  appPage:function(pg){if(!g('APP')||g('APP').style.display==='none'){var t=AT||((DB.tournaments||[])[0]||{}).id;if(!t)return;selT(t);}gP(pg);},
+  ntPage:function(pg){if(!g('NT')||g('NT').style.display==='none')enterNT();if(pg)ntP(pg);}
 };
 function nRun(go){
   if(!go)return false;
@@ -19310,8 +19311,11 @@ function rsDownload(){
    ========================================================================== */
 var AG_KIND={
   train:['تمرين','#1565c0','clock'],match:['مباراة','#DD1D45','ball'],camp:['تجمّع','#5b2d8f','cal'],
-  event:['فعالية','#16a34a','star'],holiday:['إجازة','#8b92b0','sun'],tour:['بطولة','#d97706','trophy']
+  event:['فعالية','#16a34a','star'],holiday:['إجازة','#8b92b0','sun'],tour:['بطولة','#d97706','trophy'],
+  saff:['مباراة رسمية — الاتحاد','#0e7490','trophy']
 };
+var NT_MTKIND={fr:'مباراة ودية',tour:'بطولة خارجية',saff:'دوري الاتحاد السعودي'};
+function ntMtKindLbl(m){return m&&m.kind==='saff'?(m.comp||'دوري الاتحاد'):(m&&m.kind==='tour'?'بطولة':'ودية');}
 var AG_ST={sched:'مجدول',done:'تم',missed:'لم يُحضَّر',cancel:'ملغي',post:'مؤجل',live:'جارٍ الآن'};
 var AG_WD=['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];   /* الأسبوع يبدأ السبت */
 var AGS={};
@@ -19504,7 +19508,8 @@ function agEventsNT(from,to){
     if(m.teamId!==NTTEAM||!sqs.some(function(s){return s.id===m.squadId;}))return;
     var iso=String(m.dt||'').slice(0,10);if(!iso||iso<from||iso>to)return;
     var st=m.status==='done'?'done':(m.status==='cancel'?'cancel':(m.status==='post'?'post':(iso<today?'missed':'sched')));
-    out.push({key:'m|'+m.id,kind:'match',date:iso,t1:String(m.dt).slice(11,16),t2:'',title:(m.kind==='tour'&&m.tournament?m.tournament+' — ':'')+'ضد '+(m.opp||'—'),sub:[ntSqName(m.squadId),m.loc||'',ntMtHasRes(m)?('النتيجة '+m.s1+' - '+m.s2):''].filter(Boolean).join(' • '),scope:m.squadId,color:agKind('match')[1],status:st,src:{type:'ntmatch',id:m.id,sid:m.squadId}});
+    var saff=m.kind==='saff';
+    out.push({key:'m|'+m.id,kind:saff?'saff':'match',date:iso,t1:String(m.dt).slice(11,16),t2:'',title:(m.kind==='tour'&&m.tournament?m.tournament+' — ':'')+(saff?'ضد '+(m.opp||'—')+(m.round?' — ج'+ceN(m.round):''):'ضد '+(m.opp||'—')),sub:[ntSqName(m.squadId),saff?(m.comp||'دوري الاتحاد'):'',saff?(m.home===false?'خارج الأرض':'على أرضنا'):'',m.loc||'',ntMtHasRes(m)?('النتيجة '+m.s1+' - '+m.s2):''].filter(Boolean).join(' • '),scope:m.squadId,color:agKind(saff?'saff':'match')[1],status:st,src:{type:'ntmatch',id:m.id,sid:m.squadId}});
   });
   (n.camps||[]).forEach(function(c){
     if(c.teamId!==NTTEAM||!sqs.some(function(s){return s.id===c.squadId;}))return;
@@ -23882,12 +23887,148 @@ function scoresOK(m){return !!m&&m.s1!==''&&m.s1!=null&&m.s2!==''&&m.s2!=null&&!
 function ntMtHasRes(m){return !!m&&m.s1!==''&&m.s1!==undefined&&m.s1!==null&&m.s2!==''&&m.s2!==undefined&&m.s2!==null;}
 function ntMtCanEdit(m){return ntCanManage()||ntRole()==='sadmin'||(m&&m.by===CU.name)||(ntRole()==='coach'&&m&&ntCanEditSquad(m.squadId));}
 function ntMtWhen(m){var dt=m&&m.dt?new Date(m.dt):null;return dt&&!isNaN(dt)?dt.toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'}):'—';}
+/* ===== استيراد جدول مباريات الاتحاد السعودي (Excel) إلى تقويم المنتخب ===== */
+var NTSAFF={sheets:null,file:'',busy:false,err:''};
+function ntSaffOpen(){
+  if(!(ntCanManage()||ntRole()==='sadmin')){alert('الاستيراد متاح لإدارة المنتخب');return;}
+  NTSAFF={sheets:null,file:'',busy:false,err:''};
+  ntSaffPaint();
+}
+function ntSaffPaint(){
+  var h='<div class="ce2-note" style="margin-bottom:.9rem">'+ic('info',13)+'<div>ارفع ملف Excel بجدول مباريات الاتحاد (ورقة لكل فئة: الجولة، رقم المباراة، التاريخ، الوقت، المباراة، المنافس، الملعب، المدينة). تُضاف المباريات لتقويم المنتخب بلون مميّز «مباراة رسمية — الاتحاد»، وإعادة رفع الملف تحدّث المباريات نفسها بلا تكرار.</div></div>';
+  if(!NTSAFF.sheets){
+    h+='<label class="btn btn-r" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">'+ic('doc',14)+' اختر ملف Excel<input type="file" accept=".xlsx,.xls" style="display:none" onchange="ntSaffFile(this)"></label>';
+    if(NTSAFF.busy)h+='<div class="jnote" style="margin-top:.8rem">'+ic('refresh',12)+' جارٍ قراءة الملف…</div>';
+    if(NTSAFF.err)h+='<div class="msg err" style="display:block;margin-top:.8rem">'+esc(NTSAFF.err)+'</div>';
+  }else{
+    var sqs=ntTeamSquads(),n=NTX(),tot=0,dup=0;
+    NTSAFF.sheets.forEach(function(sh,si){
+      h+='<div class="rform" style="margin-bottom:.9rem;max-width:none"><div class="cw-t" style="margin-bottom:.5rem">'+ic('trophy',13)+' '+esc(sh.comp)+' <small style="color:var(--gray);font-weight:500">— ورقة «'+esc(sh.name)+'» • '+ceN(sh.rows.length)+' مباراة</small></div>';
+      if(sh.sub)h+='<div style="font-size:11px;color:var(--gray);margin-bottom:.5rem">'+esc(sh.sub)+'</div>';
+      h+='<div class="fg" style="max-width:420px"><label>فئة المنتخب لهذه المباريات *</label>'+tdSel('ntsaff-sq-'+si,sqs.map(function(q){return [q.id,q.name+(q.year?' — مواليد '+q.year:'')];}),sh.squadId,'اختر الفئة')+'</div>';
+      var ex=0;sh.rows.forEach(function(r){if(sh.squadId&&ntSaffFind(n,sh,r))ex++;});tot+=sh.rows.length;dup+=ex;
+      h+='<div class="at-wrap"><table class="at"><thead><tr><th>ج</th><th>رقم</th><th>التاريخ</th><th>الوقت</th><th>المنافس</th><th>الأرض</th><th>الملعب</th><th></th></tr></thead><tbody>';
+      sh.rows.forEach(function(r){
+        var e=sh.squadId?ntSaffFind(n,sh,r):null;
+        h+='<tr><td>'+ceN(r.round||'')+'</td><td>'+ceN(r.no||'')+'</td><td style="white-space:nowrap">'+esc(tdDayLabel(r.date))+'</td><td style="direction:ltr;text-align:start">'+esc(r.time?fmt12(r.time):'—')+'</td><td style="font-weight:700">'+esc(r.opp)+'</td><td>'+(r.home?'أرضنا':'خارج')+'</td><td>'+esc([r.pitch,r.city].filter(Boolean).join(' — '))+'</td><td style="font-size:10.5px;color:var(--gray)">'+(e?'موجودة — تُحدَّث':'جديدة')+'</td></tr>';
+      });
+      h+='</tbody></table></div></div>';
+    });
+    h+='<div class="xacts"><button class="btn btn-r" onclick="ntSaffImport()">'+ic('check',13)+' إضافة '+ceN(tot)+' مباراة للتقويم'+(dup?' ('+ceN(dup)+' تُحدَّث)':'')+'</button><button class="btn btn-g" onclick="NTSAFF.sheets=null;ntSaffPaint()">ملف آخر</button></div>';
+    h+='<div class="msg err" id="ntsaff-err">اختر فئة لكل ورقة</div>';
+  }
+  fpgHTML('استيراد جدول مباريات الاتحاد','trophy','مباريات الاتحاد السعودي تُضاف لتقويم المنتخب بلون مميّز',h,function(){rNTMatches();});
+  (NTSAFF.sheets||[]).forEach(function(sh,si){var el=g('ntsaff-sq-'+si);if(el)el.onchange=function(){sh.squadId=this.value;ntSaffPaint();};});
+}
+function ntSaffFile(inp){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  NTSAFF.busy=true;NTSAFF.err='';NTSAFF.file=f.name;ntSaffPaint();
+  rxLib().then(function(X){
+    var rd=new FileReader();
+    rd.onload=function(){
+      try{
+        var wb=X.read(new Uint8Array(rd.result),{type:'array',cellDates:true});
+        var sheets=[];
+        wb.SheetNames.forEach(function(nm){
+          var rows=X.utils.sheet_to_json(wb.Sheets[nm],{header:1,raw:true,defval:null});
+          var sh=ntSaffParse(nm,rows);if(sh&&sh.rows.length)sheets.push(sh);
+        });
+        if(!sheets.length)throw new Error('لم أجد جدول مباريات في الملف — تأكد من أعمدة: التاريخ، الوقت، المباراة/المنافس');
+        NTSAFF.sheets=sheets;NTSAFF.busy=false;ntSaffPaint();
+      }catch(e){NTSAFF.busy=false;NTSAFF.err=(e&&e.message)||'تعذّر قراءة الملف';ntSaffPaint();}
+    };
+    rd.onerror=function(){NTSAFF.busy=false;NTSAFF.err='تعذّر قراءة الملف';ntSaffPaint();};
+    rd.readAsArrayBuffer(f);
+  }).catch(function(e){NTSAFF.busy=false;NTSAFF.err=(e&&e.message)||'تعذّر تحميل قارئ Excel';ntSaffPaint();});
+}
+function ntSaffNorm(v){return String(v==null?'':v).replace(/[\s\u200f\u200e]+/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');}
+function ntSaffIsUs(side){var k=ntSaffNorm(side);return /فارس/.test(k);}
+function ntSaffDate(v){
+  if(v==null||v==='')return '';
+  if(v instanceof Date&&!isNaN(v))return calISO(new Date(v.getFullYear(),v.getMonth(),v.getDate()));
+  if(typeof v==='number'){var d=new Date(Math.round((v-25569)*86400000));return isNaN(d)?'':calISO(new Date(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()));}
+  var t=String(v).trim(),m=t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(m)return m[1]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[3]).slice(-2);
+  m=t.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);if(m)return m[3]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2);
+  var d2=new Date(t);return isNaN(d2)?'':calISO(d2);
+}
+function ntSaffTime(v){
+  if(v==null||v==='')return '';
+  if(v instanceof Date&&!isNaN(v))return ('0'+v.getHours()).slice(-2)+':'+('0'+v.getMinutes()).slice(-2);
+  if(typeof v==='number'){var mins=Math.round((v%1)*1440);return ('0'+Math.floor(mins/60)).slice(-2)+':'+('0'+(mins%60)).slice(-2);}
+  var t=String(v).trim().replace(/[٠-٩]/g,function(c){return '٠١٢٣٤٥٦٧٨٩'.indexOf(c);}),m=t.match(/(\d{1,2})[:.](\d{2})\s*([apAP][mM]|م|ص)?/);
+  if(!m)return '';var hh=+m[1],mm=m[2],ap=(m[3]||'').toLowerCase();
+  if((ap==='pm'||ap==='م')&&hh<12)hh+=12;if((ap==='am'||ap==='ص')&&hh===12)hh=0;
+  return ('0'+hh).slice(-2)+':'+mm;
+}
+/* ورقة واحدة ← {name,comp,sub,age,rows[]} */
+function ntSaffParse(name,rows){
+  var hi=-1,H={};
+  var keys={round:/^الجول/,no:/^رقم/,day:/^اليوم/,date:/^التاريخ/,time:/^الوقت/,match:/^المبارا/,opp:/^المنافس|^الخصم/,pitch:/^الملعب/,city:/^المدين/,res:/^النتيج/};
+  for(var i=0;i<Math.min(rows.length,15);i++){
+    var r=rows[i]||[],hit={};
+    r.forEach(function(c,ci){if(c==null)return;var t=String(c).trim();Object.keys(keys).forEach(function(k){if(hit[k]==null&&keys[k].test(t))hit[k]=ci;});});
+    if(hit.date!=null&&(hit.opp!=null||hit.match!=null)){hi=i;H=hit;break;}
+  }
+  if(hi<0)return null;
+  var comp='',sub='';
+  for(var j=0;j<hi;j++){var c0=(rows[j]||[]).find(function(c){return c!=null&&String(c).trim();});if(c0==null)continue;var t0=String(c0).trim();if(!comp){comp=t0.indexOf('—')>-1?t0.split('—').pop().trim():t0;}else if(!sub)sub=t0;}
+  if(!comp)comp=name;
+  var age=(String(comp+' '+name).match(/(?:تحت|U)\s*(\d{1,2})/i)||[])[1]||'';
+  var season=(String(comp).match(/(\d{4})\s*\/\s*(\d{4})/)||[]);
+  var out=[];
+  for(var k=hi+1;k<rows.length;k++){
+    var r=rows[k]||[];var date=ntSaffDate(r[H.date]);if(!date)continue;
+    var mt=H.match!=null?String(r[H.match]||''):'',parts=mt.split(/\s*[×xX✕✖]\s*|\s+-\s+/).map(function(x){return x.trim();}).filter(Boolean);
+    var opp=H.opp!=null&&r[H.opp]!=null?String(r[H.opp]).trim():'';
+    var home=true;
+    if(parts.length>=2){home=ntSaffIsUs(parts[0]);if(!opp)opp=home?parts[1]:parts[0];}
+    if(!opp)continue;
+    var res=H.res!=null&&r[H.res]!=null?String(r[H.res]).trim():'';
+    out.push({round:r[H.round]!=null?String(r[H.round]).trim():'',no:r[H.no]!=null?String(r[H.no]).trim():'',date:date,time:ntSaffTime(H.time!=null?r[H.time]:''),opp:opp,home:home,pitch:H.pitch!=null&&r[H.pitch]!=null?String(r[H.pitch]).trim():'',city:H.city!=null&&r[H.city]!=null?String(r[H.city]).trim():'',res:res});
+  }
+  /* تخمين الفئة: اسمها يحوي العمر، أو مواليدها = نهاية الموسم − العمر */
+  var sq='';
+  if(age){var by=season[2]?(+season[2]-(+age)):0;
+    var cands=ntTeamSquads();
+    var hitQ=cands.find(function(q){return new RegExp('(?:تحت|U)\\s*'+age+'(?!\\d)','i').test(q.name||'');})||(by?cands.find(function(q){return String(q.year)===String(by);}):null);
+    if(hitQ)sq=hitQ.id;}
+  return {name:name,comp:comp,sub:sub,age:age,squadId:sq,rows:out};
+}
+function ntSaffFind(n,sh,r){
+  return (n.matches||[]).find(function(m){
+    if(m.teamId!==NTTEAM||m.squadId!==sh.squadId||m.kind!=='saff')return false;
+    if(r.no&&m.no&&String(m.no)===String(r.no)&&ntSaffNorm(m.comp)===ntSaffNorm(sh.comp))return true;
+    return String(m.dt||'').slice(0,10)===r.date&&ntSaffNorm(m.opp)===ntSaffNorm(r.opp);
+  })||null;
+}
+function ntSaffImport(){
+  var n=NTX(),sheets=NTSAFF.sheets||[];
+  if(sheets.some(function(sh){return !sh.squadId;})){fl('ntsaff-err');return;}
+  if(!n.matches)n.matches=[];
+  var added=0,upd=0;
+  sheets.forEach(function(sh){
+    sh.rows.forEach(function(r){
+      var dt=r.date+'T'+(r.time||'00:00');
+      var data={squadId:sh.squadId,kind:'saff',comp:sh.comp,round:r.round,no:r.no,opp:r.opp,home:r.home,dt:dt,loc:[r.pitch,r.city].filter(Boolean).join(' — '),src:'saff'};
+      var m=ntSaffFind(n,sh,r);
+      if(m){Object.keys(data).forEach(function(k){m[k]=data[k];});upd++;}
+      else{m=Object.assign({id:uid(),teamId:NTTEAM,by:CU.name,at:Date.now(),approved:true,status:'sched',players:[],stats:{},s1:'',s2:'',tournament:''},data);n.matches.push(m);added++;}
+      /* نتيجة في الملف: بترتيب الفريقين كما في عمود المباراة */
+      var rs=String(r.res||'').replace(/[٠-٩]/g,function(c){return '٠١٢٣٤٥٦٧٨٩'.indexOf(c);}).match(/(\d+)\s*[-–:]\s*(\d+)/);
+      if(rs&&!ntMtHasRes(m)){m.s1=r.home?rs[1]:rs[2];m.s2=r.home?rs[2]:rs[1];m.status='done';}
+    });
+  });
+  logA('استيراد جدول الاتحاد: '+ceN(added)+' مباراة جديدة'+(upd?' و'+ceN(upd)+' محدّثة':'')+' — '+sheets.map(function(s){return s.comp;}).join('، '),'trophy','#0e7490');
+  sv();fpgHide();NTMT.kind='';NTMT.period='all';rNTMatches();
+  addN('أُضيفت مباريات الاتحاد للتقويم',ceN(added)+' جديدة'+(upd?' • '+ceN(upd)+' محدّثة':''),'success',"ntPage:agenda");
+}
 function rNTMatches(){
   var n=NTX(),sq=ntScopeSquads();
   var ed=NTMT.edit?n.matches.find(function(x){return x.id===NTMT.edit;}):null;
   var canAdd=ntCanManage()||ntRole()==='coach'||ntRole()==='sadmin';
   var h=tdHead('ball','المباريات والبطولات','أنشئ المباراة أولاً فتظهر في الجدول، ثم سجّل نتيجتها من بطاقتها بعد انتهائها',
-    (canAdd?'<button class="btn btn-r btn-sm" onclick="NTMT.showForm=true;NTMT.edit=\'\';rNTMatches()">'+ic('cal-plus',13)+' إضافة مباراة</button>':''));
+    ((ntCanManage()||ntRole()==='sadmin')?'<button class="btn btn-o btn-sm" onclick="ntSaffOpen()">'+ic('doc',13)+' استيراد جدول الاتحاد (Excel)</button>':'')
+    +(canAdd?'<button class="btn btn-r btn-sm" onclick="NTMT.showForm=true;NTMT.edit=\'\';rNTMatches()">'+ic('cal-plus',13)+' إضافة مباراة</button>':''));
   /* ===== الخطوة ١: بيانات المباراة (صفحة مستقلة) ===== */
   if((NTMT.showForm||ed)&&canAdd){
     h+='<div class="rform" style="max-width:680px;margin-bottom:1.4rem" data-fpg="'+(ed?'تعديل بيانات المباراة':'مباراة جديدة')+'" data-fpg-ic="ball" data-fpg-sub="الخطوة ١: بيانات المباراة — النتيجة تُسجَّل لاحقاً من بطاقتها">';
@@ -23907,7 +24048,7 @@ function rNTMatches(){
   h+='<div class="rform" style="padding:.9rem 1rem;margin-bottom:1rem"><div style="display:flex;gap:.7rem;flex-wrap:wrap;align-items:end">';
   h+='<div style="font-size:11.5px;font-weight:700;color:var(--gray);display:flex;align-items:center;gap:5px;padding-bottom:9px">'+ic('filter',12)+' فرز</div>';
   h+='<div class="fg" style="margin-bottom:0;min-width:150px"><label>الفئة</label>'+tdSel('ntmtf-sq',sq.map(function(s){return [s.id,s.name];}),NTMT.squad,'كل الفئات')+'</div>';
-  h+='<div class="fg" style="margin-bottom:0;min-width:140px"><label>النوع</label>'+tdSel('ntmtf-kind',[['fr','ودية'],['tour','بطولة خارجية']],NTMT.kind,'الكل')+'</div>';
+  h+='<div class="fg" style="margin-bottom:0;min-width:140px"><label>النوع</label>'+tdSel('ntmtf-kind',[['fr','ودية'],['tour','بطولة خارجية'],['saff','دوري الاتحاد']],NTMT.kind,'الكل')+'</div>';
   h+='<div class="fg" style="margin-bottom:0;min-width:140px"><label>الحالة</label>'+tdSel('ntmtf-status',Object.keys(NTMST).map(function(k){return [k,NTMST[k]];}),NTMT.status,'كل الحالات')+'</div>';
   if(NTMT.squad||NTMT.kind||NTMT.status)h+='<button class="btn btn-g btn-sm" onclick="NTMT.squad=\'\';NTMT.kind=\'\';NTMT.status=\'\';rNTMatches()">'+ic('x',12)+' مسح الفرز</button>';
   h+='</div></div>';
@@ -23923,7 +24064,7 @@ function rNTMatches(){
   }
   if(NTMT.view==='cal'){
     h+=calHTML(NTMT,ms.map(function(m){
-      return{id:m.id,dt:m.dt,title:ntSqName(m.squadId)+' × '+m.opp,sub:(m.kind==='tour'?(m.tournament||'بطولة'):'ودية')+' • '+(NTMST[m.status]||''),color:NTMT_COLOR[m.status]||'#1565c0'};
+      return{id:m.id,dt:m.dt,title:ntSqName(m.squadId)+' × '+m.opp,sub:(m.kind==='tour'?(m.tournament||'بطولة'):ntMtKindLbl(m))+' • '+(NTMST[m.status]||''),color:m.kind==='saff'?AG_KIND.saff[1]:(NTMT_COLOR[m.status]||'#1565c0')};
     }),'ntMt');
     h+='<div class="att-lg" style="margin-top:-.6rem">'+Object.keys(NTMST).map(function(k){return '<span><span class="att-dot" style="background:'+NTMT_COLOR[k]+';border-color:'+NTMT_COLOR[k]+'"></span> '+NTMST[k]+'</span>';}).join('')+'</div>';
   }
@@ -23937,7 +24078,7 @@ function rNTMatches(){
       var sc=ntMtHasRes(m)?m.s1+' - '+m.s2:'—';
       var act='';
       if(ntMtCanEdit(m)&&m.status!=='cancel')act='<button class="ab" style="background:'+(ntMtHasRes(m)?'var(--bg);color:var(--accent)':'rgba(221,29,69,.08);color:var(--red)')+'" title="'+(ntMtHasRes(m)?'تعديل النتيجة':'إضافة نتيجة')+'" onclick="event.stopPropagation();ntMtRes(\''+m.id+'\')">'+ic(ntMtHasRes(m)?'edit':'plus',11)+'</button>';
-      h+='<tr style="cursor:pointer" onclick="ntMtFocus(\''+m.id+'\')"><td style="white-space:nowrap">'+ntMtWhen(m)+'</td><td style="font-weight:700">'+esc(ntSqName(m.squadId))+'</td><td>'+(m.kind==='tour'?'بطولة':'ودية')+'</td><td>'+esc(m.tournament||'—')+'</td><td>'+esc(m.opp)+'</td><td style="font-weight:700">'+sc+'</td><td><span class="badge" style="background:'+NTMT_COLOR[m.status]+'1f;color:'+NTMT_COLOR[m.status]+'">'+NTMST[m.status]+'</span></td><td>'+(m.approved?'<span class="badge approved">معتمدة</span>':'<span class="badge pending">بالانتظار</span>')+'</td><td>'+act+'</td></tr>';
+      h+='<tr style="cursor:pointer" onclick="ntMtFocus(\''+m.id+'\')"><td style="white-space:nowrap">'+ntMtWhen(m)+'</td><td style="font-weight:700">'+esc(ntSqName(m.squadId))+'</td><td>'+(m.kind==='tour'?'بطولة':(m.kind==='saff'?'دوري الاتحاد':'ودية'))+'</td><td>'+esc(m.tournament||m.comp||'—')+'</td><td>'+esc(m.opp)+'</td><td style="font-weight:700">'+sc+'</td><td><span class="badge" style="background:'+NTMT_COLOR[m.status]+'1f;color:'+NTMT_COLOR[m.status]+'">'+NTMST[m.status]+'</span></td><td>'+(m.approved?'<span class="badge approved">معتمدة</span>':'<span class="badge pending">بالانتظار</span>')+'</td><td>'+act+'</td></tr>';
     });
     h+='</tbody></table></div>';
   }
@@ -23951,13 +24092,14 @@ function rNTMatches(){
       h+='<div class="mcard" id="ntmc-'+m.id+'" style="border-top:4px solid '+col+(det?';grid-column:1/-1':'')+'">';
       h+='<div class="mcard-top"><span class="gtag" style="background:rgba(217,119,6,.13);color:var(--amber)">'+ic('crown',11)+' '+esc(ntSqName(m.squadId))+'</span>';
       h+='<span class="badge" style="background:'+col+'1f;color:'+col+'">'+NTMST[m.status]+'</span>';
-      h+=(m.kind==='tour'?'<span class="badge" style="background:rgba(217,119,6,.13);color:var(--amber)">'+ic('trophy',11)+' بطولة</span>':'<span class="badge" style="background:var(--bg);color:var(--accent)">ودية</span>');
+      h+=(m.kind==='tour'?'<span class="badge" style="background:rgba(217,119,6,.13);color:var(--amber)">'+ic('trophy',11)+' بطولة</span>':(m.kind==='saff'?'<span class="badge" style="background:'+AG_KIND.saff[1]+'22;color:'+AG_KIND.saff[1]+'">'+ic('trophy',11)+' دوري الاتحاد'+(m.round?' — ج'+ceN(m.round):'')+'</span>':'<span class="badge" style="background:var(--bg);color:var(--accent)">ودية</span>'));
       h+=(m.approved?'<span class="badge approved">معتمدة</span>':'<span class="badge pending">بالانتظار</span>')+'</div>';
       h+='<div class="mcard-vs"><div class="mc-team"><div class="mc-av" style="background:var(--amber)">'+ic('crown',15)+'</div><div class="mc-nm">'+esc(ntTeamName())+'</div></div>';
       h+='<div class="mc-sc" style="color:'+resCl+'">'+(hasRes?esc(m.s1)+' - '+esc(m.s2):'<span style="font-size:11px;color:var(--gray);font-weight:600">'+(m.status==='sched'?'لم تُلعب بعد':'لم تُسجّل')+'</span>')+'</div>';
       h+='<div class="mc-team"><div class="mc-av" style="background:var(--bg);color:var(--gray)">'+ic('shield',15)+'</div><div class="mc-nm">'+esc(m.opp)+'</div></div></div>';
       h+='<div class="mcard-meta">';
       if(m.tournament)h+='<span>'+ic('trophy',11)+' '+esc(m.tournament)+'</span>';
+      if(m.kind==='saff')h+='<span>'+ic('trophy',11)+' '+esc(m.comp||'دوري الاتحاد')+(m.no?' • مباراة رقم '+ceN(m.no):'')+' • '+(m.home===false?'خارج الأرض':'على أرضنا')+'</span>';
       h+='<span>'+ic('cal',11)+' '+ntMtWhen(m)+'</span>';
       if(m.loc)h+='<span>'+ic('pin',11)+' '+esc(m.loc)+'</span>';
       if(m.placement)h+='<span style="color:var(--amber);font-weight:700">'+ic('medal',11)+' '+esc(m.placement)+'</span>';
@@ -32094,7 +32236,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.24-r28</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.10.26-r29</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
