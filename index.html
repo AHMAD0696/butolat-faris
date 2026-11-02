@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.11.02-r31">
+<meta name="build" content="2026.11.02-r32">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3892,6 +3892,27 @@ body.wb-on #WB{display:block}
 .xf.open .xf-b{display:block}
 .xf-b>.xcard,.xf-b>.mcard{border:0;box-shadow:none;background:transparent;padding:.7rem 0 0;margin:0;border-radius:0}
 .xf-b>.xcard{border-top:0}
+.cesel-top{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem}.cesel-crumb{font-size:12px;color:var(--gray)}
+.cesel-hero{--c:var(--navy);display:flex;align-items:center;gap:1rem;padding:1rem 1.1rem;background:var(--sur);border:1px solid var(--brd);border-radius:18px;border-inline-start:5px solid var(--c);margin-bottom:.6rem}
+.cesel-hi{flex:1;min-width:0}.cesel-hn{font-size:18px;font-weight:800;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}.cesel-hn .ce2-st{font-size:10.5px}
+.cesel-hm{display:flex;flex-wrap:wrap;gap:.3rem .5rem;align-items:center;font-size:12px;color:var(--gray);margin-top:.35rem}.cesel-hm i{opacity:.4;font-style:normal}
+.cesel-score{text-align:center;padding:.4rem .9rem;border-inline-start:1px solid var(--brd);min-width:92px}.cesel-score b{display:block;font-size:24px;font-weight:900;line-height:1.1}.cesel-score small{color:var(--gray);font-size:10.5px}
+.cesel-next{--c:var(--navy);display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;padding:.6rem .9rem;border-radius:14px;background:color-mix(in srgb,var(--c) 9%,var(--sur));border:1px solid color-mix(in srgb,var(--c) 30%,var(--brd));margin-bottom:.9rem}
+.cesel-nx-ic{width:30px;height:30px;border-radius:9px;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.cesel-nx-t{flex:1;min-width:180px}.cesel-nx-t small,.cesel-nx-w small{display:block;font-size:10px;color:var(--gray)}.cesel-nx-t b{font-size:13px}.cesel-nx-w b{font-size:12px}
+.cesel-nx-w{padding-inline-start:.8rem;border-inline-start:1px solid var(--brd)}
+.cesel-tabs{display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--brd);margin-bottom:1rem}
+.cesel-tabs::-webkit-scrollbar{display:none}
+.cesel-tab{display:flex;align-items:center;gap:.45rem;padding:.6rem .8rem;border:0;border-bottom:3px solid transparent;background:none;color:var(--gray);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;flex:none}
+.cesel-tab i{width:22px;height:22px;border-radius:50%;background:var(--bg);border:1.5px solid var(--brd);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:10.5px;color:var(--gray);flex:none}
+.cesel-tab i.ok{background:#16a34a;border-color:#16a34a;color:#fff}.cesel-tab i.cur{background:var(--c);border-color:var(--c);color:#fff}
+.cesel-tab.cur{color:var(--txt)}.cesel-tab.on{color:var(--red);border-bottom-color:var(--red)}.cesel-tab.on i.ic{color:var(--red);border-color:var(--red)}
+.cesel-body{animation:fadeIn .2s}
+.cesel-sh{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem}.cesel-sh h3{margin:0;font-size:15px}.cesel-sh p{margin:.2rem 0 0;font-size:12px;color:var(--gray)}
+.cesel-stats{display:flex;gap:.4rem;flex-wrap:wrap}.cesel-stats span{background:var(--sur);border:1px solid var(--brd);border-radius:10px;padding:.35rem .7rem;text-align:center;min-width:72px}.cesel-stats small{display:block;font-size:9.5px;color:var(--gray)}.cesel-stats b{font-size:13px}
+.cesel-empty{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:2rem 1rem;border:1px dashed var(--brd);border-radius:16px;color:var(--gray);text-align:center}.cesel-empty b{color:var(--txt);font-size:13.5px}.cesel-empty small{font-size:11.5px}.cesel-empty .btn{margin-top:.3rem}
+.cesel-bar{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+@media(max-width:640px){.cesel-hero{flex-wrap:wrap}.cesel-score{border:0;padding:0;min-width:0;margin-inline-start:auto}.cesel-nx-w{border:0;padding:0}.cesel-next .btn{width:100%}}
 .cesel-path{display:flex;gap:.35rem;flex-wrap:wrap;margin:.2rem 0 .9rem}
 .cesel-pi{--c:var(--gray);display:flex;align-items:center;gap:.4rem;padding:.35rem .7rem .35rem .5rem;border:1.5px solid var(--brd);border-radius:999px;background:var(--sur);color:var(--txt);font:inherit;font-size:11.5px;font-weight:700;cursor:pointer}
 .cesel-pi i{width:20px;height:20px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:10.5px;color:var(--gray)}
@@ -4511,7 +4532,7 @@ body.wb-on #WB{display:block}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.11.02-r31</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.11.02-r32</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -5309,6 +5330,8 @@ var IC={
  ball:'<circle cx="12" cy="12" r="10"/><path d="M12 2v4l3.5 2.5L17 5M12 22v-4l-3.5-2.5L7 19M2 12h4l2.5-3.5L5 7M22 12h-4l-2.5 3.5L19 17M8.5 8.5 12 6l3.5 2.5-1.3 4.1h-4.4z"/>',
  crown:'<path d="M2 18h20l-2-11-5 4-3-7-3 7-5-4z"/><path d="M4 22h16"/>',
  heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
+ flag:'<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>',
+ lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
  list:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
  chart:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
  inbox:'<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
@@ -26224,23 +26247,41 @@ function ceCandOpen(id,tab){CEV2=id;CESEL.tab=tab||'file';ceP('cand');}
 function rCECand(){
   var el=g('cec-cand');if(!el)return;var x=ceCand(CEV2);
   if(!x||!ceSelScope().some(function(q){return q.id===x.id;})){el.innerHTML=emptyBox('user-plus','المرشح غير موجود أو خارج نطاقك')+'<button class="btn btn-g btn-sm" onclick="ceP(\'select\')">رجوع</button>';return;}
-  var st=CESEL_ST[x.stage]||CESEL_ST.screen,nx=ceSelNext(x),can=ceSelCan(x);
-  var h='<button class="btn btn-g btn-sm" onclick="ceP(\'select\')" style="margin-bottom:1rem">'+ic('swap',12)+' رجوع لاختيار المدربين</button>';
-  h+='<div class="ce2-hero">'+ceAvatar({name:x.name,img:x.img},84)+'<div class="ce2-hi"><div class="ce2-hn">'+esc(x.name)+'</div><div class="ce2-hs">'+(x.branch?ic('pin',11)+' '+esc(x.branch):'')+(x.phone?' <span style="opacity:.4">•</span> <span style="direction:ltr">'+esc(phoneDisp(x.phone))+'</span>':'')+(x.home?' <span style="opacity:.4">•</span> '+esc(x.home):'')+'</div>'
-    +'<div style="margin-top:.5rem;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center"><span class="ce2-st" style="background:'+st[1]+'1f;color:'+st[1]+'">'+st[0]+'</span><span style="font-size:11.5px;color:var(--gray)">'+ic('chev-l',10)+' الإجراء التالي: <b style="color:var(--txt)">'+esc(nx.t)+'</b> — '+esc(nx.who)+'</span></div></div>';
+  var st=CESEL_ST[x.stage]||CESEL_ST.screen,nx=ceSelNext(x),can=ceSelCan(x),cta=ceSelCTA(x,can);
   var last=ceCandLast(x),gr=ceGrade(last?last.pct:null);
-  h+='<div class="ce2-ring"><div class="ce2-rn" style="color:'+gr.c+'">'+(last?ceN(last.pct)+'٪':'—')+'</div><div class="ce2-rl">'+(last?last.lbl:'بلا تقييم')+'</div></div></div>';
-  /* مسار المراحل */
-  h+='<div class="cesel-path">'+CESEL_ACTIVE.map(function(k,i){var done=CESEL_ORDER.indexOf(x.stage)>i||x.stage==='hired';var cur=x.stage===k;return '<button type="button" class="cesel-pi'+(cur?' cur':(done?' done':''))+'" style="--c:'+CESEL_ST[k][1]+'" onclick="CESEL.tab=\''+(k==='onb'?'onb':k)+'\';rCECand()"><i>'+(done?ic('check',11):ceN(i+1))+'</i>'+esc(CESEL_ST[k][0])+'</button>';}).join('')+'</div>';
-  /* التبويبات */
-  var tabs=[['file','الملف والشروط','user'],['screen','الفرز','list'],['interview','المقابلة','users'],['trial','التجربة العملية','whistle'],['onb','الالتحاق','pin'],['branch','تقييم الفرع','star'],['log','السجل','clock']];
-  h+='<div class="ce2-tabs">'+tabs.map(function(t){return '<button class="ce2-tab'+(CESEL.tab===t[0]?' on':'')+'" onclick="CESEL.tab=\''+t[0]+'\';rCECand()">'+ic(t[2],13)+' '+t[1]+'</button>';}).join('')+'</div>';
+  var h='<div class="cesel-top"><button class="btn btn-g btn-sm" onclick="ceP(\'select\')">'+ic('swap',12)+' اختيار المدربين</button><span class="cesel-crumb">'+esc(x.name)+'</span></div>';
+  h+='<div class="cesel-hero" style="--c:'+st[1]+'">'+ceAvatar({name:x.name,img:x.img},72)
+    +'<div class="cesel-hi"><div class="cesel-hn">'+esc(x.name)+'<span class="ce2-st" style="background:'+st[1]+'1f;color:'+st[1]+'">'+st[0]+'</span></div>'
+    +'<div class="cesel-hm">'+[x.branch?ic('pin',11)+' '+esc(x.branch):'',x.phone?ic('phone',11)+' <span style="direction:ltr">'+esc(phoneDisp(x.phone))+'</span>':'',x.home?ic('user',11)+' '+esc(x.home):'',x.src?ic('users',11)+' '+esc(x.src):''].filter(Boolean).join('<i>•</i>')+'</div></div>'
+    +'<div class="cesel-score"><b style="color:'+gr.c+'">'+(last?ceN(last.pct)+'٪':'—')+'</b><small>'+(last?last.lbl:'بلا تقييم بعد')+'</small></div></div>';
+  h+='<div class="cesel-next" style="--c:'+st[1]+'"><span class="cesel-nx-ic">'+ic('flag',14)+'</span><div class="cesel-nx-t"><small>الإجراء التالي</small><b>'+esc(nx.t)+'</b></div><div class="cesel-nx-w"><small>المسؤول</small><b>'+esc(nx.who)+'</b></div>'+(cta?'<button class="btn btn-r btn-sm" onclick="'+cta[1]+'">'+ic(cta[2]||'check',12)+' '+cta[0]+'</button>':'')+'</div>';
+  var tabs=[['file','الملف والشروط','user',''],['screen','الفرز','',1],['interview','المقابلة','',2],['trial','التجربة العملية','',3],['onb','الالتحاق','',4],['branch','تقييم الفرع','',5],['log','السجل','clock','']];
+  h+='<div class="cesel-tabs">'+tabs.map(function(t){
+    var k=t[0],on=CESEL.tab===k,cls='cesel-tab'+(on?' on':''),dot='';
+    if(t[3]){var i=CESEL_ACTIVE.indexOf(k),done=CESEL_ORDER.indexOf(x.stage)>i||x.stage==='hired',cur=x.stage===k;
+      dot='<i class="'+(done?'ok':(cur?'cur':''))+'" style="--c:'+CESEL_ST[k][1]+'">'+(done?ic('check',10):ceN(t[3]))+'</i>';if(cur)cls+=' cur';}
+    else dot='<i class="ic">'+ic(t[2],12)+'</i>';
+    return '<button type="button" class="'+cls+'" onclick="CESEL.tab=\''+k+'\';rCECand()">'+dot+'<span>'+t[1]+'</span></button>';}).join('')+'</div>';
+  h+='<div class="cesel-body">';
   if(CESEL.tab==='file')h+=ceCandFileHTML(x,can);
   else if(CESEL.tab==='onb')h+=ceCandOnbHTML(x,can);
   else if(CESEL.tab==='branch')h+=ceCandBranchHTML(x,can);
   else if(CESEL.tab==='log')h+=ceCandLogHTML(x);
   else h+=ceCandFormTab(x,CESEL.tab,can);
+  h+='</div>';
   el.innerHTML=h;hydrateIcons(el);
+  try{var tb=el.querySelector('.cesel-tab.on');if(tb&&tb.scrollIntoView)tb.scrollIntoView({inline:'center',block:'nearest'});}catch(e){}
+}
+/* زر الإجراء التالي */
+function ceSelCTA(x,can){
+  if(!can)return null;var k=x.stage;
+  if(k==='reserve'||k==='rejected')return ['إعادة للمسار',"ceCandStage('"+x.id+"','"+ceSelResumeStage(x)+"')",'refresh'];
+  if(k==='hired')return ['تقييم دوري جديد',"CESEL.tab='branch';ceSelForm('"+x.id+"','branch','new')",'star'];
+  if(k==='onb'){var s=ceSelOnbNext(x);return s?['تحديث: '+s[1],"ceOnbForm('"+x.id+"','"+s[0]+"')",'pin']:['تعبئة تقييم الفرع',"CESEL.tab='branch';ceSelForm('"+x.id+"','branch','new')",'star'];}
+  var f=ceSelFormOf(x,k);
+  if(!f||f.draft)return [(f?'إكمال ':'تعبئة ')+CESEL_FORMS[k].short,"ceSelForm('"+x.id+"','"+k+"'"+(k==='branch'?",'new'":"")+")",'edit'];
+  if(!ceSelApproved(k,f))return ['الاعتمادات',"CESEL.tab='"+k+"';rCECand()",'shield'];
+  return null;
 }
 function ceCandFileHTML(x,can){
   var h='';
@@ -26275,15 +26316,19 @@ function ceCandFormTab(x,k,can){
   var F=CESEL_FORMS[k],f=ceSelFormOf(x,k),h='';
   var idx=CESEL_ACTIVE.indexOf(k),cur=CESEL_ORDER.indexOf(x.stage);
   var reachable=cur>=idx||x.stage==='hired'||!!f;
-  h+='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div><b>'+esc(F.t)+'</b> — '+esc(F.who)+'.<br><small>المجموع من '+ceN(ceSelItems(k).length*F.max)+' • حد النجاح '+ceN(F.pass)+'٪'+(F.minAxis?' ولا يقل محور عن '+ceN(F.minAxis)+' ('+ceSelMinLbl()+')':'')+' • الاعتماد: '+F.appr.map(function(a){return a[1];}).join('، ')+'</small></div></div>';
-  if(!reachable)return h+emptyBox('shield','هذه المرحلة لم تبدأ بعد','لا يُفتح نموذجها قبل اجتياز المرحلة السابقة واعتمادها');
+  h+=ceSelStageHead(k);
+  if(!reachable)return h+'<div class="cesel-empty">'+ic('lock',26)+'<b>هذه المرحلة لم تبدأ بعد</b><small>لا يُفتح نموذجها قبل اجتياز المرحلة السابقة واعتمادها</small></div>';
   if(!f){
     if(k==='interview'&&can)h+=ceSelScheduleHTML(x);
-    return h+(can&&x.stage===k?'<button class="btn btn-r" onclick="ceSelForm(\''+x.id+'\',\''+k+'\')">'+ic('plus',13)+' تعبئة '+esc(F.t)+'</button>':emptyBox('doc','لم يُعبّأ النموذج بعد'));
+    return h+'<div class="cesel-empty">'+ic('doc',26)+'<b>لم يُعبّأ '+esc(F.t)+' بعد</b>'+(can&&x.stage===k?'<button class="btn btn-r" onclick="ceSelForm(\''+x.id+'\',\''+k+'\')">'+ic('plus',13)+' تعبئة النموذج</button>':'<small>'+esc(F.who)+'</small>')+'</div>';
   }
   if(k==='interview'&&!ceSelFinal(f))h+=ceSelScheduleHTML(x);
   h+=ceSelFormView(x,k,f,can);
   return h;
+}
+function ceSelStageHead(k){
+  var F=CESEL_FORMS[k],n=ceSelItems(k).length;
+  return '<div class="cesel-sh"><div><h3>'+esc(F.t)+'</h3><p>'+esc(F.who)+'</p></div><div class="cesel-stats"><span><small>المجموع</small><b>'+ceN(n*F.max)+'</b></span><span><small>حد النجاح</small><b>'+ceN(F.pass)+'٪</b></span>'+(F.minAxis?'<span><small>أدنى محور</small><b>'+ceN(F.minAxis)+'</b></span>':'')+(F.mid?'<span><small>يحتاج تطوير</small><b>'+ceN(F.mid)+'–'+ceN(F.pass-1)+'٪</b></span>':'')+'<span><small>الاعتماد</small><b>'+ceN(F.appr.length)+' '+(F.appr.length>2?'جهات':'جهتان')+'</b></span></div></div>';
 }
 function ceSelMinLbl(){var m=ceSelSet().trialMin;return m==='item'?'يُطبَّق على كل عنصر':(m==='group'?'يُطبَّق على متوسط كل محور':'غير مفعّل حتى تحسمه الإدارة');}
 function ceSelScheduleHTML(x){
@@ -26357,7 +26402,7 @@ function ceSelTransition(x,k,f){
 function ceSelRetry(id){var x=ceCand(id);if(!x||!x.forms||!x.forms.trial)return;askConfirm('بدء تجربة عملية جديدة؟ يُحفظ التقييم السابق في سجل التجارب.',function(){if(!x.trialHist)x.trialHist=[];x.trialHist.push(x.forms.trial);delete x.forms.trial;ceCandLog(x,'إعادة التجربة العملية — حُفظت التجربة السابقة');sv();rCECand();});}
 /* ---------- الالتحاق ---------- */
 function ceCandOnbHTML(x,can){
-  var o=x.onb||{},h='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div>خطوات الالتحاق حسب الدليل بعد اجتياز التجربة العملية — لكل خطوة مسؤول وتاريخ وحالة وملاحظة. تسجيل الإضافة في الجروب متابعة داخل التطبيق.</div></div>';
+  var o=x.onb||{},h='<div class="cesel-sh"><div><h3>الالتحاق بالفرع</h3><p>بعد اجتياز التجربة العملية — لكل خطوة مسؤول وتاريخ وحالة وملاحظة</p></div></div>';
   if(CESEL_ORDER.indexOf(x.stage)<CESEL_ORDER.indexOf('onb')&&x.stage!=='hired'&&x.stage!=='reserve'&&x.stage!=='rejected')h+='<div class="jnote" style="margin-bottom:.6rem">'+ic('info',12)+' تبدأ هذه الخطوات بعد اعتماد التجربة العملية.</div>';
   h+='<div class="cesel-steps">';
   CESEL_ONB.forEach(function(s,i){var st=o[s[0]]||{},ss=CESEL_ONB_ST[st.st||'']||CESEL_ONB_ST[''];
@@ -26386,14 +26431,14 @@ function ceOnbSave(cid,key){
 /* ---------- تقييمات الفرع (متعددة) ---------- */
 function ceCandBranchHTML(x,can){
   var F=CESEL_FORMS.branch,evs=(x.branchEvals||[]).slice().sort(function(a,b){return (a.edate||'')<(b.edate||'')?1:-1;}),h='';
-  h+='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div><b>'+esc(F.t)+'</b> — '+esc(F.who)+'.<br><small>المجموع من 110 • 80٪ فأكثر معتمد للتعيين • 65٪ إلى أقل من 80٪ يحتاج تطويراً وإعادة تقييم • أقل من 65٪ غير معتمد — التصنيف على النسبة الفعلية قبل التقريب. الاعتماد: مدير الفرع ← المشرف الفني ← الإدارة. كل تقييم مستقل، والتقييم الدوري لا ينفّذ إجراءً وظيفياً تلقائياً.</small></div></div>';
+  h+=ceSelStageHead('branch');
   var reachable=['branch','hired','onb'].indexOf(x.stage)>-1||evs.length;
-  if(!reachable)return h+emptyBox('shield','هذه المرحلة لم تبدأ بعد','تبدأ بعد اعتماد التجربة العملية واستكمال الالتحاق');
-  if(can&&(x.stage==='branch'||x.stage==='hired'||x.stage==='onb'))h+='<button class="btn btn-r btn-sm" style="margin-bottom:.8rem" onclick="ceSelForm(\''+x.id+'\',\'branch\',\'new\')">'+ic('plus',12)+' تقييم جديد</button>';
-  var pd=ceSelPeriodicDue(x);if(pd)h+='<div class="jnote" style="margin-bottom:.6rem">'+ic('refresh',12)+' التقييم الدوري التالي مستحق: <b>'+esc(tdDayLabel(pd))+'</b></div>';
+  if(!reachable)return h+'<div class="cesel-empty">'+ic('lock',26)+'<b>هذه المرحلة لم تبدأ بعد</b><small>تبدأ بعد اعتماد التجربة العملية واستكمال خطوات الالتحاق</small></div>';
+  var pd=ceSelPeriodicDue(x);
+  h+='<div class="cesel-bar"><span class="jnote" style="margin:0">'+(pd?ic('refresh',12)+' التقييم الدوري التالي: <b>'+esc(tdDayLabel(pd))+'</b>':ic('info',12)+' كل تقييم مستقل، والدوري كل '+ceN(ceSelSet().periodicMonths)+' أشهر لا ينفّذ إجراءً تلقائياً')+'</span>'+(can&&(x.stage==='branch'||x.stage==='hired'||x.stage==='onb')?'<button class="btn btn-r btn-sm" onclick="ceSelForm(\''+x.id+'\',\'branch\',\'new\')">'+ic('plus',12)+' تقييم جديد</button>':'')+'</div>';
   /* تطور التقييم */
   var fin=evs.filter(ceSelFinal);if(fin.length>1){h+='<div class="cesel-trend">'+fin.slice().reverse().map(function(f){var sc=ceSelScore('branch',f);return '<div class="cesel-tp"><b style="color:'+ceGrade(sc?sc.pct:null).c+'">'+(sc?ceN(sc.pct)+'٪':'—')+'</b><small>'+esc(f.edate?tdDayLabel(f.edate):'')+'</small></div>';}).join('')+'</div>';}
-  if(!evs.length)h+=emptyBox('star','لا توجد تقييمات بعد');
+  if(!evs.length)h+='<div class="cesel-empty">'+ic('star',26)+'<b>لا توجد تقييمات بعد</b><small>أول تقييم «نهاية أسبوع التدريب» ثم «بعد الافتتاح» ثم «نهاية فترة التجربة»</small></div>';
   evs.forEach(function(f){var sc=ceSelScore('branch',f),d=f.dec?ceSelDecLbl('branch',f.dec):null,ty=(F.extra.find(function(e){return e[0]==='etype';})[3].find(function(o){return o[0]===f.etype;})||['','تقييم'])[1];
     h+=xFold('be'+f.id,{ic:'star',c:d?d[2]:'#0e7490',t:esc(ty)+(f.edate?' — '+esc(tdDayLabel(f.edate)):''),sub:esc(f.by||'')+(f.br?' • '+esc(f.br):''),m:(sc&&sc.done?'<span class="badge" style="background:var(--bg);color:'+ceGrade(sc.pct).c+';font-weight:800">'+ceN(sc.pct)+'٪</span>':'')+(ceSelFinal(f)?(ceSelApproved('branch',f)?'<span class="badge approved">معتمد</span>':'<span class="badge pending">بانتظار الاعتماد</span>'):'<span class="badge" style="background:var(--bg);color:var(--amber)">مسودة</span>')},ceSelFormView(x,'branch',f,can,f.id));});
   return h;
@@ -33003,7 +33048,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.11.02-r31</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.11.02-r32</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
