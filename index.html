@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.11.02-r30">
+<meta name="build" content="2026.11.02-r31">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -3892,6 +3892,21 @@ body.wb-on #WB{display:block}
 .xf.open .xf-b{display:block}
 .xf-b>.xcard,.xf-b>.mcard{border:0;box-shadow:none;background:transparent;padding:.7rem 0 0;margin:0;border-radius:0}
 .xf-b>.xcard{border-top:0}
+.cesel-path{display:flex;gap:.35rem;flex-wrap:wrap;margin:.2rem 0 .9rem}
+.cesel-pi{--c:var(--gray);display:flex;align-items:center;gap:.4rem;padding:.35rem .7rem .35rem .5rem;border:1.5px solid var(--brd);border-radius:999px;background:var(--sur);color:var(--txt);font:inherit;font-size:11.5px;font-weight:700;cursor:pointer}
+.cesel-pi i{width:20px;height:20px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:10.5px;color:var(--gray)}
+.cesel-pi.cur{border-color:var(--c);color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--sur))}.cesel-pi.cur i{background:var(--c);color:#fff}
+.cesel-pi.done i{background:#16a34a;color:#fff}
+.cesel-kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.45rem;margin-bottom:.6rem}
+.cesel-kv>div{background:var(--bg);border:1px solid var(--brd);border-radius:10px;padding:.45rem .7rem;font-size:12px}.cesel-kv small{display:block;color:var(--gray);font-size:10.5px}.cesel-kv b{font-weight:600;white-space:pre-wrap}
+.cesel-al{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem}
+.cesel-ali{--c:var(--gray);border:1px solid var(--c);color:var(--c);background:color-mix(in srgb,var(--c) 8%,transparent);border-radius:999px;padding:.3rem .7rem;font:inherit;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:.3rem}
+.cesel-ex{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.3rem .8rem;margin-bottom:.4rem}
+.cesel-vt td:nth-child(3){text-align:center}.cesel-gr td{background:var(--bg);font-weight:700;font-size:11.5px}
+.cesel-appr{margin:.8rem 0 .4rem;padding:.6rem .8rem;border:1px dashed var(--brd);border-radius:12px}
+.cesel-trend{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem}.cesel-tp{background:var(--bg);border:1px solid var(--brd);border-radius:10px;padding:.4rem .8rem;text-align:center;font-size:11px}.cesel-tp b{display:block;font-size:16px}
+.cesel-req label span{flex:1}.cesel-req label input{flex:none}
+.cesel-t td{vertical-align:middle}
 .cesel-steps{display:grid;gap:.45rem;margin:.6rem 0}
 .cesel-step{--c:var(--gray);display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;border:1px solid var(--brd);border-radius:12px;background:var(--bg);border-inline-start:4px solid var(--c)}
 .cesel-step.cur{background:color-mix(in srgb,var(--c) 8%,var(--bg))}
@@ -4496,7 +4511,7 @@ body.wb-on #WB{display:block}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.11.02-r30</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.11.02-r31</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -5069,6 +5084,7 @@ body.wb-on #WB{display:block}
 <div id="cepg-plans" class="page"><div class="sec" id="cec-plans"></div></div>
 <div id="cepg-courses" class="page"><div class="sec" id="cec-courses"></div></div>
 <div id="cepg-select" class="page"><div class="sec" id="cec-select"></div></div>
+<div id="cepg-cand" class="page"><div class="sec" id="cec-cand"></div></div>
 <div id="cepg-settings" class="page"><div class="sec" id="cec-settings"></div></div>
 </div>
 
@@ -25746,7 +25762,7 @@ var CENAV=[
  ['review','المراجعة والتعميد','check'],
  ['plans','خطط التطوير','doc'],
  ['courses','الدورات والشهادات','shield'],
- ['select','الترشيح والاختيار','user-plus'],
+ ['select','اختيار المدربين','user-plus'],
  ['settings','الإعدادات','gear']
 ];
 
@@ -26039,31 +26055,39 @@ function ceMyPlayerRec(){
 /* ==================== الغلاف ==================== */
 var CEPAGE='home',CEV='',CEFILT={branch:'',cycle:'',st:''},CEEVAL={coachId:'',src:'',ans:{},note:'',open:''};
 /* ==========================================================================
-   مدربين فارس — الترشيح والاختيار (حسب دليل معايير وآلية اختيار المدربين)
-   المراحل: الفرز (٦٠٪) ← المقابلة (٧٠٪) ← التجربة العملية (٧٥٪ ولا محور أقل من ٣) ← التقييم في الفرع (٨٠٪)
+   مدربين فارس — اختيار المدربين (دليل معايير وآلية اختيار المدربين)
+   ملف لكل مرشح: البيانات والشروط والمرفقات ← الفرز (اللجنة الفنية) ← المقابلة (لجنة المقابلة)
+   ← التجربة العملية (مدير فرع التجربة) ← الالتحاق (جروب الفرع، أسبوع تدريب، مرافقة الافتتاح، التعيين)
+   ← تقييم المدرب في الفرع (مدير الفرع ← المشرف الفني ← الإدارة) ← تقييم دوري كل ٣ أشهر
+   المجموع والنسبة آليان، لا يُحتسب الفارغ صفراً، مسودة قبل الاعتماد، قفل بعد الاعتماد، سبب لكل قرار غير النجاح.
    ========================================================================== */
-var CESEL_ST={screen:['الاختيار الأولي — الفرز','#5b2d8f'],interview:['المقابلة الشخصية','#1565c0'],trial:['التجربة العملية','#d97706'],branch:['التقييم في الفرع','#0e7490'],hired:['معتمد للتعيين','#16a34a'],reserve:['قائمة الاحتياط','#8b92b0'],rejected:['مستبعد','#DD1D45']};
-var CESEL_ORDER=['screen','interview','trial','branch','hired','reserve','rejected'];
+var CESEL_ST={screen:['الاختيار الأولي — الفرز','#5b2d8f'],interview:['المقابلة الشخصية','#1565c0'],trial:['التجربة العملية','#d97706'],onb:['الالتحاق بالفرع','#0891b2'],branch:['التقييم في الفرع','#0e7490'],hired:['معتمد — مدرب','#16a34a'],reserve:['قائمة الاحتياط','#8b92b0'],rejected:['مستبعد','#DD1D45']};
+var CESEL_ORDER=['screen','interview','trial','onb','branch','hired','reserve','rejected'];
+var CESEL_ACTIVE=['screen','interview','trial','onb','branch'];
 var CESEL_FORMS={
-  screen:{t:'نموذج فرز المرشحين',who:'تعبّئه اللجنة الفنية قبل دعوة المرشح للمقابلة',max:5,pass:60,
+  screen:{t:'نموذج فرز المرشحين',short:'الفرز',who:'تعبّئه اللجنة الفنية قبل دعوة المرشح للمقابلة',max:5,pass:60,
     groups:[['السيرة الذاتية والتجارب السابقة',['المؤهلات والشهادات التدريبية','الخبرات التدريبية السابقة وجودتها (أندية، أكاديميات، مدارس)','الخبرة مع الفئات العمرية المستهدفة']],
-            ['الموقع والقرب من الأكاديمية',['قرب السكن من الفرع (5 = أقل من 15 دقيقة، 1 = أكثر من 45 دقيقة)']],
+            ['الموقع والقرب من الأكاديمية',['قرب السكن من الفرع (5 = أقل من 15 دقيقة، 1 = أكثر من 45 دقيقة — الدرجات المتوسطة تقديرية حتى تعتمد الإدارة معيارها)']],
             ['الترشيح من داخل أكاديمية فارس',['ترشيح من أحد المدربين أو العاملين وقوة هذا الترشيح']],
             ['توصيات مدير الفرع',['توصية مدير الفرع واحتياج الفرع لهذا المرشح']],
             ['نظرة اللجنة الفنية',['الانطباع العام للجنة الفنية عن ملاءمة المرشح']]],
-    dec:[['pass','يُدعى للمقابلة','#16a34a'],['reserve','قائمة احتياط','#8b92b0'],['no','مستبعد','#DD1D45']],next:'interview'},
-  interview:{t:'نموذج تقييم المقابلة الشخصية',who:'تعبّئه لجنة المقابلة (زوم أو حضوري)',max:10,pass:70,
+    dec:[['pass','يُدعى للمقابلة','#16a34a'],['reserve','قائمة احتياط','#8b92b0'],['no','مستبعد','#DD1D45']],next:'interview',
+    appr:[['m1','عضو اللجنة الفنية','tech'],['m2','عضو اللجنة الفنية','tech'],['chair','رئيس اللجنة الفنية','chair']],
+    extra:[['sdate','تاريخ الفرز','date']]},
+  interview:{t:'نموذج تقييم المقابلة الشخصية',short:'المقابلة',who:'تعبّئه لجنة المقابلة (زوم أو حضوري — جامعة الأميرة نورة)',max:10,pass:70,
     groups:[['المحاور',['التعريف بالنفس والخبرة التدريبية السابقة','فلسفته في التدريب وتطوير اللاعبين','كيف يبني حصة تدريبية لفئة عمرية محددة؟','كيف يتعامل مع لاعب كثير المشاكل أو غير منضبط؟','كيف يتعامل مع ولي أمر غاضب أو معترض؟','ماذا يفعل عند حدوث إصابة أثناء التمرين؟','الالتزام بالأوقات والتفرغ وقرب السكن','مهارات التواصل والثقة واللغة','المظهر العام والانطباع الأول','الدافع للانضمام للأكاديمية والاستمرار']]],
     dec:[['pass','ينتقل للتجربة العملية','#16a34a'],['reserve','احتياط','#8b92b0'],['no','غير مقبول','#DD1D45']],next:'trial',
-    extra:[['mode','طريقة المقابلة',[['zoom','زوم'],['live','حضوري']]]]},
-  trial:{t:'نموذج تقييم التجربة العملية',who:'يعبّئه مدير الفرع الذي تُجرى فيه التجربة',max:5,pass:75,minAxis:3,
+    appr:[['m1','عضو لجنة المقابلة','intv'],['m2','عضو لجنة المقابلة','intv']],
+    extra:[['mode','طريقة المقابلة','opts',[['zoom','زوم'],['live','حضوري — جامعة الأميرة نورة']]],['when','موعد المقابلة','datetime-local'],['link','رابط الاجتماع / الموقع','text']]},
+  trial:{t:'نموذج تقييم التجربة العملية',short:'التجربة العملية',who:'يعبّئه مدير الفرع الذي تُجرى فيه التجربة',max:5,pass:75,minAxis:3,
     groups:[['المظهر',['الالتزام بالزي الرياضي ونظافة المظهر','الحضور في الموعد والجاهزية','لغة الجسد والثقة أمام اللاعبين']],
             ['التعامل',['التعارف وكسب انتباه اللاعبين سريعاً','الاحترام والتحفيز في الأسلوب','التعامل مع أولياء الأمور الحاضرين وإدارة الفرع']],
             ['التدريب',['وضوح الشرح وصحة العرض الفني','ملاءمة التمارين للفئة العمرية','تصحيح الأخطاء ومتابعة اللاعبين','تنظيم الحصة وإدارة الوقت']],
             ['إدارة المواقف',['التعامل مع لاعب غير منضبط أو خلاف','التصرف عند إصابة أو موقف طارئ','المرونة عند تغيّر الظروف (العدد، المكان، الأدوات)']]],
-    dec:[['pass','ناجح ويُرشَّح للفرع','#16a34a'],['retry','إعادة تجربة','#d97706'],['no','غير مقبول','#DD1D45']],next:'branch',
-    extra:[['cat','الفئة العمرية',null],['dur','مدة الحصة',null]]},
-  branch:{t:'نموذج تقييم المدرب في الفرع',who:'يعبّئه مدير الفرع بعد أسبوع التدريب والافتتاح وخلال فترة التجربة',max:5,pass:80,mid:65,
+    dec:[['pass','ناجح ويُرشَّح للفرع','#16a34a'],['retry','إعادة تجربة','#d97706'],['no','غير مقبول','#DD1D45']],next:'onb',
+    appr:[['mgr','مدير فرع التجربة','mgr'],['sup','المشرف الفني','sup']],
+    extra:[['tdate','تاريخ التجربة','date'],['cat','الفئة العمرية','text'],['dur','مدة الحصة','text'],['evalBy','اسم المقيّم','text']]},
+  branch:{t:'نموذج تقييم المدرب في الفرع',short:'تقييم الفرع',who:'يعبّئه مدير الفرع بعد أسبوع التدريب والافتتاح وخلال فترة التجربة، ثم دورياً كل 3 أشهر',max:5,pass:80,mid:65,
     groups:[['المظهر والانضباط',['الالتزام بالزي الرسمي للأكاديمية ونظافة المظهر','الحضور قبل موعد التمرين بـ 15 دقيقة على الأقل','الالتزام بأنظمة الأكاديمية والفرع']],
             ['تجهيز التمرين',['وجود خطة تمرين مكتوبة وواضحة الأهداف','تجهيز الأدوات والملعب قبل بدء التمرين','ملاءمة التمرين للفئة العمرية ومستوى اللاعبين']],
             ['الإدارة الفنية',['وضوح الشرح وصحة العرض الفني للمهارة','متابعة اللاعبين وتصحيح الأخطاء الفنية','التدرج في المهارات من السهل إلى الصعب','تنوع التمارين وارتباطها بأهداف الحصة']],
@@ -26072,233 +26096,521 @@ var CESEL_FORMS={
             ['إدارة المواقف والسلامة',['التصرف الصحيح عند الإصابات والإسعافات الأولية','التعامل مع المشكلات السلوكية والخلافات','فحص سلامة المكان والأدوات قبل التمرين']],
             ['الشخصية والتطور',['الحماس والطاقة الإيجابية خلال التمرين','تقبّل الملاحظات والعمل على تطبيقها']]],
     dec:[['pass','معتمد للتعيين','#16a34a'],['dev','يحتاج تطوير وإعادة تقييم','#d97706'],['no','غير معتمد','#DD1D45']],next:'hired',
-    extra:[['cat','الفئة العمرية',null],['etype','نوع التقييم',[['week','نهاية أسبوع التدريب'],['open','بعد الافتتاح'],['prob','نهاية فترة التجربة'],['periodic','تقييم دوري']]]]}
+    appr:[['mgr','مدير الفرع','mgr'],['sup','المشرف الفني','sup'],['adm','اعتماد الإدارة','adm']],seq:true,
+    extra:[['edate','تاريخ التقييم','date'],['cat','الفئة العمرية','text'],['start','تاريخ المباشرة','date'],['evalBy','اسم المقيّم','text'],['etype','نوع التقييم','opts',[['week','نهاية أسبوع التدريب'],['open','بعد الافتتاح'],['prob','نهاية فترة التجربة'],['periodic','تقييم دوري']]],['redate','موعد إعادة التقييم (عند الحاجة)','date']]}
 };
+var CESEL_ONB=[['group','الإضافة في جروب الفرع','مدير الفرع'],['week','أسبوع تدريب في أحد الفروع','المشرف الفني'],['open','مرافقة مدرب الفرع الحالي للافتتاح','المدرب الحالي'],['hire','التعيين وفترة تجربة شهر','مدير الفرع / الإدارة']];
+var CESEL_ONB_ST={'':['لم يبدأ','var(--gray)'],doing:['جارٍ','#d97706'],done:['تم','#16a34a'],skip:['لا ينطبق','#8b92b0']};
 var CESEL_STEPS=['ترشيح المدربين الحاليين والعاملين','فرز السير الذاتية — الاختيار الأولي (اللجنة الفنية)','تحديد الأقرب سكناً للفرع','المقابلة الشخصية (زوم أو جامعة الأميرة نورة)','الإضافة في جروب الفرع','التجربة العملية في أحد الفروع','أسبوع تدريب في أحد الفروع (المشرف الفني)','مرافقة مدرب الفرع الحالي للافتتاح','التعيين وفترة تجربة شهر'];
-var CESEL_REQ=['شهادة تدريبية معتمدة أو خبرة موثقة لا تقل عن سنة','شهادة إسعافات أولية سارية','السكن قريب من الفرع (يُفضّل أقل من 30 دقيقة)','التفرغ لأوقات التدريب','حسن السيرة والسلوك','القدرة على التعامل مع الفئات العمرية المستهدفة'];
-var CESEL={stage:'',branch:'',q:'',open:'',form:''};
+var CESEL_REQ=[['شهادة تدريبية معتمدة أو خبرة موثقة لا تقل عن سنة',true],['شهادة إسعافات أولية سارية',true],['السكن قريب من الفرع (يُفضّل أقل من 30 دقيقة — تفضيل لا استبعاد)',false],['التفرغ لأوقات التدريب',true],['حسن السيرة والسلوك',true],['القدرة على التعامل مع الفئات العمرية المستهدفة',true]];
+var CESEL_REQ_ST={'':['لم يُتحقق','var(--gray)'],ok:['متحقق','#16a34a'],no:['غير متحقق','#DD1D45'],na:['لا ينطبق','#8b92b0']};
+var CESEL_NOTIFY_M={call:'اتصال',wa:'واتساب',sms:'رسالة نصية',live:'حضوري',other:'أخرى'};
+var CESEL={stage:'',branch:'',q:'',from:'',to:'',tab:'file',form:'',evalId:''};
+var CEV2='';   /* المرشح المفتوح */
+function ceSelSet(){var c=CEX();if(!c.settings.sel)c.settings.sel={trialMin:'item',periodicMonths:3,probMonths:1,notifyDays:3,committee:{chair:'',tech:[],intv:[]}};var s=c.settings.sel;if(!s.committee)s.committee={chair:'',tech:[],intv:[]};if(!s.trialMin)s.trialMin='item';if(!s.periodicMonths)s.periodicMonths=3;if(!s.probMonths)s.probMonths=1;if(!s.notifyDays)s.notifyDays=3;return s;}
 function ceCands(){var c=CEX();if(!c.cands)c.cands=[];return c.cands;}
 function ceCand(id){return ceCands().find(function(x){return x.id===id;})||null;}
-/* من يملك الترشيح: الإدارة والمشرف (اللجنة الفنية) ومدير الفرع لفرعه */
+/* النطاق والصلاحيات: الإدارة والمشرف (اللجان) كل الفروع — مدير الفرع فرعه */
 function ceSelCan(cand){var r=ceRole();if(r==='admin'||r==='sup')return true;if(r==='mgr')return !cand||!cand.branch||ceBranches().indexOf(cand.branch)>-1;return false;}
 function ceSelScope(){var r=ceRole(),all=ceCands();if(r==='admin'||r==='sup')return all;if(r==='mgr'){var brs=ceBranches();return all.filter(function(x){return !x.branch||brs.indexOf(x.branch)>-1;});}return [];}
 function ceSelItems(k){var out=[];(CESEL_FORMS[k].groups||[]).forEach(function(gp){gp[1].forEach(function(t){out.push([gp[0],t]);});});return out;}
+/* الدرجة: لا يُحتسب الفارغ صفراً — النتيجة النهائية فقط عند اكتمال كل البنود */
 function ceSelScore(k,f){
-  if(!f||!f.sc)return null;var items=ceSelItems(k),mx=CESEL_FORMS[k].max,sum=0,n=0,low=false;
-  items.forEach(function(it,i){var v=+f.sc[i];if(v>0){sum+=v;n++;if(CESEL_FORMS[k].minAxis&&v<CESEL_FORMS[k].minAxis)low=true;}});
-  if(!n)return null;return {pct:Math.round(sum*100/(items.length*mx)),sum:sum,n:n,total:items.length,max:items.length*mx,low:low};
+  if(!f||!f.sc)return null;var F=CESEL_FORMS[k],items=ceSelItems(k),mx=F.max,sum=0,n=0,lowItem=false,grp={};
+  items.forEach(function(it,i){var v=+f.sc[i];if(v>0){sum+=v;n++;if(F.minAxis&&v<F.minAxis)lowItem=true;if(!grp[it[0]])grp[it[0]]={s:0,n:0};grp[it[0]].s+=v;grp[it[0]].n++;}});
+  if(!n)return null;
+  var lowGroup=false;if(F.minAxis)Object.keys(grp).forEach(function(g2){if(grp[g2].s/grp[g2].n<F.minAxis)lowGroup=true;});
+  var mode=ceSelSet().trialMin,low=F.minAxis?(mode==='item'?lowItem:(mode==='group'?lowGroup:false)):false;
+  var exact=sum*100/(items.length*mx);
+  return {pct:Math.round(exact),exact:exact,sum:sum,n:n,total:items.length,max:items.length*mx,done:n===items.length,low:low,lowItem:lowItem,lowGroup:lowGroup};
 }
-function ceSelAuto(k,sc){var F=CESEL_FORMS[k];if(!sc)return '';if(sc.pct>=F.pass&&!sc.low)return 'pass';if(k==='branch'&&sc.pct>=F.mid)return 'dev';if(k==='trial'&&sc.pct>=60)return 'retry';if((k==='screen'||k==='interview')&&sc.pct>=F.pass-15)return 'reserve';return 'no';}
+/* التصنيف على النسبة الفعلية قبل التقريب */
+function ceSelAuto(k,sc){var F=CESEL_FORMS[k];if(!sc||!sc.done)return '';if(sc.exact>=F.pass&&!sc.low)return 'pass';if(k==='branch')return sc.exact>=F.mid?'dev':'no';if(k==='trial')return 'retry';return sc.exact>=F.pass-15?'reserve':'no';}
 function ceSelDecLbl(k,d){var x=(CESEL_FORMS[k].dec||[]).find(function(q){return q[0]===d;});return x?x:['','—','var(--gray)'];}
+function ceSelFormOf(x,k,evalId){if(k==='branch'){var arr=x.branchEvals||[];if(evalId)return arr.find(function(e){return e.id===evalId;})||null;return arr.length?arr[arr.length-1]:null;}return (x.forms&&x.forms[k])||null;}
+function ceSelFinal(f){return !!(f&&!f.draft&&f.at);}
+function ceSelApproved(k,f){if(!f)return false;var F=CESEL_FORMS[k];return F.appr.every(function(a){return f.appr&&f.appr[a[0]];});}
+/* أيام العمل: الجمعة والسبت عطلة */
+function ceWorkAdd(iso,n){var d=calD(iso+'T12:00:00'),k=0;while(k<n){d.setDate(d.getDate()+1);var w=d.getDay();if(w!==5&&w!==6)k++;}return calISO(d);}
+function ceAddMonths(iso,m){var d=calD(iso+'T12:00:00');d.setMonth(d.getMonth()+m);return calISO(d);}
+/* المسؤول عن الإجراء التالي */
+function ceSelNext(x){
+  var k=x.stage;
+  if(k==='reserve')return {t:'في قائمة الاحتياط — تُعاد للمسار عند الحاجة',who:'الإدارة الفنية'};
+  if(k==='rejected')return {t:'مستبعد',who:'—'};
+  if(k==='hired'){var due=ceSelPeriodicDue(x);return {t:due?'تقييم دوري مستحق '+tdDayLabel(due):'مدرب معتمد — التقييم الدوري كل '+ceN(ceSelSet().periodicMonths)+' أشهر',who:'مدير الفرع'};}
+  if(k==='onb'){var st=ceSelOnbNext(x);return st?{t:st[1],who:st[2]}:{t:'اكتملت خطوات الالتحاق — تعبئة تقييم الفرع',who:'مدير الفرع'};}
+  var F=CESEL_FORMS[k],f=ceSelFormOf(x,k);
+  if(!f||f.draft)return {t:(f?'إكمال ':'تعبئة ')+F.t,who:F.who.replace(/^(تعبّئه|يعبّئه)\s*/,'').split('—')[0].split('(')[0].trim()};
+  var miss=F.appr.filter(function(a){return !(f.appr&&f.appr[a[0]]);});
+  if(miss.length)return {t:'اعتماد '+F.short,who:miss.map(function(a){return a[1];}).join(' / ')};
+  return {t:'—',who:'—'};
+}
+function ceSelOnbNext(x){var o=x.onb||{};for(var i=0;i<CESEL_ONB.length;i++){var s=CESEL_ONB[i],st=(o[s[0]]||{}).st||'';if(st!=='done'&&st!=='skip')return s;}return null;}
+function ceSelPeriodicDue(x){if(x.stage!=='hired')return '';var ev=(x.branchEvals||[]).filter(ceSelFinal).sort(function(a,b){return (a.edate||'')<(b.edate||'')?1:-1;})[0];var base=ev?(ev.edate||calISO(new Date(ev.at))):(x.hiredAt?calISO(new Date(x.hiredAt)):'');if(!base)return '';return ceAddMonths(base,ceSelSet().periodicMonths);}
+/* ---------- الإبلاغ بالنتيجة خلال ٣ أيام عمل ---------- */
+function ceSelNotifyAdd(x,k,lbl){if(!x.notify)x.notify=[];var today=calISO(new Date());x.notify.push({id:uid(),stage:k,lbl:lbl,decAt:today,due:ceWorkAdd(today,ceSelSet().notifyDays),at:'',method:'',by:'',note:''});}
+function ceSelNotifyDo(cid,nid){
+  var x=ceCand(cid);if(!x||!ceSelCan(x))return;var n=(x.notify||[]).find(function(q){return q.id===nid;});if(!n)return;
+  var h='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div><b>'+esc(x.name)+'</b> — إبلاغه بنتيجة: '+esc(n.lbl)+'<br><small>الموعد: خلال 3 أيام عمل من القرار ('+esc(tdDayLabel(n.due))+')</small></div></div>';
+  h+='<div class="frow">'+xInp('cnf-date','تاريخ الإبلاغ',calISO(new Date()),'','date',true)+'<div class="fg"><label>طريقة الإبلاغ *</label>'+tdSel('cnf-m',Object.keys(CESEL_NOTIFY_M).map(function(k){return [k,CESEL_NOTIFY_M[k]];}),'wa','اختر')+'</div></div>';
+  h+=xTxt('cnf-note','ملاحظة','',2);
+  h+='<div class="xacts"><button class="btn btn-r" onclick="ceSelNotifySave(\''+cid+'\',\''+nid+'\')">'+ic('check',13)+' تسجيل الإبلاغ</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div>';
+  fpgHTML('تسجيل إبلاغ المرشح','bell','يُسجَّل التاريخ والطريقة والمسؤول',h,function(){rCECand();});
+}
+function ceSelNotifySave(cid,nid){var x=ceCand(cid);var n=x&&(x.notify||[]).find(function(q){return q.id===nid;});if(!n)return;var d=gv('cnf-date'),m=gv('cnf-m');if(!d||!m)return;n.at=d;n.method=m;n.by=CU.name;n.note=gv('cnf-note');ceCandLog(x,'إبلاغ المرشح بنتيجة '+n.lbl+' ('+CESEL_NOTIFY_M[m]+')');sv();fpgHide();rCECand();}
+/* ---------- التنبيهات (داخل القسم فقط) ---------- */
+function ceSelAlerts(){
+  var out=[],today=calISO(new Date()),soon=agAdd(today,3);
+  ceSelScope().forEach(function(x){
+    (x.notify||[]).forEach(function(n){if(n.at)return;if(n.due<today)out.push({c:'var(--red)',ic:'bell',t:'تأخر إبلاغ «'+x.name+'» بنتيجة '+n.lbl+' (الموعد '+tdDayLabel(n.due)+')',id:x.id,tab:'file'});else if(n.due<=soon)out.push({c:'var(--amber)',ic:'bell',t:'إبلاغ «'+x.name+'» بنتيجة '+n.lbl+' قبل '+tdDayLabel(n.due),id:x.id,tab:'file'});});
+    var iv=x.forms&&x.forms.interview;if(iv&&iv.when&&!ceSelFinal(iv)){var d=String(iv.when).slice(0,10);if(d>=today&&d<=soon)out.push({c:'#1565c0',ic:'cal',t:'مقابلة «'+x.name+'» '+esc(new Date(iv.when).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'})),id:x.id,tab:'interview'});}
+    var tr=x.forms&&x.forms.trial;if(tr&&tr.tdate&&!ceSelFinal(tr)&&tr.tdate>=today&&tr.tdate<=soon)out.push({c:'#d97706',ic:'whistle',t:'تجربة عملية لـ «'+x.name+'» '+tdDayLabel(tr.tdate),id:x.id,tab:'trial'});
+    ['screen','interview','trial'].forEach(function(k){var f=ceSelFormOf(x,k);if(f&&ceSelFinal(f)&&!ceSelApproved(k,f)){var late=(Date.now()-f.at)>3*864e5;out.push({c:late?'var(--red)':'#5b2d8f',ic:'check',t:(late?'تأخر اعتماد ':'بانتظار اعتماد ')+CESEL_FORMS[k].short+' — «'+x.name+'»',id:x.id,tab:k});}});
+    (x.branchEvals||[]).forEach(function(f){if(ceSelFinal(f)&&!ceSelApproved('branch',f)){var late=(Date.now()-f.at)>3*864e5;out.push({c:late?'var(--red)':'#0e7490',ic:'check',t:(late?'تأخر اعتماد ':'بانتظار اعتماد ')+'تقييم الفرع — «'+x.name+'»',id:x.id,tab:'branch'});}if(f.redate&&f.redate<=soon&&ceSelFinal(f)&&f.dec==='dev'&&!(x.branchEvals||[]).some(function(q){return q!==f&&(q.edate||'')>=f.redate;}))out.push({c:'var(--amber)',ic:'refresh',t:'إعادة تقييم «'+x.name+'» مستحقة '+tdDayLabel(f.redate),id:x.id,tab:'branch'});});
+    var o=x.onb||{};if(x.stage==='onb'&&o.week&&o.week.st==='doing'&&o.week.date&&agAdd(o.week.date,7)<=soon)out.push({c:'#0891b2',ic:'clock',t:'نهاية أسبوع تدريب «'+x.name+'» — تعبئة تقييم «نهاية أسبوع التدريب»',id:x.id,tab:'onb'});
+    if((x.stage==='onb'||x.stage==='branch'||x.stage==='hired')&&x.probEnd&&x.probEnd<=soon&&!(x.branchEvals||[]).some(function(q){return q.etype==='prob'&&ceSelFinal(q);}))out.push({c:'var(--amber)',ic:'clock',t:'نهاية فترة تجربة «'+x.name+'» '+tdDayLabel(x.probEnd)+' — تقييم نهاية فترة التجربة',id:x.id,tab:'branch'});
+    var pd=ceSelPeriodicDue(x);if(pd&&pd<=soon)out.push({c:pd<today?'var(--red)':'#0e7490',ic:'refresh',t:'تقييم دوري مستحق لـ «'+x.name+'» ('+tdDayLabel(pd)+')',id:x.id,tab:'branch'});
+  });
+  return out;
+}
+/* ==================== الصفحة الرئيسية للقسم ==================== */
 function rCESelect(){
   var el=g('cec-select');if(!el)return;
   var r=ceRole(),can=ceSelCan(null),list=ceSelScope();
-  var h=ceHead('user-plus','الترشيح والاختيار','مسار المرشح من الترشيح إلى التعيين: فرز ← مقابلة ← تجربة عملية ← تقييم في الفرع',
-    (can?'<button class="btn btn-r btn-sm" onclick="ceCandForm()">'+ic('plus',13)+' مرشح جديد</button>':'')+'<button class="btn btn-g btn-sm" onclick="ceSelGuide()">'+ic('doc',13)+' دليل الاختيار</button>');
-  /* مؤشرات المراحل */
+  var h=ceHead('user-plus','اختيار المدربين','من تسجيل المرشح إلى اعتماده ومتابعة تقييمه الدوري — حسب دليل معايير وآلية اختيار المدربين',
+    (can?'<button class="btn btn-r btn-sm" onclick="ceCandForm()">'+ic('plus',13)+' مدرب جديد</button>':'')+'<button class="btn btn-g btn-sm" onclick="ceSelGuide()">'+ic('doc',13)+' الدليل</button>'+(list.length?'<button class="btn btn-g btn-sm" onclick="ceSelExport()">'+ic('doc',13)+' Excel</button>':''));
   var cnt={};CESEL_ORDER.forEach(function(k){cnt[k]=0;});list.forEach(function(x){cnt[x.stage]=(cnt[x.stage]||0)+1;});
   h+='<div class="xkpis">'+CESEL_ORDER.map(function(k){return '<button type="button" class="xkpi" style="--c:'+CESEL_ST[k][1]+';cursor:pointer;'+(CESEL.stage===k?'outline:2px solid '+CESEL_ST[k][1]:'')+'" onclick="CESEL.stage=CESEL.stage===\''+k+'\'?\'\':\''+k+'\';rCESelect()"><b>'+ceN(cnt[k])+'</b><span>'+CESEL_ST[k][0]+'</span></button>';}).join('')+'</div>';
+  /* التنبيهات */
+  var al=ceSelAlerts();
+  if(al.length){h+='<div class="cesel-al">'+al.slice(0,8).map(function(a){return '<button type="button" class="cesel-ali" style="--c:'+a.c+'" onclick="ceCandOpen(\''+a.id+'\',\''+a.tab+'\')">'+ic(a.ic,12)+' '+a.t+'</button>';}).join('')+(al.length>8?'<span style="font-size:11px;color:var(--gray)">+'+ceN(al.length-8)+' أخرى</span>':'')+'</div>';}
+  /* الفرز والبحث */
   var brs=r==='admin'||r==='sup'?(TDX().branches||[]).map(function(b){return b.name;}):ceBranches();
-  h+='<div class="xbar"><div class="fg" style="margin:0;min-width:170px">'+tdSel('cesel-br',brs,CESEL.branch,'كل الفروع')+'</div>'
-    +'<div class="fg" style="margin:0;flex:1;min-width:160px"><input type="text" id="cesel-q" placeholder="بحث باسم المرشح أو الجوال" value="'+esc(CESEL.q)+'"></div></div>';
-  var q=ceSelNormQ(CESEL.q);
-  var rows=list.filter(function(x){return (!CESEL.stage||x.stage===CESEL.stage)&&(!CESEL.branch||x.branch===CESEL.branch)&&(!q||ceSelNormQ(x.name+' '+(x.phone||'')).indexOf(q)>-1);});
-  var active=rows.filter(function(x){return ['screen','interview','trial','branch'].indexOf(x.stage)>-1;}),done=rows.filter(function(x){return ['screen','interview','trial','branch'].indexOf(x.stage)<0;});
+  h+='<div class="xbar"><div class="fg" style="margin:0;min-width:160px">'+tdSel('cesel-br',brs,CESEL.branch,'كل الفروع')+'</div>'
+    +'<div class="fg" style="margin:0;flex:1;min-width:160px"><input type="text" id="cesel-q" placeholder="بحث بالاسم أو الجوال" value="'+esc(CESEL.q)+'"></div>'
+    +'<div class="fg" style="margin:0"><input type="date" id="cesel-from" title="من تاريخ تقييم" value="'+esc(CESEL.from)+'" style="direction:ltr"></div><div class="fg" style="margin:0"><input type="date" id="cesel-to" title="إلى تاريخ تقييم" value="'+esc(CESEL.to)+'" style="direction:ltr"></div>'
+    +((CESEL.stage||CESEL.branch||CESEL.q||CESEL.from||CESEL.to)?'<button class="btn btn-g btn-sm" onclick="CESEL.stage=\'\';CESEL.branch=\'\';CESEL.q=\'\';CESEL.from=\'\';CESEL.to=\'\';rCESelect()">'+ic('x',12)+' مسح</button>':'')+'</div>';
+  var q=ceSelNormQ(CESEL.q),qd=String(CESEL.q||'').replace(/[^0-9]/g,'');
+  var rows=list.filter(function(x){
+    if(CESEL.stage&&x.stage!==CESEL.stage)return false;if(CESEL.branch&&x.branch!==CESEL.branch)return false;
+    if(q&&!(ceSelNormQ(x.name).indexOf(q)>-1||(qd&&phoneHit(x.phone,qd))))return false;
+    if(CESEL.from||CESEL.to){var ds=ceSelEvalDates(x);if(!ds.some(function(d){return (!CESEL.from||d>=CESEL.from)&&(!CESEL.to||d<=CESEL.to);}))return false;}
+    return true;});
   var ord=function(a,b){return CESEL_ORDER.indexOf(a.stage)-CESEL_ORDER.indexOf(b.stage)||(b.at||0)-(a.at||0);};
-  active.sort(ord);done.sort(ord);
-  if(!rows.length)h+=emptyBox('user-plus','لا يوجد مرشحون'+(CESEL.stage?' في هذه المرحلة':''),can?'أضف مرشحاً من زر «مرشح جديد»':'');
+  var act=rows.filter(function(x){return CESEL_ACTIVE.indexOf(x.stage)>-1;}).sort(ord),hired=rows.filter(function(x){return x.stage==='hired';}).sort(ord),res=rows.filter(function(x){return x.stage==='reserve';}).sort(function(a,b){return (a.branch||'').localeCompare(b.branch||'','ar');}),rej=rows.filter(function(x){return x.stage==='rejected';}).sort(ord);
+  if(!rows.length)h+=emptyBox('user-plus','لا يوجد مرشحون'+(CESEL.stage?' في هذه المرحلة':''),can?'أضف مرشحاً من زر «مدرب جديد»':'');
   else{
-    if(active.length){h+=xFoldSec('قيد الاختيار',active.length);active.forEach(function(x){h+=ceCandRow(x);});}
-    if(done.length){h+=xFoldSec('محسومون (معتمد / احتياط / مستبعد)',done.length);done.forEach(function(x){h+=ceCandRow(x);});}
+    var tbl=function(lbl,arr,showBr){if(!arr.length)return '';var s=xFoldSec(lbl,arr.length)+'<div class="at-wrap"><table class="at cesel-t"><thead><tr><th>المرشح</th><th>الفرع</th><th>المرحلة</th><th>آخر نتيجة</th><th>الإجراء التالي</th><th>المسؤول</th></tr></thead><tbody>';
+      arr.forEach(function(x){var st=CESEL_ST[x.stage]||CESEL_ST.screen,last=ceCandLast(x),nx=ceSelNext(x);
+        s+='<tr style="cursor:pointer" onclick="ceCandOpen(\''+x.id+'\')"><td style="font-weight:700;white-space:nowrap">'+(x.img?'<img src="'+srcOK(x.img)+'" class="fr-lg" alt="">':'')+esc(x.name)+(x.phone?'<div style="font-size:10.5px;color:var(--gray);direction:ltr;text-align:end">'+esc(phoneDisp(x.phone))+'</div>':'')+'</td><td>'+esc(x.branch||'—')+'</td><td><span class="badge" style="background:'+st[1]+'1f;color:'+st[1]+'">'+st[0]+'</span></td><td>'+(last?'<b style="color:'+ceGrade(last.pct).c+'">'+ceN(last.pct)+'٪</b> <small style="color:var(--gray)">'+esc(last.lbl)+'</small>':'—')+'</td><td style="font-size:11.5px">'+esc(nx.t)+'</td><td style="font-size:11.5px;color:var(--gray)">'+esc(nx.who)+'</td></tr>';});
+      return s+'</tbody></table></div>';};
+    h+=tbl('قيد الاختيار',act)+tbl('مدربون معتمدون (فترة التجربة والتقييم الدوري)',hired)+tbl('قائمة الاحتياط حسب الفرع',res)+tbl('مستبعدون',rej);
   }
   el.innerHTML=h;hydrateIcons(el);
   var b1=g('cesel-br');if(b1)b1.onchange=function(){CESEL.branch=this.value;rCESelect();};
-  var q1=g('cesel-q');if(q1){q1.oninput=function(){CESEL.q=this.value;clearTimeout(CESEL._t);CESEL._t=setTimeout(function(){var v=g('cesel-q');rCESelect();var n=g('cesel-q');if(n&&v){n.focus();try{n.setSelectionRange(n.value.length,n.value.length);}catch(e){}}},350);};}
+  var f1=g('cesel-from');if(f1)f1.onchange=function(){CESEL.from=this.value;rCESelect();};var t1=g('cesel-to');if(t1)t1.onchange=function(){CESEL.to=this.value;rCESelect();};
+  var q1=g('cesel-q');if(q1){q1.oninput=function(){CESEL.q=this.value;clearTimeout(CESEL._t);CESEL._t=setTimeout(function(){rCESelect();var n=g('cesel-q');if(n){n.focus();try{n.setSelectionRange(n.value.length,n.value.length);}catch(e){}}},350);};}
 }
+function ceSelEvalDates(x){var ds=[];['screen','interview','trial'].forEach(function(k){var f=x.forms&&x.forms[k];if(f&&f.at)ds.push(f.sdate||f.tdate||(f.when?String(f.when).slice(0,10):'')||calISO(new Date(f.at)));});(x.branchEvals||[]).forEach(function(f){if(f.at)ds.push(f.edate||calISO(new Date(f.at)));});return ds.filter(Boolean);}
 function ceSelNormQ(s){return String(s||'').replace(/[ً-ْ\s]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');}
-function ceCandRow(x){
-  var st=CESEL_ST[x.stage]||CESEL_ST.screen,last=ceCandLast(x);
-  var m='<span class="badge" style="background:'+st[1]+'1f;color:'+st[1]+'">'+st[0]+'</span>'+(last?'<span class="badge xf-hide" style="background:var(--bg);color:'+ceGrade(last.pct).c+'">'+ceN(last.pct)+'٪ '+esc(last.lbl)+'</span>':'');
-  return xFold('c'+x.id,{ic:'user-plus',img:x.img||'',c:st[1],t:esc(x.name),sub:[x.branch?ic('pin',10)+' '+esc(x.branch):'',x.src?'ترشيح: '+esc(x.src):'',x.home?'السكن: '+esc(x.home):''].filter(Boolean).join(' • '),m:m},ceCandCard(x));
-}
-/* آخر نموذج معبّأ للمرشح */
 function ceCandLast(x){
-  var ks=['branch','trial','interview','screen'];
-  for(var i=0;i<ks.length;i++){var f=x.forms&&x.forms[ks[i]];if(f&&f.at){var sc=ceSelScore(ks[i],f);if(sc)return {k:ks[i],pct:sc.pct,lbl:CESEL_FORMS[ks[i]].t.replace('نموذج ','').replace('تقييم ','')};}}
+  var be=(x.branchEvals||[]).filter(ceSelFinal);if(be.length){var f=be[be.length-1],sc=ceSelScore('branch',f);if(sc)return {k:'branch',pct:sc.pct,lbl:'تقييم الفرع'};}
+  var ks=['trial','interview','screen'];for(var i=0;i<ks.length;i++){var f2=x.forms&&x.forms[ks[i]];if(f2&&ceSelFinal(f2)){var s2=ceSelScore(ks[i],f2);if(s2)return {k:ks[i],pct:s2.pct,lbl:CESEL_FORMS[ks[i]].short};}}
   return null;
 }
-function ceCandCard(x){
-  var can=ceSelCan(x),h='<div class="xcard" style="--c:'+(CESEL_ST[x.stage]||CESEL_ST.screen)[1]+'">';
-  /* البيانات */
-  h+='<div class="xcard-m" style="margin-bottom:.4rem">'+(x.phone?'<span>'+ic('phone',11)+' <span style="direction:ltr">'+esc(x.phone)+'</span></span>':'')+(x.home?'<span>'+ic('pin',11)+' '+esc(x.home)+'</span>':'')+(x.branch?'<span>'+ic('list',11)+' الفرع المستهدف: '+esc(x.branch)+'</span>':'')+(x.src?'<span>'+ic('users',11)+' مصدر الترشيح: '+esc(x.src)+'</span>':'')+'</div>';
-  if(x.srcWhy)h+='<div class="xcard-d"><b>سبب الترشيح:</b> '+esc(x.srcWhy)+'</div>';
-  if(x.cv)h+='<div class="xcard-d"><b>السيرة الذاتية:</b> '+esc(x.cv)+'</div>';
-  if(x.cvImg)h+='<div class="xcard-d"><a href="'+srcOK(x.cvImg)+'" target="_blank" rel="noopener">'+ic('doc',11)+' ملف السيرة الذاتية</a></div>';
+function ceCandOpen(id,tab){CEV2=id;CESEL.tab=tab||'file';ceP('cand');}
+/* ==================== ملف المرشح (صفحة مستقلة بتبويبات) ==================== */
+function rCECand(){
+  var el=g('cec-cand');if(!el)return;var x=ceCand(CEV2);
+  if(!x||!ceSelScope().some(function(q){return q.id===x.id;})){el.innerHTML=emptyBox('user-plus','المرشح غير موجود أو خارج نطاقك')+'<button class="btn btn-g btn-sm" onclick="ceP(\'select\')">رجوع</button>';return;}
+  var st=CESEL_ST[x.stage]||CESEL_ST.screen,nx=ceSelNext(x),can=ceSelCan(x);
+  var h='<button class="btn btn-g btn-sm" onclick="ceP(\'select\')" style="margin-bottom:1rem">'+ic('swap',12)+' رجوع لاختيار المدربين</button>';
+  h+='<div class="ce2-hero">'+ceAvatar({name:x.name,img:x.img},84)+'<div class="ce2-hi"><div class="ce2-hn">'+esc(x.name)+'</div><div class="ce2-hs">'+(x.branch?ic('pin',11)+' '+esc(x.branch):'')+(x.phone?' <span style="opacity:.4">•</span> <span style="direction:ltr">'+esc(phoneDisp(x.phone))+'</span>':'')+(x.home?' <span style="opacity:.4">•</span> '+esc(x.home):'')+'</div>'
+    +'<div style="margin-top:.5rem;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center"><span class="ce2-st" style="background:'+st[1]+'1f;color:'+st[1]+'">'+st[0]+'</span><span style="font-size:11.5px;color:var(--gray)">'+ic('chev-l',10)+' الإجراء التالي: <b style="color:var(--txt)">'+esc(nx.t)+'</b> — '+esc(nx.who)+'</span></div></div>';
+  var last=ceCandLast(x),gr=ceGrade(last?last.pct:null);
+  h+='<div class="ce2-ring"><div class="ce2-rn" style="color:'+gr.c+'">'+(last?ceN(last.pct)+'٪':'—')+'</div><div class="ce2-rl">'+(last?last.lbl:'بلا تقييم')+'</div></div></div>';
+  /* مسار المراحل */
+  h+='<div class="cesel-path">'+CESEL_ACTIVE.map(function(k,i){var done=CESEL_ORDER.indexOf(x.stage)>i||x.stage==='hired';var cur=x.stage===k;return '<button type="button" class="cesel-pi'+(cur?' cur':(done?' done':''))+'" style="--c:'+CESEL_ST[k][1]+'" onclick="CESEL.tab=\''+(k==='onb'?'onb':k)+'\';rCECand()"><i>'+(done?ic('check',11):ceN(i+1))+'</i>'+esc(CESEL_ST[k][0])+'</button>';}).join('')+'</div>';
+  /* التبويبات */
+  var tabs=[['file','الملف والشروط','user'],['screen','الفرز','list'],['interview','المقابلة','users'],['trial','التجربة العملية','whistle'],['onb','الالتحاق','pin'],['branch','تقييم الفرع','star'],['log','السجل','clock']];
+  h+='<div class="ce2-tabs">'+tabs.map(function(t){return '<button class="ce2-tab'+(CESEL.tab===t[0]?' on':'')+'" onclick="CESEL.tab=\''+t[0]+'\';rCECand()">'+ic(t[2],13)+' '+t[1]+'</button>';}).join('')+'</div>';
+  if(CESEL.tab==='file')h+=ceCandFileHTML(x,can);
+  else if(CESEL.tab==='onb')h+=ceCandOnbHTML(x,can);
+  else if(CESEL.tab==='branch')h+=ceCandBranchHTML(x,can);
+  else if(CESEL.tab==='log')h+=ceCandLogHTML(x);
+  else h+=ceCandFormTab(x,CESEL.tab,can);
+  el.innerHTML=h;hydrateIcons(el);
+}
+function ceCandFileHTML(x,can){
+  var h='';
+  /* الإبلاغ المعلّق */
+  (x.notify||[]).filter(function(n){return !n.at;}).forEach(function(n){var late=n.due<calISO(new Date());h+='<div class="ce2-note'+(late?' warn':'')+'" style="margin-bottom:.6rem">'+ic('bell',13)+'<div><b>إبلاغ المرشح بنتيجة '+esc(n.lbl)+'</b> — الموعد '+esc(tdDayLabel(n.due))+(late?' (متأخر)':'')+(can?' <button class="btn btn-o btn-sm" style="margin-inline-start:.5rem" onclick="ceSelNotifyDo(\''+x.id+'\',\''+n.id+'\')">تسجيل الإبلاغ</button>':'')+'</div></div>';});
+  h+=tdSubHead('بيانات المرشح',can?'<button class="btn btn-g btn-sm" onclick="ceCandForm(\''+x.id+'\')">'+ic('edit',11)+' تعديل</button>':'');
+  var rows=[['رقم الجوال',x.phone?phoneDisp(x.phone):''],['مكان السكن',x.home],['زمن الوصول للفرع',x.dist?ceN(x.dist)+' دقيقة':''],['الفرع المستهدف',x.branch],['مصدر الترشيح',x.src],['المرشِّح من الأكاديمية',x.srcBy],['سبب الترشيح',x.srcWhy],['المؤهلات والشهادات التدريبية',x.quals],['سنوات الخبرة',x.expYears],['الجهات السابقة',x.expPlaces],['الفئات العمرية التي درّبها',x.ageGroups],['مدى التفرغ لأوقات التدريب',x.avail],['شهادة الإسعافات الأولية',x.fa&&x.fa.has?('سارية'+(x.fa.expiry?' حتى '+tdDayLabel(x.fa.expiry):'')+(x.fa.expiry&&x.fa.expiry<calISO(new Date())?' — <b style="color:var(--red)">منتهية</b>':'')):''],['السيرة الذاتية',x.cv],['ملاحظات اللجنة',x.cnotes]];
+  h+='<div class="cesel-kv">'+rows.filter(function(r){return r[1];}).map(function(r){return '<div><small>'+r[0]+'</small><b>'+(r[0]==='شهادة الإسعافات الأولية'?r[1]:esc(r[1]))+'</b></div>';}).join('')+'</div>';
+  /* المرفقات */
+  h+=tdSubHead('المرفقات',can?'<label class="btn btn-g btn-sm" style="cursor:pointer">'+ic('plus',11)+' إضافة مرفق<input type="file" accept="image/*,.pdf" style="display:none" onchange="ceCandAttach(this,\''+x.id+'\')"></label>':'');
+  if(x.files&&x.files.length)h+='<div class="cecr-list">'+x.files.map(function(f){return '<div class="cecr-row"><span class="cecr-n"><a href="'+srcOK(f.url)+'" target="_blank" rel="noopener">'+ic(f.pdf?'doc':'image',11)+' '+esc(f.name)+'</a></span><small style="color:var(--gray)">'+esc(f.by||'')+' • '+esc(xDateLbl(new Date(f.at).toISOString()))+'</small>'+(can?'<button class="ab" style="color:var(--red)" onclick="ceCandAttachDel(\''+x.id+'\',\''+f.id+'\')">'+ic('x',10)+'</button>':'')+'</div>';}).join('')+'</div>';
+  else h+='<div class="jnote">'+ic('info',12)+' لا مرفقات بعد (السيرة الذاتية، الشهادات، الإثباتات).</div>';
   /* الشروط الأساسية */
-  var req=x.req||{},okN=CESEL_REQ.filter(function(_,i){return req[i];}).length;
-  h+='<div class="xcard-d"><b>الشروط الأساسية:</b> '+ceN(okN)+'/'+ceN(CESEL_REQ.length)+' <small style="color:var(--gray)">'+CESEL_REQ.map(function(t,i){return '<span style="white-space:nowrap">'+(req[i]?'✓':'✗')+' '+esc(t)+'</span>';}).join(' • ')+'</small></div>';
-  /* المراحل */
-  h+='<div class="cesel-steps">';
-  ['screen','interview','trial','branch'].forEach(function(k,i){
-    var F=CESEL_FORMS[k],f=x.forms&&x.forms[k],sc=f?ceSelScore(k,f):null,dec=f&&f.dec?ceSelDecLbl(k,f.dec):null;
-    var cur=x.stage===k,past=CESEL_ORDER.indexOf(x.stage)>i||['hired','reserve','rejected'].indexOf(x.stage)>-1;
-    var col=dec?dec[2]:(cur?CESEL_ST[k][1]:'var(--gray)');
-    h+='<div class="cesel-step'+(cur?' cur':'')+'" style="--c:'+col+'"><div class="cesel-n">'+ceN(i+1)+'</div><div class="cesel-b"><b>'+esc(F.t.replace('نموذج ',''))+'</b><small>حد النجاح '+ceN(F.pass)+'٪'+(F.minAxis?' ولا محور أقل من '+ceN(F.minAxis):'')+'</small>'
-      +(sc?'<div class="cesel-r"><span style="color:'+ceGrade(sc.pct).c+';font-weight:800">'+ceN(sc.pct)+'٪</span> ('+ceN(sc.sum)+'/'+ceN(sc.max)+')'+(dec?' — <span style="color:'+dec[2]+';font-weight:700">'+esc(dec[1])+'</span>':'')+(f.by?' <span style="color:var(--gray)">• '+esc(f.by)+' • '+esc(xDateLbl(new Date(f.at).toISOString()))+'</span>':'')+'</div>':'')
-      +'</div>'
-      +((can&&(cur||f))?'<button type="button" class="btn btn-sm '+(f?'btn-g':'btn-r')+'" onclick="ceSelForm(\''+x.id+'\',\''+k+'\')">'+ic(f?'edit':'plus',11)+' '+(f?'عرض / تعديل':'تعبئة النموذج')+'</button>':'')+'</div>';
-  });
-  h+='</div>';
-  if(x.stage==='hired'){var co=x.coachId?tdCoach(x.coachId):null;h+='<div class="xnote" style="--c:#16a34a"><b>'+ic('check',11)+' معتمد للتعيين</b>'+(x.hiredAt?' — '+esc(xDateLbl(new Date(x.hiredAt).toISOString())):'')+(x.probEnd?' • نهاية فترة التجربة: '+esc(tdDayLabel(x.probEnd)):'')+(co?' • سجل المدرب: <b>'+esc(co.name)+'</b>':'')+'</div>';}
-  if(x.note)h+='<div class="xcard-d"><b>ملاحظات:</b> '+esc(x.note)+'</div>';
-  /* السجل */
-  if(x.log&&x.log.length)h+='<div class="xcard-d" style="font-size:10.5px;color:var(--gray)">'+x.log.slice(-4).map(function(l){return esc(xDateLbl(new Date(l.at).toISOString()))+' — '+esc(l.t)+(l.by?' ('+esc(l.by)+')':'');}).join('<br>')+'</div>';
+  var req=x.req||{};var okN=CESEL_REQ.filter(function(_,i){return (req[i]||{}).st==='ok';}).length;
+  h+=tdSubHead('التحقق من الشروط الأساسية','<span class="pg-chip">'+ceN(okN)+'/'+ceN(CESEL_REQ.length)+'</span>'+(can?'<button class="btn btn-g btn-sm" onclick="ceCandReqForm(\''+x.id+'\')">'+ic('check',11)+' تحديث التحقق</button>':''));
+  h+='<div class="cecr-list">'+CESEL_REQ.map(function(t,i){var r=req[i]||{},s=CESEL_REQ_ST[r.st||'']||CESEL_REQ_ST[''];return '<div class="cecr-row"><span class="badge" style="background:'+s[1]+'1f;color:'+s[1]+'">'+s[0]+'</span><span class="cecr-n">'+esc(t[0])+(t[1]?'':' <small style="color:var(--gray)">(تفضيل)</small>')+'</span>'+(r.note?'<small style="color:var(--gray)">'+esc(r.note)+'</small>':'')+(r.img?'<a href="'+srcOK(r.img)+'" target="_blank" rel="noopener">'+ic('image',11)+' إثبات</a>':'')+'</div>';}).join('')+'</div>';
   /* الأزرار */
-  h+='<div class="xcard-btns">';
+  h+='<div class="xcard-btns" style="margin-top:1rem">';
   if(can){
-    if(['screen','interview','trial','branch'].indexOf(x.stage)>-1)h+='<button class="btn btn-g btn-sm" onclick="ceCandStage(\''+x.id+'\',\'reserve\')">'+ic('clock',12)+' احتياط</button><button class="btn btn-g btn-sm" style="color:var(--red)" onclick="ceCandStage(\''+x.id+'\',\'rejected\')">'+ic('x',12)+' استبعاد</button>';
-    if(x.stage==='reserve'||x.stage==='rejected')h+='<button class="btn btn-o btn-sm" onclick="ceCandStage(\''+x.id+'\',\''+(x.forms&&x.forms.branch?'branch':(x.forms&&x.forms.trial?'trial':(x.forms&&x.forms.interview?'interview':'screen')))+'\')">'+ic('refresh',12)+' إعادة للمسار</button>';
-    if(x.stage==='hired'&&!x.coachId&&ceRole()==='admin')h+='<button class="btn btn-n btn-sm" onclick="ceCandHire(\''+x.id+'\')">'+ic('whistle',12)+' إنشاء سجل مدرب</button>';
-    h+='<button class="btn btn-g btn-sm" onclick="ceCandForm(\''+x.id+'\')">'+ic('edit',12)+'</button>';
-    if(ceRole()==='admin')h+='<button class="btn btn-g btn-sm" style="color:var(--red)" onclick="ceCandDel(\''+x.id+'\')">'+ic('trash',12)+'</button>';
+    if(CESEL_ACTIVE.indexOf(x.stage)>-1)h+='<button class="btn btn-g btn-sm" onclick="ceCandStage(\''+x.id+'\',\'reserve\')">'+ic('clock',12)+' نقل للاحتياط</button><button class="btn btn-g btn-sm" style="color:var(--red)" onclick="ceCandStage(\''+x.id+'\',\'rejected\')">'+ic('x',12)+' استبعاد</button>';
+    if(x.stage==='reserve'||x.stage==='rejected')h+='<button class="btn btn-o btn-sm" onclick="ceCandStage(\''+x.id+'\',\''+ceSelResumeStage(x)+'\')">'+ic('refresh',12)+' إعادة للمسار ('+CESEL_ST[ceSelResumeStage(x)][0]+')</button>';
+    if(x.stage==='hired'&&!x.coachId&&ceRole()==='admin')h+='<button class="btn btn-n btn-sm" onclick="ceCandHire(\''+x.id+'\')">'+ic('whistle',12)+' ربط بحساب مدرب</button>';
+    if(x.coachId)h+='<button class="btn btn-g btn-sm" onclick="ceOpenCoach(\''+x.coachId+'\')">'+ic('whistle',12)+' ملف المدرب</button>';
+    if(ceRole()==='admin')h+='<button class="btn btn-g btn-sm" style="color:var(--red)" onclick="ceCandDel(\''+x.id+'\')">'+ic('trash',12)+' حذف الملف</button>';
   }
-  h+='<button class="btn btn-g btn-sm" onclick="ceCandPrint(\''+x.id+'\')">'+ic('doc',12)+' طباعة الملف</button>';
-  h+='</div></div>';
+  h+='<button class="btn btn-g btn-sm" onclick="ceCandPrint(\''+x.id+'\')">'+ic('doc',12)+' طباعة الملف (PDF)</button></div>';
   return h;
 }
+function ceSelResumeStage(x){if(x.forms&&x.forms.trial&&ceSelApproved('trial',x.forms.trial)&&x.forms.trial.dec==='pass')return 'onb';if(x.forms&&x.forms.interview&&ceSelApproved('interview',x.forms.interview)&&x.forms.interview.dec==='pass')return 'trial';if(x.forms&&x.forms.screen&&ceSelApproved('screen',x.forms.screen)&&x.forms.screen.dec==='pass')return 'interview';return 'screen';}
+/* تبويب نموذج مرحلة: العرض + الاعتمادات + زر التعبئة */
+function ceCandFormTab(x,k,can){
+  var F=CESEL_FORMS[k],f=ceSelFormOf(x,k),h='';
+  var idx=CESEL_ACTIVE.indexOf(k),cur=CESEL_ORDER.indexOf(x.stage);
+  var reachable=cur>=idx||x.stage==='hired'||!!f;
+  h+='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div><b>'+esc(F.t)+'</b> — '+esc(F.who)+'.<br><small>المجموع من '+ceN(ceSelItems(k).length*F.max)+' • حد النجاح '+ceN(F.pass)+'٪'+(F.minAxis?' ولا يقل محور عن '+ceN(F.minAxis)+' ('+ceSelMinLbl()+')':'')+' • الاعتماد: '+F.appr.map(function(a){return a[1];}).join('، ')+'</small></div></div>';
+  if(!reachable)return h+emptyBox('shield','هذه المرحلة لم تبدأ بعد','لا يُفتح نموذجها قبل اجتياز المرحلة السابقة واعتمادها');
+  if(!f){
+    if(k==='interview'&&can)h+=ceSelScheduleHTML(x);
+    return h+(can&&x.stage===k?'<button class="btn btn-r" onclick="ceSelForm(\''+x.id+'\',\''+k+'\')">'+ic('plus',13)+' تعبئة '+esc(F.t)+'</button>':emptyBox('doc','لم يُعبّأ النموذج بعد'));
+  }
+  if(k==='interview'&&!ceSelFinal(f))h+=ceSelScheduleHTML(x);
+  h+=ceSelFormView(x,k,f,can);
+  return h;
+}
+function ceSelMinLbl(){var m=ceSelSet().trialMin;return m==='item'?'يُطبَّق على كل عنصر':(m==='group'?'يُطبَّق على متوسط كل محور':'غير مفعّل حتى تحسمه الإدارة');}
+function ceSelScheduleHTML(x){
+  var f=x.forms&&x.forms.interview||{};
+  return '<div class="rform" style="margin-bottom:.9rem;max-width:none"><div class="cw-t" style="margin-bottom:.5rem">'+ic('cal',13)+' موعد المقابلة</div><div class="frow"><div class="fg"><label>الموعد</label><input type="datetime-local" id="cesch-when" value="'+esc(f.when||'')+'" style="direction:ltr"></div><div class="fg"><label>الطريقة</label>'+tdSel('cesch-mode',[['zoom','زوم'],['live','حضوري — جامعة الأميرة نورة']],f.mode||'zoom','')+'</div></div><div class="fg"><label>رابط الاجتماع أو موقعه</label><input type="text" id="cesch-link" value="'+esc(f.link||'')+'" placeholder="https://zoom.us/… أو العنوان"></div><button class="btn btn-o btn-sm" onclick="ceSelScheduleSave(\''+x.id+'\')">'+ic('check',12)+' حفظ الموعد</button></div>';
+}
+function ceSelScheduleSave(id){var x=ceCand(id);if(!x||!ceSelCan(x))return;if(!x.forms)x.forms={};var f=x.forms.interview||(x.forms.interview={sc:{},notes:{},draft:true});f.when=gv('cesch-when');f.mode=gv('cesch-mode');f.link=gv('cesch-link');if(!f.at)f.draft=true;ceCandLog(x,'موعد المقابلة: '+(f.when?new Date(f.when).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'}):'—')+' ('+(f.mode==='live'?'حضوري':'زوم')+')');sv();rCECand();}
+/* عرض نموذج معبّأ */
+function ceSelFormView(x,k,f,can,evalId){
+  var F=CESEL_FORMS[k],items=ceSelItems(k),sc=ceSelScore(k,f),d=f.dec?ceSelDecLbl(k,f.dec):null,fin=ceSelFinal(f),appr=ceSelApproved(k,f);
+  var h='<div class="xcard" style="--c:'+(d?d[2]:CESEL_ST[k]&&CESEL_ST[k][1]||'var(--navy)')+'">';
+  h+='<div class="xcard-top">'+(fin?(appr?'<span class="badge approved">'+ic('check',10)+' معتمد ومقفل</span>':'<span class="badge pending">بانتظار الاعتماد</span>'):'<span class="badge" style="background:var(--bg);color:var(--amber)">مسودة</span>')+(f.etype?'<span class="badge" style="background:var(--bg)">'+esc((F.extra.find(function(e){return e[0]==='etype';})[3].find(function(o){return o[0]===f.etype;})||[])[1]||'')+'</span>':'')+'<span style="margin-inline-start:auto;font-size:10.5px;color:var(--gray)">'+esc(f.by||'')+(f.at?' • '+esc(new Date(f.at).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'})):'')+'</span></div>';
+  var meta=[];(F.extra||[]).forEach(function(e){var v=f[e[0]];if(!v)return;if(e[2]==='opts')v=(e[3].find(function(o){return o[0]===v;})||[])[1]||v;else if(e[2]==='date')v=tdDayLabel(v);else if(e[2]==='datetime-local')v=new Date(v).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'});meta.push(e[1]+': '+v);});if(f.br)meta.push('الفرع: '+f.br);
+  if(meta.length)h+='<div class="xcard-m">'+meta.map(function(m){return '<span>'+esc(m)+'</span>';}).join('')+'</div>';
+  /* الدرجات */
+  h+='<div class="at-wrap"><table class="at cesel-vt"><thead><tr><th>م</th><th>عنصر التقييم</th><th>الدرجة</th><th>ملاحظات</th></tr></thead><tbody>';
+  var lastG='';items.forEach(function(it,i){if(it[0]!==lastG&&F.groups.length>1){lastG=it[0];h+='<tr class="cesel-gr"><td colspan="4">'+esc(it[0])+'</td></tr>';}var v=f.sc&&f.sc[i];h+='<tr><td>'+ceN(i+1)+'</td><td>'+esc(it[1])+'</td><td style="font-weight:800;color:'+(v?(F.minAxis&&v<F.minAxis?'var(--red)':'var(--txt)'):'var(--gray)')+'">'+(v?ceN(v):'—')+'</td><td style="font-size:11px;color:var(--gray)">'+esc((f.notes||{})[i]||'')+'</td></tr>';});
+  h+='</tbody></table></div>';
+  /* النتيجة مستقلة عن القرار */
+  h+='<div class="cesel-tot">'+(sc?'<span>المجموع <b>'+ceN(sc.sum)+'</b> / '+ceN(sc.max)+'</span><span class="cesel-pct" style="color:'+ceGrade(sc.pct).c+'">'+(sc.done?ceN(sc.pct)+'٪':'—')+'</span>'+(sc.done?'':'<span style="color:var(--amber)">غير مكتمل — بقي '+ceN(sc.total-sc.n)+' بنداً، لا تُحتسب نتيجة نهائية</span>')+(sc.done&&F.minAxis&&sc.lowItem?'<span style="color:'+(sc.low?'var(--red)':'var(--amber)')+'">عنصر أقل من '+ceN(F.minAxis)+(sc.low?'':' (غير مطبّق)')+'</span>':'')+(sc.done?'<span style="color:var(--gray)">حسب الدرجة: <b style="color:'+ceSelDecLbl(k,ceSelAuto(k,sc))[2]+'">'+esc(ceSelDecLbl(k,ceSelAuto(k,sc))[1])+'</b></span>':''):'<span style="color:var(--gray)">لم تُدخل درجات</span>')+'</div>';
+  if(d)h+='<div class="xnote" style="--c:'+d[2]+'"><b>'+ic(f.dec==='pass'?'check':'info',11)+' القرار:</b> <span style="color:'+d[2]+';font-weight:800">'+esc(d[1])+'</span>'+(f.decWhy?' — '+esc(f.decWhy):'')+'</div>';
+  if(f.str||f.dev||f.plan)h+='<div class="xcard-d">'+(f.str?'<b style="color:var(--green)">نقاط القوة:</b> '+esc(f.str)+'<br>':'')+(f.dev?'<b style="color:var(--amber)">نقاط تحتاج إلى تطوير:</b> '+esc(f.dev)+'<br>':'')+(f.plan?'<b>خطة التطوير المقترحة:</b> '+esc(f.plan):'')+'</div>';
+  if(f.txt)h+='<div class="xcard-d"><b>ملاحظات:</b> '+esc(f.txt)+'</div>';
+  /* الاعتمادات */
+  h+='<div class="cesel-appr"><div class="cw-t" style="font-size:12px;margin-bottom:.4rem">'+ic('shield',12)+' الاعتمادات'+(F.seq?' <small style="color:var(--gray)">(بالتسلسل)</small>':'')+'</div>';
+  F.appr.forEach(function(a,ai){var ap=f.appr&&f.appr[a[0]];var prevOk=!F.seq||ai===0||!!(f.appr&&f.appr[F.appr[ai-1][0]]);
+    h+='<div class="cecr-row"><span class="cecr-n">'+esc(a[1])+'</span>'+(ap?'<span class="badge approved">'+ic('check',10)+' '+esc(ap.by)+' • '+esc(new Date(ap.at).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'}))+'</span>':(fin&&prevOk&&ceApprCan(a,f,x)?'<button class="btn btn-n btn-sm" onclick="ceSelApprove(\''+x.id+'\',\''+k+'\',\''+a[0]+'\',\''+(evalId||'')+'\')">'+ic('check',11)+' اعتماد</button>':'<span class="badge" style="background:var(--bg);color:var(--gray)">'+(fin?(prevOk?'بانتظار الاعتماد':'بعد الاعتماد السابق'):'بعد إنهاء النموذج')+'</span>'))+'</div>';});
+  h+='</div>';
+  if(f.history&&f.history.length)h+='<div class="xcard-d" style="font-size:10.5px;color:var(--gray)"><b>سجل التغيير:</b> '+f.history.map(function(hh){return esc(xDateLbl(new Date(hh.at).toISOString()))+' — '+esc(hh.by)+': '+esc(hh.t);}).join(' • ')+'</div>';
+  h+='<div class="xcard-btns">';
+  if(can&&(!appr||ceRole()==='admin'))h+='<button class="btn '+(fin?'btn-g':'btn-r')+' btn-sm" onclick="ceSelForm(\''+x.id+'\',\''+k+'\',\''+(evalId||'')+'\')">'+ic('edit',12)+' '+(fin?(appr?'تعديل (مدير النظام — يُسجَّل)':'تعديل النموذج'):'إكمال النموذج')+'</button>';
+  if(k==='trial'&&fin&&f.dec==='retry'&&can&&x.stage==='trial')h+='<button class="btn btn-o btn-sm" onclick="ceSelRetry(\''+x.id+'\')">'+ic('refresh',12)+' تجربة جديدة (يُحفظ السابق)</button>';
+  h+='<button class="btn btn-g btn-sm" onclick="ceCandPrint(\''+x.id+'\',\''+k+'\',\''+(evalId||'')+'\')">'+ic('doc',12)+' PDF</button></div>';
+  if(k==='trial'&&x.trialHist&&x.trialHist.length)h+='<div class="xcard-d" style="font-size:11px"><b>تجارب سابقة:</b> '+x.trialHist.map(function(t){var s2=ceSelScore('trial',t);return esc(t.tdate||xDateLbl(new Date(t.at).toISOString()))+' — '+(s2?ceN(s2.pct)+'٪':'—')+' ('+esc(ceSelDecLbl('trial',t.dec)[1])+')';}).join(' • ')+'</div>';
+  return h+'</div>';
+}
+/* من يعتمد؟ */
+function ceApprCan(a,f,x){
+  var r=ceRole(),s=ceSelSet(),uid0=CU?CU.id:'';
+  if(f.appr&&Object.keys(f.appr).some(function(k){return f.appr[k].uid===uid0;})&&r!=='admin')return false;   /* شخص واحد = اعتماد واحد */
+  if(r==='admin')return true;
+  var kind=a[2];
+  if(kind==='chair')return s.committee.chair===uid0;
+  if(kind==='tech')return (s.committee.tech||[]).indexOf(uid0)>-1||(!(s.committee.tech||[]).length&&r==='sup');
+  if(kind==='intv')return (s.committee.intv||[]).indexOf(uid0)>-1||(!(s.committee.intv||[]).length&&r==='sup');
+  if(kind==='sup')return r==='sup';
+  if(kind==='mgr')return r==='mgr'&&(!f.br&&!x.branch||ceBranches().indexOf(f.br||x.branch)>-1);
+  return false;
+}
+function ceSelApprove(cid,k,slot,evalId){
+  var x=ceCand(cid);if(!x)return;var f=ceSelFormOf(x,k,evalId),F=CESEL_FORMS[k];if(!f||!ceSelFinal(f))return;
+  var a=F.appr.find(function(q){return q[0]===slot;});if(!a||!ceApprCan(a,f,x))return;
+  if(!f.appr)f.appr={};f.appr[slot]={by:CU.name,uid:CU.id,at:Date.now()};
+  ceCandLog(x,'اعتماد '+F.short+' — '+a[1]+' ('+CU.name+')');
+  if(ceSelApproved(k,f)){f.locked=true;ceSelTransition(x,k,f);}
+  sv();rCECand();
+}
+/* الانتقال بعد اكتمال الاعتماد */
+function ceSelTransition(x,k,f){
+  var F=CESEL_FORMS[k],d=ceSelDecLbl(k,f.dec);
+  if(f.dec==='pass'){
+    if(k==='branch'){if(x.stage!=='hired'){x.stage='hired';x.hiredAt=x.hiredAt||Date.now();}}
+    else{x.stage=F.next;if(F.next==='onb'){if(!x.onb)x.onb={};}}
+  }else if(f.dec==='reserve')x.stage='reserve';
+  else if(f.dec==='no')x.stage='rejected';
+  /* retry / dev: يبقى في مرحلته */
+  ceCandLog(x,F.short+' معتمد: '+d[1]+(f.dec==='pass'&&x.stage!==k?' — انتقل إلى '+CESEL_ST[x.stage][0]:''));
+  ceSelNotifyAdd(x,k,F.short+' — '+d[1]);
+  logA('اختيار المدربين — '+x.name+': '+F.short+' '+d[1],'star','#0e7490');
+}
+function ceSelRetry(id){var x=ceCand(id);if(!x||!x.forms||!x.forms.trial)return;askConfirm('بدء تجربة عملية جديدة؟ يُحفظ التقييم السابق في سجل التجارب.',function(){if(!x.trialHist)x.trialHist=[];x.trialHist.push(x.forms.trial);delete x.forms.trial;ceCandLog(x,'إعادة التجربة العملية — حُفظت التجربة السابقة');sv();rCECand();});}
+/* ---------- الالتحاق ---------- */
+function ceCandOnbHTML(x,can){
+  var o=x.onb||{},h='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div>خطوات الالتحاق حسب الدليل بعد اجتياز التجربة العملية — لكل خطوة مسؤول وتاريخ وحالة وملاحظة. تسجيل الإضافة في الجروب متابعة داخل التطبيق.</div></div>';
+  if(CESEL_ORDER.indexOf(x.stage)<CESEL_ORDER.indexOf('onb')&&x.stage!=='hired'&&x.stage!=='reserve'&&x.stage!=='rejected')h+='<div class="jnote" style="margin-bottom:.6rem">'+ic('info',12)+' تبدأ هذه الخطوات بعد اعتماد التجربة العملية.</div>';
+  h+='<div class="cesel-steps">';
+  CESEL_ONB.forEach(function(s,i){var st=o[s[0]]||{},ss=CESEL_ONB_ST[st.st||'']||CESEL_ONB_ST[''];
+    h+='<div class="cesel-step'+(st.st==='doing'?' cur':'')+'" style="--c:'+ss[1]+'"><div class="cesel-n">'+(st.st==='done'?ic('check',12):ceN(i+1))+'</div><div class="cesel-b"><b>'+esc(s[1])+'</b><small>المسؤول: '+esc(st.who||s[2])+(st.date?' • '+esc(tdDayLabel(st.date)):'')+(s[0]==='hire'&&x.probEnd?' • نهاية فترة التجربة '+esc(tdDayLabel(x.probEnd)):'')+'</small>'+(st.note?'<div class="cesel-r">'+esc(st.note)+'</div>':'')+(st.by?'<div class="cesel-r" style="color:var(--gray)">'+esc(st.by)+' • '+esc(xDateLbl(new Date(st.at).toISOString()))+'</div>':'')+'</div><span class="badge" style="background:'+ss[1]+'1f;color:'+ss[1]+'">'+ss[0]+'</span>'+(can?'<button type="button" class="btn btn-g btn-sm" onclick="ceOnbForm(\''+x.id+'\',\''+s[0]+'\')">'+ic('edit',11)+'</button>':'')+'</div>';});
+  h+='</div>';
+  if(x.stage==='onb'&&!ceSelOnbNext(x)&&can)h+='<div class="ce2-note ok" style="margin-top:.8rem">'+ic('check',13)+'<div>اكتملت خطوات الالتحاق — <button class="btn btn-r btn-sm" onclick="CESEL.tab=\'branch\';rCECand()">تعبئة تقييم المدرب في الفرع</button></div></div>';
+  return h;
+}
+function ceOnbForm(cid,key){
+  var x=ceCand(cid),s=CESEL_ONB.find(function(q){return q[0]===key;});if(!x||!s||!ceSelCan(x))return;var st=(x.onb||{})[key]||{};
+  var h='<div class="fg"><label>الحالة</label><div class="xopts" id="conb-st">'+Object.keys(CESEL_ONB_ST).map(function(k){return '<button type="button" class="xopt'+((st.st||'')===k?' on':'')+'" data-v="'+k+'" onclick="xOptPick(this)">'+CESEL_ONB_ST[k][0]+'</button>';}).join('')+'</div></div>';
+  h+='<div class="frow">'+xInp('conb-who','المسؤول',st.who||s[2])+xInp('conb-date',key==='hire'?'تاريخ التعيين (بداية فترة التجربة)':'التاريخ',st.date||'','','date')+'</div>';
+  if(key==='hire')h+=xInp('conb-prob','نهاية فترة التجربة',x.probEnd||'','تُحسب شهراً من التعيين إن تُركت فارغة','date');
+  h+=xTxt('conb-note','ملاحظات',st.note||'',2);
+  h+='<div class="xacts"><button class="btn btn-r" onclick="ceOnbSave(\''+cid+'\',\''+key+'\')">'+ic('check',13)+' حفظ</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div>';
+  fpgHTML(s[1],'pin','خطوة الالتحاق — '+x.name,h,function(){rCECand();});
+}
+function ceOnbSave(cid,key){
+  var x=ceCand(cid);if(!x)return;if(!x.onb)x.onb={};var st=x.onb[key]||(x.onb[key]={});
+  st.st=xOptVal('conb-st');st.who=gv('conb-who');st.date=gv('conb-date');st.note=gv('conb-note');st.by=CU.name;st.at=Date.now();
+  if(key==='hire'){var pe=gv('conb-prob');if(!pe&&st.date)pe=ceAddMonths(st.date,ceSelSet().probMonths);if(pe)x.probEnd=pe;if(st.date)x.probStart=st.date;}
+  var s=CESEL_ONB.find(function(q){return q[0]===key;});ceCandLog(x,s[1]+': '+CESEL_ONB_ST[st.st||''][0]+(st.date?' — '+tdDayLabel(st.date):''));
+  if(x.stage==='onb'&&!ceSelOnbNext(x)){x.stage='branch';ceCandLog(x,'اكتملت خطوات الالتحاق — مرحلة التقييم في الفرع');}
+  sv();fpgHide();rCECand();
+}
+/* ---------- تقييمات الفرع (متعددة) ---------- */
+function ceCandBranchHTML(x,can){
+  var F=CESEL_FORMS.branch,evs=(x.branchEvals||[]).slice().sort(function(a,b){return (a.edate||'')<(b.edate||'')?1:-1;}),h='';
+  h+='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div><b>'+esc(F.t)+'</b> — '+esc(F.who)+'.<br><small>المجموع من 110 • 80٪ فأكثر معتمد للتعيين • 65٪ إلى أقل من 80٪ يحتاج تطويراً وإعادة تقييم • أقل من 65٪ غير معتمد — التصنيف على النسبة الفعلية قبل التقريب. الاعتماد: مدير الفرع ← المشرف الفني ← الإدارة. كل تقييم مستقل، والتقييم الدوري لا ينفّذ إجراءً وظيفياً تلقائياً.</small></div></div>';
+  var reachable=['branch','hired','onb'].indexOf(x.stage)>-1||evs.length;
+  if(!reachable)return h+emptyBox('shield','هذه المرحلة لم تبدأ بعد','تبدأ بعد اعتماد التجربة العملية واستكمال الالتحاق');
+  if(can&&(x.stage==='branch'||x.stage==='hired'||x.stage==='onb'))h+='<button class="btn btn-r btn-sm" style="margin-bottom:.8rem" onclick="ceSelForm(\''+x.id+'\',\'branch\',\'new\')">'+ic('plus',12)+' تقييم جديد</button>';
+  var pd=ceSelPeriodicDue(x);if(pd)h+='<div class="jnote" style="margin-bottom:.6rem">'+ic('refresh',12)+' التقييم الدوري التالي مستحق: <b>'+esc(tdDayLabel(pd))+'</b></div>';
+  /* تطور التقييم */
+  var fin=evs.filter(ceSelFinal);if(fin.length>1){h+='<div class="cesel-trend">'+fin.slice().reverse().map(function(f){var sc=ceSelScore('branch',f);return '<div class="cesel-tp"><b style="color:'+ceGrade(sc?sc.pct:null).c+'">'+(sc?ceN(sc.pct)+'٪':'—')+'</b><small>'+esc(f.edate?tdDayLabel(f.edate):'')+'</small></div>';}).join('')+'</div>';}
+  if(!evs.length)h+=emptyBox('star','لا توجد تقييمات بعد');
+  evs.forEach(function(f){var sc=ceSelScore('branch',f),d=f.dec?ceSelDecLbl('branch',f.dec):null,ty=(F.extra.find(function(e){return e[0]==='etype';})[3].find(function(o){return o[0]===f.etype;})||['','تقييم'])[1];
+    h+=xFold('be'+f.id,{ic:'star',c:d?d[2]:'#0e7490',t:esc(ty)+(f.edate?' — '+esc(tdDayLabel(f.edate)):''),sub:esc(f.by||'')+(f.br?' • '+esc(f.br):''),m:(sc&&sc.done?'<span class="badge" style="background:var(--bg);color:'+ceGrade(sc.pct).c+';font-weight:800">'+ceN(sc.pct)+'٪</span>':'')+(ceSelFinal(f)?(ceSelApproved('branch',f)?'<span class="badge approved">معتمد</span>':'<span class="badge pending">بانتظار الاعتماد</span>'):'<span class="badge" style="background:var(--bg);color:var(--amber)">مسودة</span>')},ceSelFormView(x,'branch',f,can,f.id));});
+  return h;
+}
+function ceCandLogHTML(x){
+  var h=tdSubHead('السجل الزمني');var L=(x.log||[]).slice().reverse();
+  if(!L.length)return h+emptyBox('clock','لا سجل بعد');
+  h+='<div class="cecr-list">'+L.map(function(l){return '<div class="cecr-row"><small style="color:var(--gray);white-space:nowrap">'+esc(new Date(l.at).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'}))+'</small><span class="cecr-n" style="font-weight:500">'+esc(l.t)+'</span><small style="color:var(--gray)">'+esc(l.by||'')+'</small></div>';}).join('')+'</div>';
+  var N=(x.notify||[]);if(N.length){h+=tdSubHead('إبلاغ المرشح بالنتائج');h+='<div class="at-wrap"><table class="at"><thead><tr><th>النتيجة</th><th>تاريخ القرار</th><th>الموعد</th><th>تم الإبلاغ</th><th>الطريقة</th><th>المسؤول</th></tr></thead><tbody>'+N.map(function(n){return '<tr><td>'+esc(n.lbl)+'</td><td>'+esc(tdDayLabel(n.decAt))+'</td><td>'+esc(tdDayLabel(n.due))+'</td><td>'+(n.at?'<span class="badge approved">'+esc(tdDayLabel(n.at))+'</span>':'<span class="badge '+(n.due<calISO(new Date())?'rejected':'pending')+'">'+(n.due<calISO(new Date())?'متأخر':'بانتظار')+'</span>')+'</td><td>'+esc(CESEL_NOTIFY_M[n.method]||'—')+'</td><td>'+esc(n.by||'—')+'</td></tr>';}).join('')+'</tbody></table></div>';}
+  return h;
+}
+/* ==================== بيانات المرشح ==================== */
 function ceCandForm(id){
   var x=id?ceCand(id):null;if(id&&!x)return;if(!ceSelCan(x))return;
   var r=ceRole(),brs=r==='admin'||r==='sup'?(TDX().branches||[]).map(function(b){return b.name;}):ceBranches();
-  var h='<div class="frow">'+xInp('cec-name','اسم المرشح',x?x.name:'','الاسم الثلاثي','text',true)+'<div class="fg"><label>رقم الجوال</label>'+phoneField('cec-phone',x?x.phone||'':'')+'</div></div>';
-  h+='<div class="frow"><div class="fg"><label>الفرع المستهدف *</label>'+tdSel('cec-br',brs,x?x.branch||'':(CESEL.branch||''),'اختر الفرع')+'</div>'+xInp('cec-home','مكان السكن',x?x.home:'','الحي / المدينة')+'</div>';
-  h+='<div class="frow">'+xInp('cec-src','مصدر الترشيح',x?x.src:'','اسم المدرب أو الموظف المرشِّح — أو «تقديم مباشر»')+xInp('cec-dist','زمن الوصول للفرع (دقيقة)',x?x.dist:'','مثال: 20','number')+'</div>';
-  h+=xTxt('cec-why','سبب الترشيح',x?x.srcWhy:'',2,'لماذا رُشّح هذا المدرب؟');
-  h+=xTxt('cec-cv','ملخص السيرة الذاتية',x?x.cv:'',3,'المؤهلات، الخبرات، الفئات التي درّبها');
-  h+='<div class="fg"><label>صورة المرشح <small>(اختياري)</small></label><div class="img-pick"><div class="img-prev" id="cec-prev">'+(x&&x.img?'<img src="'+srcOK(x.img)+'">':ic('user',22))+'</div><div><label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة<input type="file" accept="image/*" style="display:none" onchange="prvLogoImg(this,\'cec\')"></label><button class="img-rm" id="cec-rm" onclick="rmImg(\'cec\',\'user\')"'+(x&&x.img?' style="display:inline-block"':'')+'>إزالة</button></div><input type="hidden" id="cec-img" value="'+(x?esc(x.img||''):'')+'"></div></div>';
-  h+='<div class="fg"><label>الشروط الأساسية</label><div class="cesel-req">'+CESEL_REQ.map(function(t,i){return '<label><input type="checkbox" id="cec-req-'+i+'"'+(x&&x.req&&x.req[i]?' checked':'')+'> '+esc(t)+'</label>';}).join('')+'</div></div>';
-  h+=xTxt('cec-note','ملاحظات',x?x.note:'',2,'');
-  h+='<div class="xacts"><button class="btn btn-r" onclick="ceCandSave(\''+(id||'')+'\')">'+ic('check',13)+' '+(x?'حفظ التعديلات':'إضافة المرشح')+'</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div><div class="msg err" id="cec-err">أكمل اسم المرشح والفرع المستهدف</div>';
-  fpgHTML(x?'تعديل بيانات المرشح':'مرشح جديد','user-plus','يبدأ المرشح من مرحلة الفرز (الاختيار الأولي)',h,function(){rCESelect();});
+  var h=tdSubHead('البيانات الأساسية');
+  h+='<div class="frow">'+xInp('ccf-name','اسم المرشح',x?x.name:'','الاسم الثلاثي','text',true)+'<div class="fg"><label>رقم الجوال</label>'+phoneField('ccf-phone',x?x.phone||'':'')+'</div></div>';
+  h+='<div class="frow"><div class="fg"><label>الفرع المستهدف *</label>'+tdSel('ccf-br',brs,x?x.branch||'':(CESEL.branch||''),'اختر الفرع')+'</div>'+xInp('ccf-home','مكان السكن',x?x.home:'','الحي / المدينة')+'</div>';
+  h+='<div class="frow">'+xInp('ccf-dist','زمن الوصول للفرع (دقيقة)',x?x.dist:'','مثال: 20','number')+xInp('ccf-avail','مدى التفرغ لأوقات التدريب',x?x.avail:'','مثال: متفرغ مساءً كل الأيام')+'</div>';
+  h+=tdSubHead('الترشيح');
+  h+='<div class="frow">'+xInp('ccf-src','مصدر الترشيح',x?x.src:'','تقديم مباشر / ترشيح داخلي / إعلان…')+xInp('ccf-srcby','المرشِّح من الأكاديمية (إن وجد)',x?x.srcBy:'','اسم المدرب أو الموظف')+'</div>';
+  h+=xTxt('ccf-why','سبب الترشيح',x?x.srcWhy:'',2,'لماذا رُشّح هذا المدرب؟');
+  h+=tdSubHead('المؤهلات والخبرة');
+  h+=xTxt('ccf-quals','المؤهلات والشهادات التدريبية',x?x.quals:'',2,'مثال: رخصة D — الاتحاد السعودي، دبلوم تربية بدنية');
+  h+='<div class="frow">'+xInp('ccf-expy','سنوات الخبرة',x?x.expYears:'','','number')+xInp('ccf-expp','الجهات السابقة',x?x.expPlaces:'','أندية، أكاديميات، مدارس')+'</div>';
+  h+=xInp('ccf-ages','الفئات العمرية التي سبق له تدريبها',x?x.ageGroups:'','مثال: 8–12 سنة');
+  h+='<div class="frow"><div class="fg"><label><input type="checkbox" id="ccf-fa"'+(x&&x.fa&&x.fa.has?' checked':'')+'> لديه شهادة إسعافات أولية</label></div>'+xInp('ccf-faexp','تاريخ انتهاء شهادة الإسعافات',x&&x.fa?x.fa.expiry:'','','date')+'</div>';
+  h+=xTxt('ccf-cv','ملخص السيرة الذاتية',x?x.cv:'',3,'');
+  h+='<div class="fg"><label>صورة المرشح <small>(اختياري)</small></label><div class="img-pick"><div class="img-prev" id="ccf-prev">'+(x&&x.img?'<img src="'+srcOK(x.img)+'">':ic('user',22))+'</div><div><label class="img-pick-btn"><span data-ic="camera"></span> اختر صورة<input type="file" accept="image/*" style="display:none" onchange="prvLogoImg(this,\'ccf\')"></label><button class="img-rm" id="ccf-rm" onclick="rmImg(\'ccf\',\'user\')"'+(x&&x.img?' style="display:inline-block"':'')+'>إزالة</button></div><input type="hidden" id="ccf-img" value="'+(x?esc(x.img||''):'')+'"></div></div>';
+  h+=xTxt('ccf-cnotes','ملاحظات اللجنة',x?x.cnotes:'',2,'');
+  h+='<div class="xacts"><button class="btn btn-r" onclick="ceCandSave(\''+(id||'')+'\')">'+ic('check',13)+' '+(x?'حفظ التعديلات':'إضافة المرشح')+'</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div><div class="msg err" id="ccf-err">أكمل اسم المرشح والفرع المستهدف</div>';
+  fpgHTML(x?'تعديل بيانات المرشح':'مدرب جديد — مرشح','user-plus','ملف مستقل لكل مرشح: بياناته ومرفقاته وتقييماته وقرارات اللجان',h,function(){if(x)rCECand();else rCESelect();});
 }
 function ceCandSave(id){
-  var name=gv('cec-name'),br=gv('cec-br');if(!name||!br){fl('cec-err');return;}
-  var ph=phoneVal('cec-phone');if(ph&&!phoneOK(ph)){g('cec-err').textContent='رقم الجوال غير صحيح';fl('cec-err');return;}
-  var x=id?ceCand(id):null,req={};CESEL_REQ.forEach(function(_,i){var e=g('cec-req-'+i);req[i]=!!(e&&e.checked);});
-  var data={name:name,phone:ph,branch:br,home:gv('cec-home'),src:gv('cec-src'),srcWhy:gv('cec-why'),cv:gv('cec-cv'),dist:gv('cec-dist'),img:gv('cec-img'),req:req,note:gv('cec-note')};
+  var name=gv('ccf-name'),br=gv('ccf-br');if(!name||!br){fl('ccf-err');return;}
+  var ph=phoneVal('ccf-phone');if(ph&&!phoneOK(ph)){g('ccf-err').textContent='رقم الجوال غير صحيح';fl('ccf-err');return;}
+  var x=id?ceCand(id):null;
+  var data={name:name,phone:ph,branch:br,home:gv('ccf-home'),dist:gv('ccf-dist'),avail:gv('ccf-avail'),src:gv('ccf-src'),srcBy:gv('ccf-srcby'),srcWhy:gv('ccf-why'),quals:gv('ccf-quals'),expYears:gv('ccf-expy'),expPlaces:gv('ccf-expp'),ageGroups:gv('ccf-ages'),fa:{has:!!(g('ccf-fa')&&g('ccf-fa').checked),expiry:gv('ccf-faexp')},cv:gv('ccf-cv'),img:gv('ccf-img'),cnotes:gv('ccf-cnotes')};
   if(x){Object.assign(x,data);ceCandLog(x,'تعديل البيانات');logA('تعديل مرشح: '+name,'edit','#0e7490');}
-  else{x=Object.assign({id:uid(),stage:'screen',forms:{},log:[],by:CU.name,at:Date.now()},data);ceCands().push(x);ceCandLog(x,'إضافة المرشح — مرحلة الفرز');logA('مرشح جديد للتدريب: '+name+' — '+br,'user-plus','#0e7490');}
-  sv();fpgHide();XFOLD['c'+x.id]=true;rCESelect();
+  else{x=Object.assign({id:uid(),stage:'screen',forms:{},branchEvals:[],req:{},files:[],onb:{},notify:[],log:[],by:CU.name,at:Date.now()},data);
+    /* شهادة الإسعافات من البيانات ← شرط ٢ */
+    if(data.fa.has&&(!data.fa.expiry||data.fa.expiry>=calISO(new Date())))x.req[1]={st:'ok',note:'من بيانات المرشح'};
+    ceCands().push(x);ceCandLog(x,'إضافة المرشح — مرحلة الفرز');logA('مرشح جديد للتدريب: '+name+' — '+br,'user-plus','#0e7490');}
+  sv();fpgHide();CEV2=x.id;CESEL.tab='file';ceP('cand');
 }
-function ceCandLog(x,t){if(!x.log)x.log=[];x.log.push({at:Date.now(),by:CU?CU.name:'',t:t});if(x.log.length>40)x.log=x.log.slice(-40);}
+function ceCandLog(x,t){if(!x.log)x.log=[];x.log.push({at:Date.now(),by:CU?CU.name:'',t:t});if(x.log.length>80)x.log=x.log.slice(-80);}
+function ceCandAttach(inp,cid){
+  var x=ceCand(cid),f=inp.files&&inp.files[0];if(!x||!f)return;
+  var isPdf=/pdf/i.test(f.type)||/\.pdf$/i.test(f.name);
+  var push=function(url){if(!x.files)x.files=[];var rec={id:uid(),name:f.name,url:url,pdf:isPdf,by:CU.name,at:Date.now()};x.files.push(rec);ceCandLog(x,'مرفق: '+f.name);sv();rCECand();
+    if(!isPdf&&FA.enabled)FA.uploadImage(url,'cands').then(function(u){rec.url=u;sv();}).catch(function(){});};
+  var rd=new FileReader();
+  if(isPdf){if(f.size>2.5*1024*1024){alert('ملف PDF كبير — الحد 2.5 م.ب');return;}rd.onload=function(){push(rd.result);};rd.readAsDataURL(f);return;}
+  rd.onload=function(){var im=new Image();im.onload=function(){var mx=1400,k=Math.min(1,mx/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(im.width*k));cv.height=Math.max(1,Math.round(im.height*k));cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);push(cv.toDataURL('image/jpeg',.88));};im.src=rd.result;};
+  rd.readAsDataURL(f);
+}
+function ceCandAttachDel(cid,fid){var x=ceCand(cid);if(!x)return;askConfirm('حذف المرفق؟',function(){x.files=(x.files||[]).filter(function(q){return q.id!==fid;});sv();rCECand();});}
+function ceCandReqForm(cid){
+  var x=ceCand(cid);if(!x||!ceSelCan(x))return;var req=x.req||{};
+  var h='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div>لكل شرط حالة تحقق وملاحظة وإثبات عند الحاجة. قرب السكن أقل من 30 دقيقة تفضيل حسب الدليل ولا يُستبعد به المرشح تلقائياً.</div></div>';
+  CESEL_REQ.forEach(function(t,i){var r=req[i]||{};
+    h+='<div class="rform" style="margin-bottom:.6rem;max-width:none;padding:.7rem .9rem"><div style="font-weight:700;font-size:12.5px;margin-bottom:.4rem">'+ceN(i+1)+'. '+esc(t[0])+(t[1]?'':' <small style="color:var(--gray)">(تفضيل)</small>')+'</div>'
+      +'<div class="xopts" id="creq-st-'+i+'" style="margin-bottom:.4rem">'+Object.keys(CESEL_REQ_ST).filter(function(k){return k;}).map(function(k){return '<button type="button" class="xopt'+((r.st||'')===k?' on':'')+'" data-v="'+k+'" style="--c:'+CESEL_REQ_ST[k][1]+'" onclick="xOptPick(this)">'+CESEL_REQ_ST[k][0]+'</button>';}).join('')+'</div>'
+      +'<div class="frow"><div class="fg" style="margin:0"><input type="text" id="creq-n-'+i+'" placeholder="ملاحظة" value="'+esc(r.note||'')+'"></div><div class="fg" style="margin:0"><div class="img-pick"><div class="img-prev" id="creq'+i+'-prev" style="width:40px;height:40px">'+(r.img?'<img src="'+srcOK(r.img)+'">':ic('image',16))+'</div><label class="img-pick-btn" style="font-size:11px"><span data-ic="camera"></span> إثبات<input type="file" accept="image/*" style="display:none" onchange="prvLogoImg(this,\'creq'+i+'\')"></label><button class="img-rm" id="creq'+i+'-rm" onclick="rmImg(\'creq'+i+'\',\'image\')"'+(r.img?' style="display:inline-block"':'')+'>إزالة</button><input type="hidden" id="creq'+i+'-img" value="'+esc(r.img||'')+'"></div></div></div></div>';});
+  h+='<div class="xacts"><button class="btn btn-r" onclick="ceCandReqSave(\''+cid+'\')">'+ic('check',13)+' حفظ التحقق</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div>';
+  fpgHTML('التحقق من الشروط الأساسية','check',x.name,h,function(){rCECand();});
+}
+function ceCandReqSave(cid){var x=ceCand(cid);if(!x)return;x.req={};CESEL_REQ.forEach(function(_,i){x.req[i]={st:xOptVal('creq-st-'+i),note:gv('creq-n-'+i),img:gv('creq'+i+'-img')};});ceCandLog(x,'تحديث التحقق من الشروط ('+ceN(CESEL_REQ.filter(function(_,i){return x.req[i].st==='ok';}).length)+'/'+ceN(CESEL_REQ.length)+')');sv();fpgHide();rCECand();}
 function ceCandStage(id,st){
   var x=ceCand(id);if(!x||!ceSelCan(x))return;
-  var go=function(){x.stage=st;if(st==='hired'){x.hiredAt=x.hiredAt||Date.now();if(!x.probEnd){var d=new Date();d.setMonth(d.getMonth()+1);x.probEnd=calISO(d);}}ceCandLog(x,'نقل إلى: '+CESEL_ST[st][0]);logA('مرشح «'+x.name+'» → '+CESEL_ST[st][0],'user-plus','#0e7490');sv();rCESelect();};
-  if(st==='rejected')askConfirm('استبعاد المرشح «'+x.name+'»؟\nيبقى ملفه محفوظاً ويمكن إعادته للمسار لاحقاً.',go);else go();
+  var go=function(why){x.stage=st;if(why)ceCandLog(x,'نقل إلى: '+CESEL_ST[st][0]+' — السبب: '+why);else ceCandLog(x,'نقل إلى: '+CESEL_ST[st][0]);logA('مرشح «'+x.name+'» → '+CESEL_ST[st][0],'user-plus','#0e7490');sv();rCECand();};
+  if(st==='reserve'||st==='rejected'){
+    var h=xTxt('cst-why','سبب '+(st==='reserve'?'النقل للاحتياط':'الاستبعاد'),'',3,'إلزامي',true)+'<div class="xacts"><button class="btn btn-r" onclick="var w=gv(\'cst-why\');if(!w){fl(\'cst-err\');return;}fpgHide();ceCandStageGo(\''+id+'\',\''+st+'\',w)">'+ic('check',13)+' تأكيد</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div><div class="msg err" id="cst-err">اكتب السبب</div>';
+    fpgHTML(CESEL_ST[st][0],'info',x.name,h,function(){rCECand();});return;
+  }
+  go('');
 }
-function ceCandDel(id){var x=ceCand(id);if(!x||ceRole()!=='admin')return;askConfirm('حذف ملف المرشح «'+x.name+'» نهائياً مع كل نماذجه؟',function(){var c=CEX();c.cands=c.cands.filter(function(q){return q.id!==id;});logA('حذف مرشح: '+x.name,'trash','#DD1D45');sv();rCESelect();});}
-/* إنشاء سجل مدرب في الإدارة الفنية للمعتمد */
+function ceCandStageGo(id,st,why){var x=ceCand(id);if(!x)return;x.stage=st;ceCandLog(x,'نقل إلى: '+CESEL_ST[st][0]+' — السبب: '+why);logA('مرشح «'+x.name+'» → '+CESEL_ST[st][0],'user-plus','#0e7490');sv();rCECand();}
+function ceCandDel(id){var x=ceCand(id);if(!x||ceRole()!=='admin')return;askConfirm('حذف ملف المرشح «'+x.name+'» نهائياً مع كل نماذجه؟',function(){var c=CEX();c.cands=c.cands.filter(function(q){return q.id!==id;});logA('حذف مرشح: '+x.name,'trash','#DD1D45');sv();ceP('select');});}
 function ceCandHire(id){
   var x=ceCand(id);if(!x||ceRole()!=='admin'||x.coachId)return;
-  askConfirm('إنشاء سجل مدرب لـ «'+x.name+'» في فرع '+x.branch+'؟\nيبدأ بفترة تجربة شهر وتُنقل بياناته (الجوال، السكن، السيرة).',function(){
-    var t=TDX(),co={id:uid(),name:x.name,branch:x.branch,branches:[x.branch],phone:x.phone||'',img:x.img||'',joined:calISO(new Date()),certs:'',exp:x.cv||'',home:x.home||'',probEnd:x.probEnd||'',candId:x.id,at:Date.now()};
-    t.coaches.push(co);x.coachId=co.id;ceCandLog(x,'أُنشئ سجل المدرب');logA('تعيين مدرب من الترشيح: '+x.name+' — '+x.branch,'whistle','#16a34a');sv();rCESelect();
-    addN('أُنشئ سجل المدرب',x.name+' — فترة التجربة حتى '+(x.probEnd?tdDayLabel(x.probEnd):'شهر'),'success');
+  var t=TDX(),same=(t.coaches||[]).find(function(c){return (x.phone&&normPhone(c.phone||'')===normPhone(x.phone))||normName(c.name)===normName(x.name);});
+  askConfirm(same?'يوجد مدرب بنفس الاسم أو الجوال: «'+same.name+'» — ربط الملف به؟':'إنشاء سجل مدرب لـ «'+x.name+'» في فرع '+x.branch+' وربط ملف الترشيح به؟',function(){
+    var co=same;if(!co){co={id:uid(),name:x.name,branch:x.branch,branches:[x.branch],phone:x.phone||'',img:x.img||'',joined:x.probStart||calISO(new Date()),certs:x.quals||'',exp:[x.expYears?x.expYears+' سنوات':'',x.expPlaces||''].filter(Boolean).join(' — '),home:x.home||'',probEnd:x.probEnd||'',candId:x.id,at:Date.now()};t.coaches.push(co);}
+    else{co.candId=x.id;if(!co.phone&&x.phone)co.phone=x.phone;}
+    x.coachId=co.id;ceCandLog(x,'رُبط الملف بسجل المدرب: '+co.name);logA('تعيين مدرب من الترشيح: '+x.name+' — '+x.branch,'whistle','#16a34a');
+    if(x.fa&&x.fa.has&&!ceCerts().some(function(c){return c.coachId===co.id&&c.kind==='firstaid';}))ceCerts().push({id:uid(),coachId:co.id,name:'شهادة إسعافات أولية',kind:'firstaid',issuer:'',date:'',expiry:x.fa.expiry||'',by:CU.name,at:Date.now()});
+    sv();rCECand();addN('رُبط المرشح بحساب مدرب',x.name,'success');
   });
 }
-/* نموذج مرحلة */
-function ceSelForm(id,k){
+/* ==================== نموذج مرحلة (تعبئة) ==================== */
+function ceSelForm(id,k,evalId){
   var x=ceCand(id),F=CESEL_FORMS[k];if(!x||!F||!ceSelCan(x))return;
-  var f=(x.forms&&x.forms[k])||{sc:{},notes:{}},items=ceSelItems(k),mx=F.max;
-  var h='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div><b>'+esc(x.name)+'</b> — '+esc(x.branch||'')+'<br><small>'+esc(F.who)+'. حد النجاح '+ceN(F.pass)+'٪'+(F.minAxis?' ولا يقل محور عن '+ceN(F.minAxis):'')+(F.mid?' • '+ceN(F.mid)+'–'+ceN(F.pass-1)+'٪ يحتاج تطوير وإعادة تقييم':'')+'.</small></div></div>';
-  h+='<div class="frow">'+xInp('cesf-date','التاريخ',f.date||calISO(new Date()),'','date')+(k==='trial'||k==='branch'?'<div class="fg"><label>'+(k==='trial'?'فرع التجربة':'الفرع')+'</label>'+tdSel('cesf-br',(TDX().branches||[]).map(function(b){return b.name;}),f.br||x.branch||'','اختر')+'</div>':'')+'</div>';
-  (F.extra||[]).forEach(function(ex){
-    if(ex[2])h+='<div class="fg"><label>'+ex[1]+'</label><div class="xopts" id="cesf-'+ex[0]+'">'+ex[2].map(function(o,i){return '<button type="button" class="xopt'+((f[ex[0]]||ex[2][0][0])===o[0]?' on':'')+'" data-v="'+o[0]+'" onclick="xOptPick(this)">'+o[1]+'</button>';}).join('')+'</div></div>';
-    else h+=xInp('cesf-'+ex[0],ex[1],f[ex[0]]||'');
-  });
-  var scale=mx===10?null:['ضعيف','مقبول','جيد','جيد جداً','ممتاز'];
+  var f;if(k==='branch'){f=evalId&&evalId!=='new'?ceSelFormOf(x,'branch',evalId):null;}else f=x.forms&&x.forms[k];
+  if(f&&f.locked&&ceRole()!=='admin'){alert('النموذج معتمد ومقفل — التعديل لمدير النظام فقط');return;}
+  f=f||{sc:{},notes:{},draft:true};
+  var items=ceSelItems(k),mx=F.max;
+  var h='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div><b>'+esc(x.name)+'</b> — '+esc(x.branch||'')+(x.phone?' • <span style="direction:ltr">'+esc(phoneDisp(x.phone))+'</span>':'')+(x.src?' • مصدر الترشيح: '+esc(x.src):'')+(x.home?' • السكن: '+esc(x.home):'')+'<br><small>'+esc(F.who)+'. حد النجاح '+ceN(F.pass)+'٪'+(F.minAxis?' ولا يقل محور عن '+ceN(F.minAxis)+' — '+ceSelMinLbl():'')+(F.mid?' • '+ceN(F.mid)+'٪ إلى أقل من '+ceN(F.pass)+'٪ يحتاج تطوير وإعادة تقييم':'')+'. يمكن الحفظ كمسودة والرجوع إليها.</small></div></div>';
+  if(f.locked)h+='<div class="ce2-note warn" style="margin-bottom:.8rem">'+ic('shield',13)+'<div>نموذج معتمد ومقفل — أي تعديل يُسجَّل في سجل التغيير باسمك.</div></div>';
+  var ex=[];
+  if(k==='trial'||k==='branch')ex.push('<div class="fg"><label>'+(k==='trial'?'فرع التجربة':'الفرع')+'</label>'+tdSel('cesf-br',(TDX().branches||[]).map(function(b){return b.name;}),f.br||x.branch||'','اختر')+'</div>');
+  (F.extra||[]).forEach(function(e){var v=f[e[0]];if(v==null||v===''){if(e[2]==='date'&&(e[0]==='sdate'||e[0]==='tdate'||e[0]==='edate'))v=calISO(new Date());if(e[0]==='evalBy')v=CU.name;if(e[0]==='start'&&x.probStart)v=x.probStart;if(e[0]==='cat'&&f.cat==null&&k==='branch'){var tr=x.forms&&x.forms.trial;if(tr&&tr.cat)v=tr.cat;}}
+    if(e[2]==='opts')ex.push('<div class="fg"><label>'+e[1]+'</label><div class="xopts" id="cesf-'+e[0]+'">'+e[3].map(function(o,i){return '<button type="button" class="xopt'+((v||e[3][0][0])===o[0]?' on':'')+'" data-v="'+o[0]+'" onclick="xOptPick(this)">'+o[1]+'</button>';}).join('')+'</div></div>');
+    else ex.push('<div class="fg"><label>'+e[1]+'</label><input type="'+e[2]+'" id="cesf-'+e[0]+'" value="'+esc(v||'')+'"'+(e[2]!=='text'?' style="direction:ltr"':'')+'></div>');});
+  h+='<div class="cesel-ex">'+ex.join('')+'</div>';
   var gi=0;
   F.groups.forEach(function(gp){
     h+='<div class="cesel-g">'+esc(gp[0])+'</div>';
-    gp[1].forEach(function(t){
-      var i=gi++;var v=+((f.sc||{})[i]||0);
+    gp[1].forEach(function(t){var i=gi++;var v=+((f.sc||{})[i]||0);
       h+='<div class="cesel-it"><div class="cesel-q"><span class="cesel-num">'+ceN(i+1)+'</span>'+esc(t)+'</div><div class="cesel-sc">';
       if(mx===10)h+='<input type="number" min="0" max="10" id="cesf-s'+i+'" value="'+(v||'')+'" placeholder="/10" style="width:70px;direction:ltr;text-align:center">';
-      else h+='<div class="cesel-opts">'+[1,2,3,4,5].map(function(n){return '<button type="button" class="cesel-o'+(v===n?' on':'')+'" data-i="'+i+'" data-v="'+n+'" title="'+scale[n-1]+'" onclick="ceSelPick(this)">'+n+'</button>';}).join('')+'</div>';
-      h+='<input type="text" id="cesf-n'+i+'" placeholder="ملاحظة" value="'+esc((f.notes||{})[i]||'')+'" class="cesel-note"></div></div>';
-    });
+      else h+='<div class="cesel-opts">'+[1,2,3,4,5].map(function(n){return '<button type="button" class="cesel-o'+(v===n?' on':'')+'" data-i="'+i+'" data-v="'+n+'" title="'+['ضعيف','مقبول','جيد','جيد جداً','ممتاز'][n-1]+'" onclick="ceSelPick(this)">'+n+'</button>';}).join('')+'</div>';
+      h+='<input type="text" id="cesf-n'+i+'" placeholder="ملاحظة" value="'+esc((f.notes||{})[i]||'')+'" class="cesel-note"></div></div>';});
   });
-  if(mx!==10)h+='<div class="jnote" style="margin:.5rem 0">'+ic('info',12)+' 5 ممتاز • 4 جيد جداً • 3 جيد • 2 مقبول • 1 ضعيف</div>';
+  if(mx!==10)h+='<div class="jnote" style="margin:.5rem 0">'+ic('info',12)+' مفتاح الدرجات: 5 ممتاز • 4 جيد جداً • 3 جيد • 2 مقبول • 1 ضعيف</div>';
   h+='<div class="cesel-tot" id="cesf-tot"></div>';
   if(k==='branch')h+='<div class="frow">'+xTxt('cesf-str','نقاط القوة',f.str||'',2)+xTxt('cesf-dev','نقاط تحتاج إلى تطوير',f.dev||'',2)+'</div>'+xTxt('cesf-plan','خطة التطوير المقترحة (إن وجدت)',f.plan||'',2);
-  h+=xTxt('cesf-notes',k==='screen'?'اسم المرشِّح من الأكاديمية وسبب الترشيح / ملاحظات اللجنة':'ملاحظات '+(k==='interview'?'اللجنة':'المقيّم'),f.txt||'',2);
-  h+='<div class="fg"><label>القرار</label><div class="xopts" id="cesf-dec">'+F.dec.map(function(d){return '<button type="button" class="xopt'+(f.dec===d[0]?' on':'')+'" data-v="'+d[0]+'" style="--c:'+d[2]+'" onclick="xOptPick(this)">'+d[1]+'</button>';}).join('')+'</div><div class="jnote" id="cesf-auto" style="margin-top:.4rem"></div></div>';
-  h+='<div class="xacts"><button class="btn btn-r" onclick="ceSelSave(\''+x.id+'\',\''+k+'\')">'+ic('check',13)+' حفظ النموذج</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div><div class="msg err" id="cesf-err">قيّم كل العناصر واختر القرار</div>';
-  fpgHTML(F.t,'star',x.name+' — '+CESEL_ST[k][0],h,function(){rCESelect();});
-  CESEL.form=k;ceSelTot(k);
+  h+=xTxt('cesf-notes',k==='screen'?'ملاحظات اللجنة الفنية':(k==='interview'?'ملاحظات اللجنة العامة':'ملاحظات المقيّم'),f.txt||'',2);
+  h+='<div class="fg"><label>القرار</label><div class="xopts" id="cesf-dec">'+F.dec.map(function(d){return '<button type="button" class="xopt'+(f.dec===d[0]?' on':'')+'" data-v="'+d[0]+'" style="--c:'+d[2]+'" onclick="xOptPick(this);ceSelDecWhy()">'+d[1]+'</button>';}).join('')+'</div><div class="jnote" id="cesf-auto" style="margin-top:.4rem"></div></div>';
+  h+='<div class="fg" id="cesf-why-fg" style="display:'+(f.dec&&f.dec!=='pass'?'':'none')+'"><label>سبب القرار *</label><textarea id="cesf-why" rows="2" placeholder="إلزامي للاحتياط أو الرفض أو إعادة التقييم">'+esc(f.decWhy||'')+'</textarea></div>';
+  h+='<div class="xacts"><button class="btn btn-r" onclick="ceSelSave(\''+x.id+'\',\''+k+'\',\''+(evalId||'')+'\',false)">'+ic('check',13)+' إنهاء النموذج (للاعتماد)</button><button class="btn btn-o" onclick="ceSelSave(\''+x.id+'\',\''+k+'\',\''+(evalId||'')+'\',true)">'+ic('doc',13)+' حفظ كمسودة</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div><div class="msg err" id="cesf-err">قيّم كل العناصر واختر القرار</div>';
+  fpgHTML(F.t,'star',x.name+' — '+F.short,h,function(){rCECand();});
+  CESEL.form=k;CESEL.evalId=evalId||'';ceSelTot(k);
   document.querySelectorAll('[id^=cesf-s]').forEach(function(e){e.oninput=function(){ceSelTot(k);};});
 }
+function ceSelDecWhy(){var d=xOptVal('cesf-dec'),w=g('cesf-why-fg');if(w)w.style.display=(d&&d!=='pass')?'':'none';}
 function ceSelPick(b){var w=b.parentNode;w.querySelectorAll('.cesel-o').forEach(function(x){x.classList.remove('on');});b.classList.add('on');ceSelTot(CESEL.form);}
-function ceSelRead(k){var items=ceSelItems(k),sc={},notes={};items.forEach(function(_,i){var on=document.querySelector('.cesel-o.on[data-i="'+i+'"]');var inp=g('cesf-s'+i);sc[i]=on?+on.dataset.v:(inp?+inp.value:0);var n=g('cesf-n'+i);if(n&&n.value)notes[i]=n.value;});return {sc:sc,notes:notes};}
+function ceSelRead(k){var items=ceSelItems(k),sc={},notes={};items.forEach(function(_,i){var on=document.querySelector('.cesel-o.on[data-i="'+i+'"]');var inp=g('cesf-s'+i);var v=on?+on.dataset.v:(inp?+inp.value:0);if(v>0)sc[i]=v;var n=g('cesf-n'+i);if(n&&n.value)notes[i]=n.value;});return {sc:sc,notes:notes};}
 function ceSelTot(k){
   var F=CESEL_FORMS[k],el=g('cesf-tot');if(!el)return;
-  var r=ceSelRead(k),sc=ceSelScore(k,r),auto=sc?ceSelAuto(k,sc.sc?null:sc):'';
-  if(!sc){el.innerHTML='<span style="color:var(--gray)">المجموع: — / '+ceN(ceSelItems(k).length*F.max)+'</span>';return;}
-  var gr=ceGrade(sc.pct),done=sc.n===sc.total;
-  el.innerHTML='<span>المجموع <b>'+ceN(sc.sum)+'</b> / '+ceN(sc.max)+'</span><span class="cesel-pct" style="color:'+gr.c+'">'+ceN(sc.pct)+'٪</span>'+(done?'':'<span style="color:var(--amber)">بقي '+ceN(sc.total-sc.n)+' عنصراً</span>')+(sc.low?'<span style="color:var(--red)">محور أقل من '+ceN(F.minAxis)+'</span>':'');
-  var a=g('cesf-auto');if(a){var d=done?ceSelDecLbl(k,ceSelAuto(k,sc)):null;a.innerHTML=d?ic('info',12)+' حسب الدرجة: <b style="color:'+d[2]+'">'+esc(d[1])+'</b> — والقرار النهائي للجنة.':'';hydrateIcons(a);}
+  var r=ceSelRead(k),sc=ceSelScore(k,r);
+  if(!sc){el.innerHTML='<span style="color:var(--gray)">المجموع: — / '+ceN(ceSelItems(k).length*F.max)+'</span>';var a0=g('cesf-auto');if(a0)a0.innerHTML='';return;}
+  var gr=ceGrade(sc.pct);
+  el.innerHTML='<span>المجموع <b>'+ceN(sc.sum)+'</b> / '+ceN(sc.max)+'</span>'+(sc.done?'<span class="cesel-pct" style="color:'+gr.c+'">'+ceN(sc.pct)+'٪</span>':'<span style="color:var(--amber)">بقي '+ceN(sc.total-sc.n)+' بنداً — لا نتيجة نهائية قبل اكتمال البنود</span>')+(sc.lowItem&&F.minAxis?'<span style="color:'+(sc.low?'var(--red)':'var(--amber)')+'">عنصر أقل من '+ceN(F.minAxis)+(sc.low?'':' (شرط المحور غير مفعّل)')+'</span>':'');
+  var a=g('cesf-auto');if(a){var d=sc.done?ceSelDecLbl(k,ceSelAuto(k,sc)):null;a.innerHTML=d?ic('info',12)+' نتيجة الدرجات: <b style="color:'+d[2]+'">'+esc(d[1])+'</b> — القرار الإداري مستقل ويُختار أدناه.':'';hydrateIcons(a);}
 }
-function ceSelSave(id,k){
+function ceSelSave(id,k,evalId,draft){
   var x=ceCand(id),F=CESEL_FORMS[k];if(!x||!F)return;
-  var r=ceSelRead(k),sc=ceSelScore(k,r),dec=xOptVal('cesf-dec');
-  if(!sc||sc.n<sc.total||!dec){fl('cesf-err');return;}
-  if(!x.forms)x.forms={};
-  var f=Object.assign({},x.forms[k]||{},{sc:r.sc,notes:r.notes,dec:dec,txt:gv('cesf-notes'),date:gv('cesf-date'),by:CU.name,at:Date.now()});
+  var r=ceSelRead(k),sc=ceSelScore(k,r),dec=xOptVal('cesf-dec'),why=gv('cesf-why');
+  if(!draft){if(!sc||!sc.done||!dec){fl('cesf-err');return;}if(dec!=='pass'&&!why){g('cesf-err').textContent='اكتب سبب القرار';fl('cesf-err');return;}}
+  var prev;if(k==='branch'){prev=evalId&&evalId!=='new'?ceSelFormOf(x,'branch',evalId):null;}else prev=x.forms&&x.forms[k];
+  var f=prev||{id:uid(),sc:{},notes:{},appr:{},history:[]};
+  if(prev&&prev.locked){if(!f.history)f.history=[];var ps=ceSelScore(k,prev);f.history.push({at:Date.now(),by:CU.name,t:'تعديل بعد الاعتماد — كان '+(ps?ceN(ps.pct)+'٪':'—')+' / '+ceSelDecLbl(k,prev.dec)[1]});}
+  f.sc=r.sc;f.notes=r.notes;f.dec=dec;f.decWhy=why;f.txt=gv('cesf-notes');f.draft=!!draft;f.by=CU.name;f.at=Date.now();
   if(g('cesf-br'))f.br=gv('cesf-br');
-  (F.extra||[]).forEach(function(ex){f[ex[0]]=ex[2]?xOptVal('cesf-'+ex[0]):gv('cesf-'+ex[0]);});
-  if(k==='branch'){f.str=gv('cesf-str');f.dev=gv('cesf-dev');f.plan=gv('cesf-plan');}
-  x.forms[k]=f;
+  (F.extra||[]).forEach(function(e){f[e[0]]=e[2]==='opts'?xOptVal('cesf-'+e[0]):gv('cesf-'+e[0]);});
+  if(k==='branch'){f.str=gv('cesf-str');f.dev=gv('cesf-dev');f.plan=gv('cesf-plan');if(!x.branchEvals)x.branchEvals=[];if(!prev)x.branchEvals.push(f);if(f.start&&!x.probStart)x.probStart=f.start;}
+  else{if(!x.forms)x.forms={};x.forms[k]=f;}
   var d=ceSelDecLbl(k,dec);
-  /* الانتقال حسب القرار */
-  if(dec==='pass'){x.stage=F.next;if(F.next==='hired'){x.hiredAt=Date.now();if(!x.probEnd){var dd=new Date();dd.setMonth(dd.getMonth()+1);x.probEnd=calISO(dd);}}}
-  else if(dec==='reserve')x.stage='reserve';
-  else if(dec==='no')x.stage='rejected';
-  else x.stage=k;   /* إعادة تجربة / يحتاج تطوير: يبقى في المرحلة نفسها */
-  ceCandLog(x,F.t.replace('نموذج ','')+': '+ceN(sc.pct)+'٪ — '+d[1]);
-  logA('نموذج اختيار مدرب — '+x.name+': '+F.t.replace('نموذج ','')+' '+ceN(sc.pct)+'٪ ('+d[1]+')','star','#0e7490');
-  sv();fpgHide();XFOLD['c'+x.id]=true;rCESelect();
-  addN(d[1],x.name+' — '+F.t.replace('نموذج ','')+' '+ceN(sc.pct)+'٪','success');
+  ceCandLog(x,(draft?'مسودة ':'إنهاء ')+F.short+(sc&&sc.done?': '+ceN(sc.pct)+'٪':'')+(dec?' — '+d[1]:''));
+  if(!draft)logA('اختيار المدربين — '+x.name+': '+F.short+' '+(sc?ceN(sc.pct)+'٪':'')+' ('+d[1]+') بانتظار الاعتماد','star','#0e7490');
+  sv();fpgHide();CESEL.tab=k;if(k==='branch')XFOLD['be'+f.id]=true;rCECand();
+  if(!draft)addN('أُنهي النموذج — بانتظار الاعتماد',x.name+' — '+F.short+(sc?' '+ceN(sc.pct)+'٪':''),'success');
 }
-/* طباعة ملف المرشح: البيانات وكل النماذج */
-function ceCandPrint(id){
+/* ==================== طباعة / PDF ==================== */
+function ceCandPrint(id,onlyK,evalId){
   var x=ceCand(id);if(!x)return;
-  var h='<div class="cep"><div class="cep-h"><b>أكاديمية فارس — مدربين فارس</b><span>ملف مرشح للتدريب</span></div>';
-  h+='<h2>'+esc(x.name)+'</h2><div class="cep-m">'+[x.phone?'الجوال: '+x.phone:'',x.branch?'الفرع المستهدف: '+x.branch:'',x.home?'السكن: '+x.home:'',x.src?'مصدر الترشيح: '+x.src:'','المرحلة: '+(CESEL_ST[x.stage]||CESEL_ST.screen)[0]].filter(Boolean).map(esc).join(' • ')+'</div>';
-  if(x.cv)h+='<p><b>السيرة الذاتية:</b> '+esc(x.cv)+'</p>';
-  h+='<p><b>الشروط الأساسية:</b> '+CESEL_REQ.map(function(t,i){return (x.req&&x.req[i]?'☑':'☐')+' '+esc(t);}).join(' • ')+'</p>';
-  ['screen','interview','trial','branch'].forEach(function(k){
-    var F=CESEL_FORMS[k],f=x.forms&&x.forms[k];if(!f)return;var sc=ceSelScore(k,f),d=ceSelDecLbl(k,f.dec),items=ceSelItems(k);
-    h+='<h3>'+esc(F.t)+'</h3><div class="cep-m">'+[f.date?'التاريخ: '+f.date:'',f.br?'الفرع: '+f.br:'',f.by?'المقيّم: '+f.by:''].filter(Boolean).map(esc).join(' • ')+'</div>';
+  var h='<div class="cep"><div class="cep-h"><b>أكاديمية فارس — مدربين فارس</b><span>'+(onlyK?esc(CESEL_FORMS[onlyK].t):'ملف مرشح للتدريب')+'</span></div>';
+  h+='<h2>'+esc(x.name)+'</h2><div class="cep-m">'+[x.phone?'الجوال: '+phoneDisp(x.phone):'',x.branch?'الفرع المستهدف: '+x.branch:'',x.home?'السكن: '+x.home:'',x.src?'مصدر الترشيح: '+x.src:'',x.srcBy?'المرشِّح: '+x.srcBy:'','المرحلة: '+(CESEL_ST[x.stage]||CESEL_ST.screen)[0]].filter(Boolean).map(esc).join(' • ')+'</div>';
+  if(!onlyK){
+    var kv=[['المؤهلات',x.quals],['الخبرة',[x.expYears?x.expYears+' سنوات':'',x.expPlaces].filter(Boolean).join(' — ')],['الفئات العمرية',x.ageGroups],['التفرغ',x.avail],['السيرة الذاتية',x.cv],['ملاحظات اللجنة',x.cnotes]].filter(function(r){return r[1];});
+    if(kv.length)h+='<p>'+kv.map(function(r){return '<b>'+r[0]+':</b> '+esc(r[1]);}).join('<br>')+'</p>';
+    h+='<p><b>الشروط الأساسية:</b><br>'+CESEL_REQ.map(function(t,i){var r=(x.req||{})[i]||{};return (r.st==='ok'?'☑':(r.st==='no'?'☒':'☐'))+' '+esc(t[0])+(r.note?' — '+esc(r.note):'');}).join('<br>')+'</p>';
+  }
+  var forms=[];['screen','interview','trial'].forEach(function(k){if(onlyK&&onlyK!==k)return;var f=x.forms&&x.forms[k];if(f)forms.push([k,f]);});
+  (x.branchEvals||[]).forEach(function(f){if(onlyK&&onlyK!=='branch')return;if(evalId&&f.id!==evalId)return;forms.push(['branch',f]);});
+  forms.forEach(function(pair){var k=pair[0],f=pair[1],F=CESEL_FORMS[k],sc=ceSelScore(k,f),d=ceSelDecLbl(k,f.dec),items=ceSelItems(k);
+    var meta=[];(F.extra||[]).forEach(function(e){var v=f[e[0]];if(!v)return;if(e[2]==='opts')v=(e[3].find(function(o){return o[0]===v;})||[])[1]||v;meta.push(e[1]+': '+v);});if(f.br)meta.push('الفرع: '+f.br);meta.push('المقيّم: '+(f.by||''));
+    h+='<h3>'+esc(F.t)+(f.draft?' (مسودة)':'')+'</h3><div class="cep-m">'+meta.map(esc).join(' • ')+'</div>';
     h+='<table><thead><tr><th>م</th><th>عنصر التقييم</th><th>الدرجة</th><th>ملاحظات</th></tr></thead><tbody>';
-    var lastG='';items.forEach(function(it,i){if(it[0]!==lastG){lastG=it[0];h+='<tr class="g"><td colspan="4">'+esc(it[0])+'</td></tr>';}h+='<tr><td>'+ceN(i+1)+'</td><td>'+esc(it[1])+'</td><td>'+ceN(f.sc[i]||'')+'</td><td>'+esc((f.notes||{})[i]||'')+'</td></tr>';});
-    h+='</tbody></table><div class="cep-t">المجموع: '+ceN(sc?sc.sum:'')+' / '+ceN(items.length*F.max)+' — النسبة: <b>'+ceN(sc?sc.pct:'')+'٪</b> — القرار: <b>'+esc(d[1])+'</b></div>';
+    var lastG='';items.forEach(function(it,i){if(it[0]!==lastG&&F.groups.length>1){lastG=it[0];h+='<tr class="g"><td colspan="4">'+esc(it[0])+'</td></tr>';}h+='<tr><td>'+ceN(i+1)+'</td><td>'+esc(it[1])+'</td><td>'+ceN((f.sc||{})[i]||'')+'</td><td>'+esc((f.notes||{})[i]||'')+'</td></tr>';});
+    h+='</tbody></table><div class="cep-t">المجموع: '+ceN(sc?sc.sum:'')+' / '+ceN(items.length*F.max)+' — النسبة: <b>'+(sc&&sc.done?ceN(sc.pct)+'٪':'—')+'</b> — القرار: <b>'+esc(d[1])+'</b>'+(f.decWhy?' — '+esc(f.decWhy):'')+'</div>';
     if(f.str||f.dev||f.plan)h+='<p>'+(f.str?'<b>نقاط القوة:</b> '+esc(f.str)+'<br>':'')+(f.dev?'<b>نقاط تحتاج إلى تطوير:</b> '+esc(f.dev)+'<br>':'')+(f.plan?'<b>خطة التطوير:</b> '+esc(f.plan):'')+'</p>';
     if(f.txt)h+='<p><b>ملاحظات:</b> '+esc(f.txt)+'</p>';
-    h+='<div class="cep-sig"><span>التوقيع: ____________</span><span>التاريخ: ____________</span><span>اعتماد الإدارة: ____________</span></div>';
+    h+='<div class="cep-sig">'+F.appr.map(function(a){var ap=f.appr&&f.appr[a[0]];return '<span><b>'+esc(a[1])+'</b><br>'+(ap?esc(ap.by)+'<br>'+esc(new Date(ap.at).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'}))+' ✓':'الاسم: ________<br>التوقيع: ________ التاريخ: ______')+'</span>';}).join('')+'</div>';
   });
+  if(!onlyK&&x.onb){var ob=CESEL_ONB.filter(function(s){return x.onb[s[0]]&&x.onb[s[0]].st;});if(ob.length)h+='<h3>الالتحاق بالفرع</h3><p>'+ob.map(function(s){var st=x.onb[s[0]];return esc(s[1])+': '+esc(CESEL_ONB_ST[st.st][0])+(st.date?' — '+esc(tdDayLabel(st.date)):'')+(st.who?' ('+esc(st.who)+')':'');}).join('<br>')+'</p>';}
   h+='</div>';
   var w=window.open('','_blank');if(!w){alert('اسمح بالنوافذ المنبثقة للطباعة');return;}
-  w.document.write('<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>'+esc(x.name)+'</title><style>body{font-family:Tahoma,Arial,sans-serif;color:#111;padding:18px;max-width:900px;margin:auto}.cep-h{display:flex;justify-content:space-between;border-bottom:3px solid #181946;padding-bottom:6px;margin-bottom:10px;color:#181946}h2{margin:.2rem 0}h3{margin:1.2rem 0 .3rem;color:#DD1D45;page-break-after:avoid}.cep-m{font-size:12px;color:#555;margin-bottom:.4rem}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #bbb;padding:4px 6px;text-align:right}th{background:#eef}tr.g td{background:#f5f5f5;font-weight:700}.cep-t{margin:.4rem 0;font-size:13px}.cep-sig{display:flex;gap:2rem;font-size:12px;margin:.6rem 0 1rem}@media print{body{padding:0}}</style></head><body>'+h+'<script>setTimeout(function(){window.print();},300);<\/script></body></html>');
+  w.document.write('<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>'+esc(x.name)+'</title><style>body{font-family:Tahoma,Arial,sans-serif;color:#111;padding:18px;max-width:900px;margin:auto}.cep-h{display:flex;justify-content:space-between;border-bottom:3px solid #181946;padding-bottom:6px;margin-bottom:10px;color:#181946}h2{margin:.2rem 0}h3{margin:1.2rem 0 .3rem;color:#DD1D45;page-break-after:avoid}.cep-m{font-size:12px;color:#555;margin-bottom:.4rem}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #bbb;padding:4px 6px;text-align:right}th{background:#eef}tr.g td{background:#f5f5f5;font-weight:700}.cep-t{margin:.4rem 0;font-size:13px}.cep-sig{display:flex;gap:2rem;font-size:11.5px;margin:.6rem 0 1rem;flex-wrap:wrap}.cep-sig span{flex:1;min-width:180px;border-top:1px solid #999;padding-top:4px}@media print{body{padding:0}}</style></head><body>'+h+'<script>setTimeout(function(){window.print();},300);<\/script></body></html>');
   w.document.close();
+}
+/* تصدير Excel */
+function ceSelExport(){
+  var list=ceSelScope();if(!list.length){alert('لا يوجد مرشحون');return;}
+  var cols=['م','الاسم','الجوال','الفرع المستهدف','السكن','مصدر الترشيح','المرحلة','الفرز %','قرار الفرز','المقابلة %','قرار المقابلة','التجربة %','قرار التجربة','آخر تقييم فرع %','قراره','الإجراء التالي','المسؤول'];
+  var pct=function(k,f){var s=f?ceSelScore(k,f):null;return s&&s.done?s.pct:'';},dec=function(k,f){return f&&f.dec?ceSelDecLbl(k,f.dec)[1]:'';};
+  var rows=list.map(function(x,i){var be=(x.branchEvals||[]).filter(ceSelFinal),lb=be[be.length-1],nx=ceSelNext(x),f=x.forms||{};return [i+1,x.name,x.phone?phoneDisp(x.phone).replace(/[⁦⁩]/g,''):'',x.branch||'',x.home||'',x.src||'',(CESEL_ST[x.stage]||{})[0]||'',pct('screen',f.screen),dec('screen',f.screen),pct('interview',f.interview),dec('interview',f.interview),pct('trial',f.trial),dec('trial',f.trial),pct('branch',lb),dec('branch',lb),nx.t,nx.who];});
+  var e2=function(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var html='<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body><table border="1"><thead><tr>'+cols.map(function(c){return '<th style="background:#181946;color:#fff">'+e2(c)+'</th>';}).join('')+'</tr></thead><tbody>'+rows.map(function(r){return '<tr>'+r.map(function(v){return '<td>'+e2(v)+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></body></html>';
+  var blob=new Blob(['﻿'+html],{type:'application/vnd.ms-excel;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='اختيار-المدربين.xls';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
 }
 function ceSelGuide(){
   var h='<div class="ce2-note" style="margin-bottom:.9rem">'+ic('info',13)+'<div><b>دليل معايير وآلية اختيار المدربين</b> — توحيد طريقة اختيار المدربين وتقييمهم في جميع فروع الأكاديمية.</div></div>';
-  h+='<div class="cesel-steps" style="margin-bottom:1rem">'+['screen','interview','trial','branch'].map(function(k,i){var F=CESEL_FORMS[k];return '<div class="cesel-step" style="--c:'+CESEL_ST[k][1]+'"><div class="cesel-n">'+ceN(i+1)+'</div><div class="cesel-b"><b>'+esc(CESEL_ST[k][0])+'</b><small>'+esc(F.who)+' • حد النجاح '+ceN(F.pass)+'٪'+(F.minAxis?' ولا يقل محور عن '+ceN(F.minAxis):'')+'</small></div></div>';}).join('')+'</div>';
+  h+='<div class="cesel-steps" style="margin-bottom:1rem">'+['screen','interview','trial','branch'].map(function(k,i){var F=CESEL_FORMS[k];return '<div class="cesel-step" style="--c:'+CESEL_ST[k][1]+'"><div class="cesel-n">'+ceN(i+1)+'</div><div class="cesel-b"><b>'+esc(CESEL_ST[k][0])+'</b><small>'+esc(F.who)+' • حد النجاح '+ceN(F.pass)+'٪'+(F.minAxis?' ولا يقل محور عن '+ceN(F.minAxis):'')+' • الاعتماد: '+F.appr.map(function(a){return a[1];}).join('، ')+'</small></div></div>';}).join('')+'</div>';
   h+=tdSubHead('آلية الاختيار');h+='<ol class="cesel-ol">'+CESEL_STEPS.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ol>';
-  h+=tdSubHead('الشروط الأساسية');h+='<ul class="cesel-ul">'+CESEL_REQ.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul>';
-  h+=tdSubHead('ملاحظات تنظيمية');h+='<ul class="cesel-ul"><li>يُحفظ ملف لكل مرشح يضم سيرته الذاتية وجميع نماذج التقييم (هنا في النظام، ويُطبع من زر «طباعة الملف»).</li><li>وجود مدربين احتياط جاهزين لكل فرع — «قائمة الاحتياط».</li><li>يُبلَّغ المرشح بنتيجة كل مرحلة خلال 3 أيام عمل.</li><li>يُراجَع أداء المدرب كل 3 أشهر بنموذج المرحلة الثالثة (تقييم دوري).</li></ul>';
+  h+=tdSubHead('الشروط الأساسية');h+='<ul class="cesel-ul">'+CESEL_REQ.map(function(s){return '<li>'+esc(s[0])+'</li>';}).join('')+'</ul>';
+  h+=tdSubHead('ملاحظات تنظيمية');h+='<ul class="cesel-ul"><li>يُحفظ ملف لكل مرشح يضم سيرته الذاتية وجميع نماذج التقييم (ملف المرشح هنا، ويُطبع PDF).</li><li>وجود مدربين احتياط جاهزين لكل فرع — «قائمة الاحتياط».</li><li>يُبلَّغ المرشح بنتيجة كل مرحلة خلال 3 أيام عمل — تُسجَّل مهمة إبلاغ تلقائياً بعد كل قرار معتمد.</li><li>يُراجَع أداء المدرب كل 3 أشهر بنموذج المرحلة الثالثة (تقييم دوري).</li></ul>';
   h+='<div class="xacts"><button class="btn btn-g" onclick="fpgBack()">رجوع</button></div>';
   fpgHTML('دليل اختيار المدربين','doc','المراحل والآلية والشروط',h,function(){rCESelect();});
 }
+/* ---------- إعدادات القسم (اللجان والضوابط) ---------- */
+function ceSetSel(){
+  var s=ceSelSet(),users=(DB.users||[]).filter(function(u){return u.role!=='player'&&!isPlayerRole(u.role);}).sort(function(a,b){return a.name.localeCompare(b.name,'ar');});
+  var opt=function(id,cur){return tdSel(id,users.map(function(u){return [u.id,u.name+' — '+(RL[u.role]||u.role)];}),cur,'— غير محدد —');};
+  var chk=function(id,arr){return '<div class="cesel-req">'+users.map(function(u){return '<label><input type="checkbox" data-grp="'+id+'" value="'+u.id+'"'+(arr.indexOf(u.id)>-1?' checked':'')+'> <span style="flex:1">'+esc(u.name)+' <small style="color:var(--gray)">— '+esc(RL[u.role]||u.role)+'</small></span></label>';}).join('')+'</div>';};
+  var h='<div class="rform" style="max-width:none">';
+  h+=tdSubHead('اللجنة الفنية (الفرز الأولي)');h+='<div class="fg"><label>رئيس اللجنة</label>'+opt('cess-chair',s.committee.chair)+'</div><div class="fg"><label>الأعضاء</label>'+chk('tech',s.committee.tech||[])+'</div>';
+  h+=tdSubHead('لجنة المقابلة');h+='<div class="fg"><label>الأعضاء</label>'+chk('intv',s.committee.intv||[])+'</div>';
+  h+='<div class="jnote" style="margin-bottom:.8rem">'+ic('info',12)+' إن لم تُحدَّد لجنة، يستطيع المشرف الفني ومدير النظام الاعتماد. مدير النظام يعتمد أي خانة دائماً.</div>';
+  h+=tdSubHead('الضوابط');
+  h+='<div class="fg"><label>شرط «لا يقل محور عن 3» في التجربة العملية</label><div class="xopts" id="cess-min">'+[['item','كل عنصر من الـ13 ≥ 3'],['group','متوسط كل محور رئيسي ≥ 3'],['off','غير مفعّل حتى تحسمه الإدارة']].map(function(o){return '<button type="button" class="xopt'+(s.trialMin===o[0]?' on':'')+'" data-v="'+o[0]+'" onclick="xOptPick(this)">'+o[1]+'</button>';}).join('')+'</div></div>';
+  h+='<div class="frow">'+xInp('cess-per','التقييم الدوري كل (أشهر)',s.periodicMonths,'','number')+xInp('cess-prob','فترة التجربة (أشهر)',s.probMonths,'','number')+xInp('cess-ntf','إبلاغ المرشح خلال (أيام عمل)',s.notifyDays,'','number')+'</div>';
+  h+='<button class="btn btn-r" onclick="ceSetSelSave()">'+ic('check',13)+' حفظ</button><div class="msg ok" id="cess-ok">تم الحفظ</div></div>';
+  return h;
+}
+function ceSetSelSave(){var s=ceSelSet();s.committee.chair=gv('cess-chair');s.committee.tech=[].slice.call(document.querySelectorAll('input[data-grp="tech"]:checked')).map(function(c){return c.value;});s.committee.intv=[].slice.call(document.querySelectorAll('input[data-grp="intv"]:checked')).map(function(c){return c.value;});s.trialMin=xOptVal('cess-min')||'item';s.periodicMonths=+gv('cess-per')||3;s.probMonths=+gv('cess-prob')||1;s.notifyDays=+gv('cess-ntf')||3;logA('تعديل إعدادات اختيار المدربين','gear','#0e7490');sv();fl('cess-ok');}
 
 /* ==========================================================================
    مدربين فارس — الدورات والشهادات
@@ -26483,14 +26795,14 @@ function buildCENav(){
 }
 function ceP(pg){
   if(typeof closeAllDrawers==='function')closeAllDrawers();
-  if(pg!=='coach'&&!ceAllowed(pg))pg=ceRole()==='player'?'eval':'home';
+  if(pg!=='coach'&&pg!=='cand'&&!ceAllowed(pg))pg=ceRole()==='player'?'eval':'home';
   CEPAGE=pg;try{tsRemember('ce',pg);}catch(e){}
   document.querySelectorAll('#CE .page').forEach(function(e){e.classList.remove('on');});
   var el=g('cepg-'+pg);if(el)el.classList.add('on');
   document.querySelectorAll('#ce-links .nl,#ce-sbar-links .sb-l').forEach(function(b){
     b.classList.toggle('on',b.dataset.cepg===pg);});
   var fn={home:rCEHome,coaches:rCECoaches,coach:rCECoach,eval:rCEEval,review:rCEReview,
-          plans:rCEPlans,courses:rCECourses,select:rCESelect,settings:rCESettings}[pg];
+          plans:rCEPlans,courses:rCECourses,select:rCESelect,cand:rCECand,settings:rCESettings}[pg];
   if(fn)fn();
   window.scrollTo({top:0});
 }
@@ -26515,12 +26827,13 @@ function ceSetCycle(){CEFILT.cycle=gv('ce-cyc');ceP(CEPAGE);}
 /* بطاقة الترشيح والشهادات في لوحة المتابعة */
 function ceHomeExtraHTML(){
   var r=ceRole();if(r==='coach'||r==='player')return '';
-  var cands=ceSelScope(),act=cands.filter(function(x){return ['screen','interview','trial','branch'].indexOf(x.stage)>-1;}),res=cands.filter(function(x){return x.stage==='reserve';});
-  var today=calISO(new Date()),prob=cands.filter(function(x){return x.stage==='hired'&&x.probEnd&&x.probEnd<=agAdd(today,14)&&!(x.forms&&x.forms.branch&&x.forms.branch.etype==='prob');});
+  var cands=ceSelScope(),act=cands.filter(function(x){return CESEL_ACTIVE.indexOf(x.stage)>-1;}),res=cands.filter(function(x){return x.stage==='reserve';});
+  var today=calISO(new Date()),prob=cands.filter(function(x){return (x.stage==='hired'||x.stage==='branch'||x.stage==='onb')&&x.probEnd&&x.probEnd<=agAdd(today,14)&&!(x.branchEvals||[]).some(function(q){return q.etype==='prob'&&ceSelFinal(q);});});
   var cids=ceScopeCoaches().map(function(c){return c.id;}),exp=ceCerts().filter(function(x){var d=ceCertDays(x);return cids.indexOf(x.coachId)>-1&&d!=null&&d<=60;});
   var up=ceCourses().filter(function(c){return (c.to||c.from||'')>=today;}).length;
   var h='<div class="xkpis" style="margin-top:.4rem">';
   h+='<button type="button" class="xkpi" style="--c:#5b2d8f;cursor:pointer" onclick="CESEL.stage=\'\';ceP(\'select\')"><b>'+ceN(act.length)+'</b><span>مرشح قيد الاختيار</span></button>';
+  var alN=ceSelAlerts().length;if(alN)h+='<button type="button" class="xkpi" style="--c:var(--red);cursor:pointer" onclick="ceP(\'select\')"><b>'+ceN(alN)+'</b><span>تنبيه في اختيار المدربين</span></button>';
   h+='<button type="button" class="xkpi" style="--c:#8b92b0;cursor:pointer" onclick="CESEL.stage=\'reserve\';ceP(\'select\')"><b>'+ceN(res.length)+'</b><span>قائمة الاحتياط</span></button>';
   if(prob.length)h+='<button type="button" class="xkpi" style="--c:var(--amber);cursor:pointer" onclick="CESEL.stage=\'hired\';ceP(\'select\')"><b>'+ceN(prob.length)+'</b><span>تقييم نهاية التجربة مستحق</span></button>';
   h+='<button type="button" class="xkpi" style="--c:'+(exp.length?'var(--red)':'#16a34a')+';cursor:pointer" onclick="CECR.tab=\'certs\';ceP(\'courses\')"><b>'+ceN(exp.length)+'</b><span>شهادة منتهية / تنتهي قريباً</span></button>';
@@ -27080,7 +27393,7 @@ function rCESettings(){
   var el=g('cec-settings');
   if(ceRole()!=='admin'){el.innerHTML=emptyBox('shield','الإعدادات لمدير النظام فقط');return;}
   var tabs=[['cycles','دورات التقييم','cal'],['qs','الأسئلة','doc'],['w','الأوزان','chart'],
-            ['sups','المشرفون','shield'],['qr','باركود الفروع','card']];
+            ['sups','المشرفون','shield'],['sel','اختيار المدربين','user-plus'],['qr','باركود الفروع','card']];
   var h=ceHead('gear','الإعدادات','الدورات والأسئلة والأوزان والمشرفون');
   h+='<div class="ce2-tabs">'+tabs.map(function(t){
     return '<button class="ce2-tab'+(CESET===t[0]?' on':'')+'" onclick="CESET=\''+t[0]+'\';rCESettings()">'+ic(t[2],13)+' '+t[1]+'</button>';
@@ -27089,6 +27402,7 @@ function rCESettings(){
   else if(CESET==='qs')h+=ceSetQs();
   else if(CESET==='w')h+=ceSetW();
   else if(CESET==='sups')h+=ceSetSups();
+  else if(CESET==='sel')h+=ceSetSel();
   else h+=ceSetQR();
   el.innerHTML=h;hydrateIcons(el);
   if(CESET==='qr')setTimeout(ceDrawQRs,80);
@@ -32689,7 +33003,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.11.02-r30</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.11.02-r31</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
