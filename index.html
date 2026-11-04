@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="build" content="2026.11.02-r32">
+<meta name="build" content="2026.11.04-r35">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>أكاديمية فارس</title>
 <meta name="theme-color" content="#0d0e24">
@@ -351,6 +351,7 @@ bdi.ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
   justify-content:center;font-size:12px;font-weight:800;background:var(--bg);color:var(--gray)}
 .req-i.miss .req-n{background:var(--red);color:#fff}
 .req-i.ok .req-n{background:#16a34a;color:#fff}
+.req-i.opt{border-color:var(--brd);background:transparent;opacity:.85}.req-i.opt .req-n{background:var(--brd);color:var(--txt)}
 .req-i b{display:block;font-size:12.5px;font-weight:700}
 .req-i small{display:block;font-size:11px;color:var(--gray);margin-top:2px;line-height:1.5}
 /* الحقول الحرجة */
@@ -964,6 +965,16 @@ html[data-theme="dark"] .wtab.on{background:var(--red);border-color:var(--red);c
 .rtabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
 .rtab{background:var(--sur);border:1.5px solid var(--brd);font-size:12px;font-weight:600;padding:8px 17px;border-radius:99px;display:inline-flex;align-items:center;gap:6px;color:var(--txt)}
 .rtab.on{background:var(--red);border-color:var(--red);color:#fff}
+.ma-view{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;background:var(--bg);border:1px solid var(--brd);border-radius:12px;padding:1rem;margin-bottom:1rem}
+.ma-logo{width:64px;height:64px;border-radius:12px;background:var(--sur);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 auto}.ma-logo img{width:100%;height:100%;object-fit:cover}
+.ma-grid{flex:1;min-width:220px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem}
+.ma-f small{display:block;font-size:10.5px;color:var(--gray);margin-bottom:2px}.ma-f b{font-size:13px}
+.ap-tools{display:flex;gap:.5rem;align-items:center;margin:.6rem 0 .7rem}
+.ap-tools .usearch{flex:1;margin:0}.ap-tools .usearch input{padding:9px 0;font-size:12.5px}
+.ap-filter{position:relative;display:inline-flex;align-items:center;gap:.35rem;background:var(--sur);border:1.5px solid var(--brd);border-radius:var(--r2);padding:0 .6rem;color:var(--gray);cursor:pointer;height:40px;flex:none}
+.ap-filter.on{border-color:var(--red);color:var(--red)}
+.ap-filter select{border:none;background:none;outline:none;font-family:inherit;font-size:12px;color:var(--txt);max-width:140px;cursor:pointer}
+#ap-list .xf-b{padding:.3rem .5rem .4rem}
 .rform{background:var(--sur);border-radius:var(--r);border:1px solid var(--brd);box-shadow:var(--sh);padding:1.6rem;max-width:640px}
 .addcat-outer{background:none;border:none;box-shadow:none;padding:0;max-width:none}
 .addcat-row{display:flex;gap:1.2rem;align-items:flex-start;flex-wrap:wrap;flex-direction:row-reverse}
@@ -2604,6 +2615,12 @@ body.nt-pick #NT .nav .hmb,body.nt-pick #NT .nav .sb-toggle{display:none!importa
 .xhint{font-size:11px;color:var(--gray);display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:.9rem;line-height:1.6}
 .xacts{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
 .xacts .btn:first-child{flex:1}
+.tkind{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.tkind-o{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;text-align:start;padding:.8rem .9rem;border:1.5px solid var(--brd);border-radius:14px;background:var(--bg);color:var(--txt);font:inherit;cursor:pointer;transition:.15s}
+.tkind-o b{font-size:13px}.tkind-o small{font-size:10.5px;color:var(--gray);line-height:1.5}
+.tkind-ic{width:30px;height:30px;border-radius:9px;color:#fff;display:flex;align-items:center;justify-content:center}
+.tkind-o.on{border-color:var(--red);box-shadow:0 0 0 3px rgba(221,29,69,.15);background:var(--sur)}
+@media(max-width:560px){.tkind{grid-template-columns:1fr}}
 .xopts{display:flex;gap:.4rem;flex-wrap:wrap}
 .xopt{background:var(--bg);border:1.5px solid var(--brd);border-radius:11px;padding:.55rem .9rem;font-size:12px;font-weight:600;color:var(--txt);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:.15s}
 .xopt:hover{border-color:var(--red)}
@@ -3892,6 +3909,9 @@ body.wb-on #WB{display:block}
 .xf.open .xf-b{display:block}
 .xf-b>.xcard,.xf-b>.mcard{border:0;box-shadow:none;background:transparent;padding:.7rem 0 0;margin:0;border-radius:0}
 .xf-b>.xcard{border-top:0}
+#CSELPUB{position:fixed;inset:0;z-index:99000;background:var(--bg);color:var(--txt);overflow-y:auto;display:none;padding:1rem;direction:rtl}
+.cselp{max-width:720px;margin:0 auto;padding-bottom:3rem}.cselp-h{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}.cselp-h .lg{width:44px;height:44px}.cselp-h b{display:block;font-size:15px}.cselp-h small{color:var(--gray);font-size:11px}
+.cesel-iq{margin:.3rem 0 0;padding-inline-start:1.1rem;font-size:11px;color:var(--gray);line-height:1.7;font-weight:500}
 .cesel-top{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem}.cesel-crumb{font-size:12px;color:var(--gray)}
 .cesel-hero{--c:var(--navy);display:flex;align-items:center;gap:1rem;padding:1rem 1.1rem;background:var(--sur);border:1px solid var(--brd);border-radius:18px;border-inline-start:5px solid var(--c);margin-bottom:.6rem}
 .cesel-hi{flex:1;min-width:0}.cesel-hn{font-size:18px;font-weight:800;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}.cesel-hn .ce2-st{font-size:10.5px}
@@ -4532,7 +4552,7 @@ body.wb-on #WB{display:block}
     <div class="lerr" id="n-err">يرجى إدخال اسمك أولاً</div>
     <button type="button" class="lnk-forgot" onclick="askReset()">نسيت الرمز السري؟</button>
     <div class="llink">ولي أمر؟ <button onclick="openJoin()">كيف أدخل</button></div>
-    <div class="ls-ver" id="ls-ver" data-notr>v2026.11.02-r32</div>
+    <div class="ls-ver" id="ls-ver" data-notr>v2026.11.04-r35</div>
   </div>
   <div class="lbox" id="ls-s2" style="display:none">
     <button class="bkbtn" onclick="goBack()">رجوع</button>
@@ -4658,10 +4678,11 @@ body.wb-on #WB{display:block}
       <div style="font-size:11px;color:rgba(255,255,255,.5)">مع حساب الإداري وحسابات المدربين</div>
     </div>
     <div class="mbody" style="text-align:start">
-      <div class="fg"><label>نوع الفريق</label>
-        <label class="ntsw" style="cursor:pointer"><input type="checkbox" id="ct-ext" onchange="this.closest('.ntsw').classList.toggle('on',this.checked)">
-          <span class="ntsw-dot"></span>
-          <span class="ntsw-tx"><b>فريق خارجي</b><small>أكاديمية أخرى تشارك في البطولة. اتركه فارغاً إن كان فرعاً من فروع أكاديمية فارس — فيُنشأ له فرع تلقائياً.</small></span></label>
+      <div class="fg"><label>نوع الفريق *</label>
+        <div class="tkind" id="ct-kind">
+          <button type="button" class="tkind-o" data-v="in" onclick="ctKind(this)"><span class="tkind-ic" style="background:var(--red)"><i data-ic="shield"></i></span><b>فريق أكاديمية فارس</b><small>فرع من فروع الأكاديمية — يظهر في الإدارة الفنية وبقية الأنظمة، وينشأ فرعه تلقائياً</small></button>
+          <button type="button" class="tkind-o" data-v="ext" onclick="ctKind(this)"><span class="tkind-ic" style="background:#5b2d8f"><i data-ic="trophy"></i></span><b>أكاديمية خارجية</b><small>فريق ضيف يشارك في البطولات فقط — لا يظهر في أي نظام آخر</small></button>
+        </div>
       </div>
       <div class="fg"><label>البطولات المشارِك فيها <small>(اختر واحدة أو أكثر — اختياري)</small></label><div id="ct-tours" class="tpick"></div></div>
       <div class="frow"><div class="fg"><label>اسم الأكاديمية / الفرع *</label><input type="text" id="ct-name" placeholder="اسم الأكاديمية أو الفرع"></div><div class="fg"><label>المدينة *</label><select id="ct-city"></select></div></div>
@@ -4705,6 +4726,12 @@ body.wb-on #WB{display:block}
       <div style="font-size:11px;color:rgba(255,255,255,.5)">الفريق والإداري والمدربون</div>
     </div>
     <div class="mbody" style="text-align:start">
+      <div class="fg"><label>نوع الفريق</label>
+        <div class="tkind" id="et-kind">
+          <button type="button" class="tkind-o" data-v="in" onclick="ctKind(this)"><span class="tkind-ic" style="background:var(--red)"><i data-ic="shield"></i></span><b>فريق أكاديمية فارس</b><small>يظهر في الإدارة الفنية وبقية الأنظمة</small></button>
+          <button type="button" class="tkind-o" data-v="ext" onclick="ctKind(this)"><span class="tkind-ic" style="background:#5b2d8f"><i data-ic="trophy"></i></span><b>أكاديمية خارجية</b><small>البطولات فقط</small></button>
+        </div>
+      </div>
       <div class="frow"><div class="fg"><label>اسم الأكاديمية *</label><input type="text" id="et-name"></div><div class="fg"><label>المدينة *</label><select id="et-city"></select></div></div>
       <div class="fg"><label>شعار الأكاديمية *</label><div class="img-pick"><div class="img-prev" id="et-prev" data-ic="shield"></div><div><label class="img-pick-btn"><span data-ic="camera"></span> تغيير الصورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,'et')"></label><button class="img-rm" id="et-rm" onclick="rmImg('et','shield')">إزالة</button></div><input type="hidden" id="et-img"></div></div>
       <div class="cat-wrap"><div class="cw-t"><span data-ic="shield"></span> حساب الإداري</div>
@@ -4890,7 +4917,8 @@ body.wb-on #WB{display:block}
       <h3><span data-ic="user-plus"></span> إضافة لاعب</h3>
       <div id="ap-brsw"></div>
       <div class="coach-ban" id="ap-ban" style="display:none"><div class="cb-ic" data-ic="trophy"></div><div><div class="cb-t">الأكاديمية: <span id="ap-tn">—</span></div><div class="cb-s">سيُضاف اللاعب لهذه الأكاديمية</div></div></div>
-      <div class="fg"><label>الفئة السنية *</label><select id="ap-cat"></select></div>
+      <div class="fg"><label>الفئة السنية *</label><select id="ap-cat" onchange="apReq()"></select></div>
+      <div class="coach-ban" id="ap-ext-note" style="display:none"><div class="cb-ic" data-ic="trophy"></div><div><div class="cb-t">أكاديمية خارجية — متطلبات مخفّفة</div><div class="cb-s">الإجباري: اسم اللاعب، تاريخ الميلاد، صورة الهوية. رقم الهوية اختياري، وبه يدخل اللاعب لحسابه.</div></div></div>
       <div class="req-note" id="ap-req"></div>
       <div class="frow" style="grid-template-columns:1fr 1fr 1fr">
         <div class="fg req"><label>اسم اللاعب *</label><input type="text" id="ap-fn" placeholder="محمد"></div>
@@ -5248,6 +5276,7 @@ body.wb-on #WB{display:block}
     </div>
     <div class="mbody" style="text-align:start">
       <div class="fg"><label>الفئة السنية *</label><select id="ep-cat"></select></div>
+      <div class="coach-ban" id="ep-ext-note" style="display:none"><div class="cb-ic" data-ic="trophy"></div><div><div class="cb-t">أكاديمية خارجية — متطلبات مخفّفة</div><div class="cb-s">الإجباري: اسم اللاعب، تاريخ الميلاد، صورة الهوية. رقم الهوية اختياري، وبه يدخل اللاعب لحسابه.</div></div></div>
       <div class="req-note" id="ep-req"></div>
       <div class="frow" style="grid-template-columns:1fr 1fr 1fr">
         <div class="fg req"><label>اسم اللاعب *</label><input type="text" id="ep-fn" placeholder="محمد"></div>
@@ -5286,6 +5315,7 @@ body.wb-on #WB{display:block}
 'use strict';
 /* ================= ICONS (SVG, no emoji) ================= */
 var IC={
+  search:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
   faceid:'<path d="M7 3H5a2 2 0 0 0-2 2v2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M17 21h2a2 2 0 0 0 2-2v-2"/><path d="M9 9v1"/><path d="M15 9v1"/><path d="M12 9v4h-1"/><path d="M9 15.5c.8.9 1.8 1.5 3 1.5s2.2-.6 3-1.5"/>',
   link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
   save:'<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>',
@@ -6898,6 +6928,7 @@ function prvImg(inp,pref,mxIn){
     _cx.drawImage(img,0,0,cv.width,cv.height);
     var d=cv.toDataURL('image/jpeg',.9);
     g(pref+'-img').value=d;g(pref+'-prev').innerHTML='<img src="'+srcOK(d)+'">';g(pref+'-rm').style.display='inline-block';
+    imgReqHook(pref);
     toStorage(d,'misc',pref);
   };img.src=rd.result;};
   rd.readAsDataURL(f);inp.value='';
@@ -6929,11 +6960,14 @@ function prvLogoImg(inp,pref){
     var cx=cv.getContext('2d');cx.imageSmoothingEnabled=true;cx.imageSmoothingQuality='high';cx.drawImage(img,0,0,cv.width,cv.height);
     var d=png?cv.toDataURL('image/png'):cv.toDataURL('image/jpeg',.9);
     g(pref+'-img').value=d;g(pref+'-prev').innerHTML='<img src="'+srcOK(d)+'">';g(pref+'-rm').style.display='inline-block';
+    imgReqHook(pref);
     toStorage(d,'logos',pref);
   };img.src=rd.result;};
   rd.readAsDataURL(f);
 }
-function rmImg(pref,icn){g(pref+'-img').value='';g(pref+'-prev').innerHTML=ic(icn,22);g(pref+'-rm').style.display='none';}
+function rmImg(pref,icn){g(pref+'-img').value='';g(pref+'-prev').innerHTML=ic(icn,22);g(pref+'-rm').style.display='none';imgReqHook(pref);}
+/* تحديث لوحة المتطلبات بعد اختيار/إزالة صورة الهوية في نماذج البطولة */
+function imgReqHook(pref){try{if(pref==='apid'&&typeof apReq==='function')apReq();else if(pref==='epid'&&typeof epReq==='function')epReq();}catch(e){}}
 
 /* ===== صور قوالب الأنظمة ===== */
 function sysImgs(){DB.sysImg=DB.sysImg||{};return DB.sysImg;}
@@ -7014,6 +7048,7 @@ function prvStoryImg(inp,pref){
     _cx.drawImage(img,0,0,cv.width,cv.height);
     var d=cv.toDataURL('image/jpeg',.92);
     g(pref+'-img').value=d;g(pref+'-prev').innerHTML='<img src="'+srcOK(d)+'">';g(pref+'-rm').style.display='inline-block';
+    imgReqHook(pref);
     toStorage(d,'stories',pref);
   };img.src=rd.result;};
   rd.readAsDataURL(f);inp.value='';
@@ -9966,21 +10001,33 @@ function allTeamsGlobal(){
 function openTM(){TMVIEW='';g('TS').style.display='none';g('TM').style.display='block';renderTM();hydrateIcons(g('TM'));}
 function closeTM(){g('TM').style.display='none';showTS();}
 function tmOpen(n){TMVIEW=n;renderTM();hydrateIcons(g('TM'));}
+/* إدارة الفرق: صفحتان — فرق فارس (فروع) / فرق خارجية (أكاديميات أخرى) */
+var TMKIND='in';
+function tmKind(k){TMKIND=(k==='ext')?'ext':'in';TMVIEW='';renderTM();hydrateIcons(g('TM'));}
+function teamIsExt(name){
+  var gt=gTeam(name);if(gt)return btIsExt(gt);
+  var tt=null;(DB.tournaments||[]).some(function(tr){tt=(tr.teams||[]).find(function(x){return x.name===name;});return !!tt;});
+  return btIsExt(tt);
+}
 function renderTM(){
   var el=g('tm-content');
-  var list=allTeamsGlobal();
+  var all=allTeamsGlobal();
+  var nIn=all.filter(function(x){return !btIsExt(x.team);}).length,nExt=all.length-nIn;
+  var list=all.filter(function(x){return btIsExt(x.team)===(TMKIND==='ext');});
   if(!TMVIEW){
-    if(!list.length){el.innerHTML=emptyBox('trophy','لا توجد فرق بعد','أنشئ فريقاً من زر «إنشاء فريق»');return;}
-    el.innerHTML='<div class="tg">'+list.map(function(x){var t=x.team;
+    var tabs='<div class="rtabs" id="tm-kind-tabs"><button class="rtab'+(TMKIND==='in'?' on':'')+'" onclick="tmKind(\'in\')">'+ic('shield',13)+' فرق فارس <b>'+nIn+'</b></button><button class="rtab'+(TMKIND==='ext'?' on':'')+'" onclick="tmKind(\'ext\')">'+ic('trophy',13)+' فرق خارجية <b>'+nExt+'</b></button></div>';
+    if(!list.length){el.innerHTML=tabs+(TMKIND==='ext'?emptyBox('trophy','لا توجد فرق خارجية','عند إنشاء فريق اختر «أكاديمية خارجية» ليظهر هنا'):emptyBox('shield','لا توجد فرق فارس بعد','أنشئ فريقاً من زر «إنشاء فريق»'));return;}
+    el.innerHTML=tabs+'<div class="tg">'+list.map(function(x){var t=x.team;
       return '<div class="tcard" style="--tc:'+(t.color||'#181946')+';position:relative" onclick="tmOpen(\''+jq(t.name)+'\')"><button onclick="event.stopPropagation();deleteTeamCompletely(\''+jq(t.name)+'\')" title="حذف الفريق نهائياً" style="position:absolute;top:8px;left:8px;z-index:2;background:rgba(221,29,69,.1);color:var(--red);border:none;width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center">'+ic('trash',14)+'</button>'+tlogo(t,58)+'<div class="tn">'+esc(t.name)+'</div><div class="tb">'+esc(t.branch||'—')+(btIsExt(t)?' <i style="font-style:normal;color:var(--gray)">• خارجي</i>':' <i style="font-style:normal;color:#1565c0">• فرع</i>')+'</div><div class="tstats"><div><div class="n">'+(t.players||[]).length+'</div><div class="l">لاعب</div></div><div><div class="n">'+((t.coaches||[]).length)+'</div><div class="l">مدرب</div></div><div><div class="n">'+x.tours.length+'</div><div class="l">بطولة</div></div></div></div>';
     }).join('')+'</div>';
     return;
   }
-  var entry=list.find(function(x){return x.team.name===TMVIEW;});
+  var entry=all.find(function(x){return x.team.name===TMVIEW;});
   if(!entry){TMVIEW='';renderTM();return;}
   var t=entry.team;
-  var h='<button class="btn btn-g btn-sm" style="margin-bottom:1rem" onclick="tmOpen(\'\')">→ كل الفرق</button>';
-  h+='<div class="tp-hero">'+tlogo(t,76)+'<div class="tp-hx" style="flex:1"><h2>'+esc(t.name)+'</h2><div class="m">'+esc(t.branch||'—')+' • الإداري: '+esc(t.admin||'—')+' • <bdi class="ltr">'+esc(t.phone||'—')+'</bdi></div></div><div class="tp-acts" style="display:flex;gap:.4rem"><button class="btn btn-sm" style="background:rgba(255,255,255,.14);color:#fff" onclick="openET(\''+jq(t.name)+'\')">'+ic('edit',13)+' تعديل</button><button class="btn btn-sm" style="background:rgba(221,29,69,.9);color:#fff" onclick="deleteTeamCompletely(\''+jq(t.name)+'\')">'+ic('trash',13)+' حذف</button></div></div>';
+  TMKIND=btIsExt(t)?'ext':'in';
+  var h='<button class="btn btn-g btn-sm" style="margin-bottom:1rem" onclick="tmOpen(\'\')">→ '+(TMKIND==='ext'?'الفرق الخارجية':'فرق فارس')+'</button>';
+  h+='<div class="tp-hero">'+tlogo(t,76)+'<div class="tp-hx" style="flex:1"><h2>'+esc(t.name)+' <span class="badge '+(TMKIND==='ext'?'pending':'approved')+'" style="font-size:10px;vertical-align:middle">'+(TMKIND==='ext'?'أكاديمية خارجية':'فريق أكاديمية فارس')+'</span></h2><div class="m">'+esc(t.branch||'—')+' • الإداري: '+esc(t.admin||'—')+' • <bdi class="ltr">'+esc(t.phone||'—')+'</bdi></div></div><div class="tp-acts" style="display:flex;gap:.4rem"><button class="btn btn-sm" style="background:rgba(255,255,255,.14);color:#fff" onclick="openET(\''+jq(t.name)+'\')">'+ic('edit',13)+' تعديل</button><button class="btn btn-sm" style="background:rgba(221,29,69,.9);color:#fff" onclick="deleteTeamCompletely(\''+jq(t.name)+'\')">'+ic('trash',13)+' حذف</button></div></div>';
   /* tournament membership: chips + add-to-tournament */
   h+='<div class="sec-t" style="margin:1.2rem 0 .6rem"><div class="bar"></div><h2 style="font-size:14px">البطولات المشارِك فيها</h2></div>';
   if(entry.tours.length)h+='<div style="margin-bottom:.6rem">'+entry.tours.map(function(tn){return '<span class="cat-pill" style="cursor:default">'+ic('trophy',12)+' '+esc(tn)+' <button onclick="removeTeamFromTournament(\''+jq(t.name)+'\',\''+jq(tn)+'\')" style="border:none;background:none;color:var(--red);cursor:pointer;font-weight:700;margin-inline-start:4px">✕</button></span>';}).join('')+'</div>';
@@ -9998,7 +10045,7 @@ function renderTM(){
   if(!cos.length)h+=emptyBox('whistle','لا يوجد مدربون');
   else h+='<div class="at-wrap"><table class="at"><thead><tr><th>الاسم</th><th>الجوال</th><th>الحساب</th><th>الفئات</th></tr></thead><tbody>'+cos.map(function(c){var his=(t.categories||[]).filter(function(x){return x.coach===c.name;}).map(function(x){return esc(x.name);}).join('، ')||'—';return '<tr><td><strong>'+esc(c.name)+'</strong></td><td style="direction:ltr">'+esc(c.phone?phoneDisp(c.phone):'—')+'</td><td>'+(c.account?'<span class="badge approved">له حساب</span>':'<span class="badge pending">بدون</span>')+'</td><td>'+his+'</td></tr>';}).join('')+'</tbody></table></div>';
   /* players full */
-  h+='<div class="sec-t" style="margin:1.5rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">اللاعبون ('+(t.players||[]).length+') '+missChipOf(t.players)+'</h2></div>';
+  h+='<div class="sec-t" style="margin:1.5rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">اللاعبون ('+(t.players||[]).length+') '+missChipOf(t.players,btIsExt(t)||teamIsExt(t.name))+'</h2></div>';
   var ps=t.players||[];
   if(!ps.length)h+=emptyBox('user','لا يوجد لاعبون');
   else{
@@ -10018,6 +10065,7 @@ function renderTM(){
 /* ---- create team + accounts ---- */
 function openCT(){
   ['ct-name','ct-aname','ct-aphone','ct-apin'].forEach(function(id){var e=g(id);if(e)e.value='';});
+  ctKindSet('ct-kind','');
   g('ct-tours').innerHTML=DB.tournaments.length?DB.tournaments.map(function(t){return tourPickItem(t,'ct-tour-cb',esc(t.name));}).join(''):'<div class="tpick-empty">لا توجد بطولات — سيُحفظ الفريق في «الفرق» ويمكن إضافته لبطولة لاحقاً.</div>';
   fillSel('ct-city',CITIES);
   rmImg('ct','shield');
@@ -10072,8 +10120,21 @@ function tmAddToTour(name){
   var sel=g('tm-add-tour');if(!sel||!sel.value)return;
   if(addTeamToTournament(name,sel.value)){logA('إضافة فريق '+name+' إلى بطولة '+sel.value,'trophy','#16a34a');sv();renderTM();hydrateIcons(g('TM'));}
 }
+function ctKind(b){var w=b.parentNode;w.querySelectorAll('.tkind-o').forEach(function(x){x.classList.remove('on');});b.classList.add('on');}
+function ctKindVal(id){var w=g(id),on=w&&w.querySelector('.tkind-o.on');return on?on.dataset.v:'';}
+function ctKindSet(id,v){var w=g(id);if(!w)return;w.querySelectorAll('.tkind-o').forEach(function(x){x.classList.toggle('on',x.dataset.v===v);});}
+/* فريق فارس: مدربوه يُسجَّلون في الإدارة الفنية داخل فرعه */
+function btSyncCoachesToTD(t){
+  if(!t||btIsExt(t))return 0;var x=TDX(),n=0;x.coaches=x.coaches||[];
+  (t.coaches||[]).forEach(function(c){if(!c||!c.name)return;
+    if(x.coaches.some(function(q){return normName(q.name)===normName(c.name)&&coachInBranch(q,t.name);}))return;
+    x.coaches.push({id:c.id||uid(),name:c.name,branch:t.name,branches:[t.name],phone:c.phone||'',user:c.name||'',at:Date.now(),src:'team'});n++;});
+  return n;
+}
 function createTeam(){
   var name=gv('ct-name'),city=gv('ct-city');
+  var kind=ctKindVal('ct-kind');
+  if(!kind){g('ct-err').textContent='اختر نوع الفريق: فريق أكاديمية فارس أو أكاديمية خارجية';fl('ct-err');return;}
   var an=gv('ct-aname'),ap=normPhone(gv('ct-aphone')),apin=gv('ct-apin');
   if(!name||!city||!an||!ap||apin.length!==6){g('ct-err').textContent='أكمل: اسم الأكاديمية، المدينة، وبيانات الإداري (رمز 6 أرقام)';fl('ct-err');return;}
   if(!phoneOK(ap)){g('ct-err').textContent='جوال الإداري غير صحيح — 05XXXXXXXX';fl('ct-err');return;}
@@ -10097,11 +10158,11 @@ function createTeam(){
   if(bad==='phone'){g('ct-err').textContent='جوال أحد المدربين غير صحيح — 05XXXXXXXX';fl('ct-err');return;}
   if(bad){g('ct-err').textContent='أكمل جوال ورمز (6 أرقام) لكل مدرب';fl('ct-err');return;}
   /* create team in global store first */
-  var isExt=!!(g('ct-ext')&&g('ct-ext').checked);
+  var isExt=kind==='ext';
   var newTeam={id:uid(),name:name,branch:city,admin:an,phone:ap,ext:isExt,color:COLS[(DB.teams||[]).length%COLS.length],img:gv('ct-img'),coaches:coaches,categories:[],players:[]};
   upsertGlobalTeam(newTeam);
-  /* الفريق في النظام فرع، إلا الفرق الخارجية */
-  if(!isExt)btEnsureBranch(gTeam(name)||newTeam);
+  /* فريق فارس = فرع في كل الأنظمة (الإدارة الفنية، الإدارة والمتابعة…) — الخارجي في البطولات فقط */
+  if(!isExt){btEnsureBranch(gTeam(name)||newTeam);btSyncCoachesToTD(gTeam(name)||newTeam);}
   /* add to each selected tournament */
   tours.forEach(function(tn){addTeamToTournament(name,tn);});
   /* admin account */
@@ -10110,13 +10171,15 @@ function createTeam(){
   if(FA.enabled)faSync(FA.upsertUser({id:adminId,name:an,username:an,role:'admin-team',team:name,phone:ap},apin));
   /* coach accounts */
   coachUsers.forEach(function(u){DB.users.push(u);if(FA.enabled)faSync(FA.upsertUser(u,u.password));});
-  logA('إنشاء فريق: '+name+(tours.length?' في '+tours.length+' بطولة':'')+' (+'+coachUsers.length+' مدرب)','user-plus','#16a34a');
+  logA('إنشاء '+(isExt?'أكاديمية خارجية':'فريق فارس (فرع)')+': '+name+(tours.length?' في '+tours.length+' بطولة':'')+' (+'+coachUsers.length+' مدرب)','user-plus','#16a34a');
+  addN(isExt?'أُضيفت أكاديمية خارجية':'أُضيف فريق فارس وفرعه',name+(isExt?' — في البطولات فقط':' — يظهر الآن في الإدارة الفنية وبقية الأنظمة'),'success');
   sv();fl('ct-ok');g('ctMod').classList.remove('open');renderTM();
 }
 /* ---- edit team (admin, from الفرق) ---- */
 var ETNAME='';
 function openET(name){
   var t=gTeam(name);if(!t)return;ETNAME=name;
+  ctKindSet('et-kind',btIsExt(t)?'ext':'in');
   g('et-name').value=t.name;
   fillSel('et-city',CITIES);g('et-city').value=t.branch||'';
   g('et-img').value=t.img||'';g('et-prev').innerHTML=t.img?'<img src="'+srcOK(t.img)+'">':ic('shield',22);g('et-rm').style.display=t.img?'inline-block':'none';
@@ -10307,6 +10370,9 @@ function saveEditTeam(){
   var finalCoaches=newCoaches.map(function(c){return {id:c.id,name:c.name,phone:c.phone,account:c.account,pin:c.linked?'':c.pin};});
   master.coaches=finalCoaches;
   (DB.tournaments||[]).forEach(function(tr){(tr.teams||[]).forEach(function(t2){if(t2.name===curName)t2.coaches=JSON.parse(JSON.stringify(finalCoaches));});});
+  /* نوع الفريق: فارس (فرع) أو خارجية */
+  var ek=ctKindVal('et-kind'),wasExt=btIsExt(t);
+  if(ek&&(ek==='ext')!==wasExt){btSetExt(curName,ek==='ext');if(ek==='in')btSyncCoachesToTD(gTeam(curName));}
   logA('تعديل بيانات فريق: '+curName,'edit','#d97706');
   ETNAME=curName;TMVIEW=curName;
   sv();fl('et-ok');g('etMod').classList.remove('open');renderTM();hydrateIcons(g('TM'));
@@ -13146,7 +13212,23 @@ function renderMyAcad(){
   var logo=o.img?'<img src="'+srcOK(o.img)+'">':ic('shield',22);
   var lock=CU&&CU.role!=='admin';
   var h='<h3><span data-ic="trophy"></span> أكاديميتي '+(pending?'<span class="badge pending" style="margin-inline-start:6px">قيد الاعتماد</span>':'<span class="badge approved" style="margin-inline-start:6px">معتمدة</span>')+'</h3>';
-  if(lock)h+='<div class="jnote" style="margin-bottom:.8rem">'+ic('shield',12)+' اسم الأكاديمية ومدينتها وبيانات الإداري وشعارها يعدّلها مدير النظام فقط — تواصل معه لأي تغيير. يمكنك إدارة المدربين من هنا.</div>';
+  if(lock){
+    /* إداري الأكاديمية: عرض فقط — بيانات التسجيل يعدّلها مدير النظام */
+    h+='<div class="jnote" style="margin-bottom:.9rem">'+ic('shield',12)+' بيانات تسجيل الأكاديمية (الاسم، المدينة، الإداري، الشعار، المدربون) يعدّلها مدير النظام فقط — تواصل معه لأي تغيير.</div>';
+    h+='<div class="ma-view"><div class="ma-logo">'+logo+'</div><div class="ma-grid">'
+      +'<div class="ma-f"><small>اسم الأكاديمية</small><b>'+esc(o.name||'—')+'</b></div>'
+      +'<div class="ma-f"><small>المدينة</small><b>'+esc(o.branch||'—')+'</b></div>'
+      +'<div class="ma-f"><small>اسم الإداري</small><b>'+esc(o.admin||'—')+'</b></div>'
+      +'<div class="ma-f"><small>رقم التواصل</small><b><bdi class="ltr">'+esc(phone05(o.phone)||'—')+'</bdi></b></div>'
+      +'<div class="ma-f"><small>النوع</small><b>'+(teamIsExt(o.name)?'أكاديمية خارجية':'فريق أكاديمية فارس')+'</b></div>'
+      +'</div></div>';
+    var cl=o.coaches||[];
+    h+='<div class="cat-wrap"><div class="cw-t"><span data-ic="whistle"></span> المدربون ('+cl.length+')</div>';
+    if(!cl.length)h+='<div style="font-size:12px;color:var(--gray);padding:.6rem">لا يوجد مدربون بعد — يضيفهم مدير النظام من إدارة الفرق</div>';
+    else h+='<table class="cat-tbl"><thead><tr><th>اسم المدرب</th><th>جوال المدرب</th><th>الحساب</th></tr></thead><tbody>'+cl.map(function(c){return '<tr><td>'+esc(c.name||'')+'</td><td style="direction:ltr">'+esc(phone05(c.phone)||'—')+'</td><td>'+(c.account?'<span class="badge approved" style="font-size:9.5px">له حساب</span>':'<span class="badge pending" style="font-size:9.5px">بدون حساب</span>')+'</td></tr>';}).join('')+'</tbody></table>';
+    h+='</div>';
+    el.innerHTML=h;hydrateIcons(el);return;
+  }
   h+='<div class="frow"><div class="fg"><label>اسم الأكاديمية *</label><input type="text" id="ma-name" value="'+esc(o.name||'')+'"'+(lock?' readonly disabled':'')+'></div><div class="fg"><label>المدينة *</label><select id="ma-city"'+(lock?' disabled':'')+'></select></div></div>';
   h+='<div class="frow"><div class="fg"><label>اسم الإداري *</label><input type="text" id="ma-admin" value="'+esc(o.admin||'')+'"'+(lock?' readonly disabled':'')+'></div><div class="fg"><label>رقم التواصل *</label><input type="tel" id="ma-phone"'+(lock?' readonly disabled':'')+' value="'+esc(phone05(o.phone))+'" maxlength="10" style="direction:ltr"></div></div>';
   h+='<div class="fg"><label>شعار الأكاديمية</label><div class="img-pick"><div class="img-prev" id="ma-prev">'+logo+'</div>'+(lock?'':'<div><label class="img-pick-btn"><span data-ic="camera"></span> تغيير الصورة<input type="file" accept="image/*" style="display:none" onchange="prvImg(this,\'ma\')"></label><button class="img-rm" id="ma-rm" onclick="rmImg(\'ma\',\'shield\')" style="'+(o.img?'':'display:none')+'">إزالة</button></div>')+'<input type="hidden" id="ma-img" value="'+esc(o.img||'')+'"></div></div>';
@@ -13166,6 +13248,7 @@ function renderMyAcad(){
 }
 function openCoachMod(){
   if(!myAcad()){fl('ma-err');return;}
+  if(CU&&CU.role!=='admin')return;
   ['cm-name','cm-phone','cm-pin'].forEach(function(id){var e=g(id);if(e)e.value='';});
   g('coachMod').classList.add('open');hydrateIcons(g('coachMod'));
   setTimeout(function(){var e=g('cm-name');if(e)e.focus();},60);
@@ -13189,6 +13272,7 @@ function createCoach(){
 }
 function saveMyAcad(){
   var a=myAcad();if(!a)return;
+  if(CU&&CU.role!=='admin')return; /* بيانات التسجيل يعدّلها مدير النظام فقط */
   var o=a.obj;
   var name=gv('ma-name'),city=gv('ma-city'),admin=gv('ma-admin'),phone=normPhone(gv('ma-phone')),img=gv('ma-img');
   /* غير مدير النظام لا يغيّر اسم الأكاديمية أو بياناتها — تُؤخذ من السجل كما هي */
@@ -13354,30 +13438,65 @@ function pMode(m){
   if(frm)frm.style.display=(PMODE==='add')?'block':'none';
   if(PMODE==='edit')renderApList();
 }
+/* قائمة «تعديل اللاعبين»: كل فئة داخل ملف يُفتح ويُغلق + بحث + فرز */
+var APQ='',APF='';
+function apSetQ(v){APQ=(v||'').trim();renderApList();var e=g('ap-q');if(e&&document.activeElement!==e){e.focus();try{e.setSelectionRange(e.value.length,e.value.length);}catch(x){}}}
+function apSetF(v){APF=v||'';renderApList();}
+function apNorm(v){return String(v==null?'':v).toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\u064B-\u0652]/g,'').replace(/\s+/g,' ').trim();}
+function apMatch(p,q){
+  if(!q)return true;
+  var n=apNorm(q);
+  var hay=[p.name,p.fn,p.mn,p.ln,p.nid,p.number,p.pos,p.cat,p.guard,p.phone,p.guardName].map(function(x){return x==null?'':String(x);}).join(' ');
+  return apNorm(hay).indexOf(n)>-1;
+}
 function renderApList(){
   var el=g('ap-list');if(!el)return;
   var list=managePlayers();
   var pc=g('pm-count');if(pc)pc.textContent=list.length;
-  var nMiss=0;list.forEach(function(x){if(issuesTPlayer(x.p).length)nMiss++;});
+  var isX=function(x){return teamIsExt(x.t.name);};
+  var nMiss=0;list.forEach(function(x){if(issuesTPlayer(x.p,isX(x)).length)nMiss++;});
   var missChip=nMiss
     ?'<span class="miss-chip" title="لاعبون ببيانات ناقصة">'+ic('info',11)+' ناقص البيانات: '+nMiss+'</span>'
     :'<span class="miss-chip ok" title="جميع البيانات مكتملة">'+ic('check',11)+' البيانات مكتملة</span>';
   var head='<div class="acl-title" style="display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:.5rem">'+ic('users',14)+' اللاعبون ('+list.length+') '+missChip+'</span>'+(list.length?'<button class="btn btn-n btn-sm" onclick="exportPlayers()">'+ic('doc',12)+' تصدير Excel</button>':'')+'</div>';
   if(!list.length){el.innerHTML=head+emptyBox('user','لا يوجد لاعبون بعد','أضِف لاعباً من النموذج المجاور');hydrateIcons(el);return;}
-  var byCat={};list.forEach(function(x){var k=x.p.cat||'بدون فئة';(byCat[k]=byCat[k]||[]).push(x);});
-  var h=head;
+  /* أدوات البحث والفرز */
+  var catsAll=[];list.forEach(function(x){var k=x.p.cat||'بدون فئة';if(catsAll.indexOf(k)<0)catsAll.push(k);});
+  var fopts=[['','كل اللاعبين'],['miss','ناقص البيانات'],['ok','مكتمل البيانات'],['noimg','بدون صورة'],['noid','بدون صورة هوية']];
+  catsAll.forEach(function(k){fopts.push(['cat:'+k,'الفئة: '+k]);});
+  var tools='<div class="ap-tools"><div class="usearch ap-search">'+ic('search',14)+'<input type="text" id="ap-q" placeholder="ابحث بالاسم أو رقم الهوية أو رقم القميص…" value="'+esc(APQ)+'" oninput="apSetQ(this.value)">'+(APQ?'<button class="uclear" onclick="apSetQ(\'\')" title="مسح">'+ic('x',13)+'</button>':'')+'</div>'
+    +'<label class="ap-filter'+(APF?' on':'')+'" title="فرز">'+ic('filter',14)+'<select onchange="apSetF(this.value)">'+fopts.map(function(o){return '<option value="'+esc(o[0])+'"'+(o[0]===APF?' selected':'')+'>'+esc(o[1])+'</option>';}).join('')+'</select></label></div>';
+  var shown=list.filter(function(x){
+    var p=x.p;
+    if(!apMatch(p,APQ))return false;
+    if(APF==='miss')return issuesTPlayer(p,isX(x)).length>0;
+    if(APF==='ok')return !issuesTPlayer(p,isX(x)).length;
+    if(APF==='noimg')return !p.img;
+    if(APF==='noid')return !p.idImg;
+    if(APF.indexOf('cat:')===0)return (p.cat||'بدون فئة')===APF.slice(4);
+    return true;
+  });
+  var h=head+tools;
+  if(!shown.length){el.innerHTML=h+emptyBox('search','لا توجد نتائج مطابقة','جرّب كلمة بحث أخرى أو غيّر الفرز');hydrateIcons(el);return;}
+  var byCat={};shown.forEach(function(x){var k=x.p.cat||'بدون فئة';(byCat[k]=byCat[k]||[]).push(x);});
+  var filtering=!!(APQ||APF);
   Object.keys(byCat).forEach(function(k){
-    h+='<div style="font-size:12px;font-weight:700;color:var(--gray);margin:.6rem 0 .4rem">'+esc(k)+'</div>';
-    h+=byCat[k].map(function(x){
+    var rows=byCat[k];
+    var nm=rows.filter(function(x){return issuesTPlayer(x.p,isX(x)).length;}).length;
+    var fid='apc_'+String(k).replace(/[^\w\u0600-\u06FF]+/g,'_');
+    var keep=XFOLD[fid];if(filtering)XFOLD[fid]=true;   /* أثناء البحث/الفرز تُفتح النتائج دون تغيير حالة الطيّ المحفوظة */
+    var body=rows.map(function(x){
       var p=x.p,av=p.img?'<div class="tlogo" style="width:34px;height:34px"><img src="'+srcOK(p.img)+'"></div>':'<div class="tlogo" style="width:34px;height:34px;background:var(--navy)">'+ic('user',16)+'</div>';
       return '<div class="acl-item plr"><div class="plr-av">'+av+'</div>'
-        +'<div class="plr-i"><div class="plr-n">'+esc(p.name)+tPlayerBadge(p)+'</div><div class="plr-s">'+esc(p.pos||'—')+' • رقم '+(p.number||'—')+' • '+(p.goals||0)+' هدف</div></div>'
+        +'<div class="plr-i"><div class="plr-n">'+esc(p.name)+tPlayerBadge(p,isX(x))+'</div><div class="plr-s">'+esc(p.pos||'—')+' • رقم '+(p.number||'—')+' • '+(p.goals||0)+' هدف</div></div>'
         +'<div class="plr-a">'
         +'<button class="ab" title="بطولاته" onclick="event.stopPropagation();ptOpen(\''+p.id+'\',\'tour\')">'+ic('trophy',13)+'</button>'
         +'<button class="btn btn-n btn-sm" onclick="editPlayer(\''+jq(x.t.name)+'\',\''+p.id+'\')">'+ic('edit',12)+' <span class="plr-lbl">تعديل</span></button>'
         +'<button class="btn btn-o btn-sm" style="color:var(--red);border-color:var(--red)" onclick="delPlayer(\''+jq(x.t.name)+'\',\''+p.id+'\')">'+ic('trash',12)+' <span class="plr-lbl">حذف</span></button>'
         +'</div></div>';
     }).join('');
+    h+=xFold(fid,{ic:'users',c:nm?'#d97706':'#2563eb',t:esc(k),sub:rows.length+' لاعب'+(nm?' • ناقص البيانات: '+nm:''),m:'<span class="cat-pill" style="cursor:default;font-size:10.5px">'+rows.length+'</span>'},body);
+    if(filtering){if(keep===undefined)delete XFOLD[fid];else XFOLD[fid]=keep;}
   });
   el.innerHTML=h;hydrateIcons(el);
 }
@@ -13425,17 +13544,30 @@ function editPlayer(tname,pid){
 /* لوحة الشرح في نافذة التعديل */
 function epReq(){
   var el=g('ep-req');if(!el)return;
+  var ext=!!(EPCTX&&teamIsExt(EPCTX.team));apApplyExt('ep',ext);
   var fn=gv('ep-fn'),mn=gv('ep-mn'),ln=gv('ep-ln');
-  var ok=[!!(fn&&mn&&ln), normNid(gv('ep-nid')).length===10, phoneOK(phoneVal('ep-gd')),
-          !!(gv('ep-dd')&&g('ep-dm')&&g('ep-dm').value&&gv('ep-dy'))];
-  var h='<div class="req-hd">'+ic('shield',15)+'<b>بيانات لازمة لتفعيل حساب اللاعب</b></div><div class="req-list">';
-  [['١','الاسم ثلاثياً','اسم اللاعب • اسم الأب • اسم العائلة'],
-   ['٢','رقم الهوية أو الإقامة','١٠ أرقام — به يدخل اللاعب لحسابه'],
-   ['٣','جوال ولي الأمر','وسيلة التواصل الرسمية مع الأسرة'],
-   ['٤','تاريخ الميلاد','لازم للفئة السنية وللتحقق عند التفعيل']
-  ].forEach(function(x,i){
-    h+='<div class="req-i'+(ok[i]?' ok':' miss')+'"><span class="req-n">'+x[0]+'</span>'
-      +'<div><b>'+x[1]+'</b><small>'+x[2]+'</small></div></div>';
+  var nameOK=ext?!!fn:!!(fn&&mn&&ln);
+  var nidOK=normNid(gv('ep-nid')).length===10;
+  var gphOK=phoneOK(phoneVal('ep-gd'));
+  var dobOK=!!(gv('ep-dd')&&g('ep-dm')&&g('ep-dm').value&&gv('ep-dy'));
+  var idOK=!!gv('epid-img');
+  var h,rows;
+  if(ext){
+    h='<div class="req-hd">'+ic('trophy',15)+'<b>متطلبات تسجيل لاعب أكاديمية خارجية</b></div><div class="req-list">';
+    rows=[[nameOK,'١','اسم اللاعب','إجباري'],
+      [dobOK,'٢','تاريخ الميلاد','إجباري — للفئة السنية'],
+      [idOK,'٣','صورة الهوية','إجبارية'],
+      [nidOK?true:'opt','٤','رقم الهوية أو الإقامة','اختياري — دخول اللاعب لحسابه يكون عن طريق رقم الهوية']];
+  }else{
+    h='<div class="req-hd">'+ic('shield',15)+'<b>بيانات لازمة لتفعيل حساب اللاعب</b></div><div class="req-list">';
+    rows=[[nameOK,'١','الاسم ثلاثياً','اسم اللاعب • اسم الأب • اسم العائلة'],
+      [nidOK,'٢','رقم الهوية أو الإقامة','١٠ أرقام — به يدخل اللاعب لحسابه'],
+      [gphOK,'٣','جوال ولي الأمر','وسيلة التواصل الرسمية مع الأسرة'],
+      [dobOK,'٤','تاريخ الميلاد','لازم للفئة السنية وللتحقق عند التفعيل']];
+  }
+  rows.forEach(function(x){
+    h+='<div class="req-i'+(x[0]==='opt'?' opt':(x[0]?' ok':' miss'))+'"><span class="req-n">'+x[1]+'</span>'
+      +'<div><b>'+x[2]+'</b><small>'+x[3]+'</small></div></div>';
   });
   el.innerHTML=h+'</div>';hydrateIcons(el);
   var gn=g('ep-gname');
@@ -13451,14 +13583,22 @@ function saveEditPlayer(){
   var nid=normNid(gv('ep-nid'));
   var dd=gv('ep-dd'),dm=g('ep-dm').value,dy=gv('ep-dy'),nat=gv('ep-nat'),gd=phoneVal('ep-gd');
   if(!cat){vFail('ep-err','اختر الفئة السنية','ep-cat');return;}
-  if(!fn||!mn||!ln){vFail('ep-err','الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة',!fn?'ep-fn':(!mn?'ep-mn':'ep-ln'));return;}
-  var _ne=nidErr(nid,p.nid);if(_ne){vFail('ep-err',_ne,'ep-nid');return;}
+  var ext=teamIsExt(t.name);
+  if(ext){
+    if(!fn){vFail('ep-err','اسم اللاعب مطلوب','ep-fn');return;}
+    if(nid){var _nx=nidErr(nid,p.nid);if(_nx){vFail('ep-err',_nx,'ep-nid');return;}}
+  }else{
+    if(!fn||!mn||!ln){vFail('ep-err','الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة',!fn?'ep-fn':(!mn?'ep-mn':'ep-ln'));return;}
+    var _ne=nidErr(nid,p.nid);if(_ne){vFail('ep-err',_ne,'ep-nid');return;}
+  }
   if(!dd||!dm||!dy){vFail('ep-err','تاريخ الميلاد مطلوب','ep-dd');return;}
   if(!validYMD(dy,dm,dd)){vFail('ep-err','تاريخ الميلاد غير صحيح — هذا اليوم غير موجود في الشهر','ep-dd');return;}
-  if(!phoneOK(gd)){vFail('ep-err','جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5','ep-gd');return;}
-  if(phoneFake(gd)){vFail('ep-err','جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً','ep-gd');return;}
+  if(!ext){
+    if(!phoneOK(gd)){vFail('ep-err','جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5','ep-gd');return;}
+    if(phoneFake(gd)){vFail('ep-err','جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً','ep-gd');return;}
+  }else if(gd&&(!phoneOK(gd)||phoneFake(gd))){vFail('ep-err','جوال ولي الأمر غير صحيح — ٩ أرقام تبدأ بـ 5','ep-gd');return;}
   var dupN=null;
-  (T().teams||[]).forEach(function(tt){(tt.players||[]).forEach(function(pp){
+  if(nid)(T().teams||[]).forEach(function(tt){(tt.players||[]).forEach(function(pp){
     if(pp.id!==p.id&&pp.nid&&normNid(pp.nid)===nid)dupN=pp;});});
   if(dupN){vFail('ep-err','رقم الهوية مسجّل للاعب: '+dupN.name,'ep-nid');return;}
   if(!gv('epid-img')){vFail('ep-err','صورة الهوية مطلوبة','epid-prev');return;}
@@ -13490,21 +13630,52 @@ function exportPlayers(){
   a.href=url;a.download='لاعبو-'+who+'.xls';document.body.appendChild(a);a.click();
   setTimeout(function(){a.remove();URL.revokeObjectURL(url);},1000);
 }
+/* ===== متطلبات التسجيل تختلف: فرق فارس (كاملة) / الفرق الخارجية (مخفّفة) =====
+   الخارجية: الاسم لازم، الهوية اختيارية (بها يدخل اللاعب)، القميص اختياري،
+   الميلاد إجباري، الجنسية اختيارية، صورة اللاعب اختيارية، صورة الهوية إجبارية. */
+function apTeamName(){
+  var cat=gv('ap-cat');
+  if(CU&&CU.role==='admin'&&cat&&cat.indexOf(' — ')>-1)return cat.split(' — ')[0];
+  return myTeamName();
+}
+function apIsExt(){var tn=apTeamName();return !!tn&&teamIsExt(tn);}
+/* تبديل العلامات (*) والملاحظات في النموذج حسب نوع الفريق — pfx: ap أو ep */
+function apApplyExt(pfx,ext){
+  var set=function(id,req,txt){var e=g(id);if(!e)return;var fg=e.closest('.fg');if(!fg)return;fg.classList.toggle('req',!!req);var lb=fg.querySelector('label');if(lb&&txt!=null)lb.innerHTML=txt;};
+  set(pfx+'-fn',true,'اسم اللاعب *');
+  set(pfx+'-mn',!ext,ext?'اسم الأب <small>(اختياري)</small>':'اسم الأب *');
+  set(pfx+'-ln',!ext,ext?'اسم العائلة <small>(اختياري)</small>':'اسم العائلة *');
+  set(pfx+'-nid',!ext,ext?'رقم الهوية / الإقامة <small>(اختياري — دخول اللاعب لحسابه يكون عن طريق رقم الهوية)</small>':'رقم الهوية / الإقامة *');
+  set(pfx+'-gd',!ext,ext?'جوال ولي الأمر <small>(اختياري)</small>':'جوال ولي الأمر *');
+  var note=g(pfx+'-ext-note');
+  if(note){note.style.display=ext?'flex':'none';}
+}
 /* لوحة الشرح في نموذج البطولة — نفس منطق الإدارة الفنية */
 function apReq(){
   var el=g('ap-req');if(!el)return;
+  var ext=apIsExt();apApplyExt('ap',ext);
   var fn=gv('ap-fn'),mn=gv('ap-mn'),ln=gv('ap-ln');
-  var nameOK=!!(fn&&mn&&ln);
+  var nameOK=ext?!!fn:!!(fn&&mn&&ln);
   var nidOK2=normNid(gv('ap-nid')).length===10;
   var gphOK=phoneOK(phoneVal('ap-gd'));
   var dobOK=!!(gv('ap-dd')&&g('ap-dm')&&g('ap-dm').value&&gv('ap-dy'));
-  var h='<div class="req-hd">'+ic('shield',15)+'<b>بيانات لازمة لتفعيل حساب اللاعب</b></div><div class="req-list">';
-  [[nameOK,'١','الاسم ثلاثياً','اسم اللاعب • اسم الأب • اسم العائلة'],
-   [nidOK2,'٢','رقم الهوية أو الإقامة','١٠ أرقام — به يدخل اللاعب لحسابه'],
-   [gphOK,'٣','جوال ولي الأمر','وسيلة التواصل الرسمية مع الأسرة'],
-   [dobOK,'٤','تاريخ الميلاد','لازم للفئة السنية وللتحقق عند التفعيل']
-  ].forEach(function(x){
-    h+='<div class="req-i'+(x[0]?' ok':' miss')+'"><span class="req-n">'+x[1]+'</span>'
+  var idOK=!!gv('apid-img');
+  var h,rows;
+  if(ext){
+    h='<div class="req-hd">'+ic('trophy',15)+'<b>متطلبات تسجيل لاعب أكاديمية خارجية</b></div><div class="req-list">';
+    rows=[[nameOK,'١','اسم اللاعب','إجباري'],
+      [dobOK,'٢','تاريخ الميلاد','إجباري — للفئة السنية'],
+      [idOK,'٣','صورة الهوية','إجبارية'],
+      [nidOK2?true:'opt','٤','رقم الهوية أو الإقامة','اختياري — دخول اللاعب لحسابه يكون عن طريق رقم الهوية']];
+  }else{
+    h='<div class="req-hd">'+ic('shield',15)+'<b>بيانات لازمة لتفعيل حساب اللاعب</b></div><div class="req-list">';
+    rows=[[nameOK,'١','الاسم ثلاثياً','اسم اللاعب • اسم الأب • اسم العائلة'],
+      [nidOK2,'٢','رقم الهوية أو الإقامة','١٠ أرقام — به يدخل اللاعب لحسابه'],
+      [gphOK,'٣','جوال ولي الأمر','وسيلة التواصل الرسمية مع الأسرة'],
+      [dobOK,'٤','تاريخ الميلاد','لازم للفئة السنية وللتحقق عند التفعيل']];
+  }
+  rows.forEach(function(x){
+    h+='<div class="req-i'+(x[0]==='opt'?' opt':(x[0]?' ok':' miss'))+'"><span class="req-n">'+x[1]+'</span>'
       +'<div><b>'+x[2]+'</b><small>'+x[3]+'</small></div></div>';
   });
   el.innerHTML=h+'</div>';
@@ -13520,16 +13691,24 @@ function subAddPlayer(){
   var nid=normNid(gv('ap-nid'));
   var dd=gv('ap-dd'),dm=g('ap-dm').value,dy=gv('ap-dy'),nat=gv('ap-nat'),gd=phoneVal('ap-gd'),img=gv('ap-img'),idImg=gv('apid-img');
   if(!cat){g('ap-err').textContent='اختر الفئة السنية';fl('ap-err');return;}
-  if(!fn||!mn||!ln){g('ap-err').textContent='الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة';fl('ap-err');return;}
-  var _ne=nidErr(nid);if(_ne){vFail('ap-err',_ne,'ap-nid');return;}
+  var ext=apIsExt();
+  if(ext){
+    if(!fn){vFail('ap-err','اسم اللاعب مطلوب','ap-fn');return;}
+    if(nid){var _nx=nidErr(nid);if(_nx){vFail('ap-err',_nx,'ap-nid');return;}}
+  }else{
+    if(!fn||!mn||!ln){g('ap-err').textContent='الاسم لازم يكون ثلاثياً: اسم اللاعب واسم الأب واسم العائلة';fl('ap-err');return;}
+    var _ne=nidErr(nid);if(_ne){vFail('ap-err',_ne,'ap-nid');return;}
+  }
   if(!dd||!dm||!dy){vFail('ap-err','تاريخ الميلاد مطلوب','ap-dd');return;}
   if(!validYMD(dy,dm,dd)){vFail('ap-err','تاريخ الميلاد غير صحيح — هذا اليوم غير موجود في الشهر','ap-dd');return;}
-  if(!phoneOK(gd)){vFail('ap-err','جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5','ap-gd');return;}
-  if(phoneFake(gd)){vFail('ap-err','جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً','ap-gd');return;}
+  if(!ext){
+    if(!phoneOK(gd)){vFail('ap-err','جوال ولي الأمر مطلوب — ٩ أرقام تبدأ بـ 5','ap-gd');return;}
+    if(phoneFake(gd)){vFail('ap-err','جوال ولي الأمر غير مقبول — أدخل رقماً حقيقياً','ap-gd');return;}
+  }else if(gd&&(!phoneOK(gd)||phoneFake(gd))){vFail('ap-err','جوال ولي الأمر غير صحيح — ٩ أرقام تبدأ بـ 5','ap-gd');return;}
   if(!idImg){vFail('ap-err','صورة الهوية مطلوبة','apid-prev');return;}
   /* الهوية فريدة — لا تتكرر بين اللاعبين */
   var dupNid=null;
-  (T().teams||[]).forEach(function(tt){(tt.players||[]).forEach(function(pp){
+  if(nid)(T().teams||[]).forEach(function(tt){(tt.players||[]).forEach(function(pp){
     if(pp.nid&&normNid(pp.nid)===nid)dupNid=pp;});});
   if(dupNid){vFail('ap-err','رقم الهوية مسجّل للاعب: '+dupNid.name,'ap-nid');return;}
   var tname,catName;
@@ -13895,7 +14074,7 @@ function admTeamInfoHTML(){
   if(!cats.length)h2+=emptyBox('cal','لا توجد فئات');
   else h2+='<div>'+cats.map(function(c){var n=(t.players||[]).filter(function(p){return p.cat===c.name;}).length;return '<span class="cat-pill" style="cursor:default">'+ic('cal',12)+' '+esc(c.name)+' — '+esc(c.coach||'بدون مدرب')+' ('+n+' لاعب)</span>';}).join('')+'</div>';
   /* players full details */
-  h2+='<div class="sec-t" style="margin:1.5rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">اللاعبون ('+(t.players||[]).length+') '+missChipOf(t.players)+'</h2></div>';
+  h2+='<div class="sec-t" style="margin:1.5rem 0 .7rem"><div class="bar"></div><h2 style="font-size:14px">اللاعبون ('+(t.players||[]).length+') '+missChipOf(t.players,btIsExt(t)||teamIsExt(t.name))+'</h2></div>';
   var ps=t.players||[];
   if(!ps.length)h2+=emptyBox('user','لا يوجد لاعبون');
   else{
@@ -14796,6 +14975,7 @@ function plPushApp(ap,teamName){
   var n=0;
   /* نسخه الأخرى في البطولات (القائمة العامة وبقية البطولات) */
   plAppRosters().forEach(function(r){(r.players||[]).forEach(function(p){if(p===ap)return;var same=(normNid(p.nid)&&normNid(p.nid)===normNid(ap.nid))||(normName(r.team)===normName(teamName)&&plNameKey(p)===plNameKey(ap));if(same)n+=plCopy(ap,p,true,'app');});});
+  if(teamIsExt(teamName))return n;   /* الفرق الخارجية لا تُمثَّل في الإدارة الفنية */
   var m=plMatchTD(ap,teamName);
   if(m.length)m.forEach(function(td){n+=plCopy(ap,td,true,'td');});
   else if(plBranchOf(teamName)){if(plNewTD(ap,teamName))n++;}
@@ -15402,27 +15582,28 @@ function plGuardCounts(){
   PL_GC={at:now,map:m};return m;
 }
 /* لاعب البطولة: guard = جوال ولي الأمر (تسمية مختلفة عن الإدارة الفنية) */
-function issuesTPlayerRanked(p){
+/* ext=true: لاعب أكاديمية خارجية — متطلبات مخفّفة (الاسم، الميلاد، صورة الهوية إجبارية؛ الباقي اختياري) */
+function issuesTPlayerRanked(p,ext){
   var crit=[],warn=[],codes={};
   if(!p)return{crit:crit,warn:warn,codes:codes};
   var n=splitName(p);
   if(!String(p.name||'').trim()){crit.push('الاسم فارغ');codes.name=1;}
-  else if(!n.first||!n.mid||!n.last){crit.push('الاسم غير ثلاثي (اللاعب • الأب • العائلة)');codes.name=1;}
-  if(!p.nid){crit.push('لا يوجد رقم هوية');codes.nid=1;}
+  else if(!ext&&(!n.first||!n.mid||!n.last)){crit.push('الاسم غير ثلاثي (اللاعب • الأب • العائلة)');codes.name=1;}
+  if(!p.nid){if(!ext){crit.push('لا يوجد رقم هوية');codes.nid=1;}}
   else if(normNid(p.nid).length!==10){crit.push('رقم الهوية ناقص — يجب ١٠ أرقام');codes.nid=1;}
   else if(!nidChk(p.nid)){crit.push('رقم الهوية غير صحيح — لا يبدأ بـ 1/2 أو خانة التحقق لا تطابق');codes.nid=1;}
   var gp=p.guard||p.guardPhone||'';
-  if(!gp){crit.push('لا يوجد جوال ولي أمر');codes.gph=1;}
+  if(!gp){if(!ext){crit.push('لا يوجد جوال ولي أمر');codes.gph=1;}}
   else if(!phoneOK(gp)){crit.push('جوال ولي الأمر غير صحيح');codes.gph=1;}
   else if(phoneFake(gp)){crit.push('جوال ولي الأمر يبدو وهمياً');codes.gph=1;}
   if(!p.dob){crit.push('لا يوجد تاريخ ميلاد');codes.dob=1;}
-  if(!p.idImg)warn.push('لا توجد صورة هوية');
+  if(!p.idImg){if(ext){crit.push('لا توجد صورة هوية');codes.idImg=1;}else warn.push('لا توجد صورة هوية');}
   if(p.phone&&!phoneOK(p.phone))warn.push('جوال اللاعب غير صحيح');
   return{crit:crit,warn:warn,codes:codes};
 }
-function issuesTPlayer(p){var r=issuesTPlayerRanked(p);return r.crit.concat(r.warn);}
-function tPlayerBadge(p){
-  var r=issuesTPlayerRanked(p),all=r.crit.concat(r.warn);
+function issuesTPlayer(p,ext){var r=issuesTPlayerRanked(p,ext);return r.crit.concat(r.warn);}
+function tPlayerBadge(p,ext){
+  var r=issuesTPlayerRanked(p,ext),all=r.crit.concat(r.warn);
   return warnBadge(all,p.name,r.crit.length>0);
 }
 /* ================= ترحيل اللاعبين لجدول منفصل =================
@@ -15611,8 +15792,8 @@ function issuesPlayer(p){
   return r.crit.concat(r.warn);
 }
 /* عدّاد اللاعبين ناقصي البيانات — يُعرض بجانب عنوان القائمة */
-function missChipOf(players){
-  var n=0;(players||[]).forEach(function(p){if(issuesTPlayer(p).length)n++;});
+function missChipOf(players,ext){
+  var n=0;(players||[]).forEach(function(p){if(issuesTPlayer(p,ext).length)n++;});
   if(!n)return '<span class="miss-chip ok">'+ic('check',11)+' مكتملة</span>';
   return '<span class="miss-chip">'+ic('info',11)+' ناقص: '+n+'</span>';
 }
@@ -26095,12 +26276,12 @@ var CESEL_FORMS={
             ['توصيات مدير الفرع',['توصية مدير الفرع واحتياج الفرع لهذا المرشح']],
             ['نظرة اللجنة الفنية',['الانطباع العام للجنة الفنية عن ملاءمة المرشح']]],
     dec:[['pass','يُدعى للمقابلة','#16a34a'],['reserve','قائمة احتياط','#8b92b0'],['no','مستبعد','#DD1D45']],next:'interview',
-    appr:[['m1','عضو اللجنة الفنية','tech'],['m2','عضو اللجنة الفنية','tech'],['chair','رئيس اللجنة الفنية','chair']],
+    appr:[['td','المدير الفني','td']],
     extra:[['sdate','تاريخ الفرز','date']]},
-  interview:{t:'نموذج تقييم المقابلة الشخصية',short:'المقابلة',who:'تعبّئه لجنة المقابلة (زوم أو حضوري — جامعة الأميرة نورة)',max:10,pass:70,
+  interview:{t:'نموذج تقييم المقابلة الشخصية',short:'المقابلة',who:'تعبّئه لجنة المقابلة (زوم أو حضوري — جامعة الأميرة نورة)',max:5,pass:70,
     groups:[['المحاور',['التعريف بالنفس والخبرة التدريبية السابقة','فلسفته في التدريب وتطوير اللاعبين','كيف يبني حصة تدريبية لفئة عمرية محددة؟','كيف يتعامل مع لاعب كثير المشاكل أو غير منضبط؟','كيف يتعامل مع ولي أمر غاضب أو معترض؟','ماذا يفعل عند حدوث إصابة أثناء التمرين؟','الالتزام بالأوقات والتفرغ وقرب السكن','مهارات التواصل والثقة واللغة','المظهر العام والانطباع الأول','الدافع للانضمام للأكاديمية والاستمرار']]],
     dec:[['pass','ينتقل للتجربة العملية','#16a34a'],['reserve','احتياط','#8b92b0'],['no','غير مقبول','#DD1D45']],next:'trial',
-    appr:[['m1','عضو لجنة المقابلة','intv'],['m2','عضو لجنة المقابلة','intv']],
+    appr:[['td','المدير الفني','td']],
     extra:[['mode','طريقة المقابلة','opts',[['zoom','زوم'],['live','حضوري — جامعة الأميرة نورة']]],['when','موعد المقابلة','datetime-local'],['link','رابط الاجتماع / الموقع','text']]},
   trial:{t:'نموذج تقييم التجربة العملية',short:'التجربة العملية',who:'يعبّئه مدير الفرع الذي تُجرى فيه التجربة',max:5,pass:75,minAxis:3,
     groups:[['المظهر',['الالتزام بالزي الرياضي ونظافة المظهر','الحضور في الموعد والجاهزية','لغة الجسد والثقة أمام اللاعبين']],
@@ -26108,7 +26289,7 @@ var CESEL_FORMS={
             ['التدريب',['وضوح الشرح وصحة العرض الفني','ملاءمة التمارين للفئة العمرية','تصحيح الأخطاء ومتابعة اللاعبين','تنظيم الحصة وإدارة الوقت']],
             ['إدارة المواقف',['التعامل مع لاعب غير منضبط أو خلاف','التصرف عند إصابة أو موقف طارئ','المرونة عند تغيّر الظروف (العدد، المكان، الأدوات)']]],
     dec:[['pass','ناجح ويُرشَّح للفرع','#16a34a'],['retry','إعادة تجربة','#d97706'],['no','غير مقبول','#DD1D45']],next:'onb',
-    appr:[['mgr','مدير فرع التجربة','mgr'],['sup','المشرف الفني','sup']],
+    appr:[['td','المدير الفني','td']],
     extra:[['tdate','تاريخ التجربة','date'],['cat','الفئة العمرية','text'],['dur','مدة الحصة','text'],['evalBy','اسم المقيّم','text']]},
   branch:{t:'نموذج تقييم المدرب في الفرع',short:'تقييم الفرع',who:'يعبّئه مدير الفرع بعد أسبوع التدريب والافتتاح وخلال فترة التجربة، ثم دورياً كل 3 أشهر',max:5,pass:80,mid:65,
     groups:[['المظهر والانضباط',['الالتزام بالزي الرسمي للأكاديمية ونظافة المظهر','الحضور قبل موعد التمرين بـ 15 دقيقة على الأقل','الالتزام بأنظمة الأكاديمية والفرع']],
@@ -26119,18 +26300,33 @@ var CESEL_FORMS={
             ['إدارة المواقف والسلامة',['التصرف الصحيح عند الإصابات والإسعافات الأولية','التعامل مع المشكلات السلوكية والخلافات','فحص سلامة المكان والأدوات قبل التمرين']],
             ['الشخصية والتطور',['الحماس والطاقة الإيجابية خلال التمرين','تقبّل الملاحظات والعمل على تطبيقها']]],
     dec:[['pass','معتمد للتعيين','#16a34a'],['dev','يحتاج تطوير وإعادة تقييم','#d97706'],['no','غير معتمد','#DD1D45']],next:'hired',
-    appr:[['mgr','مدير الفرع','mgr'],['sup','المشرف الفني','sup'],['adm','اعتماد الإدارة','adm']],seq:true,
+    appr:[['td','المدير الفني','td']],
     extra:[['edate','تاريخ التقييم','date'],['cat','الفئة العمرية','text'],['start','تاريخ المباشرة','date'],['evalBy','اسم المقيّم','text'],['etype','نوع التقييم','opts',[['week','نهاية أسبوع التدريب'],['open','بعد الافتتاح'],['prob','نهاية فترة التجربة'],['periodic','تقييم دوري']]],['redate','موعد إعادة التقييم (عند الحاجة)','date']]}
 };
-var CESEL_ONB=[['group','الإضافة في جروب الفرع','مدير الفرع'],['week','أسبوع تدريب في أحد الفروع','المشرف الفني'],['open','مرافقة مدرب الفرع الحالي للافتتاح','المدرب الحالي'],['hire','التعيين وفترة تجربة شهر','مدير الفرع / الإدارة']];
+/* أسئلة المقابلة الشخصية لكل محور (تُعدَّل من الإعدادات) */
+var CESEL_IQ_DEF=[
+ ['عرّفنا بنفسك: دراستك، شهاداتك التدريبية، وأين درّبت وكم سنة؟','ما أبرز إنجاز تدريبي تفخر به؟ ولماذا تركت آخر جهة عملت فيها؟'],
+ ['ما فلسفتك في تدريب الناشئين: الفوز أم التطوير؟ وكيف توازن بينهما؟','كيف تقيس تطور اللاعب خلال الموسم؟'],
+ ['صف لنا حصة تدريبية كاملة لفئة مواليد 2014 مدتها 90 دقيقة: الإحماء، الجزء الرئيسي، التهدئة.','كيف تعدّل الحصة لو حضر 25 لاعباً بدل 15؟'],
+ ['لاعب يقاطع التمرين ويستفز زملاءه باستمرار — ماذا تفعل في اللحظة نفسها، وماذا بعد الحصة؟','متى تُشرك إدارة الفرع أو ولي الأمر؟'],
+ ['ولي أمر غاضب يعترض أمام اللاعبين على عدم مشاركة ابنه — كيف تتصرف؟','كيف تبني علاقة مهنية مع أولياء الأمور من البداية؟'],
+ ['لاعب سقط وأصيب في كاحله أثناء التمرين — ما خطواتك بالترتيب؟','هل لديك شهادة إسعافات أولية سارية؟ ومتى آخر مرة استخدمتها؟'],
+ ['ما أوقات التدريب التي تستطيع الالتزام بها كاملة؟ وهل لديك ارتباطات أخرى؟','كم يستغرق وصولك للفرع؟ وما البديل لو تعطلت سيارتك؟'],
+ ['اشرح لنا مهارة فنية (مثل الاستلام والتمرير) كأنك تشرحها لطفل عمره 9 سنوات.','كيف تتعامل مع لاعب لا يفهم الشرح من أول مرة؟'],
+ ['ملاحظة اللجنة: الزي، الهندام، لغة الجسد، الوصول في الموعد.'],
+ ['لماذا أكاديمية فارس تحديداً؟ وأين ترى نفسك بعد سنتين؟','ما الذي يجعلك تستمر معنا لو جاءك عرض آخر؟']
+];
+function ceSelIQ(){var s=ceSelSet();return (s.iq&&s.iq.length)?s.iq:CESEL_IQ_DEF;}
+var CESEL_ONB=[['group','الإضافة في جروب الفرع','مدير الفرع'],['week','أسبوع تدريب في أحد الفروع','المشرف الفني'],['hire','التعيين وفترة تجربة شهر','مدير الفرع / الإدارة']];
 var CESEL_ONB_ST={'':['لم يبدأ','var(--gray)'],doing:['جارٍ','#d97706'],done:['تم','#16a34a'],skip:['لا ينطبق','#8b92b0']};
-var CESEL_STEPS=['ترشيح المدربين الحاليين والعاملين','فرز السير الذاتية — الاختيار الأولي (اللجنة الفنية)','تحديد الأقرب سكناً للفرع','المقابلة الشخصية (زوم أو جامعة الأميرة نورة)','الإضافة في جروب الفرع','التجربة العملية في أحد الفروع','أسبوع تدريب في أحد الفروع (المشرف الفني)','مرافقة مدرب الفرع الحالي للافتتاح','التعيين وفترة تجربة شهر'];
+var CESEL_STEPS=['ترشيح المدربين الحاليين والعاملين','فرز السير الذاتية — الاختيار الأولي (اللجنة الفنية)','تحديد الأقرب سكناً للفرع','المقابلة الشخصية (زوم أو جامعة الأميرة نورة)','الإضافة في جروب الفرع','التجربة العملية في أحد الفروع','أسبوع تدريب في أحد الفروع (المشرف الفني)','التعيين وفترة تجربة شهر'];
 var CESEL_REQ=[['شهادة تدريبية معتمدة أو خبرة موثقة لا تقل عن سنة',true],['شهادة إسعافات أولية سارية',true],['السكن قريب من الفرع (يُفضّل أقل من 30 دقيقة — تفضيل لا استبعاد)',false],['التفرغ لأوقات التدريب',true],['حسن السيرة والسلوك',true],['القدرة على التعامل مع الفئات العمرية المستهدفة',true]];
 var CESEL_REQ_ST={'':['لم يُتحقق','var(--gray)'],ok:['متحقق','#16a34a'],no:['غير متحقق','#DD1D45'],na:['لا ينطبق','#8b92b0']};
-var CESEL_NOTIFY_M={call:'اتصال',wa:'واتساب',sms:'رسالة نصية',live:'حضوري',other:'أخرى'};
 var CESEL={stage:'',branch:'',q:'',from:'',to:'',tab:'file',form:'',evalId:''};
 var CEV2='';   /* المرشح المفتوح */
-function ceSelSet(){var c=CEX();if(!c.settings.sel)c.settings.sel={trialMin:'item',periodicMonths:3,probMonths:1,notifyDays:3,committee:{chair:'',tech:[],intv:[]}};var s=c.settings.sel;if(!s.committee)s.committee={chair:'',tech:[],intv:[]};if(!s.trialMin)s.trialMin='item';if(!s.periodicMonths)s.periodicMonths=3;if(!s.probMonths)s.probMonths=1;if(!s.notifyDays)s.notifyDays=3;return s;}
+function ceSelSet(){var c=CEX();if(!c.settings.sel)c.settings.sel={trialMin:'item',periodicMonths:3,probMonths:1,td:'',linkDays:7};var s=c.settings.sel;if(!s.trialMin)s.trialMin='item';if(!s.periodicMonths)s.periodicMonths=3;if(!s.probMonths)s.probMonths=1;if(s.td==null)s.td='';if(!s.linkDays)s.linkDays=7;return s;}
+/* المدير الفني: الحساب المعتمِد لكل النماذج (يُحدَّد من الإعدادات) */
+function ceSelTDName(){var s=ceSelSet(),u=s.td?(DB.users||[]).find(function(q){return q.id===s.td;}):null;return u?u.name:'';}
 function ceCands(){var c=CEX();if(!c.cands)c.cands=[];return c.cands;}
 function ceCand(id){return ceCands().find(function(x){return x.id===id;})||null;}
 /* النطاق والصلاحيات: الإدارة والمشرف (اللجان) كل الفروع — مدير الفرع فرعه */
@@ -26172,21 +26368,11 @@ function ceSelNext(x){
 function ceSelOnbNext(x){var o=x.onb||{};for(var i=0;i<CESEL_ONB.length;i++){var s=CESEL_ONB[i],st=(o[s[0]]||{}).st||'';if(st!=='done'&&st!=='skip')return s;}return null;}
 function ceSelPeriodicDue(x){if(x.stage!=='hired')return '';var ev=(x.branchEvals||[]).filter(ceSelFinal).sort(function(a,b){return (a.edate||'')<(b.edate||'')?1:-1;})[0];var base=ev?(ev.edate||calISO(new Date(ev.at))):(x.hiredAt?calISO(new Date(x.hiredAt)):'');if(!base)return '';return ceAddMonths(base,ceSelSet().periodicMonths);}
 /* ---------- الإبلاغ بالنتيجة خلال ٣ أيام عمل ---------- */
-function ceSelNotifyAdd(x,k,lbl){if(!x.notify)x.notify=[];var today=calISO(new Date());x.notify.push({id:uid(),stage:k,lbl:lbl,decAt:today,due:ceWorkAdd(today,ceSelSet().notifyDays),at:'',method:'',by:'',note:''});}
-function ceSelNotifyDo(cid,nid){
-  var x=ceCand(cid);if(!x||!ceSelCan(x))return;var n=(x.notify||[]).find(function(q){return q.id===nid;});if(!n)return;
-  var h='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div><b>'+esc(x.name)+'</b> — إبلاغه بنتيجة: '+esc(n.lbl)+'<br><small>الموعد: خلال 3 أيام عمل من القرار ('+esc(tdDayLabel(n.due))+')</small></div></div>';
-  h+='<div class="frow">'+xInp('cnf-date','تاريخ الإبلاغ',calISO(new Date()),'','date',true)+'<div class="fg"><label>طريقة الإبلاغ *</label>'+tdSel('cnf-m',Object.keys(CESEL_NOTIFY_M).map(function(k){return [k,CESEL_NOTIFY_M[k]];}),'wa','اختر')+'</div></div>';
-  h+=xTxt('cnf-note','ملاحظة','',2);
-  h+='<div class="xacts"><button class="btn btn-r" onclick="ceSelNotifySave(\''+cid+'\',\''+nid+'\')">'+ic('check',13)+' تسجيل الإبلاغ</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div>';
-  fpgHTML('تسجيل إبلاغ المرشح','bell','يُسجَّل التاريخ والطريقة والمسؤول',h,function(){rCECand();});
-}
-function ceSelNotifySave(cid,nid){var x=ceCand(cid);var n=x&&(x.notify||[]).find(function(q){return q.id===nid;});if(!n)return;var d=gv('cnf-date'),m=gv('cnf-m');if(!d||!m)return;n.at=d;n.method=m;n.by=CU.name;n.note=gv('cnf-note');ceCandLog(x,'إبلاغ المرشح بنتيجة '+n.lbl+' ('+CESEL_NOTIFY_M[m]+')');sv();fpgHide();rCECand();}
+function ceSelNotifyAdd(x,k,lbl){}
 /* ---------- التنبيهات (داخل القسم فقط) ---------- */
 function ceSelAlerts(){
   var out=[],today=calISO(new Date()),soon=agAdd(today,3);
   ceSelScope().forEach(function(x){
-    (x.notify||[]).forEach(function(n){if(n.at)return;if(n.due<today)out.push({c:'var(--red)',ic:'bell',t:'تأخر إبلاغ «'+x.name+'» بنتيجة '+n.lbl+' (الموعد '+tdDayLabel(n.due)+')',id:x.id,tab:'file'});else if(n.due<=soon)out.push({c:'var(--amber)',ic:'bell',t:'إبلاغ «'+x.name+'» بنتيجة '+n.lbl+' قبل '+tdDayLabel(n.due),id:x.id,tab:'file'});});
     var iv=x.forms&&x.forms.interview;if(iv&&iv.when&&!ceSelFinal(iv)){var d=String(iv.when).slice(0,10);if(d>=today&&d<=soon)out.push({c:'#1565c0',ic:'cal',t:'مقابلة «'+x.name+'» '+esc(new Date(iv.when).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'})),id:x.id,tab:'interview'});}
     var tr=x.forms&&x.forms.trial;if(tr&&tr.tdate&&!ceSelFinal(tr)&&tr.tdate>=today&&tr.tdate<=soon)out.push({c:'#d97706',ic:'whistle',t:'تجربة عملية لـ «'+x.name+'» '+tdDayLabel(tr.tdate),id:x.id,tab:'trial'});
     ['screen','interview','trial'].forEach(function(k){var f=ceSelFormOf(x,k);if(f&&ceSelFinal(f)&&!ceSelApproved(k,f)){var late=(Date.now()-f.at)>3*864e5;out.push({c:late?'var(--red)':'#5b2d8f',ic:'check',t:(late?'تأخر اعتماد ':'بانتظار اعتماد ')+CESEL_FORMS[k].short+' — «'+x.name+'»',id:x.id,tab:k});}});
@@ -26231,6 +26417,7 @@ function rCESelect(){
     h+=tbl('قيد الاختيار',act)+tbl('مدربون معتمدون (فترة التجربة والتقييم الدوري)',hired)+tbl('قائمة الاحتياط حسب الفرع',res)+tbl('مستبعدون',rej);
   }
   el.innerHTML=h;hydrateIcons(el);
+  try{ceSelPull();}catch(e){}
   var b1=g('cesel-br');if(b1)b1.onchange=function(){CESEL.branch=this.value;rCESelect();};
   var f1=g('cesel-from');if(f1)f1.onchange=function(){CESEL.from=this.value;rCESelect();};var t1=g('cesel-to');if(t1)t1.onchange=function(){CESEL.to=this.value;rCESelect();};
   var q1=g('cesel-q');if(q1){q1.oninput=function(){CESEL.q=this.value;clearTimeout(CESEL._t);CESEL._t=setTimeout(function(){rCESelect();var n=g('cesel-q');if(n){n.focus();try{n.setSelectionRange(n.value.length,n.value.length);}catch(e){}}},350);};}
@@ -26271,6 +26458,7 @@ function rCECand(){
   h+='</div>';
   el.innerHTML=h;hydrateIcons(el);
   try{var tb=el.querySelector('.cesel-tab.on');if(tb&&tb.scrollIntoView)tb.scrollIntoView({inline:'center',block:'nearest'});}catch(e){}
+  try{ceSelPull();}catch(e){}
 }
 /* زر الإجراء التالي */
 function ceSelCTA(x,can){
@@ -26285,19 +26473,13 @@ function ceSelCTA(x,can){
 }
 function ceCandFileHTML(x,can){
   var h='';
-  /* الإبلاغ المعلّق */
-  (x.notify||[]).filter(function(n){return !n.at;}).forEach(function(n){var late=n.due<calISO(new Date());h+='<div class="ce2-note'+(late?' warn':'')+'" style="margin-bottom:.6rem">'+ic('bell',13)+'<div><b>إبلاغ المرشح بنتيجة '+esc(n.lbl)+'</b> — الموعد '+esc(tdDayLabel(n.due))+(late?' (متأخر)':'')+(can?' <button class="btn btn-o btn-sm" style="margin-inline-start:.5rem" onclick="ceSelNotifyDo(\''+x.id+'\',\''+n.id+'\')">تسجيل الإبلاغ</button>':'')+'</div></div>';});
   h+=tdSubHead('بيانات المرشح',can?'<button class="btn btn-g btn-sm" onclick="ceCandForm(\''+x.id+'\')">'+ic('edit',11)+' تعديل</button>':'');
   var rows=[['رقم الجوال',x.phone?phoneDisp(x.phone):''],['مكان السكن',x.home],['زمن الوصول للفرع',x.dist?ceN(x.dist)+' دقيقة':''],['الفرع المستهدف',x.branch],['مصدر الترشيح',x.src],['المرشِّح من الأكاديمية',x.srcBy],['سبب الترشيح',x.srcWhy],['المؤهلات والشهادات التدريبية',x.quals],['سنوات الخبرة',x.expYears],['الجهات السابقة',x.expPlaces],['الفئات العمرية التي درّبها',x.ageGroups],['مدى التفرغ لأوقات التدريب',x.avail],['شهادة الإسعافات الأولية',x.fa&&x.fa.has?('سارية'+(x.fa.expiry?' حتى '+tdDayLabel(x.fa.expiry):'')+(x.fa.expiry&&x.fa.expiry<calISO(new Date())?' — <b style="color:var(--red)">منتهية</b>':'')):''],['السيرة الذاتية',x.cv],['ملاحظات اللجنة',x.cnotes]];
   h+='<div class="cesel-kv">'+rows.filter(function(r){return r[1];}).map(function(r){return '<div><small>'+r[0]+'</small><b>'+(r[0]==='شهادة الإسعافات الأولية'?r[1]:esc(r[1]))+'</b></div>';}).join('')+'</div>';
   /* المرفقات */
-  h+=tdSubHead('المرفقات',can?'<label class="btn btn-g btn-sm" style="cursor:pointer">'+ic('plus',11)+' إضافة مرفق<input type="file" accept="image/*,.pdf" style="display:none" onchange="ceCandAttach(this,\''+x.id+'\')"></label>':'');
-  if(x.files&&x.files.length)h+='<div class="cecr-list">'+x.files.map(function(f){return '<div class="cecr-row"><span class="cecr-n"><a href="'+srcOK(f.url)+'" target="_blank" rel="noopener">'+ic(f.pdf?'doc':'image',11)+' '+esc(f.name)+'</a></span><small style="color:var(--gray)">'+esc(f.by||'')+' • '+esc(xDateLbl(new Date(f.at).toISOString()))+'</small>'+(can?'<button class="ab" style="color:var(--red)" onclick="ceCandAttachDel(\''+x.id+'\',\''+f.id+'\')">'+ic('x',10)+'</button>':'')+'</div>';}).join('')+'</div>';
-  else h+='<div class="jnote">'+ic('info',12)+' لا مرفقات بعد (السيرة الذاتية، الشهادات، الإثباتات).</div>';
-  /* الشروط الأساسية */
-  var req=x.req||{};var okN=CESEL_REQ.filter(function(_,i){return (req[i]||{}).st==='ok';}).length;
-  h+=tdSubHead('التحقق من الشروط الأساسية','<span class="pg-chip">'+ceN(okN)+'/'+ceN(CESEL_REQ.length)+'</span>'+(can?'<button class="btn btn-g btn-sm" onclick="ceCandReqForm(\''+x.id+'\')">'+ic('check',11)+' تحديث التحقق</button>':''));
-  h+='<div class="cecr-list">'+CESEL_REQ.map(function(t,i){var r=req[i]||{},s=CESEL_REQ_ST[r.st||'']||CESEL_REQ_ST[''];return '<div class="cecr-row"><span class="badge" style="background:'+s[1]+'1f;color:'+s[1]+'">'+s[0]+'</span><span class="cecr-n">'+esc(t[0])+(t[1]?'':' <small style="color:var(--gray)">(تفضيل)</small>')+'</span>'+(r.note?'<small style="color:var(--gray)">'+esc(r.note)+'</small>':'')+(r.img?'<a href="'+srcOK(r.img)+'" target="_blank" rel="noopener">'+ic('image',11)+' إثبات</a>':'')+'</div>';}).join('')+'</div>';
+  h+=tdSubHead('المرفقات',can?'<button class="btn btn-g btn-sm" onclick="ceCandAttachForm(\''+x.id+'\')">'+ic('plus',11)+' إضافة مرفق</button>':'');
+  if(x.files&&x.files.length)h+='<div class="cecr-list">'+x.files.map(function(f){return '<div class="cecr-row"><span class="badge" style="background:var(--bg);color:var(--txt)">'+ic(f.pdf?'doc':'image',11)+'</span><span class="cecr-n"><a href="'+srcOK(f.url)+'" target="_blank" rel="noopener">'+esc(f.title||f.name)+'</a>'+(f.title&&f.name&&f.title!==f.name?' <small style="color:var(--gray)">('+esc(f.name)+')</small>':'')+'</span><small style="color:var(--gray)">'+esc(f.by||'')+' • '+esc(xDateLbl(new Date(f.at).toISOString()))+'</small>'+(can?'<button class="ab" style="color:var(--red)" onclick="ceCandAttachDel(\''+x.id+'\',\''+f.id+'\')">'+ic('x',10)+'</button>':'')+'</div>';}).join('')+'</div>';
+  else h+='<div class="jnote">'+ic('info',12)+' لا مرفقات بعد — السيرة الذاتية، الشهادات التدريبية، شهادة الإسعافات، الهوية، أي إثبات.</div>';
   /* الأزرار */
   h+='<div class="xcard-btns" style="margin-top:1rem">';
   if(can){
@@ -26318,9 +26500,10 @@ function ceCandFormTab(x,k,can){
   var reachable=cur>=idx||x.stage==='hired'||!!f;
   h+=ceSelStageHead(k);
   if(!reachable)return h+'<div class="cesel-empty">'+ic('lock',26)+'<b>هذه المرحلة لم تبدأ بعد</b><small>لا يُفتح نموذجها قبل اجتياز المرحلة السابقة واعتمادها</small></div>';
+  if(k==='trial')h+=ceSelLinksHTML(x,'trial');
   if(!f){
     if(k==='interview'&&can)h+=ceSelScheduleHTML(x);
-    return h+'<div class="cesel-empty">'+ic('doc',26)+'<b>لم يُعبّأ '+esc(F.t)+' بعد</b>'+(can&&x.stage===k?'<button class="btn btn-r" onclick="ceSelForm(\''+x.id+'\',\''+k+'\')">'+ic('plus',13)+' تعبئة النموذج</button>':'<small>'+esc(F.who)+'</small>')+'</div>';
+    return h+'<div class="cesel-empty">'+ic('doc',26)+'<b>لم يُعبّأ '+esc(F.t)+' بعد</b>'+(can&&x.stage===k?'<div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center"><button class="btn btn-r" onclick="ceSelForm(\''+x.id+'\',\''+k+'\')">'+ic('plus',13)+' تعبئة النموذج</button>'+(k==='trial'&&FA.enabled?'<button class="btn btn-o" onclick="ceSelLinkForm(\''+x.id+'\',\'trial\')">'+ic('whistle',13)+' إرسال رابط لمدير الفرع</button>':'')+'</div>':'<small>'+esc(F.who)+'</small>')+'</div>';
   }
   if(k==='interview'&&!ceSelFinal(f))h+=ceSelScheduleHTML(x);
   h+=ceSelFormView(x,k,f,can);
@@ -26328,7 +26511,7 @@ function ceCandFormTab(x,k,can){
 }
 function ceSelStageHead(k){
   var F=CESEL_FORMS[k],n=ceSelItems(k).length;
-  return '<div class="cesel-sh"><div><h3>'+esc(F.t)+'</h3><p>'+esc(F.who)+'</p></div><div class="cesel-stats"><span><small>المجموع</small><b>'+ceN(n*F.max)+'</b></span><span><small>حد النجاح</small><b>'+ceN(F.pass)+'٪</b></span>'+(F.minAxis?'<span><small>أدنى محور</small><b>'+ceN(F.minAxis)+'</b></span>':'')+(F.mid?'<span><small>يحتاج تطوير</small><b>'+ceN(F.mid)+'–'+ceN(F.pass-1)+'٪</b></span>':'')+'<span><small>الاعتماد</small><b>'+ceN(F.appr.length)+' '+(F.appr.length>2?'جهات':'جهتان')+'</b></span></div></div>';
+  return '<div class="cesel-sh"><div><h3>'+esc(F.t)+'</h3><p>'+esc(F.who)+'</p></div><div class="cesel-stats"><span><small>المجموع</small><b>'+ceN(n*F.max)+'</b></span><span><small>حد النجاح</small><b>'+ceN(F.pass)+'٪</b></span>'+(F.minAxis?'<span><small>أدنى محور</small><b>'+ceN(F.minAxis)+'</b></span>':'')+(F.mid?'<span><small>يحتاج تطوير</small><b>'+ceN(F.mid)+'–'+ceN(F.pass-1)+'٪</b></span>':'')+'<span><small>الاعتماد</small><b>المدير الفني</b></span></div></div>';
 }
 function ceSelMinLbl(){var m=ceSelSet().trialMin;return m==='item'?'يُطبَّق على كل عنصر':(m==='group'?'يُطبَّق على متوسط كل محور':'غير مفعّل حتى تحسمه الإدارة');}
 function ceSelScheduleHTML(x){
@@ -26340,7 +26523,7 @@ function ceSelScheduleSave(id){var x=ceCand(id);if(!x||!ceSelCan(x))return;if(!x
 function ceSelFormView(x,k,f,can,evalId){
   var F=CESEL_FORMS[k],items=ceSelItems(k),sc=ceSelScore(k,f),d=f.dec?ceSelDecLbl(k,f.dec):null,fin=ceSelFinal(f),appr=ceSelApproved(k,f);
   var h='<div class="xcard" style="--c:'+(d?d[2]:CESEL_ST[k]&&CESEL_ST[k][1]||'var(--navy)')+'">';
-  h+='<div class="xcard-top">'+(fin?(appr?'<span class="badge approved">'+ic('check',10)+' معتمد ومقفل</span>':'<span class="badge pending">بانتظار الاعتماد</span>'):'<span class="badge" style="background:var(--bg);color:var(--amber)">مسودة</span>')+(f.etype?'<span class="badge" style="background:var(--bg)">'+esc((F.extra.find(function(e){return e[0]==='etype';})[3].find(function(o){return o[0]===f.etype;})||[])[1]||'')+'</span>':'')+'<span style="margin-inline-start:auto;font-size:10.5px;color:var(--gray)">'+esc(f.by||'')+(f.at?' • '+esc(new Date(f.at).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'})):'')+'</span></div>';
+  h+='<div class="xcard-top">'+(fin?(appr?'<span class="badge approved">'+ic('check',10)+' معتمد ومقفل</span>':'<span class="badge pending">بانتظار الاعتماد</span>'):'<span class="badge" style="background:var(--bg);color:var(--amber)">مسودة</span>')+(f.etype?'<span class="badge" style="background:var(--bg)">'+esc((F.extra.find(function(e){return e[0]==='etype';})[3].find(function(o){return o[0]===f.etype;})||[])[1]||'')+'</span>':'')+'<span style="margin-inline-start:auto;font-size:10.5px;color:var(--gray)">'+(f.via==='link'?ic('whistle',10)+' عبر رابط مدير الفرع • ':'')+esc(f.by||'')+(f.at?' • '+esc(new Date(f.at).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'})):'')+'</span></div>';
   var meta=[];(F.extra||[]).forEach(function(e){var v=f[e[0]];if(!v)return;if(e[2]==='opts')v=(e[3].find(function(o){return o[0]===v;})||[])[1]||v;else if(e[2]==='date')v=tdDayLabel(v);else if(e[2]==='datetime-local')v=new Date(v).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'});meta.push(e[1]+': '+v);});if(f.br)meta.push('الفرع: '+f.br);
   if(meta.length)h+='<div class="xcard-m">'+meta.map(function(m){return '<span>'+esc(m)+'</span>';}).join('')+'</div>';
   /* الدرجات */
@@ -26353,7 +26536,7 @@ function ceSelFormView(x,k,f,can,evalId){
   if(f.str||f.dev||f.plan)h+='<div class="xcard-d">'+(f.str?'<b style="color:var(--green)">نقاط القوة:</b> '+esc(f.str)+'<br>':'')+(f.dev?'<b style="color:var(--amber)">نقاط تحتاج إلى تطوير:</b> '+esc(f.dev)+'<br>':'')+(f.plan?'<b>خطة التطوير المقترحة:</b> '+esc(f.plan):'')+'</div>';
   if(f.txt)h+='<div class="xcard-d"><b>ملاحظات:</b> '+esc(f.txt)+'</div>';
   /* الاعتمادات */
-  h+='<div class="cesel-appr"><div class="cw-t" style="font-size:12px;margin-bottom:.4rem">'+ic('shield',12)+' الاعتمادات'+(F.seq?' <small style="color:var(--gray)">(بالتسلسل)</small>':'')+'</div>';
+  h+='<div class="cesel-appr"><div class="cw-t" style="font-size:12px;margin-bottom:.4rem">'+ic('shield',12)+' اعتماد المدير الفني'+(ceSelTDName()?' <small style="color:var(--gray)">— '+esc(ceSelTDName())+'</small>':'')+'</div>';
   F.appr.forEach(function(a,ai){var ap=f.appr&&f.appr[a[0]];var prevOk=!F.seq||ai===0||!!(f.appr&&f.appr[F.appr[ai-1][0]]);
     h+='<div class="cecr-row"><span class="cecr-n">'+esc(a[1])+'</span>'+(ap?'<span class="badge approved">'+ic('check',10)+' '+esc(ap.by)+' • '+esc(new Date(ap.at).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'}))+'</span>':(fin&&prevOk&&ceApprCan(a,f,x)?'<button class="btn btn-n btn-sm" onclick="ceSelApprove(\''+x.id+'\',\''+k+'\',\''+a[0]+'\',\''+(evalId||'')+'\')">'+ic('check',11)+' اعتماد</button>':'<span class="badge" style="background:var(--bg);color:var(--gray)">'+(fin?(prevOk?'بانتظار الاعتماد':'بعد الاعتماد السابق'):'بعد إنهاء النموذج')+'</span>'))+'</div>';});
   h+='</div>';
@@ -26368,15 +26551,8 @@ function ceSelFormView(x,k,f,can,evalId){
 /* من يعتمد؟ */
 function ceApprCan(a,f,x){
   var r=ceRole(),s=ceSelSet(),uid0=CU?CU.id:'';
-  if(f.appr&&Object.keys(f.appr).some(function(k){return f.appr[k].uid===uid0;})&&r!=='admin')return false;   /* شخص واحد = اعتماد واحد */
   if(r==='admin')return true;
-  var kind=a[2];
-  if(kind==='chair')return s.committee.chair===uid0;
-  if(kind==='tech')return (s.committee.tech||[]).indexOf(uid0)>-1||(!(s.committee.tech||[]).length&&r==='sup');
-  if(kind==='intv')return (s.committee.intv||[]).indexOf(uid0)>-1||(!(s.committee.intv||[]).length&&r==='sup');
-  if(kind==='sup')return r==='sup';
-  if(kind==='mgr')return r==='mgr'&&(!f.br&&!x.branch||ceBranches().indexOf(f.br||x.branch)>-1);
-  return false;
+  return !!(s.td&&s.td===uid0);
 }
 function ceSelApprove(cid,k,slot,evalId){
   var x=ceCand(cid);if(!x)return;var f=ceSelFormOf(x,k,evalId),F=CESEL_FORMS[k];if(!f||!ceSelFinal(f))return;
@@ -26435,7 +26611,8 @@ function ceCandBranchHTML(x,can){
   var reachable=['branch','hired','onb'].indexOf(x.stage)>-1||evs.length;
   if(!reachable)return h+'<div class="cesel-empty">'+ic('lock',26)+'<b>هذه المرحلة لم تبدأ بعد</b><small>تبدأ بعد اعتماد التجربة العملية واستكمال خطوات الالتحاق</small></div>';
   var pd=ceSelPeriodicDue(x);
-  h+='<div class="cesel-bar"><span class="jnote" style="margin:0">'+(pd?ic('refresh',12)+' التقييم الدوري التالي: <b>'+esc(tdDayLabel(pd))+'</b>':ic('info',12)+' كل تقييم مستقل، والدوري كل '+ceN(ceSelSet().periodicMonths)+' أشهر لا ينفّذ إجراءً تلقائياً')+'</span>'+(can&&(x.stage==='branch'||x.stage==='hired'||x.stage==='onb')?'<button class="btn btn-r btn-sm" onclick="ceSelForm(\''+x.id+'\',\'branch\',\'new\')">'+ic('plus',12)+' تقييم جديد</button>':'')+'</div>';
+  h+='<div class="cesel-bar"><span class="jnote" style="margin:0">'+(pd?ic('refresh',12)+' التقييم الدوري التالي: <b>'+esc(tdDayLabel(pd))+'</b>':ic('info',12)+' كل تقييم مستقل، والدوري كل '+ceN(ceSelSet().periodicMonths)+' أشهر لا ينفّذ إجراءً تلقائياً')+'</span>'+(can&&(x.stage==='branch'||x.stage==='hired'||x.stage==='onb')?'<span style="display:flex;gap:.4rem;flex-wrap:wrap"><button class="btn btn-r btn-sm" onclick="ceSelForm(\''+x.id+'\',\'branch\',\'new\')">'+ic('plus',12)+' تقييم جديد</button>'+(FA.enabled?'<button class="btn btn-o btn-sm" onclick="ceSelLinkForm(\''+x.id+'\',\'branch\')">'+ic('whistle',12)+' رابط لمدير الفرع</button>':'')+'</span>':'')+'</div>';
+  h+=ceSelLinksHTML(x,'branch');
   /* تطور التقييم */
   var fin=evs.filter(ceSelFinal);if(fin.length>1){h+='<div class="cesel-trend">'+fin.slice().reverse().map(function(f){var sc=ceSelScore('branch',f);return '<div class="cesel-tp"><b style="color:'+ceGrade(sc?sc.pct:null).c+'">'+(sc?ceN(sc.pct)+'٪':'—')+'</b><small>'+esc(f.edate?tdDayLabel(f.edate):'')+'</small></div>';}).join('')+'</div>';}
   if(!evs.length)h+='<div class="cesel-empty">'+ic('star',26)+'<b>لا توجد تقييمات بعد</b><small>أول تقييم «نهاية أسبوع التدريب» ثم «بعد الافتتاح» ثم «نهاية فترة التجربة»</small></div>';
@@ -26447,7 +26624,6 @@ function ceCandLogHTML(x){
   var h=tdSubHead('السجل الزمني');var L=(x.log||[]).slice().reverse();
   if(!L.length)return h+emptyBox('clock','لا سجل بعد');
   h+='<div class="cecr-list">'+L.map(function(l){return '<div class="cecr-row"><small style="color:var(--gray);white-space:nowrap">'+esc(new Date(l.at).toLocaleString(locale(),{dateStyle:'medium',timeStyle:'short'}))+'</small><span class="cecr-n" style="font-weight:500">'+esc(l.t)+'</span><small style="color:var(--gray)">'+esc(l.by||'')+'</small></div>';}).join('')+'</div>';
-  var N=(x.notify||[]);if(N.length){h+=tdSubHead('إبلاغ المرشح بالنتائج');h+='<div class="at-wrap"><table class="at"><thead><tr><th>النتيجة</th><th>تاريخ القرار</th><th>الموعد</th><th>تم الإبلاغ</th><th>الطريقة</th><th>المسؤول</th></tr></thead><tbody>'+N.map(function(n){return '<tr><td>'+esc(n.lbl)+'</td><td>'+esc(tdDayLabel(n.decAt))+'</td><td>'+esc(tdDayLabel(n.due))+'</td><td>'+(n.at?'<span class="badge approved">'+esc(tdDayLabel(n.at))+'</span>':'<span class="badge '+(n.due<calISO(new Date())?'rejected':'pending')+'">'+(n.due<calISO(new Date())?'متأخر':'بانتظار')+'</span>')+'</td><td>'+esc(CESEL_NOTIFY_M[n.method]||'—')+'</td><td>'+esc(n.by||'—')+'</td></tr>';}).join('')+'</tbody></table></div>';}
   return h;
 }
 /* ==================== بيانات المرشح ==================== */
@@ -26479,34 +26655,29 @@ function ceCandSave(id){
   var data={name:name,phone:ph,branch:br,home:gv('ccf-home'),dist:gv('ccf-dist'),avail:gv('ccf-avail'),src:gv('ccf-src'),srcBy:gv('ccf-srcby'),srcWhy:gv('ccf-why'),quals:gv('ccf-quals'),expYears:gv('ccf-expy'),expPlaces:gv('ccf-expp'),ageGroups:gv('ccf-ages'),fa:{has:!!(g('ccf-fa')&&g('ccf-fa').checked),expiry:gv('ccf-faexp')},cv:gv('ccf-cv'),img:gv('ccf-img'),cnotes:gv('ccf-cnotes')};
   if(x){Object.assign(x,data);ceCandLog(x,'تعديل البيانات');logA('تعديل مرشح: '+name,'edit','#0e7490');}
   else{x=Object.assign({id:uid(),stage:'screen',forms:{},branchEvals:[],req:{},files:[],onb:{},notify:[],log:[],by:CU.name,at:Date.now()},data);
-    /* شهادة الإسعافات من البيانات ← شرط ٢ */
-    if(data.fa.has&&(!data.fa.expiry||data.fa.expiry>=calISO(new Date())))x.req[1]={st:'ok',note:'من بيانات المرشح'};
     ceCands().push(x);ceCandLog(x,'إضافة المرشح — مرحلة الفرز');logA('مرشح جديد للتدريب: '+name+' — '+br,'user-plus','#0e7490');}
   sv();fpgHide();CEV2=x.id;CESEL.tab='file';ceP('cand');
 }
 function ceCandLog(x,t){if(!x.log)x.log=[];x.log.push({at:Date.now(),by:CU?CU.name:'',t:t});if(x.log.length>80)x.log=x.log.slice(-80);}
-function ceCandAttach(inp,cid){
-  var x=ceCand(cid),f=inp.files&&inp.files[0];if(!x||!f)return;
+function ceCandAttachForm(cid){
+  var x=ceCand(cid);if(!x||!ceSelCan(x))return;
+  var h=xInp('catt-title','عنوان المرفق','','مثال: السيرة الذاتية، رخصة D، شهادة إسعافات أولية','text',true)
+    +'<div class="fg"><label>الملف * <small>(صورة أو PDF حتى 2.5 م.ب)</small></label><input type="file" id="catt-file" accept="image/*,.pdf"></div>'
+    +'<div class="xacts"><button class="btn btn-r" onclick="ceCandAttach(\''+cid+'\')">'+ic('check',13)+' رفع المرفق</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div><div class="msg err" id="catt-err">اكتب العنوان واختر الملف</div>';
+  fpgHTML('إضافة مرفق','doc',x.name,h,function(){rCECand();});
+}
+function ceCandAttach(cid){
+  var x=ceCand(cid),inp=g('catt-file'),title=gv('catt-title'),f=inp&&inp.files&&inp.files[0];
+  if(!x||!f||!title){fl('catt-err');return;}
   var isPdf=/pdf/i.test(f.type)||/\.pdf$/i.test(f.name);
-  var push=function(url){if(!x.files)x.files=[];var rec={id:uid(),name:f.name,url:url,pdf:isPdf,by:CU.name,at:Date.now()};x.files.push(rec);ceCandLog(x,'مرفق: '+f.name);sv();rCECand();
+  var push=function(url){if(!x.files)x.files=[];var rec={id:uid(),title:title,name:f.name,url:url,pdf:isPdf,by:CU.name,at:Date.now()};x.files.push(rec);ceCandLog(x,'مرفق: '+title);sv();fpgHide();rCECand();
     if(!isPdf&&FA.enabled)FA.uploadImage(url,'cands').then(function(u){rec.url=u;sv();}).catch(function(){});};
   var rd=new FileReader();
-  if(isPdf){if(f.size>2.5*1024*1024){alert('ملف PDF كبير — الحد 2.5 م.ب');return;}rd.onload=function(){push(rd.result);};rd.readAsDataURL(f);return;}
+  if(isPdf){if(f.size>2.5*1024*1024){g('catt-err').textContent='ملف PDF كبير — الحد 2.5 م.ب';fl('catt-err');return;}rd.onload=function(){push(rd.result);};rd.readAsDataURL(f);return;}
   rd.onload=function(){var im=new Image();im.onload=function(){var mx=1400,k=Math.min(1,mx/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(im.width*k));cv.height=Math.max(1,Math.round(im.height*k));cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);push(cv.toDataURL('image/jpeg',.88));};im.src=rd.result;};
   rd.readAsDataURL(f);
 }
 function ceCandAttachDel(cid,fid){var x=ceCand(cid);if(!x)return;askConfirm('حذف المرفق؟',function(){x.files=(x.files||[]).filter(function(q){return q.id!==fid;});sv();rCECand();});}
-function ceCandReqForm(cid){
-  var x=ceCand(cid);if(!x||!ceSelCan(x))return;var req=x.req||{};
-  var h='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div>لكل شرط حالة تحقق وملاحظة وإثبات عند الحاجة. قرب السكن أقل من 30 دقيقة تفضيل حسب الدليل ولا يُستبعد به المرشح تلقائياً.</div></div>';
-  CESEL_REQ.forEach(function(t,i){var r=req[i]||{};
-    h+='<div class="rform" style="margin-bottom:.6rem;max-width:none;padding:.7rem .9rem"><div style="font-weight:700;font-size:12.5px;margin-bottom:.4rem">'+ceN(i+1)+'. '+esc(t[0])+(t[1]?'':' <small style="color:var(--gray)">(تفضيل)</small>')+'</div>'
-      +'<div class="xopts" id="creq-st-'+i+'" style="margin-bottom:.4rem">'+Object.keys(CESEL_REQ_ST).filter(function(k){return k;}).map(function(k){return '<button type="button" class="xopt'+((r.st||'')===k?' on':'')+'" data-v="'+k+'" style="--c:'+CESEL_REQ_ST[k][1]+'" onclick="xOptPick(this)">'+CESEL_REQ_ST[k][0]+'</button>';}).join('')+'</div>'
-      +'<div class="frow"><div class="fg" style="margin:0"><input type="text" id="creq-n-'+i+'" placeholder="ملاحظة" value="'+esc(r.note||'')+'"></div><div class="fg" style="margin:0"><div class="img-pick"><div class="img-prev" id="creq'+i+'-prev" style="width:40px;height:40px">'+(r.img?'<img src="'+srcOK(r.img)+'">':ic('image',16))+'</div><label class="img-pick-btn" style="font-size:11px"><span data-ic="camera"></span> إثبات<input type="file" accept="image/*" style="display:none" onchange="prvLogoImg(this,\'creq'+i+'\')"></label><button class="img-rm" id="creq'+i+'-rm" onclick="rmImg(\'creq'+i+'\',\'image\')"'+(r.img?' style="display:inline-block"':'')+'>إزالة</button><input type="hidden" id="creq'+i+'-img" value="'+esc(r.img||'')+'"></div></div></div></div>';});
-  h+='<div class="xacts"><button class="btn btn-r" onclick="ceCandReqSave(\''+cid+'\')">'+ic('check',13)+' حفظ التحقق</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div>';
-  fpgHTML('التحقق من الشروط الأساسية','check',x.name,h,function(){rCECand();});
-}
-function ceCandReqSave(cid){var x=ceCand(cid);if(!x)return;x.req={};CESEL_REQ.forEach(function(_,i){x.req[i]={st:xOptVal('creq-st-'+i),note:gv('creq-n-'+i),img:gv('creq'+i+'-img')};});ceCandLog(x,'تحديث التحقق من الشروط ('+ceN(CESEL_REQ.filter(function(_,i){return x.req[i].st==='ok';}).length)+'/'+ceN(CESEL_REQ.length)+')');sv();fpgHide();rCECand();}
 function ceCandStage(id,st){
   var x=ceCand(id);if(!x||!ceSelCan(x))return;
   var go=function(why){x.stage=st;if(why)ceCandLog(x,'نقل إلى: '+CESEL_ST[st][0]+' — السبب: '+why);else ceCandLog(x,'نقل إلى: '+CESEL_ST[st][0]);logA('مرشح «'+x.name+'» → '+CESEL_ST[st][0],'user-plus','#0e7490');sv();rCECand();};
@@ -26548,7 +26719,8 @@ function ceSelForm(id,k,evalId){
   F.groups.forEach(function(gp){
     h+='<div class="cesel-g">'+esc(gp[0])+'</div>';
     gp[1].forEach(function(t){var i=gi++;var v=+((f.sc||{})[i]||0);
-      h+='<div class="cesel-it"><div class="cesel-q"><span class="cesel-num">'+ceN(i+1)+'</span>'+esc(t)+'</div><div class="cesel-sc">';
+      var qs=k==='interview'?(ceSelIQ()[i]||[]):[];
+      h+='<div class="cesel-it"><div class="cesel-q"><span class="cesel-num">'+ceN(i+1)+'</span><span>'+esc(t)+(qs.length?'<ul class="cesel-iq">'+qs.map(function(q){return '<li>'+esc(q)+'</li>';}).join('')+'</ul>':'')+'</span></div><div class="cesel-sc">';
       if(mx===10)h+='<input type="number" min="0" max="10" id="cesf-s'+i+'" value="'+(v||'')+'" placeholder="/10" style="width:70px;direction:ltr;text-align:center">';
       else h+='<div class="cesel-opts">'+[1,2,3,4,5].map(function(n){return '<button type="button" class="cesel-o'+(v===n?' on':'')+'" data-i="'+i+'" data-v="'+n+'" title="'+['ضعيف','مقبول','جيد','جيد جداً','ممتاز'][n-1]+'" onclick="ceSelPick(this)">'+n+'</button>';}).join('')+'</div>';
       h+='<input type="text" id="cesf-n'+i+'" placeholder="ملاحظة" value="'+esc((f.notes||{})[i]||'')+'" class="cesel-note"></div></div>';});
@@ -26601,7 +26773,6 @@ function ceCandPrint(id,onlyK,evalId){
   if(!onlyK){
     var kv=[['المؤهلات',x.quals],['الخبرة',[x.expYears?x.expYears+' سنوات':'',x.expPlaces].filter(Boolean).join(' — ')],['الفئات العمرية',x.ageGroups],['التفرغ',x.avail],['السيرة الذاتية',x.cv],['ملاحظات اللجنة',x.cnotes]].filter(function(r){return r[1];});
     if(kv.length)h+='<p>'+kv.map(function(r){return '<b>'+r[0]+':</b> '+esc(r[1]);}).join('<br>')+'</p>';
-    h+='<p><b>الشروط الأساسية:</b><br>'+CESEL_REQ.map(function(t,i){var r=(x.req||{})[i]||{};return (r.st==='ok'?'☑':(r.st==='no'?'☒':'☐'))+' '+esc(t[0])+(r.note?' — '+esc(r.note):'');}).join('<br>')+'</p>';
   }
   var forms=[];['screen','interview','trial'].forEach(function(k){if(onlyK&&onlyK!==k)return;var f=x.forms&&x.forms[k];if(f)forms.push([k,f]);});
   (x.branchEvals||[]).forEach(function(f){if(onlyK&&onlyK!=='branch')return;if(evalId&&f.id!==evalId)return;forms.push(['branch',f]);});
@@ -26633,29 +26804,135 @@ function ceSelExport(){
 }
 function ceSelGuide(){
   var h='<div class="ce2-note" style="margin-bottom:.9rem">'+ic('info',13)+'<div><b>دليل معايير وآلية اختيار المدربين</b> — توحيد طريقة اختيار المدربين وتقييمهم في جميع فروع الأكاديمية.</div></div>';
-  h+='<div class="cesel-steps" style="margin-bottom:1rem">'+['screen','interview','trial','branch'].map(function(k,i){var F=CESEL_FORMS[k];return '<div class="cesel-step" style="--c:'+CESEL_ST[k][1]+'"><div class="cesel-n">'+ceN(i+1)+'</div><div class="cesel-b"><b>'+esc(CESEL_ST[k][0])+'</b><small>'+esc(F.who)+' • حد النجاح '+ceN(F.pass)+'٪'+(F.minAxis?' ولا يقل محور عن '+ceN(F.minAxis):'')+' • الاعتماد: '+F.appr.map(function(a){return a[1];}).join('، ')+'</small></div></div>';}).join('')+'</div>';
+  h+='<div class="cesel-steps" style="margin-bottom:1rem">'+['screen','interview','trial','branch'].map(function(k,i){var F=CESEL_FORMS[k];return '<div class="cesel-step" style="--c:'+CESEL_ST[k][1]+'"><div class="cesel-n">'+ceN(i+1)+'</div><div class="cesel-b"><b>'+esc(CESEL_ST[k][0])+'</b><small>'+esc(F.who)+' • حد النجاح '+ceN(F.pass)+'٪'+(F.minAxis?' ولا يقل محور عن '+ceN(F.minAxis):'')+' • الاعتماد: المدير الفني</small></div></div>';}).join('')+'</div>';
   h+=tdSubHead('آلية الاختيار');h+='<ol class="cesel-ol">'+CESEL_STEPS.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ol>';
   h+=tdSubHead('الشروط الأساسية');h+='<ul class="cesel-ul">'+CESEL_REQ.map(function(s){return '<li>'+esc(s[0])+'</li>';}).join('')+'</ul>';
-  h+=tdSubHead('ملاحظات تنظيمية');h+='<ul class="cesel-ul"><li>يُحفظ ملف لكل مرشح يضم سيرته الذاتية وجميع نماذج التقييم (ملف المرشح هنا، ويُطبع PDF).</li><li>وجود مدربين احتياط جاهزين لكل فرع — «قائمة الاحتياط».</li><li>يُبلَّغ المرشح بنتيجة كل مرحلة خلال 3 أيام عمل — تُسجَّل مهمة إبلاغ تلقائياً بعد كل قرار معتمد.</li><li>يُراجَع أداء المدرب كل 3 أشهر بنموذج المرحلة الثالثة (تقييم دوري).</li></ul>';
+  h+=tdSubHead('ملاحظات تنظيمية');h+='<ul class="cesel-ul"><li>يُحفظ ملف لكل مرشح يضم سيرته الذاتية وجميع نماذج التقييم (ملف المرشح هنا، ويُطبع PDF).</li><li>وجود مدربين احتياط جاهزين لكل فرع — «قائمة الاحتياط».</li><li>يُبلَّغ المرشح بنتيجة كل مرحلة خلال 3 أيام عمل.</li><li>يُراجَع أداء المدرب كل 3 أشهر بنموذج المرحلة الثالثة (تقييم دوري).</li></ul>';
   h+='<div class="xacts"><button class="btn btn-g" onclick="fpgBack()">رجوع</button></div>';
   fpgHTML('دليل اختيار المدربين','doc','المراحل والآلية والشروط',h,function(){rCESelect();});
 }
 /* ---------- إعدادات القسم (اللجان والضوابط) ---------- */
 function ceSetSel(){
   var s=ceSelSet(),users=(DB.users||[]).filter(function(u){return u.role!=='player'&&!isPlayerRole(u.role);}).sort(function(a,b){return a.name.localeCompare(b.name,'ar');});
-  var opt=function(id,cur){return tdSel(id,users.map(function(u){return [u.id,u.name+' — '+(RL[u.role]||u.role)];}),cur,'— غير محدد —');};
-  var chk=function(id,arr){return '<div class="cesel-req">'+users.map(function(u){return '<label><input type="checkbox" data-grp="'+id+'" value="'+u.id+'"'+(arr.indexOf(u.id)>-1?' checked':'')+'> <span style="flex:1">'+esc(u.name)+' <small style="color:var(--gray)">— '+esc(RL[u.role]||u.role)+'</small></span></label>';}).join('')+'</div>';};
   var h='<div class="rform" style="max-width:none">';
-  h+=tdSubHead('اللجنة الفنية (الفرز الأولي)');h+='<div class="fg"><label>رئيس اللجنة</label>'+opt('cess-chair',s.committee.chair)+'</div><div class="fg"><label>الأعضاء</label>'+chk('tech',s.committee.tech||[])+'</div>';
-  h+=tdSubHead('لجنة المقابلة');h+='<div class="fg"><label>الأعضاء</label>'+chk('intv',s.committee.intv||[])+'</div>';
-  h+='<div class="jnote" style="margin-bottom:.8rem">'+ic('info',12)+' إن لم تُحدَّد لجنة، يستطيع المشرف الفني ومدير النظام الاعتماد. مدير النظام يعتمد أي خانة دائماً.</div>';
+  h+=tdSubHead('المدير الفني — المعتمِد لكل النماذج');
+  h+='<div class="fg" style="max-width:420px"><label>حساب المدير الفني</label>'+tdSel('cess-td',users.map(function(u){return [u.id,u.name+' — '+(RL[u.role]||u.role)];}),s.td,'— غير محدد —')+'</div>';
+  h+='<div class="jnote" style="margin-bottom:.8rem">'+ic('info',12)+' يعتمد نماذج الفرز والمقابلة والتجربة وتقييم الفرع. مدير النظام يعتمد دائماً.</div>';
   h+=tdSubHead('الضوابط');
   h+='<div class="fg"><label>شرط «لا يقل محور عن 3» في التجربة العملية</label><div class="xopts" id="cess-min">'+[['item','كل عنصر من الـ13 ≥ 3'],['group','متوسط كل محور رئيسي ≥ 3'],['off','غير مفعّل حتى تحسمه الإدارة']].map(function(o){return '<button type="button" class="xopt'+(s.trialMin===o[0]?' on':'')+'" data-v="'+o[0]+'" onclick="xOptPick(this)">'+o[1]+'</button>';}).join('')+'</div></div>';
-  h+='<div class="frow">'+xInp('cess-per','التقييم الدوري كل (أشهر)',s.periodicMonths,'','number')+xInp('cess-prob','فترة التجربة (أشهر)',s.probMonths,'','number')+xInp('cess-ntf','إبلاغ المرشح خلال (أيام عمل)',s.notifyDays,'','number')+'</div>';
-  h+='<button class="btn btn-r" onclick="ceSetSelSave()">'+ic('check',13)+' حفظ</button><div class="msg ok" id="cess-ok">تم الحفظ</div></div>';
+  h+='<div class="frow">'+xInp('cess-per','التقييم الدوري كل (أشهر)',s.periodicMonths,'','number')+xInp('cess-prob','فترة التجربة (أشهر)',s.probMonths,'','number')+xInp('cess-link','صلاحية رابط التقييم (أيام)',s.linkDays,'','number')+'</div>';
+  h+=tdSubHead('أسئلة المقابلة الشخصية','<small style="color:var(--gray)">سؤال في كل سطر — تظهر للجنة تحت كل محور</small>');
+  var iq=ceSelIQ(),axes=CESEL_FORMS.interview.groups[0][1];
+  axes.forEach(function(t,i){h+='<div class="fg"><label>'+ceN(i+1)+'. '+esc(t)+'</label><textarea id="cess-iq-'+i+'" rows="2">'+esc((iq[i]||[]).join('\n'))+'</textarea></div>';});
+  h+='<button class="btn btn-r" onclick="ceSetSelSave()">'+ic('check',13)+' حفظ</button> <button class="btn btn-g" onclick="var s=ceSelSet();delete s.iq;sv();rCESettings()">استعادة الأسئلة الافتراضية</button><div class="msg ok" id="cess-ok">تم الحفظ</div></div>';
   return h;
 }
-function ceSetSelSave(){var s=ceSelSet();s.committee.chair=gv('cess-chair');s.committee.tech=[].slice.call(document.querySelectorAll('input[data-grp="tech"]:checked')).map(function(c){return c.value;});s.committee.intv=[].slice.call(document.querySelectorAll('input[data-grp="intv"]:checked')).map(function(c){return c.value;});s.trialMin=xOptVal('cess-min')||'item';s.periodicMonths=+gv('cess-per')||3;s.probMonths=+gv('cess-prob')||1;s.notifyDays=+gv('cess-ntf')||3;logA('تعديل إعدادات اختيار المدربين','gear','#0e7490');sv();fl('cess-ok');}
+function ceSetSelSave(){var s=ceSelSet();s.td=gv('cess-td');s.trialMin=xOptVal('cess-min')||'item';s.periodicMonths=+gv('cess-per')||3;s.probMonths=+gv('cess-prob')||1;s.linkDays=+gv('cess-link')||7;
+  var axes=CESEL_FORMS.interview.groups[0][1],iq=[];axes.forEach(function(_,i){var e=g('cess-iq-'+i);iq.push(e?e.value.split('\n').map(function(q){return q.trim();}).filter(Boolean):[]);});s.iq=iq;
+  logA('تعديل إعدادات اختيار المدربين','gear','#0e7490');sv();fl('cess-ok');}
+/* ==========================================================================
+   رابط تقييم خاص لمدير الفرع (واتساب) — يفتح النموذج بلا دخول، يقيّم، ويخرج
+   ========================================================================== */
+var CSELP={tok:'',info:null,kind:'',sc:{},notes:{},sent:false};
+function ceSelLinkForm(cid,kind,evalId){
+  var x=ceCand(cid);if(!x||!ceSelCan(x)||!FA.enabled)return;
+  var mgrs=(DB.users||[]).filter(function(u){return u.role==='admin-team'||u.role==='supervisor';}).sort(function(a,b){return a.name.localeCompare(b.name,'ar');});
+  var h='<div class="ce2-note" style="margin-bottom:.8rem">'+ic('info',13)+'<div>يُولَّد رابط خاص لمرة واحدة لنموذج <b>'+esc(CESEL_FORMS[kind].t)+'</b> للمرشح <b>'+esc(x.name)+'</b>، ويُرسل لمدير الفرع عبر واتساب. يفتحه بلا دخول، يقيّم، ويخرج — ثم يصل التقييم لملف المرشح هنا ويعتمده المدير الفني.</div></div>';
+  h+='<div class="fg"><label>مدير الفرع</label>'+tdSel('clk-u',mgrs.map(function(u){return [u.id,u.name+(u.phone?' — '+phoneDisp(u.phone):'')+(u.team?' ('+u.team+')':'')];}),'','— اكتب الرقم يدوياً —')+'</div>';
+  h+='<div class="fg"><label>رقم الجوال</label>'+phoneField('clk-ph','')+'</div>';
+  h+='<div class="frow">'+xInp('clk-br','الفرع',x.branch||'')+(kind==='branch'?'<div class="fg"><label>نوع التقييم</label>'+tdSel('clk-et',CESEL_FORMS.branch.extra.find(function(e){return e[0]==='etype';})[3],'week','')+'</div>':xInp('clk-cat','الفئة العمرية',''))+'</div>';
+  h+='<div class="xacts"><button class="btn btn-r" onclick="ceSelLinkCreate(\''+cid+'\',\''+kind+'\',\''+(evalId||'')+'\')">'+ic('whistle',13)+' إنشاء الرابط وفتح واتساب</button><button class="btn btn-g" onclick="fpgBack()">إلغاء</button></div><div class="msg err" id="clk-err">اختر مدير الفرع أو اكتب رقم جوال صحيح</div><div id="clk-out"></div>';
+  fpgHTML('رابط تقييم لمدير الفرع','whistle',x.name+' — '+CESEL_FORMS[kind].short,h,function(){rCECand();});
+  var u=g('clk-u');if(u)u.onchange=function(){var us=(DB.users||[]).find(function(q){return q.id===u.value;});var ph=g('clk-ph');if(ph&&us&&us.phone)ph.value=phoneLocal(us.phone);};
+}
+function ceSelLinkCreate(cid,kind,evalId){
+  var x=ceCand(cid);if(!x)return;var ph=phoneVal('clk-ph');if(!phoneOK(ph)){fl('clk-err');return;}
+  var meta={branch:gv('clk-br'),cat:gv('clk-cat'),etype:gv('clk-et'),phone:ph,to:(function(){var u=(DB.users||[]).find(function(q){return q.id===gv('clk-u');});return u?u.name:'';})()};
+  var out=g('clk-out');if(out)out.innerHTML='<div class="jnote">'+ic('refresh',12)+' جارٍ إنشاء الرابط…</div>';
+  FA._auth('fa_csel_link_create',{p_token:FA.token,p_cand:x.id,p_name:x.name,p_kind:kind,p_eval:evalId||uid(),p_meta:meta,p_days:ceSelSet().linkDays}).then(function(r){
+    if(!r||!r.ok)throw new Error(r&&r.err==='unauthorized'?'الجلسة منتهية':'رفض الخادم');
+    var url=location.origin+location.pathname+'?csel='+r.tok;
+    var msg='السلام عليكم '+(meta.to||'')+'\nهذا رابط '+CESEL_FORMS[kind].t+' للمدرب «'+x.name+'»'+(meta.branch?' — '+meta.branch:'')+'.\nيُفتح بلا تسجيل دخول، قيّم ثم اضغط إرسال:\n'+url+'\n— أكاديمية فارس';
+    if(!x.links)x.links=[];x.links.push({tok:r.tok,kind:kind,eval:evalId||'',to:meta.to,phone:ph,by:CU.name,at:Date.now()});
+    ceCandLog(x,'رابط تقييم '+CESEL_FORMS[kind].short+' أُرسل إلى '+(meta.to||phoneDisp(ph)));sv();
+    var wa='https://wa.me/'+normPhone(ph)+'?text='+encodeURIComponent(msg);
+    if(out)out.innerHTML='<div class="ce2-note ok" style="margin-top:.8rem">'+ic('check',13)+'<div><b>تم إنشاء الرابط.</b><br><input type="text" readonly value="'+esc(url)+'" style="margin:.4rem 0;direction:ltr;font-size:11px" onclick="this.select()"><div style="display:flex;gap:.4rem;flex-wrap:wrap"><a class="btn btn-r btn-sm" href="'+wa+'" target="_blank" rel="noopener">'+ic('whistle',12)+' فتح واتساب</a><button class="btn btn-g btn-sm" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+esc(url)+'\');addN(\'نُسخ الرابط\',\'\',\'success\')">نسخ الرابط</button></div><small style="color:var(--gray)">صالح '+ceN(ceSelSet().linkDays)+' أيام ولمرة واحدة.</small></div></div>';
+    try{window.open(wa,'_blank');}catch(e){}
+  }).catch(function(e){if(out)out.innerHTML='<div class="msg err" style="display:block">'+esc((e&&e.message==='na')?'نفّذ ملف fa_coach_links.sql في Supabase أولاً':(e&&e.message)||'تعذّر إنشاء الرابط')+'</div>';});
+}
+/* حالة روابط المرشح (تظهر في تبويب التجربة / تقييم الفرع) */
+function ceSelLinksHTML(x,kind){
+  var L=(x.links||[]).filter(function(l){return l.kind===kind;});if(!L.length)return '';
+  return '<div class="cecr-list" style="margin:.4rem 0 .8rem">'+L.slice().reverse().map(function(l){return '<div class="cecr-row"><span class="badge" style="background:var(--bg)">'+ic('whistle',10)+' رابط</span><span class="cecr-n" style="font-weight:500">'+esc(l.to||phoneDisp(l.phone))+' <small style="color:var(--gray)">• '+esc(l.by)+' • '+esc(xDateLbl(new Date(l.at).toISOString()))+'</small></span>'+(l.used?'<span class="badge approved">وصل التقييم</span>':'<span class="badge pending">بانتظار التعبئة</span>')+'</div>';}).join('')+'</div>';
+}
+/* سحب التقييمات الواردة من الروابط ودمجها في ملفات المرشحين */
+var CSEL_PULL_AT=0;
+function ceSelPull(force){
+  if(!FA.enabled||!FA.token||!ceSelCan(null))return;
+  if(!force&&Date.now()-CSEL_PULL_AT<60000)return;CSEL_PULL_AT=Date.now();
+  FA._auth('fa_csel_pull',{p_token:FA.token}).then(function(r){
+    var L=r&&r.ok&&r.list||[];if(!L.length)return;var toks=[],n=0;
+    L.forEach(function(it){var x=ceCand(it.cand);toks.push(it.tok);if(!x||!it.sub)return;
+      var f=Object.assign({id:it.eval||uid(),sc:{},notes:{},appr:{},history:[]},it.sub,{draft:false,via:'link',linkBy:it.by,at:it.usedAt?new Date(it.usedAt).getTime():Date.now()});
+      if(it.kind==='branch'){if(!x.branchEvals)x.branchEvals=[];if(!x.branchEvals.some(function(q){return q.id===f.id;}))x.branchEvals.push(f);}
+      else{if(!x.forms)x.forms={};var prev=x.forms.trial;if(prev&&prev.locked){if(!x.trialHist)x.trialHist=[];x.trialHist.push(prev);}x.forms.trial=f;}
+      var l=(x.links||[]).find(function(q){return q.tok===it.tok;});if(l)l.used=true;
+      ceCandLog(x,'وصل '+CESEL_FORMS[it.kind].short+' من رابط مدير الفرع ('+(f.by||'')+')');n++;});
+    FA._auth('fa_csel_ack',{p_token:FA.token,p_toks:toks}).catch(function(){});
+    if(n){sv();addN('وصلت تقييمات من مديري الفروع',ceN(n)+' نموذجاً — بانتظار اعتماد المدير الفني','success');if(CEPAGE==='cand')rCECand();else if(CEPAGE==='select')rCESelect();}
+  }).catch(function(){});
+}
+/* ---------- الصفحة العامة للرابط (بلا دخول) ---------- */
+function cselCheckLink(){
+  var m=/[?&]csel=([^&]+)/.exec(location.search||'');if(!m)return false;
+  CSELP={tok:decodeURIComponent(m[1]),info:null,kind:'',sc:{},notes:{},sent:false};
+  cselRender('loading');
+  var go=function(){FA._auth('fa_csel_link_info',{p_tok:CSELP.tok}).then(function(r){if(!r||!r.ok){cselRender(r&&r.err||'notfound',r);return;}CSELP.info=r;CSELP.kind=r.kind;cselRender('form');}).catch(function(e){cselRender(e&&e.message==='na'?'na':'net');});};
+  if(FA.sb)go();else setTimeout(go,800);
+  return true;
+}
+function cselBox(){var b=g('CSELPUB');if(!b){b=document.createElement('div');b.id='CSELPUB';document.body.appendChild(b);}return b;}
+function cselRender(st,r){
+  var b=cselBox(),h='<div class="cselp"><div class="cselp-h"><div class="lg"></div><div><b>أكاديمية فارس</b><small>مدربين فارس — اختيار المدربين</small></div></div>';
+  if(st==='loading')h+='<div class="cesel-empty">'+ic('refresh',26)+'<b>جارٍ فتح النموذج…</b></div>';
+  else if(st==='form'){
+    var F=CESEL_FORMS[CSELP.kind],inf=CSELP.info,meta=inf.meta||{};
+    h+='<div class="cesel-hero" style="--c:'+CESEL_ST[CSELP.kind][1]+'"><div class="cesel-hi"><div class="cesel-hn">'+esc(inf.name)+'</div><div class="cesel-hm">'+[meta.branch?ic('pin',11)+' '+esc(meta.branch):'',meta.cat?ic('users',11)+' '+esc(meta.cat):'',ic('doc',11)+' '+esc(F.t)].filter(Boolean).join('<i>•</i>')+'</div></div></div>';
+    h+='<div class="jnote" style="margin-bottom:.8rem">'+ic('info',12)+' '+esc(F.who)+'. قيّم كل عنصر من 1 إلى 5 (5 ممتاز • 4 جيد جداً • 3 جيد • 2 مقبول • 1 ضعيف)، ثم اضغط إرسال. الرابط لمرة واحدة.</div>';
+    h+='<div class="frow">'+xInp('cselp-by','اسم المقيّم','','اسمك','text',true)+xInp('cselp-date','التاريخ',calISO(new Date()),'','date')+'</div>';
+    if(CSELP.kind==='trial')h+='<div class="frow">'+xInp('cselp-cat','الفئة العمرية',meta.cat||'')+xInp('cselp-dur','مدة الحصة','','مثال: 90 دقيقة')+'</div>';
+    var gi=0;F.groups.forEach(function(gp){h+='<div class="cesel-g">'+esc(gp[0])+'</div>';gp[1].forEach(function(t){var i=gi++;h+='<div class="cesel-it"><div class="cesel-q"><span class="cesel-num">'+ceN(i+1)+'</span><span>'+esc(t)+'</span></div><div class="cesel-sc"><div class="cesel-opts">'+[1,2,3,4,5].map(function(n){return '<button type="button" class="cesel-o" data-i="'+i+'" data-v="'+n+'" onclick="cselPick(this)">'+n+'</button>';}).join('')+'</div><input type="text" id="cselp-n'+i+'" placeholder="ملاحظة" class="cesel-note"></div></div>';});});
+    h+='<div class="cesel-tot" id="cselp-tot"><span style="color:var(--gray)">المجموع: — / '+ceN(ceSelItems(CSELP.kind).length*F.max)+'</span></div>';
+    if(CSELP.kind==='branch')h+='<div class="frow">'+xTxt('cselp-str','نقاط القوة','',2)+xTxt('cselp-dev','نقاط تحتاج إلى تطوير','',2)+'</div>'+xTxt('cselp-plan','خطة التطوير المقترحة (إن وجدت)','',2);
+    h+=xTxt('cselp-notes','ملاحظات المقيّم','',2);
+    h+='<div class="fg"><label>رأيك في النتيجة</label><div class="xopts" id="cselp-dec">'+F.dec.map(function(d){return '<button type="button" class="xopt" data-v="'+d[0]+'" style="--c:'+d[2]+'" onclick="xOptPick(this)">'+d[1]+'</button>';}).join('')+'</div><small style="color:var(--gray)">القرار النهائي والاعتماد للمدير الفني.</small></div>';
+    h+='<div class="xacts"><button class="btn btn-r" style="flex:1" onclick="cselSubmit()">'+ic('check',13)+' إرسال التقييم</button></div><div class="msg err" id="cselp-err">قيّم كل العناصر واكتب اسمك</div>';
+  }
+  else if(st==='done')h+='<div class="cesel-empty" style="border-color:#16a34a">'+ic('check',30)+'<b>تم إرسال التقييم — شكراً لك</b><small>وصل التقييم لملف المرشح في النظام، ويعتمده المدير الفني. يمكنك إغلاق الصفحة.</small></div>';
+  else if(st==='used')h+='<div class="cesel-empty">'+ic('check',26)+'<b>هذا الرابط استُخدم من قبل</b><small>التقييم مسجّل'+(r&&r.name?' للمرشح «'+esc(r.name)+'»':'')+' — لا يمكن التعبئة مرة أخرى.</small></div>';
+  else if(st==='expired')h+='<div class="cesel-empty">'+ic('clock',26)+'<b>انتهت صلاحية الرابط</b><small>اطلب رابطاً جديداً من إدارة الأكاديمية.</small></div>';
+  else if(st==='na')h+='<div class="cesel-empty">'+ic('info',26)+'<b>الخدمة غير مفعّلة بعد</b><small>لم يُنفَّذ ملف fa_coach_links.sql في الخادم.</small></div>';
+  else if(st==='net')h+='<div class="cesel-empty">'+ic('info',26)+'<b>تعذّر الاتصال</b><small>تحقق من الإنترنت ثم أعد فتح الرابط.</small></div>';
+  else h+='<div class="cesel-empty">'+ic('x',26)+'<b>الرابط غير صحيح</b></div>';
+  h+='</div>';
+  b.innerHTML=h;b.style.display='block';hydrateIcons(b);
+}
+function cselPick(btn){var w=btn.parentNode;w.querySelectorAll('.cesel-o').forEach(function(x){x.classList.remove('on');});btn.classList.add('on');
+  var F=CESEL_FORMS[CSELP.kind],items=ceSelItems(CSELP.kind),sc={};items.forEach(function(_,i){var on=document.querySelector('#CSELPUB .cesel-o.on[data-i="'+i+'"]');if(on)sc[i]=+on.dataset.v;});
+  var s=ceSelScore(CSELP.kind,{sc:sc}),el=g('cselp-tot');if(!el)return;
+  el.innerHTML=s?'<span>المجموع <b>'+ceN(s.sum)+'</b> / '+ceN(s.max)+'</span>'+(s.done?'<span class="cesel-pct" style="color:'+ceGrade(s.pct).c+'">'+ceN(s.pct)+'٪</span>':'<span style="color:var(--amber)">بقي '+ceN(s.total-s.n)+' عنصراً</span>'):'';
+}
+function cselSubmit(){
+  if(CSELP.sent)return;var F=CESEL_FORMS[CSELP.kind],items=ceSelItems(CSELP.kind),sc={},notes={};
+  items.forEach(function(_,i){var on=document.querySelector('#CSELPUB .cesel-o.on[data-i="'+i+'"]');if(on)sc[i]=+on.dataset.v;var n=g('cselp-n'+i);if(n&&n.value)notes[i]=n.value;});
+  var by=gv('cselp-by'),s=ceSelScore(CSELP.kind,{sc:sc});
+  if(!by||!s||!s.done){fl('cselp-err');return;}
+  var meta=CSELP.info.meta||{},f={sc:sc,notes:notes,by:by,txt:gv('cselp-notes'),dec:xOptVal('cselp-dec')||'',br:meta.branch||''};
+  if(CSELP.kind==='trial'){f.tdate=gv('cselp-date');f.cat=gv('cselp-cat');f.dur=gv('cselp-dur');f.evalBy=by;}
+  else{f.edate=gv('cselp-date');f.cat=meta.cat||'';f.etype=meta.etype||'week';f.evalBy=by;f.str=gv('cselp-str');f.dev=gv('cselp-dev');f.plan=gv('cselp-plan');}
+  CSELP.sent=true;var e=g('cselp-err');if(e){e.textContent='جارٍ الإرسال…';fl('cselp-err');}
+  FA._auth('fa_csel_submit',{p_tok:CSELP.tok,p_form:f}).then(function(r){if(!r||!r.ok){CSELP.sent=false;cselRender(r&&r.err||'notfound',r);return;}cselRender('done');}).catch(function(){CSELP.sent=false;if(e){e.textContent='تعذّر الإرسال — تحقق من الإنترنت وحاول مجدداً';fl('cselp-err');}});
+}
 
 /* ==========================================================================
    مدربين فارس — الدورات والشهادات
@@ -31788,6 +32065,8 @@ function faBoot(){
       window.__FA_READY=true;
       /* باركود تقييم المدرب: يفتح النموذج (بجلسة اللاعب إن كانت سارية) */
       var _ceLink=false;try{_ceLink=ceCheckLink();}catch(e){}
+      /* رابط تقييم مدير الفرع: صفحة مستقلة بلا دخول */
+      try{if(cselCheckLink())return;}catch(e){}
       /* استئناف الجلسة إن كانت سارية — قبل عرض شاشة الدخول */
       if(sessRestore()){if(_ceLink)setTimeout(cePubOpen,300);setTimeout(function(){try{wbCheckLink();}catch(e){}},400);return;}
       if(_ceLink)return;
@@ -33048,7 +33327,7 @@ function rTDTplan(){xSet('td');g('tdc-tplan').innerHTML=xTpHTML();hydrateIcons(g
   <div id="lbx-top"><div id="lbx-cap"></div><button id="lbx-x" onclick="lbxClose()" aria-label="إغلاق">&times;</button></div>
   <div id="lbx-wrap"><img id="lbx-img" alt=""></div>
   <div id="lbx-hint">اضغط الصورة للتكبير • اضغط الخلفية للإغلاق</div>
-<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.11.02-r32</div>
+<div id="build-tag" style="position:fixed;bottom:4px;left:8px;z-index:5;font-size:9px;color:rgba(255,255,255,.25);pointer-events:none;direction:ltr">v2026.11.04-r35</div>
 </div>
 
 <!-- نافذة تفعيل اللاعب: خارج #APP لأنها تُستخدم من شاشة الدخول قبل ظهور التطبيق -->
